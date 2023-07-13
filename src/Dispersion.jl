@@ -1,5 +1,5 @@
 function Dispersion(Hamiltonian, dim; N=51, labels=true)
-    GLMakie.activate!(inline=false)
+    # GLMakie.activate!(inline=false)
 
     function Ene1D(nrang, p) # 1D Energy
         (; Hamiltonian, N, Hs) = p
