@@ -1,4 +1,4 @@
-function Z2invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
+function Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
     # function psi_j!(j, psi_2, Evec2, p) # wave function
     function psi_j!(j, psi_2, p) # wave function
