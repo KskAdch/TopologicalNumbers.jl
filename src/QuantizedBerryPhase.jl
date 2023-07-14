@@ -3,11 +3,8 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0
     function psi!(i, psi1, Evec1, p) # wave function
         @unpack Hamiltonian, N, Hs = p
 
-        nrang = range(0, N - 1, length=N)
-
-        n = nrang[i]
-        k = 2pi * n / N
-        eigens = eigen(Hamiltonian(k))
+        k = 2pi * (i - 1) / N
+        eigens = eigen!(Hamiltonian(k))
         psi1[:, :] .= eigens.vectors
         Evec1[:] .= eigens.values
     end
@@ -26,23 +23,29 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0
             psi!(i + 1, psi1, Evec1, p)
         end
 
-        Evec0[:]
         l = 1
         while l <= Hs
-            Enevec = Evec0[Evec0.>Evec0[l]] .- Evec0[l]
-            l0 = l + count(Enevec .<= gapless)
+            l0 = Hs - count(Evec0 .> (gapless + Evec0[l]))
 
             if i == N
-                Link[l:l0] .= det(psi1[:, l:l0]' * psiN1[:, l:l0])
+                if l == l0
+                    Link[l:l0] .= dot(psi1[:, l:l0],  psiN1[:, l:l0])
+                else
+                    Link[l:l0] .= det(psi1[:, l:l0]' * psiN1[:, l:l0])
+                end
             else
-                Link[l:l0] .= det(psi0[:, l:l0]' * psi1[:, l:l0])
+                if l == l0
+                    Link[l:l0] .= dot(psi0[:, l:l0], psi1[:, l:l0])
+                else
+                    Link[l:l0] .= det(psi0[:, l:l0]' * psi1[:, l:l0])
+                end
             end
 
             l = 1 + l0
         end
     end
 
-    @views function F!(phi, i, Link, p) # lattice field strength
+    @views function F!(phi, Link, p) # lattice field strength
         @unpack N, Hs = p
 
         phi[:] = [imag(log(Link[l])) for l in 1:Hs]
@@ -65,7 +68,7 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0
 
         for i in 1:N
             U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p)
-            F!(phi, i, Link, p)
+            F!(phi, Link, p)
             TN[:] .+= phi[:]
         end
 

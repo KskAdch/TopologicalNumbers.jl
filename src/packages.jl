@@ -3,3 +3,4 @@ using LinearAlgebra
 using CairoMakie
 using LaTeXStrings
 using StaticArrays
+using Parameters
