@@ -43,8 +43,8 @@ function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds:
                         l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
 
                         if l == l0
-                            link10[l:l0] .= psi00[:, l:l0] ⋅ psi10[:, l:l0]
-                            link01[l:l0] .= psi00[:, l:l0] ⋅ psi01[:, l:l0]
+                            link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
+                            link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
                         else
                             link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
                             link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
@@ -82,14 +82,14 @@ function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds:
                     psi01[:, :] = psi_1[i, :, :]
                 end
 
-                Enevec[:] = Evec1[i, :]
+                Enevec[:] = Evec0[i, :]
                 l = 1
                 while l <= Hs
                     l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
 
                     if l == l0
-                        link10[l:l0] .= psi00[:, l:l0] ⋅ psi10[:, l:l0]
-                        link01[l:l0] .= psi00[:, l:l0] ⋅ psi01[:, l:l0]
+                        link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
+                        link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
                     else
                         link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
                         link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
@@ -104,7 +104,7 @@ function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds:
     end
 
     @views function F!(phi, dphi, i, j, Link0, Link1, LinkN, p) # lattice field strength
-        @unpack N, Hs = p
+        @unpack N, rounds, Hs = p
 
         if i == N && j == N
             phi[:] = [imag(log(Link0[l, 1, N]*Link0[l, 2, 1]*conj(LinkN[l, 1, N])*conj(Link0[l, 2, N]))) for l in 1:Hs]

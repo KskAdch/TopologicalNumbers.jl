@@ -48,11 +48,11 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0
     @views function F!(phi, Link, p) # lattice field strength
         @unpack N, Hs = p
 
-        phi[:] = [imag(log(Link[l])) for l in 1:Hs]
+        phi[:] .= [imag(log(Link[l])) for l in 1:Hs]
     end
 
     @views function Phase!(TopologicalNumber, p) # berry phase
-        @unpack N, Hs = p
+        @unpack N, rounds, Hs = p
         Link = zeros(ComplexF64, Hs)
 
         Evec0 = zeros(Hs)
