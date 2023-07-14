@@ -1,4 +1,4 @@
-function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Float=0.0)
+function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0)
 
     function psi_j!(j, psi_2, Evec2, p) # wave function
         @unpack Hamiltonian, N, Hs = p

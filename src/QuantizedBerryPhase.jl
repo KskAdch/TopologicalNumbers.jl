@@ -1,4 +1,4 @@
-function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Float=0.0)
+function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0)
 
     function psi!(i, psi1, Evec1, p) # wave function
         @unpack Hamiltonian, N, Hs = p
