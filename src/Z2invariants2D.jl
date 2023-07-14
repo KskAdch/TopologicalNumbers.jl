@@ -1,11 +1,11 @@
-function Z2invariants2D(Hamiltonian::Function; N::Int=50)
+function Z2invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
     # function psi_j!(j, psi_2, Evec2, p) # wave function
     function psi_j!(j, psi_2, p) # wave function
         @unpack Hamiltonian, N, Hs = p
         for i in 1:N
             k = [i - 1, j - 1] * 2pi / N
-            eigens = eigen(Hamiltonian(k))
+            eigens = eigen!(Hamiltonian(k))
             psi_2[i, :, :] .= eigens.vectors
             # Evec2[i, :] .= eigens.values
         end
@@ -165,28 +165,44 @@ function Z2invariants2D(Hamiltonian::Function; N::Int=50)
         for l in 1:Hshalf
             for TRS in 1:2
                 if TN[l, TRS] - 2Px0[l] + 2Pxp[l] !== NaN
-                    TopologicalNumber[TRS, 2l-1:2l] .= abs(rem(round(Int, (TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                    if rounds == true
+                        TopologicalNumber[TRS, 2l-1:2l] .= abs(rem(round(Int, (TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                    else
+                        TopologicalNumber[TRS, 2l-1:2l] .= abs(rem((TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+                    end
                 end
             end
         end
     end
 
-    function main(Hamiltonian, N)
+    function main(Hamiltonian, N, rounds)
 
-        Nhalf = Int(N / 2 + 1)
+        Nhalf = N ÷ 2 + 1
         n0 = zeros(2)
         Hs = size(Hamiltonian(n0))[1]
-        Hshalf = Int(Hs / 2)
-        p = (; Hamiltonian, N, Nhalf, Hs, Hshalf)
+        Hshalf = Hs ÷ 2
+        @unpack Hamiltonian, N, Nhalf, Hs, Hshalf = p
 
-        TopologicalNumber = zeros(Int, 2, Hs)
+        if rounds == true
+            TopologicalNumber = zeros(Int, 2, Hs)
+        else
+            TopologicalNumber = zeros(2, Hs)
+        end
 
         Phase!(TopologicalNumber, p)
 
-        Total = rem(sum(TopologicalNumber[1, 1:2:Hs]), 2)
+        if rounds == true
+            Total = rem(sum(TopologicalNumber[1, 1:2:Hs]), 2)
+        else
+            Total = sum(TopologicalNumber[1, 1:2:Hs])
+            if Total > 1.5
+                Total -= 2
+            end
+            Total = rem(Total, 2)
+        end
 
         (; TopologicalNumber, Total)
     end
 
-    main(Hamiltonian, N)
+    main(Hamiltonian, N, rounds)
 end
