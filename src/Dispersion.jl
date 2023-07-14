@@ -28,7 +28,7 @@ function Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=tru
     end
 
     function diagram(p)
-        @unpack dim, Hs = p
+        @unpack dim, labels, Hs = p
 
         nrang = range(0, 2pi, length=N)
 
@@ -74,6 +74,6 @@ function Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=tru
         Hs = size(Hamiltonian(zeros(2)))[1]
     end
 
-    p = (; Hamiltonian, dim, N, Hs)
+    p = (; Hamiltonian, dim, N, labels, Hs)
     diagram(p)
 end
