@@ -1,7 +1,7 @@
-function FirstChern(Hamiltonian; N=51, gapless=0.0)
+function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0)
 
     function psi_j!(j, psi_2, Evec2, p) # wave function
-        (; Hamiltonian, N, Hs) = p
+        @unpack Hamiltonian, N, Hs = p
         for i in 1:N
             k = [i - 1, j - 1] * 2pi / N
             eigens = eigen(Hamiltonian(k))
@@ -11,7 +11,7 @@ function FirstChern(Hamiltonian; N=51, gapless=0.0)
     end
 
     @views function U!(Link1, Link2, LinkN1, link1, link2, psi_1, psi_2, psi_N1, Evec1, Evec2, psi0, psi1, psi2, Enevec, j, p) # link variable
-        (; N, gapless, Hs) = p
+        @unpack N, gapless, Hs = p
 
         if j != 1
             Link1 .= Link2
@@ -96,7 +96,7 @@ function FirstChern(Hamiltonian; N=51, gapless=0.0)
     end
 
     @views function F!(phi, dphi, i, j, Link1, Link2, LinkN1, p) # lattice field strength
-        (; N, Hs) = p
+        @unpack N, Hs = p
 
         if i == N && j == N
             phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(LinkN1[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hs]
@@ -116,7 +116,7 @@ function FirstChern(Hamiltonian; N=51, gapless=0.0)
     end
 
     @views function Phase!(TopologicalNumber, p) # chern number
-        (; N, Hs) = p
+        @unpack N, Hs = p
         Link1 = zeros(ComplexF64, Hs, 2, N)
         Link2 = zeros(ComplexF64, Hs, 2, N)
         LinkN1 = zeros(ComplexF64, Hs, 2, N)

@@ -1,6 +1,7 @@
 .vscode/*
 .vscode
 desktop.ini
+.DS_Store
 *.jl.*.cov
 *.jl.cov
 *.jl.mem
