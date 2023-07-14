@@ -87,7 +87,7 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0
     function main(Hamiltonian, N, gapless)
 
         Hs = size(Hamiltonian(0.0))[1]
-        p = (; Hamiltonian, N, gapless, rounds, Hs)
+        @unpack Hamiltonian, N, gapless, rounds, Hs = p
 
         if rounds == true
             TopologicalNumber = zeros(Int, Hs)
