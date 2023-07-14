@@ -1,4 +1,4 @@
-function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0)
+function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi!(i, psi1, Evec1, p) # wave function
         @unpack Hamiltonian, N, Hs = p
@@ -48,11 +48,11 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0
     @views function F!(phi, Link, p) # lattice field strength
         @unpack N, Hs = p
 
-        phi[:] = [imag(log(Link[l])) for l in 1:Hs]
+        phi[:] .= [imag(log(Link[l])) for l in 1:Hs]
     end
 
     @views function Phase!(TopologicalNumber, p) # berry phase
-        @unpack N, Hs = p
+        @unpack N, rounds, Hs = p
         Link = zeros(ComplexF64, Hs)
 
         Evec0 = zeros(Hs)
@@ -72,22 +72,43 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0
             TN[:] .+= phi[:]
         end
 
-        TopologicalNumber .= [round(Int, abs(rem(TN[i] / pi, 2))) for i in 1:Hs]
+        if rounds == true
+            TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
+        else
+            for i in 1:Hs
+                while abs(TN[i]) > 1.5pi
+                    TN[i] = abs(TN[i]) - 2pi
+                end
+            end
+            TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
+        end
     end
 
-    function main(Hamiltonian, N, gapless)
+    function main(Hamiltonian, N, gapless, rounds)
 
         Hs = size(Hamiltonian(0.0))[1]
-        p = (; Hamiltonian, N, gapless, Hs)
+        p = (; Hamiltonian, N, gapless, rounds, Hs)
 
-        TopologicalNumber = zeros(Int, Hs)
+        if rounds == true
+            TopologicalNumber = zeros(Int, Hs)
+        else
+            TopologicalNumber = zeros(Hs)
+        end
 
         Phase!(TopologicalNumber, p)
 
-        Total = rem(sum(TopologicalNumber), 2)
+        if rounds == true
+            Total = rem(sum(TopologicalNumber), 2)
+        else
+            Total = sum(TopologicalNumber)
+            while Total > 1.5
+                Total -= 2
+            end
+            Total = rem(Total, 2)
+        end
 
         (; TopologicalNumber, Total)
     end
 
-    main(Hamiltonian, N, gapless)
+    main(Hamiltonian, N, gapless, rounds)
 end
