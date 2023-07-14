@@ -24,7 +24,7 @@ Modules = [TopologicalNumbers]
 
 ## Abstract
 
-TopologicalNumbers.jl is a Julia package to calculate topological numbers, including the Chern numbers and $\mathbb{Z}_2$ numbers using an numerical approach based on the Fukui-Hataugai-Suzuki method.
+TopologicalNumbers.jl is a Julia package to calculate topological numbers, including the Chern numbers and $\mathbb{Z}_2$ numbers using a numerical approach based on the Fukui-Hataugai-Suzuki method.
 This package serves the following functions:
 
 - `Dispersion` to calculate the dispersion relation,
