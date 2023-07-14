@@ -162,7 +162,7 @@ function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds:
 
         n0 = zeros(2)
         Hs = size(Hamiltonian(n0))[1]
-        p = (; Hamiltonian, N, gapless, Hs)
+        p = (; Hamiltonian, N, gapless, rounds, Hs)
 
         if rounds == true
             TopologicalNumber = zeros(Int, Hs)
