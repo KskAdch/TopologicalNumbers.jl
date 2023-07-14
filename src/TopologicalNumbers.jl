@@ -1,7 +1,5 @@
 module TopologicalNumbers
 
-# Test branch
-
 include("./packages.jl")
 include("./Dispersion.jl")
 include("./Z2invariants2D.jl")
