@@ -1,8 +1,8 @@
-function Dispersion(Hamiltonian, dim; N=51, labels=true)
+function Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
     # GLMakie.activate!(inline=false)
 
     function Ene1D(nrang, p) # 1D Energy
-        (; Hamiltonian, N, Hs) = p
+        @unpack Hamiltonian, N, Hs = p
 
         Ene = zeros(N, Hs)
 
@@ -15,7 +15,7 @@ function Dispersion(Hamiltonian, dim; N=51, labels=true)
     end
 
     function Ene2D(nrang, p) # 2D Energy
-        (; Hamiltonian, N, Hs) = p
+        @unpack Hamiltonian, N, Hs = p
 
         Ene = zeros(N, N, Hs)
 
@@ -32,7 +32,7 @@ function Dispersion(Hamiltonian, dim; N=51, labels=true)
     end
 
     function diagram(p)
-        (; dim, Hs) = p
+        @unpack dim, Hs = p
 
         nrang = range(0, N, length=N)
 

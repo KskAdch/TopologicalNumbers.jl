@@ -1,7 +1,7 @@
-function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Float64=0.0)
+function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Float=0.0)
 
     function psi!(i, psi1, Evec1, p) # wave function
-        (; Hamiltonian, N, Hs) = p
+        @unpack Hamiltonian, N, Hs = p
 
         nrang = range(0, N - 1, length=N)
 
@@ -13,7 +13,7 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Float64=
     end
 
     @views function U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p) # link variable
-        (; N, gapless, Hs) = p
+        @unpack N, gapless, Hs = p
 
         if i == 1
             psi!(i, psi1, Evec1, p)
@@ -43,13 +43,13 @@ function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Float64=
     end
 
     @views function F!(phi, i, Link, p) # lattice field strength
-        (; N, Hs) = p
+        @unpack N, Hs = p
 
         phi[:] = [imag(log(Link[l])) for l in 1:Hs]
     end
 
     @views function Phase!(TopologicalNumber, p) # berry phase
-        (; N, Hs) = p
+        @unpack N, Hs = p
         Link = zeros(ComplexF64, Hs)
 
         Evec0 = zeros(Hs)
