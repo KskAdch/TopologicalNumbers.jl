@@ -7,7 +7,7 @@
 
 ## Abstract
 
-TopologicalNumbers.jl is a Julia package to calculate topological numbers, including the Chern numbers and $\mathbb{Z}_2$ numbers using an numerical approach based on the Fukui-Hataugai-Suzuki method.
+TopologicalNumbers.jl is a Julia package to calculate topological numbers, including the Chern numbers and $\mathbb{Z}_2$ numbers using a numerical approach based on the Fukui-Hataugai-Suzuki method.
 This package serves the following functions:
 
 - `Dispersion` to calculate the dispersion relation,
@@ -51,7 +51,7 @@ end
 ```
 
 A band structure is here:
-```
+```julia
 julia> Dispersion(H, 1)
 ```
 
@@ -67,7 +67,7 @@ julia> QuantizedBerryPhase(H)
 
 Output is 
 
-```
+```julia
 (TopologicalNumber = [1, 1], Total = 0)
 ```
 
@@ -119,7 +119,7 @@ julia> FirstChern(H)
 
 Output is 
 
-```
+```julia
 (TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
 ```
 
