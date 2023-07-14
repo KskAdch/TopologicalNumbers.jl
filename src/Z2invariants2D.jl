@@ -181,7 +181,7 @@ function Z2invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
         n0 = zeros(2)
         Hs = size(Hamiltonian(n0))[1]
         Hshalf = Hs ÷ 2
-        @unpack Hamiltonian, N, Nhalf, Hs, Hshalf = p
+        p = (; Hamiltonian, N, Nhalf, Hs, Hshalf)
 
         if rounds == true
             TopologicalNumber = zeros(Int, 2, Hs)
