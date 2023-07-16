@@ -29,8 +29,6 @@ julia> using Pkg
 julia> Pkg.add("https://github.com/KskAdch/TopologicalNumbers.jl")
 ```
 
-We scheduled the package to be registered in the Julia repository as a official package soon.
-
 
 ## Examples
 
