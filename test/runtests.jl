@@ -1,6 +1,8 @@
 using TopologicalNumbers
 using Test
 
+using CairoMakie
+
 @testset "TopologicalNumbers.jl" begin
     @testset "1D case" begin
         function H(k)
