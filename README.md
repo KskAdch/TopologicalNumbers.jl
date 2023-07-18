@@ -53,7 +53,7 @@ A band structure is here:
 julia> Dispersion(H, 1)
 ```
 
-![Band structure of SSH model](https://user-images.githubusercontent.com/139373570/254269408-be9bac9a-679f-4392-9570-97220d3ad28b)
+![Band structure of SSH model](https://user-images.githubusercontent.com/139373570/254270706-a906ea2f-ceae-4a49-b37b-333d5d789e17)
 
 Here, `1` is the dimension of the wavenumber space.
 
