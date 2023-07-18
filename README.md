@@ -53,7 +53,7 @@ A band structure is here:
 julia> Dispersion(H, 1)
 ```
 
-![Band structure of SSH model](https://user-images.githubusercontent.com/139373570/254269408-be9bac9a-679f-4392-9570-97220d3ad28b)
+![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/ec08e558-3b0c-4ab0-9c4f-99b977b20142)
 
 Here, `1` is the dimension of the wavenumber space.
 
@@ -106,7 +106,7 @@ To calcurate Dispersion, run:
 julia> Dispersion(H, 2)
 ```
 
-![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/aab6fa5c-e10a-4ad5-bf6f-bad31e217d5c)
+![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/abf47c01-94f3-4c66-8b54-bb243ce48b5f)
 
 
 Then we can calculate the Chern numbers using `FirstChern`:
