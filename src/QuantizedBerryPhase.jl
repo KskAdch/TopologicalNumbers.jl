@@ -4,7 +4,7 @@ Calculate Quantized Berry Phase.
     QuantizedBerryPhase(H)
 
 ```math
-\phi
+∫_{BZ}dk\bra{Ψ_{k}}\frac{∂}{∂k}\ket{Ψ_{k}}
 ```
 """
 
