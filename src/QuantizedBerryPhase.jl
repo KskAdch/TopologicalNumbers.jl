@@ -1,3 +1,13 @@
+@doc raw"""
+Calculate Quantized Berry Phase.
+
+    QuantizedBerryPhase(H)
+
+```math
+\phi
+```
+"""
+
 function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi!(i, psi1, Evec1, p) # wave function
