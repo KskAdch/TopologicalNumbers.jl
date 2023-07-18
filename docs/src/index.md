@@ -83,7 +83,7 @@ julia> QuantizedBerryPhase(H)
 
 Output is 
 
-```
+```julia
 (TopologicalNumber = [1, 1], Total = 0)
 ```
 
@@ -135,7 +135,7 @@ julia> FirstChern(H)
 
 Output is 
 
-```
+```julia
 (TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
 ```
 
