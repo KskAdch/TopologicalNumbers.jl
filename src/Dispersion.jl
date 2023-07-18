@@ -62,9 +62,9 @@ function Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=tru
             end
         end
 
-        save("Dispersion.png", fig)
-        save("Dispersion.svg", fig)
-        save("Dispersion.pdf", fig)
+        # save("Dispersion.png", fig)
+        # save("Dispersion.svg", fig)
+        # save("Dispersion.pdf", fig)
         fig
     end
 

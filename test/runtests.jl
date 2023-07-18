@@ -11,6 +11,10 @@ using Test
                 g+exp(im*k) 0
             ]
         end
+
+        fig = Dispersion(H, 1)
+        @test typeof(fig) == Makie.Figure
+
         @test QuantizedBerryPhase(H) == (TopologicalNumber = [1, 1], Total = 0)
     end
 
@@ -39,6 +43,9 @@ using Test
                 Hmat
             end
 
+            fig = Dispersion(H, 2)
+            @test typeof(fig) == Makie.Figure
+
             @test FirstChern(H) == (TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
         end
 
@@ -62,6 +69,9 @@ using Test
 
                 R3*a3+R4*a4+R5*a5
             end
+
+            fig = Dispersion(H, 2)
+            @test typeof(fig) == Makie.Figure
 
             @test Z2Invariants2D(H) == (TopologicalNumber = [1 1 1 1; 1 1 1 1], Total = 0)
         end
