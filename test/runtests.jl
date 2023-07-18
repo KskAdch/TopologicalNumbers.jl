@@ -16,7 +16,7 @@ using Test
 
     @testset "2D case" begin
 
-        @testet "FirstChern" begin
+        @testset "FirstChern" begin
             function H(k) # landau
                 k1, k2 = k
                 t = 1
