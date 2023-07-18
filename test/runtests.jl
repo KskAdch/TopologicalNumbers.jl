@@ -2,6 +2,9 @@ using TopologicalNumbers
 using Test
 
 using CairoMakie
+using Aqua
+
+# Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
 @testset "TopologicalNumbers.jl" begin
     @testset "1D case" begin
