@@ -1,17 +1,26 @@
 # API
 
+```@index
+```
+
+```@autodocs
+Modules = [TopologicalNumbers]
+```
+
+
+
 ```@docs
-QuantizedBerryPhase
+TopologicalNumbers.QuantizedBerryPhase
 ```
 
 ```@docs
-Z2Invariants2D
+TopologicalNumbers.Z2Invariants2D
 ```
 
 ```@docs
-FirstChern
+TopologicalNumbers.FirstChern
 ```
 
 ```@docs
-Dispersion
+TopologicalNumbers.Dispersion
 ```
