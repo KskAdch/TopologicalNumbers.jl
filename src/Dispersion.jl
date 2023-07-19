@@ -1,3 +1,12 @@
+@doc raw"""
+
+Calculate the dispersion relation.
+
+    Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
+
+```math
+```
+"""
 function Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
     # GLMakie.activate!(inline=false)
 

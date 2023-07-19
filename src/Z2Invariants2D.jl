@@ -1,3 +1,12 @@
+@doc raw"""
+
+Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case.
+
+    Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
+
+```math
+```
+"""
 function Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
     # function psi_j!(j, psi_1, Evec2, p) # wave function

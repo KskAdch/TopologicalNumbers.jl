@@ -6,12 +6,7 @@ CurrentModule = TopologicalNumbers
 
 Documentation for [TopologicalNumbers](https://github.com/KskAdch/TopologicalNumbers.jl).
 
-```@index
-```
 
-```@autodocs
-Modules = [TopologicalNumbers]
-```
 
 
 
@@ -24,7 +19,7 @@ Modules = [TopologicalNumbers]
 
 ## Abstract
 
-TopologicalNumbers.jl is a Julia package to calculate topological numbers, including the Chern numbers and $\mathbb{Z}_2$ numbers using a numerical approach based on the Fukui-Hataugai-Suzuki method.
+TopologicalNumbers.jl is a Julia package to calculate topological numbers, including the Chern numbers and $\mathbb{Z}_2$ numbers using a numerical approach based on the Fukui-Hatsugai-Suzuki method or the Shiozaki method.
 This package serves the following functions:
 
 - `Dispersion` to calculate the dispersion relation,
@@ -71,7 +66,7 @@ A band structure is here:
 julia> Dispersion(H, 1)
 ```
 
-![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/18161b55-8b51-4ed0-bb57-9314b4b82e55)
+![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/ec08e558-3b0c-4ab0-9c4f-99b977b20142)
 
 Here, `1` is the dimension of the wavenumber space.
 
@@ -124,7 +119,7 @@ To calcurate Dispersion, run:
 julia> Dispersion(H, 2)
 ```
 
-![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/aab6fa5c-e10a-4ad5-bf6f-bad31e217d5c)
+![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/abf47c01-94f3-4c66-8b54-bb243ce48b5f)
 
 
 Then we can calculate the Chern numbers using `FirstChern`:

@@ -1,3 +1,12 @@
+@doc raw"""
+
+Calculate the first Chern numbers in the two-dimensional case.
+
+    FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+```math
+```
+"""
 function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi_j!(j, psi_1, Evec1, p) # wave function

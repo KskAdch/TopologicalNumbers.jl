@@ -1,3 +1,12 @@
+@doc raw"""
+
+Calculate the winding numbers in the one-dimensional case.
+
+    QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+```math
+```
+"""
 function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi!(i, psi1, Evec1, p) # wave function
