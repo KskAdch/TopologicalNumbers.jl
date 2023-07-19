@@ -6,9 +6,11 @@
 
 Calculate Quantized Berry Phase.
 
-    QuantizedBerryPhase(H, N=31; gapless, rounds)
+    QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-
+```math
+\phi
+```
 """
 function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
