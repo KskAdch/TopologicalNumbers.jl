@@ -1,15 +1,10 @@
-# ```math
-# ∫_{BZ}dk\bra{Ψ_{k}}\frac{∂}{∂k}\ket{Ψ_{k}}
-# ```
-
 @doc raw"""
 
-Calculate Quantized Berry Phase.
+Calculate the winding numbers in the one-dimensional case.
 
     QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
 ```math
-\phi
 ```
 """
 function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
