@@ -5,6 +5,7 @@ Calculate the first Chern numbers in the two-dimensional case.
     FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
 ```math
+\nu=\frac{1}{2\pi}\int_{\mathrm{BZ}}\left(\partial_{k_{1}}A_{2}(k)-\partial_{k_{2}}A_{1}(k)\right)
 ```
 """
 function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
