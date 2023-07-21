@@ -4,9 +4,15 @@ Calculate the first Chern numbers in the two-dimensional case.
 
     FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
+ Chern Number $\nu_{n}$
 ```math
-\nu=\frac{1}{2\pi}\int_{\mathrm{BZ}}\left(\partial_{k_{1}}A_{2}(k)-\partial_{k_{2}}A_{1}(k)\right)
+\nu=\frac{1}{2\pi i}\int_{\mathrm{BZ}}dk\left(\partial_{k_{1}}A_{2}(k)-\partial_{k_{2}}A_{1}(k)\right)
 ```
+ $A_{i}(k)$ is the berry curvature
+```math
+A_{i}(k)=\bra{\Psi_{n}(k)}\partial_{k_{i}}\ket{\Psi_{n}(k)}
+```
+ $\ket{\Psi_{n}(k)}$ is the wave function
 """
 function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
