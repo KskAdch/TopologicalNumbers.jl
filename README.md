@@ -195,3 +195,6 @@ The output is:
 This implies... (edit required)
 
 `Total` is a value that should consistently return zero.
+
+
+Please see [Documentation](https://kskadch.github.io/TopologicalNumbers.jl/dev/) for more details.
