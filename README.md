@@ -64,7 +64,7 @@ julia> Dispersion(H, 1)
 
 ![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/ec08e558-3b0c-4ab0-9c4f-99b977b20142)
 
-In this case, 1 signifies the dimension of the wavenumber space.
+In this case, `1` signifies the dimension of the wavenumber space.
 
 Next, we can calculate the winding numbers using `QuantizedBerryPhase`:
 
