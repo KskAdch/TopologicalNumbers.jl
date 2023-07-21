@@ -84,7 +84,7 @@ The second argument `Total` stores the total of the winding numbers for each ban
 `Total` is a quantity that should always return zero.
 
 
-### Two-dimensional square lattice with flux model
+### Two-dimensional square lattice model with flux
 
 A two-dimensional example is presented here:
 
