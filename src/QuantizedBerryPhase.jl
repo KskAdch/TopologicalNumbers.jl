@@ -6,12 +6,13 @@ Calculate the winding numbers in the one-dimensional case.
 
  Berry Phase $\nu_{n}$
 ```math
-\nu_{n}=\frac{1}{\pi}\int_{\mathrm{BZ}}dkA_{n}(k)
+\nu_{n}=\frac{1}{\pi i}\int_{\mathrm{BZ}}dkA_{n}(k)
 ```
  $A(k)$ is the Berry curvature
 ```math
 A_{n}(k)=\bra{\Psi_{n}(k)}\partial_{k}\ket{\Psi_{n}(k)}
 ```
+ $\ket{\Psi_{n}(k)}$ is the wave function
 """
 function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 

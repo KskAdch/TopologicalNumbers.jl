@@ -4,8 +4,15 @@ Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case.
 
     Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
+ $\mathbb{Z}_{2}$ invariant $\nu_{n}$
 ```math
+\nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}/2}dk\left(\partial_{k_{1}}A_{n,2}(k)-\partial_{k_{2}}A_{n,1}(k)\right)-\frac{1}{\pi i}\int_{k_{1}=-\pi}+\frac{1}{\pi i}\int_{k_{1}=0}
 ```
+ $A_{n,i}(k)$ is the berry curvature
+```math
+A_{n,i}(k)=\bra{\Psi_{n}(k)}\partial_{k_{i}}\ket{\Psi_{n}(k)}
+```
+ $\ket{\Psi_{n}(k)}$ is the wave function
 """
 function Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
