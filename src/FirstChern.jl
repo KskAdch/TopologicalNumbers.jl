@@ -1,18 +1,18 @@
 @doc raw"""
 
-Calculate the first Chern numbers in the two-dimensional case.
+ Calculate the first Chern numbers in the two-dimensional case.
 
     FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
- Chern Number $\nu_{n}$
+ The firs Chern number of the n-th band $\nu_{n}$ is defined by
 ```math
-\nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}}dk\left(\partial_{k_{1}}A_{n,2}(k)-\partial_{k_{2}}A_{n,1}(k)\right)
+\nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}}d\bm{k}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)
 ```
- $A_{i}(k)$ is the berry curvature
+ The integral range $\mathrm{BZ}$(Brillouin Zone) is $\bm{k}\in[0,2\pi]^{2}$. $A_{n,i}(\bm{k})$ is the Berry connection at wavenumber $\bm{k}$.
 ```math
-A_{n,i}(k)=\bra{\Psi_{n}(k)}\partial_{k_{i}}\ket{\Psi_{n}(k)}
+A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 ```
- $\ket{\Psi_{n}(k)}$ is the wave function
+ $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the n-th band.
 """
 function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
