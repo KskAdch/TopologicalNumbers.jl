@@ -1,18 +1,18 @@
 @doc raw"""
 
-Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case.
+ Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method.
 
     Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
- $\mathbb{Z}_{2}$ invariant $\nu_{n}$
+ The $\mathbb{Z}_{2}$ number of the $2n$th (and $2n-1$th) band $\nu_{n}$ is defined by
 ```math
-\nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}/2}dk\left(\partial_{k_{1}}A_{n,2}(k)-\partial_{k_{2}}A_{n,1}(k)\right)-\frac{1}{\pi i}\int_{k_{1}=-\pi}+\frac{1}{\pi i}\int_{k_{1}=0}
+\nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}'}d\bm{k}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)-\frac{1}{2\pi i}\oint_{\partial\mathrm{BZ}'}dk_{i}A_{n,j\neq i}(\bm{k})
 ```
- $A_{n,i}(k)$ is the berry curvature
+ The integral range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone). $A_{n,i}(\bm{k})$ is the Berry connection at wavenumber $\bm{k}$.
 ```math
-A_{n,i}(k)=\bra{\Psi_{n}(k)}\partial_{k_{i}}\ket{\Psi_{n}(k)}
+A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 ```
- $\ket{\Psi_{n}(k)}$ is the wave function
+ $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band.
 """
 function Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
