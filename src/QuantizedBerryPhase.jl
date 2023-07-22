@@ -4,15 +4,16 @@ Calculate the winding numbers in the one-dimensional case.
 
     QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
- Berry Phase $\nu_{n}$
+# Definition
+ The Berry phase of the $n$th band $\nu_{n}$ is defined by
 ```math
 \nu_{n}=\frac{1}{\pi i}\int_{\mathrm{BZ}}dkA_{n}(k)
 ```
- $A(k)$ is the Berry curvature
+The integral range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $A_{n}(k)$ is the Berry conection at wavenumber $k$.
 ```math
 A_{n}(k)=\bra{\Psi_{n}(k)}\partial_{k}\ket{\Psi_{n}(k)}
 ```
- $\ket{\Psi_{n}(k)}$ is the wave function
+ $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
 """
 function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
