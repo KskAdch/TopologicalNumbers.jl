@@ -4,6 +4,7 @@
 
     FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
+# Definition
  The firs Chern number of the $n$th band $\nu_{n}$ is defined by
 ```math
 \nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}}d\bm{k}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)

@@ -4,6 +4,7 @@
 
     Z2Invariants2D(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
+# Definition
  The $\mathbb{Z}_{2}$ number of the $2n$th (and $2n-1$th) band $\nu_{n}$ is defined by
 ```math
 \nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}'}d\bm{k}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)-\frac{1}{2\pi i}\oint_{\partial\mathrm{BZ}'}dk_{i}A_{n,j\neq i}(\bm{k})
