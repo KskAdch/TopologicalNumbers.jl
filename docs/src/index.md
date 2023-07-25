@@ -204,7 +204,10 @@ The output is:
 (TopologicalNumber = [1 1 1 1; 1 1 1 1], Total = 0)
 ```
 
-This implies... (edit required)
+The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each each pair of two energy bands. 
+The vector is arranged in order of bands, starting from the one with the lowest energy.
+The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
+`Total` is a quantity that should always return zero.
 
 `Total` is a value that should consistently return zero.
 
