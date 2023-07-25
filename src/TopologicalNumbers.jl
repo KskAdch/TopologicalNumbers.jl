@@ -1,11 +1,11 @@
 module TopologicalNumbers
 
 include("./packages.jl")
-include("./Dispersion.jl")
-include("./Z2Invariants2D.jl")
-include("./FirstChern.jl")
-include("./QuantizedBerryPhase.jl")
+include("./showBand.jl")
+include("./calcZ2.jl")
+include("./calcChern.jl")
+include("./calcBerryPhase.jl")
 
-export Dispersion, Z2Invariants2D, FirstChern, QuantizedBerryPhase
+export showBand, calcZ2, calcChern, calcBerryPhase
 
 end

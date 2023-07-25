@@ -2,7 +2,15 @@
 
  Calculate the first Chern numbers in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method.
 
-    FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+    calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+ `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
+ `N::Int` is the number of meshes when discretizing the Brillouin Zone.
+ It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ `gapless::Real` is the threshold that determines the state to be degenerate.
+ Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+ `rounds::Bool` is an option to round the value of the topological number to an integer value.
+ The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 # Definition
  The firs Chern number of the $n$th band $\nu_{n}$ is defined by
@@ -15,7 +23,7 @@ A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 ```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
-function FirstChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi_j!(j, psi_1, Evec1, p) # wave function
         @unpack Hamiltonian, N, Hs = p

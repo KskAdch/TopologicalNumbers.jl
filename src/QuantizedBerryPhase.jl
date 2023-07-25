@@ -1,21 +1,30 @@
 @doc raw"""
 
-Calculate the winding numbers in the one-dimensional case.
+ Calculate the winding numbers in the one-dimensional case.
 
-    QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+    calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+ `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
+ `N::Int` is the number of meshes when discretizing the Brillouin Zone.
+ It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ `gapless::Real` is the threshold that determines the state to be degenerate.
+ Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+ `rounds::Bool` is an option to round the value of the topological number to an integer value.
+ The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 # Definition
+
  The Berry phase of the $n$th band $\nu_{n}$ is defined by
 ```math
 \nu_{n}=\frac{1}{\pi i}\int_{\mathrm{BZ}}dkA_{n}(k)
 ```
-The integral range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $A_{n}(k)$ is the Berry conection at wavenumber $k$.
+ The integral range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $A_{n}(k)$ is the Berry conection at wavenumber $k$.
 ```math
 A_{n}(k)=\bra{\Psi_{n}(k)}\partial_{k}\ket{\Psi_{n}(k)}
 ```
  $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
 """
-function QuantizedBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi!(i, psi1, Evec1, p) # wave function
         @unpack Hamiltonian, N, Hs = p

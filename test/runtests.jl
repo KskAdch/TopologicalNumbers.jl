@@ -17,15 +17,15 @@ using Aqua
             ]
         end
 
-        fig = Dispersion(H, 1)
+        fig = showBand(H, 1)
         @test typeof(fig) == Makie.Figure
 
-        @test QuantizedBerryPhase(H) == (TopologicalNumber = [1, 1], Total = 0)
+        @test calcBerryPhase(H) == (TopologicalNumber = [1, 1], Total = 0)
     end
 
     @testset "2D case" begin
 
-        @testset "FirstChern" begin
+        @testset "calcChern" begin
             function H(k) # landau
                 k1, k2 = k
                 t = 1
@@ -48,10 +48,10 @@ using Aqua
                 Hmat
             end
 
-            fig = Dispersion(H, 2)
+            fig = showBand(H, 2)
             @test typeof(fig) == Makie.Figure
 
-            @test FirstChern(H) == (TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
+            @test calcChern(H) == (TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
         end
 
         @testset "Z2Number" begin
@@ -75,10 +75,10 @@ using Aqua
                 R3*a3+R4*a4+R5*a5
             end
 
-            fig = Dispersion(H, 2)
+            fig = showBand(H, 2)
             @test typeof(fig) == Makie.Figure
 
-            @test Z2Invariants2D(H) == (TopologicalNumber = [1 1 1 1; 1 1 1 1], Total = 0)
+            @test calcZ2(H) == (TopologicalNumber = [1 1 1 1; 1 1 1 1], Total = 0)
         end
 
     end
