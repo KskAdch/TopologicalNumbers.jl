@@ -217,12 +217,12 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
         end
     end
 
-    function main(Hamiltonian, N, rounds)
+    function main(Hamiltonian, N, rounds, TR)
 
         Nhalf = N ÷ 2 + 1
         n0 = zeros(2)
         Hshalf = size(Hamiltonian(n0))[1] ÷ 2
-        p = (; Hamiltonian, N, rounds, TR, bands, Nhalf, Hshalf)
+        p = (; Hamiltonian, N, rounds, TR, Nhalf, Hshalf)
 
         if TR == false
             if rounds == true
@@ -265,5 +265,5 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
         (; TopologicalNumber, Total)
     end
 
-    main(Hamiltonian, N, rounds)
+    main(Hamiltonian, N, rounds, TR)
 end
