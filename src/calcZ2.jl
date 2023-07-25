@@ -168,17 +168,20 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
         wp0 = zeros(ComplexF64, Hs, Hs)
         wpp = zeros(ComplexF64, Hs, Hs)
 
-        TN = zeros(Hshalf, 2)
+        TN = zeros(Hshalf)
 
         for j in 1:N
             U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
             for i in 1:N
                 F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
                 if j < Nhalf
-                    TN[:, 1] .+= phi[:]
-                else
-                    TN[:, 2] .+= phi[:]
+                    TN[:] .+= phi[:]
                 end
+                # if j < Nhalf
+                #     TN[:, 1] .+= phi[:]
+                # else
+                #     TN[:, 2] .+= phi[:]
+                # end
             end
         end
 
@@ -188,15 +191,23 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
         end
 
         for l in 1:Hshalf
-            for TRS in 1:2
-                if TN[l, TRS] - 2Px0[l] + 2Pxp[l] !== NaN
-                    if rounds == true
-                        TopologicalNumber[TRS, 2l-1:2l] .= abs(rem(round(Int, (TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-                    else
-                        TopologicalNumber[TRS, 2l-1:2l] .= abs(rem((TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-                    end
+            if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
+                if rounds == true
+                    TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                else
+                    TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
                 end
             end
+
+            # for TRS in 1:2
+            #     if TN[l, TRS] - 2Px0[l] + 2Pxp[l] !== NaN
+            #         if rounds == true
+            #             TopologicalNumber[TRS, l] = abs(rem(round(Int, (TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+            #         else
+            #             TopologicalNumber[TRS, l] = abs(rem((TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            #         end
+            #     end
+            # end
         end
     end
 
@@ -209,22 +220,38 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
         p = (; Hamiltonian, N, Nhalf, Hs, Hshalf)
 
         if rounds == true
-            TopologicalNumber = zeros(Int, 2, Hs)
+            TopologicalNumber = zeros(Int, Hshalf)
         else
-            TopologicalNumber = zeros(2, Hs)
+            TopologicalNumber = zeros(Hshalf)
         end
+
+        # if rounds == true
+        #     TopologicalNumber = zeros(Int, 2, Hshalf)
+        # else
+        #     TopologicalNumber = zeros(2, Hshalf)
+        # end
 
         Phase!(TopologicalNumber, p)
 
         if rounds == true
-            Total = rem(sum(TopologicalNumber[1, 1:2:Hs]), 2)
+            Total = rem(sum(TopologicalNumber[:]), 2)
         else
-            Total = sum(TopologicalNumber[1, 1:2:Hs])
+            Total = sum(TopologicalNumber[:])
             if Total > 1.5
                 Total -= 2
             end
             Total = rem(Total, 2)
         end
+
+        # if rounds == true
+        #     Total = rem(sum(TopologicalNumber[1, 1:Hshalf]), 2)
+        # else
+        #     Total = sum(TopologicalNumber[1, 1:Hshalf])
+        #     if Total > 1.5
+        #         Total -= 2
+        #     end
+        #     Total = rem(Total, 2)
+        # end
 
         (; TopologicalNumber, Total)
     end

@@ -1,6 +1,6 @@
 @doc raw"""
 
-Calculate the dispersion relation.
+ Drawing the band structure of the Hamiltonian.
 
     showBand(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
 
