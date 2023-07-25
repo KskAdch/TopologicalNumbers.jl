@@ -25,7 +25,7 @@ using Aqua
 
     @testset "2D case" begin
 
-        @testset "calcChern" begin
+        @testset "Chern" begin
             function H(k) # landau
                 k1, k2 = k
                 t = 1
@@ -54,7 +54,7 @@ using Aqua
             @test calcChern(H) == (TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
         end
 
-        @testset "Z2Number" begin
+        @testset "Z2" begin
             function H(k) # 2d Kane-Mele
                 k1, k2 = k
                 t = 1
@@ -78,7 +78,7 @@ using Aqua
             fig = showBand(H, 2)
             @test typeof(fig) == Makie.Figure
 
-            @test calcZ2(H) == (TopologicalNumber = [1 1 1 1; 1 1 1 1], Total = 0)
+            @test calcZ2(H) == (TopologicalNumber = [1, 1], Total = 0)
         end
 
     end
