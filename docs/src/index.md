@@ -23,10 +23,10 @@ TopologicalNumbers.jl is a Julia package designed to calculate topological numbe
 using a numerical approach based on the Fukui-Hatsugai-Suzuki method or the Shiozaki method.  
 This package includes the following functions:
 
-- `Dispersion` to calculate the dispersion relation,
-- `QuantizedBerryPhase` to calculate the winding numbers in the one-dimensional case,
-- `FirstChern` to calculate the first Chern numbers in the two-dimensional case,
-- `Z2Invariants2D` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case.
+- `showBand` to calculate the dispersion relation,
+- `calcBerryPhase` to calculate the winding numbers in the one-dimensional case,
+- `calcChern` to calculate the first Chern numbers in the two-dimensional case,
+- `calcZ2` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case.
 
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
@@ -71,17 +71,17 @@ end
 The band structure is computed as follows:
 
 ```julia
-julia> Dispersion(H, 1)
+julia> showBand(H, 1)
 ```
 
 ![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/ec08e558-3b0c-4ab0-9c4f-99b977b20142)
 
 In this case, 1 signifies the dimension of the wavenumber space.
 
-Next, we can calculate the winding numbers using `QuantizedBerryPhase`:
+Next, we can calculate the winding numbers using `calcBerryPhase`:
 
 ```julia
-julia> QuantizedBerryPhase(H)
+julia> calcBerryPhase(H)
 ```
 
 The output is:
@@ -124,19 +124,19 @@ julia> function H(k) # landau
 end
 ```
 
-To calculate the Dispersion, run:
+To calculate the dispersion, run:
 
 ```julia
-julia> Dispersion(H, 2)
+julia> showBand(H, 2)
 ```
 
 ![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/abf47c01-94f3-4c66-8b54-bb243ce48b5f)
 
 
-Then we can compute the Chern numbers using `FirstChern`:
+Then we can compute the Chern numbers using `calcChern`:
 
 ```julia
-julia> FirstChern(H)
+julia> calcChern(H)
 ```
 
 The output is:
@@ -183,19 +183,19 @@ julia> function H(k) # BHZ
 end
 ```
 
-To calculate the Dispersion, execute:
+To calculate the dispersion, execute:
 
 ```julia
-julia> Dispersion(H, 2)
+julia> showBand(H, 2)
 ```
 
 ![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/7a7b67a3-7efc-44e6-8e28-bb607e17f7f5)
 
 
-Next, we can compute the $\mathbb{Z}_2$ numbers using `Z2Invariants2D`:
+Next, we can compute the $\mathbb{Z}_2$ numbers using `calcZ2`:
 
 ```julia
-julia> Z2Invariants2D(H)
+julia> calcZ2(H)
 ```
 
 The output is:

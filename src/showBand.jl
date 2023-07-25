@@ -2,12 +2,12 @@
 
 Calculate the dispersion relation.
 
-    Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
+    showBand(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
 
 ```math
 ```
 """
-function Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
+function showBand(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=true)
     # GLMakie.activate!(inline=false)
 
     function Ene1D(p) # 1D Energy
@@ -71,9 +71,9 @@ function Dispersion(Hamiltonian::Function, dim::Int; N::Int=51, labels::Bool=tru
             end
         end
 
-        # save("Dispersion.png", fig)
-        # save("Dispersion.svg", fig)
-        # save("Dispersion.pdf", fig)
+        # save("Band.png", fig)
+        # save("Band.svg", fig)
+        # save("Band.pdf", fig)
         fig
     end
 
