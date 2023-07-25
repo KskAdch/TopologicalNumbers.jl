@@ -26,7 +26,7 @@ A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi_j!(j, psi_1, Evec1, p) # wave function
-        @unpack Hamiltonian, N, Hs = p
+        @unpack Hamiltonian, N = p
         for i in 1:N
             k = [i - 1, j - 1] * 2pi / N
             eigens = eigen!(Hamiltonian(k))

@@ -23,38 +23,33 @@ A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 ```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band.
 """
-function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
+function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
 
-    # function psi_j!(j, psi_1, Evec2, p) # wave function
     function psi_j!(j, psi_1, p) # wave function
-        @unpack Hamiltonian, N, Hs = p
+        @unpack Hamiltonian, N = p
         for i in 1:N
             k = [i - 1, j - 1] * 2pi / N
-            eigens = eigen!(Hamiltonian(k))
-            psi_1[i, :, :] .= eigens.vectors
-            # Evec2[i, :] .= eigens.values
+            psi_1[i, :, :] .= eigen!(Hamiltonian(k)).vectors
         end
     end
 
-    # @views function U!(w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, Evec1, Evec2, psi00, psi10, psi01, Enevec, j, p) # link variable
     @views function U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p) # link variable
         @unpack N, Nhalf, Hshalf = p
-
+    
         if j != 1
             Link1 .= Link2
         end
-
+    
         if j != N
             if j == 1
-
+    
                 psi_j!(1, psi_1, p)
                 psi_0 .= psi_1
                 psi_N .= psi_1
-                # Evec1 .= Evec2
                 psi_j!(2, psi_1, p)
-
+    
                 for i in 1:N
-
+    
                     psi00[:, :] = psi_0[i, :, :]
                     if i == N
                         psi10[:, :] = psi_0[1, :, :]
@@ -63,34 +58,33 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
                         psi10[:, :] = psi_0[i+1, :, :]
                         psi01[:, :] = psi_1[i, :, :]
                     end
-
+    
                     for l in 1:Hshalf
                         link1[l] = det(psi00[:, 2l-1:2l]' * psi10[:, 2l-1:2l])
                         link2[l] = det(psi00[:, 2l-1:2l]' * psi01[:, 2l-1:2l])
                     end
-
+    
                     Link1[:, :, i] .= [link1 link2]
                     LinkN1 .= Link1
                 end
-
+    
                 w00 .= psi_0[1, :, :]' * T * conj(psi_0[1, :, :])
                 wp0 .= psi_0[Nhalf, :, :]' * T * conj(psi_0[Nhalf, :, :])
             end
-
+    
             psi_0 .= psi_1
-            # Evec1 .= Evec2
-
+    
             if j != N - 1
                 psi_j!(j + 2, psi_1, p)
             end
-
+    
             if j == Nhalf - 1
                 w0p .= psi_0[1, :, :]' * T * conj(psi_0[1, :, :])
                 wpp .= psi_0[Nhalf, :, :]' * T * conj(psi_0[Nhalf, :, :])
             end
-
+    
             for i in 1:N
-
+    
                 psi00[:, :] = psi_0[i, :, :]
                 if i == N && j == N - 1
                     psi10[:, :] = psi_0[1, :, :]
@@ -105,12 +99,12 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
                     psi10[:, :] = psi_0[i+1, :, :]
                     psi01[:, :] = psi_1[i, :, :]
                 end
-
+    
                 for l in 1:Hshalf
                     link1[l] = det(psi00[:, 2l-1:2l]' * psi10[:, 2l-1:2l])
                     link2[l] = det(psi00[:, 2l-1:2l]' * psi01[:, 2l-1:2l])
                 end
-
+    
                 Link2[:, :, i] .= [link1 link2]
             end
         end
@@ -137,51 +131,61 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
     end
 
     @views function Phase!(TopologicalNumber, p) # chern number
-        @unpack N, Nhalf, Hs, Hshalf = p
+        @unpack N, rounds, TR, Nhalf, Hshalf = p
         Link1 = zeros(ComplexF64, Hshalf, 2, N)
         Link2 = zeros(ComplexF64, Hshalf, 2, N)
         LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
         link1 = zeros(ComplexF64, Hshalf)
         link2 = zeros(ComplexF64, Hshalf)
 
-        psi_0 = zeros(ComplexF64, N, Hs, Hs)
-        psi_1 = zeros(ComplexF64, N, Hs, Hs)
-        psi_N = zeros(ComplexF64, N, Hs, Hs)
-        # Evec1 = zeros(N, Hs)
-        # Evec2 = zeros(N, Hs)
+        psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+        psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+        psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
 
-        psi00 = zeros(ComplexF64, Hs, Hs)
-        psi10 = zeros(ComplexF64, Hs, Hs)
-        psi01 = zeros(ComplexF64, Hs, Hs)
-        # Enevec = zeros(Hs)
+        psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
         phi = zeros(Hshalf)
         Px0 = zeros(Hshalf)
         Pxp = zeros(Hshalf)
 
-        s0 = Matrix{ComplexF64}(I, Int(Hs / 2), Int(Hs / 2))
+        s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
         sy = [0 -1; 1 0]
         T = kron(s0, sy)
 
-        w00 = zeros(ComplexF64, Hs, Hs)
-        w0p = zeros(ComplexF64, Hs, Hs)
-        wp0 = zeros(ComplexF64, Hs, Hs)
-        wpp = zeros(ComplexF64, Hs, Hs)
+        w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
-        TN = zeros(Hshalf)
+        if TR == false
+            TN = zeros(Hshalf)
+        else
+            TN = zeros(Hshalf, 2)
+        end
 
-        for j in 1:N
-            U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
-            for i in 1:N
-                F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
-                if j < Nhalf
-                    TN[:] .+= phi[:]
+        if TR == false
+            for j in 1:Nhalf
+                U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+                for i in 1:N
+                    F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+                    if j < Nhalf
+                        TN[:] .+= phi[:]
+                    end
                 end
-                # if j < Nhalf
-                #     TN[:, 1] .+= phi[:]
-                # else
-                #     TN[:, 2] .+= phi[:]
-                # end
+            end
+        else
+            for j in 1:N
+                U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+                for i in 1:N
+                    F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+                    if j < Nhalf
+                        TN[:, 1] .+= phi[:]
+                    else
+                        TN[:, 2] .+= phi[:]
+                    end
+                end
             end
         end
 
@@ -191,23 +195,25 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
         end
 
         for l in 1:Hshalf
-            if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-                if rounds == true
-                    TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-                else
-                    TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            if TR == false
+                if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
+                    if rounds == true
+                        TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                    else
+                        TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+                    end
+                end
+            else
+                for TRS in 1:2
+                    if TN[l, TRS] - 2Px0[l] + 2Pxp[l] !== NaN
+                        if rounds == true
+                            TopologicalNumber[TRS, l] = abs(rem(round(Int, (TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                        else
+                            TopologicalNumber[TRS, l] = abs(rem((TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+                        end
+                    end
                 end
             end
-
-            # for TRS in 1:2
-            #     if TN[l, TRS] - 2Px0[l] + 2Pxp[l] !== NaN
-            #         if rounds == true
-            #             TopologicalNumber[TRS, l] = abs(rem(round(Int, (TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-            #         else
-            #             TopologicalNumber[TRS, l] = abs(rem((TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            #         end
-            #     end
-            # end
         end
     end
 
@@ -215,43 +221,46 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
 
         Nhalf = N ÷ 2 + 1
         n0 = zeros(2)
-        Hs = size(Hamiltonian(n0))[1]
-        Hshalf = Hs ÷ 2
-        p = (; Hamiltonian, N, Nhalf, Hs, Hshalf)
+        Hshalf = size(Hamiltonian(n0))[1] ÷ 2
+        p = (; Hamiltonian, N, rounds, TR, bands, Nhalf, Hshalf)
 
-        if rounds == true
-            TopologicalNumber = zeros(Int, Hshalf)
+        if TR == false
+            if rounds == true
+                TopologicalNumber = zeros(Int, Hshalf)
+            else
+                TopologicalNumber = zeros(Hshalf)
+            end
         else
-            TopologicalNumber = zeros(Hshalf)
+            if rounds == true
+                TopologicalNumber = zeros(Int, 2, Hshalf)
+            else
+                TopologicalNumber = zeros(2, Hshalf)
+            end
         end
-
-        # if rounds == true
-        #     TopologicalNumber = zeros(Int, 2, Hshalf)
-        # else
-        #     TopologicalNumber = zeros(2, Hshalf)
-        # end
 
         Phase!(TopologicalNumber, p)
 
-        if rounds == true
-            Total = rem(sum(TopologicalNumber[:]), 2)
-        else
-            Total = sum(TopologicalNumber[:])
-            if Total > 1.5
-                Total -= 2
+        if TR == false
+            if rounds == true
+                Total = rem(sum(TopologicalNumber), 2)
+            else
+                Total = sum(TopologicalNumber)
+                if Total > 1.5
+                    Total -= 2
+                end
+                Total = rem(Total, 2)
             end
-            Total = rem(Total, 2)
+        else
+            if rounds == true
+                Total = rem(sum(TopologicalNumber[1, 1:Hshalf]), 2)
+            else
+                Total = sum(TopologicalNumber[1, 1:Hshalf])
+                if Total > 1.5
+                    Total -= 2
+                end
+                Total = rem(Total, 2)
+            end
         end
-
-        # if rounds == true
-        #     Total = rem(sum(TopologicalNumber[1, 1:Hshalf]), 2)
-        # else
-        #     Total = sum(TopologicalNumber[1, 1:Hshalf])
-        #     if Total > 1.5
-        #         Total -= 2
-        #     end
-        #     Total = rem(Total, 2)
-        # end
 
         (; TopologicalNumber, Total)
     end

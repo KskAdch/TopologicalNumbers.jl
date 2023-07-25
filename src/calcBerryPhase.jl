@@ -27,7 +27,7 @@ A_{n}(k)=\bra{\Psi_{n}(k)}\partial_{k}\ket{\Psi_{n}(k)}
 function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     function psi!(i, psi1, Evec1, p) # wave function
-        @unpack Hamiltonian, N, Hs = p
+        @unpack Hamiltonian, N = p
 
         k = 2pi * (i - 1) / N
         eigens = eigen!(Hamiltonian(k))
