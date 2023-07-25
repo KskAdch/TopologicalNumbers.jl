@@ -189,12 +189,13 @@ julia> calcZ2(H)
 The output is:
 
 ```julia
-(TopologicalNumber = [1 1 1 1; 1 1 1 1], Total = 0)
+(TopologicalNumber = [1, 1], Total = 0)
 ```
 
-This implies... (edit required)
-
-`Total` is a value that should consistently return zero.
+The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each each pair of two energy bands. 
+The vector is arranged in order of bands, starting from the one with the lowest energy.
+The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
+`Total` is a quantity that should always return zero.
 
 
 Please see [Documentation](https://kskadch.github.io/TopologicalNumbers.jl/dev/) for more details.
