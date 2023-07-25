@@ -204,13 +204,13 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
                     end
                 end
             else
-                for TRS in 1:2
-                    if TN[l, TRS] - 2Px0[l] + 2Pxp[l] !== NaN
-                        if rounds == true
-                            TopologicalNumber[TRS, l] = abs(rem(round(Int, (TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-                        else
-                            TopologicalNumber[TRS, l] = abs(rem((TN[l, TRS] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-                        end
+                if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
+                    if rounds == true
+                        TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                        TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                    else
+                        TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+                        TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
                     end
                 end
             end
@@ -230,17 +230,9 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             else
                 TopologicalNumber = zeros(Hshalf)
             end
-        else
-            if rounds == true
-                TopologicalNumber = zeros(Int, 2, Hshalf)
-            else
-                TopologicalNumber = zeros(2, Hshalf)
-            end
-        end
 
-        Phase!(TopologicalNumber, p)
+            Phase!(TopologicalNumber, p)
 
-        if TR == false
             if rounds == true
                 Total = rem(sum(TopologicalNumber), 2)
             else
@@ -250,19 +242,30 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
                 end
                 Total = rem(Total, 2)
             end
+            (; TopologicalNumber, Total)
         else
             if rounds == true
-                Total = rem(sum(TopologicalNumber[1, 1:Hshalf]), 2)
+                TopologicalNumber = zeros(Int, Hshalf)
+                TRTopologicalNumber = zeros(Int, Hshalf)
             else
-                Total = sum(TopologicalNumber[1, 1:Hshalf])
+                TopologicalNumber = zeros(Hshalf)
+                TRTopologicalNumber = zeros(Hshalf)
+            end
+
+            Phase!(TopologicalNumber, TRTopologicalNumber, p)
+
+            if rounds == true
+                Total = rem(sum(TopologicalNumber), 2)
+            else
+                Total = sum(TopologicalNumber)
                 if Total > 1.5
                     Total -= 2
                 end
                 Total = rem(Total, 2)
             end
+            (; TopologicalNumber, TRTopologicalNumber, Total)
         end
 
-        (; TopologicalNumber, Total)
     end
 
     main(Hamiltonian, N, rounds, TR)
