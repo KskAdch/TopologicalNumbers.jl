@@ -103,7 +103,7 @@ end
     end
 end
 
-@views function Phase!(TopologicalNumber, p) # chern number
+@views function Z2Phase!(TopologicalNumber, p) # chern number
     @unpack N, rounds, TR, Nhalf, Hshalf = p
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)
@@ -160,7 +160,7 @@ end
     end
 end
 
-@views function Phase!(TopologicalNumber, TRTopologicalNumber, p) # chern number
+@views function Z2Phase!(TopologicalNumber, TRTopologicalNumber, p) # chern number
     @unpack N, rounds, TR, Nhalf, Hshalf = p
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)

@@ -125,7 +125,7 @@ end
     end
 end
 
-@views function Phase!(TopologicalNumber, p) # chern number
+@views function ChernPhase!(TopologicalNumber, p) # chern number
     @unpack N, Hs = p
     Link0 = zeros(ComplexF64, Hs, 2, N)
     Link1 = zeros(ComplexF64, Hs, 2, N)
