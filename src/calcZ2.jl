@@ -159,32 +159,14 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
         wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
         wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
-        if TR == false
-            TN = zeros(Hshalf)
-        else
-            TN = zeros(Hshalf, 2)
-        end
+        TN = zeros(Hshalf)
 
-        if TR == false
-            for j in 1:Nhalf
-                U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
-                for i in 1:N
-                    F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
-                    if j < Nhalf
-                        TN[:] .+= phi[:]
-                    end
-                end
-            end
-        else
-            for j in 1:N
-                U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
-                for i in 1:N
-                    F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
-                    if j < Nhalf
-                        TN[:, 1] .+= phi[:]
-                    else
-                        TN[:, 2] .+= phi[:]
-                    end
+        for j in 1:Nhalf
+            U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+            for i in 1:N
+                F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+                if j < Nhalf
+                    TN[:] .+= phi[:]
                 end
             end
         end
@@ -195,23 +177,72 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
         end
 
         for l in 1:Hshalf
-            if TR == false
-                if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-                    if rounds == true
-                        TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-                    else
-                        TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-                    end
+            if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
+                if rounds == true
+                    TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                else
+                    TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
                 end
-            else
-                if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
-                    if rounds == true
-                        TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-                        TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-                    else
-                        TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-                        TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-                    end
+            end
+        end
+    end
+
+    @views function Phase!(TopologicalNumber, TRTopologicalNumber, p) # chern number
+        @unpack N, rounds, TR, Nhalf, Hshalf = p
+        Link1 = zeros(ComplexF64, Hshalf, 2, N)
+        Link2 = zeros(ComplexF64, Hshalf, 2, N)
+        LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
+        link1 = zeros(ComplexF64, Hshalf)
+        link2 = zeros(ComplexF64, Hshalf)
+
+        psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+        psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+        psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+
+        psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+
+        phi = zeros(Hshalf)
+        Px0 = zeros(Hshalf)
+        Pxp = zeros(Hshalf)
+
+        s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
+        sy = [0 -1; 1 0]
+        T = kron(s0, sy)
+
+        w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+        wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+
+        TN = zeros(Hshalf, 2)
+
+        for j in 1:N
+            U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link1, link2, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+            for i in 1:N
+                F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+                if j < Nhalf
+                    TN[:, 1] .+= phi[:]
+                else
+                    TN[:, 2] .+= phi[:]
+                end
+            end
+        end
+
+        for l in 1:Hshalf
+            Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
+            Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+        end
+
+        for l in 1:Hshalf
+            if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
+                if rounds == true
+                    TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                    TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+                else
+                    TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+                    TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
                 end
             end
         end
