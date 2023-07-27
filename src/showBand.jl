@@ -25,7 +25,7 @@ function Ene2D(p) # 2D Energy
 end
 
 function diagram(p)
-    @unpack dim, labels, Hs = p
+    @unpack dim, N, labels, Hs = p
 
     nrang = range(0, 2pi, length=N)
 
