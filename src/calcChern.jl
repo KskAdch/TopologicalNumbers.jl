@@ -195,7 +195,7 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
             TopologicalNumber = zeros(Hs)
         end
 
-        Phase!(TopologicalNumber, p)
+        ChernPhase!(TopologicalNumber, p)
 
         Total = sum(TopologicalNumber)
 

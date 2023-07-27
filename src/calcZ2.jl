@@ -262,7 +262,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
                 TopologicalNumber = zeros(Hshalf)
             end
 
-            Phase!(TopologicalNumber, p)
+            Z2Phase!(TopologicalNumber, p)
 
             if rounds == true
                 Total = rem(sum(TopologicalNumber), 2)
@@ -283,7 +283,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
                 TRTopologicalNumber = zeros(Hshalf)
             end
 
-            Phase!(TopologicalNumber, TRTopologicalNumber, p)
+            Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
 
             if rounds == true
                 Total = rem(sum(TopologicalNumber), 2)
