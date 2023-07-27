@@ -79,6 +79,8 @@ using Aqua
             @test typeof(fig) == Makie.Figure
 
             @test calcZ2(H) == (TopologicalNumber = [1, 1], Total = 0)
+
+            @test calcZ2(H, TR = true) == (TopologicalNumber = [1, 1], TRTopologicalNumber = [1, 1], Total = 0)
         end
 
     end
