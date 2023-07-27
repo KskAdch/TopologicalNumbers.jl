@@ -26,7 +26,7 @@ It is confirmed to work on Julia 1.6 (LTS) and 1.9.
 To install TopologicalNumbers.jl, run the following command:
 
 ```julia
-]add https://github.com/KskAdch/TopologicalNumbers.jl
+pkg> add https://github.com/KskAdch/TopologicalNumbers.jl
 ```
 
 Alternatively, you can use:
