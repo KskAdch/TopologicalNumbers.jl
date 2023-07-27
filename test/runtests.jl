@@ -80,7 +80,7 @@ using Aqua
 
             @test calcZ2(H) == (TopologicalNumber = [1, 1], Total = 0)
 
-            @test calcZ2(H, TR = true) == (TopologicalNumber = [1, 1], TRTopologicalNumber = [1, 1], Total = 0)
+            @test calcZ2(H, rounds = false, TR = true) == (TopologicalNumber = [1.0, 1.0], TRTopologicalNumber = [1.0, 1.0], Total = 0.0)
         end
 
     end
