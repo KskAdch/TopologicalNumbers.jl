@@ -1,44 +1,6 @@
-# TopologicalNumbers.jl: A Julia package for calculating topological numbers
+# Examples
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://KskAdch.github.io/TopologicalNumbers.jl/stable/)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://KskAdch.github.io/TopologicalNumbers.jl/dev/)
-[![Build Status](https://github.com/KskAdch/TopologicalNumbers.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/KskAdch/TopologicalNumbers.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://codecov.io/gh/KskAdch/TopologicalNumbers.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/KskAdch/TopologicalNumbers.jl)
-
-## Overview
-
-TopologicalNumbers.jl is a Julia package designed to calculate topological numbers, such as the Chern numbers and $\mathbb{Z}_2$ numbers, 
-using a numerical approach based on the Fukui-Hatsugai-Suzuki method or the Shiozaki method.  
-This package includes the following functions:
-
-- `showBand` to calculate the dispersion relation,
-- `calcBerryPhase` to calculate the winding numbers in the one-dimensional case,
-- `calcChern` to calculate the first Chern numbers in the two-dimensional case,
-- `calcZ2` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case.
-
-
-This software is released under the MIT License, please see the LICENSE file for more details.  
-It is confirmed to work on Julia 1.6 (LTS) and 1.9.
-
-
-## Installation
-
-To install TopologicalNumbers.jl, run the following command:
-
-```julia
-pkg> add TopologicalNumbers.jl
-```
-
-Alternatively, you can use:
-
-```julia
-julia> using Pkg
-julia> Pkg.add("TopologicalNumbers.jl")
-```
-
-
-
-## Examples
+## One-dimensional case
 
 ### The Su-Schriffer-Heeger (SSH) model
 
@@ -64,6 +26,8 @@ julia> showBand(H)
 
 ![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/ec08e558-3b0c-4ab0-9c4f-99b977b20142)
 
+In this case, 1 signifies the dimension of the wavenumber space.
+
 Next, we can calculate the winding numbers using `calcBerryPhase`:
 
 ```julia
@@ -81,8 +45,9 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
 
+## Chern numbers
 
-### Two-dimensional square lattice model with flux
+### Two-dimensional square lattice with flux model
 
 A two-dimensional example is presented here:
 
@@ -137,6 +102,7 @@ The second argument `Total` stores the total of the first Chern numbers for each
 `Total` is a quantity that should always return zero.
 
 
+## $\mathbb{Z}_2$ numbers
 
 
 ### The Bernevig-Hughes-Zhang (BHZ) model
@@ -195,5 +161,4 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
 `Total` is a quantity that should always return zero.
 
-
-Please see [Documentation](https://kskadch.github.io/TopologicalNumbers.jl/dev/) for more details.
+`Total` is a value that should consistently return zero.

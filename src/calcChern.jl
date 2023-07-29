@@ -66,13 +66,13 @@ end
         for i in 1:N
 
             psi00[:, :] = psi_0[i, :, :]
-            if i == N && j == N-1
+            if i == N && j == N - 1
                 psi10[:, :] = psi_0[1, :, :]
                 psi01[:, :] = psi_N[N, :, :]
             elseif i == N
                 psi10[:, :] = psi_0[1, :, :]
                 psi01[:, :] = psi_1[N, :, :]
-            elseif j == N-1
+            elseif j == N - 1
                 psi10[:, :] = psi_0[i+1, :, :]
                 psi01[:, :] = psi_N[i, :, :]
             else
@@ -105,17 +105,17 @@ end
     @unpack N, rounds, Hs = p
 
     if i == N && j == N
-        phi[:] = [imag(log(Link0[l, 1, N]*Link0[l, 2, 1]*conj(LinkN[l, 1, N])*conj(Link0[l, 2, N]))) for l in 1:Hs]
-        dphi[:] = [imag(log(Link0[l, 1, N]))+imag(log(Link0[l, 2, 1]))-imag(log(LinkN[l, 1, N]))-imag(log(Link0[l, 2, N])) for l in 1:Hs]
+        phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(LinkN[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(LinkN[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
     elseif i == N
-        phi[:] = [imag(log(Link0[l, 1, N]*Link0[l, 2, 1]*conj(Link1[l, 1, N])*conj(Link0[l, 2, N]))) for l in 1:Hs]
-        dphi[:] = [imag(log(Link0[l, 1, N]))+imag(log(Link0[l, 2, 1]))-imag(log(Link1[l, 1, N]))-imag(log(Link0[l, 2, N])) for l in 1:Hs]
+        phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(Link1[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(Link1[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
     elseif j == N
-        phi[:] = [imag(log(Link0[l, 1, i]*Link0[l, 2, i+1]*conj(LinkN[l, 1, i])*conj(Link0[l, 2, i]))) for l in 1:Hs]
-        dphi[:] = [imag(log(Link0[l, 1, i]))+imag(log(Link0[l, 2, i+1]))-imag(log(LinkN[l, 1, i]))-imag(log(Link0[l, 2, i])) for l in 1:Hs]
+        phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(LinkN[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(LinkN[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
     else
-        phi[:] = [imag(log(Link0[l, 1, i]*Link0[l, 2, i+1]*conj(Link1[l, 1, i])*conj(Link0[l, 2, i]))) for l in 1:Hs]
-        dphi[:] = [imag(log(Link0[l, 1, i]))+imag(log(Link0[l, 2, i+1]))-imag(log(Link1[l, 1, i]))-imag(log(Link0[l, 2, i])) for l in 1:Hs]
+        phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(Link1[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
     end
 
     if rounds == true
@@ -158,17 +158,16 @@ end
 
 @doc raw"""
 
- Calculate the first Chern numbers in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method.
+ Calculate the first Chern numbers in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
     calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
- `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
- `N::Int` is the number of meshes when discretizing the Brillouin Zone.
- It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
- `gapless::Real` is the threshold that determines the state to be degenerate.
- Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
- `rounds::Bool` is an option to round the value of the topological number to an integer value.
- The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+ Arguments
+ - Hamiltionian::Function: the Hamiltonian matrix with one-dimensional wavenumber `k` as an argument.
+ - N::Int=51: The number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - gapless::Real: The threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+ - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+
 
 # Definition
  The firs Chern number of the $n$th band $\nu_{n}$ is defined by
@@ -185,21 +184,21 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
 
     # function main(Hamiltonian, N, gapless, rounds)
 
-        n0 = zeros(2)
-        Hs = size(Hamiltonian(n0))[1]
-        p = (; Hamiltonian, N, gapless, rounds, Hs)
+    n0 = zeros(2)
+    Hs = size(Hamiltonian(n0))[1]
+    p = (; Hamiltonian, N, gapless, rounds, Hs)
 
-        if rounds == true
-            TopologicalNumber = zeros(Int, Hs)
-        else
-            TopologicalNumber = zeros(Hs)
-        end
+    if rounds == true
+        TopologicalNumber = zeros(Int, Hs)
+    else
+        TopologicalNumber = zeros(Hs)
+    end
 
-        ChernPhase!(TopologicalNumber, p)
+    ChernPhase!(TopologicalNumber, p)
 
-        Total = sum(TopologicalNumber)
+    Total = sum(TopologicalNumber)
 
-        (; TopologicalNumber, Total)
+    (; TopologicalNumber, Total)
     # end
 
     # main(Hamiltonian, N, gapless, rounds)
