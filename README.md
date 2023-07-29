@@ -59,12 +59,10 @@ end
 The band structure is computed as follows:
 
 ```julia
-julia> showBand(H, 1)
+julia> showBand(H)
 ```
 
 ![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/ec08e558-3b0c-4ab0-9c4f-99b977b20142)
-
-In this case, `1` signifies the dimension of the wavenumber space.
 
 Next, we can calculate the winding numbers using `calcBerryPhase`:
 
@@ -115,7 +113,7 @@ end
 To calculate the dispersion, run:
 
 ```julia
-julia> showBand(H, 2)
+julia> showBand(H)
 ```
 
 ![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/abf47c01-94f3-4c66-8b54-bb243ce48b5f)
@@ -174,7 +172,7 @@ end
 To calculate the dispersion, execute:
 
 ```julia
-julia> showBand(H, 2)
+julia> showBand(H)
 ```
 
 ![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/7a7b67a3-7efc-44e6-8e28-bb607e17f7f5)
