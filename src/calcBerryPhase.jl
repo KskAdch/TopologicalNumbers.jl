@@ -27,7 +27,7 @@ end
 
         if i == N
             if l == l0
-                Link[l:l0] .= dot(psi1[:, l:l0],  psiN1[:, l:l0])
+                Link[l:l0] .= dot(psi1[:, l:l0], psiN1[:, l:l0])
             else
                 Link[l:l0] .= det(psi1[:, l:l0]' * psiN1[:, l:l0])
             end
@@ -88,13 +88,13 @@ end
 
     calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
- `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
- `N::Int` is the number of meshes when discretizing the Brillouin Zone.
- It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
- `gapless::Real` is the threshold that determines the state to be degenerate.
- Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
- `rounds::Bool` is an option to round the value of the topological number to an integer value.
- The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+
+ Arguments
+ - `Hamiltonian::Function`: the Hamiltonian matrix function with one-dimensional wavenumber `k` as an argument.
+ - `N::Int`: the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - `gapless::Real`: the threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+ - `rounds::Bool`: an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+
 
 # Definition
 
@@ -112,28 +112,28 @@ function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rou
 
     # function main(Hamiltonian, N, gapless, rounds)
 
-        Hs = size(Hamiltonian(0.0))[1]
-        p = (; Hamiltonian, N, gapless, rounds, Hs)
+    Hs = size(Hamiltonian(0.0))[1]
+    p = (; Hamiltonian, N, gapless, rounds, Hs)
 
-        if rounds == true
-            TopologicalNumber = zeros(Int, Hs)
-        else
-            TopologicalNumber = zeros(Hs)
+    if rounds == true
+        TopologicalNumber = zeros(Int, Hs)
+    else
+        TopologicalNumber = zeros(Hs)
+    end
+
+    Phase!(TopologicalNumber, p)
+
+    if rounds == true
+        Total = rem(sum(TopologicalNumber), 2)
+    else
+        Total = sum(TopologicalNumber)
+        while Total > 1.5
+            Total -= 2
         end
+        Total = rem(Total, 2)
+    end
 
-        Phase!(TopologicalNumber, p)
-
-        if rounds == true
-            Total = rem(sum(TopologicalNumber), 2)
-        else
-            Total = sum(TopologicalNumber)
-            while Total > 1.5
-                Total -= 2
-            end
-            Total = rem(Total, 2)
-        end
-
-        (; TopologicalNumber, Total)
+    (; TopologicalNumber, Total)
     # end
 
     # main(Hamiltonian, N, gapless, rounds)
