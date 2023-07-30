@@ -27,14 +27,14 @@ It is confirmed to work on Julia 1.6 (LTS) and 1.9.
 To install TopologicalNumbers.jl, run the following command:
 
 ```julia
-pkg> add TopologicalNumbers.jl
+pkg> add TopologicalNumbers
 ```
 
 Alternatively, you can use:
 
 ```julia
 julia> using Pkg
-julia> Pkg.add("TopologicalNumbers.jl")
+julia> Pkg.add("TopologicalNumbers")
 ```
 
 
