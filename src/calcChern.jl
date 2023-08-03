@@ -53,7 +53,7 @@ end
                 end
 
                 Enevec[:] = Evec1[i, :]
-                Link!(psi00, psi01, psi10, Enevec, link01, link10, gapless, Hs)
+                Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
 
                 Link0[:, :, i] .= [link10 link01]
                 LinkN .= Link0
@@ -85,7 +85,7 @@ end
             end
 
             Enevec[:] = Evec0[i, :]
-            Link!(psi00, psi01, psi10, Enevec, link01, link10, gapless, Hs)
+            Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
 
             Link1[:, :, i] .= [link10 link01]
         end
