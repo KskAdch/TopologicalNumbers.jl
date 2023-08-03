@@ -1,4 +1,5 @@
 using TopologicalNumbers
+using LinearAlgebra
 using Test
 
 using CairoMakie
@@ -21,6 +22,8 @@ using Aqua
         @test typeof(fig) == Makie.Figure
 
         @test calcBerryPhase(H) == (TopologicalNumber=[1, 1], Total=0)
+
+        @test norm(calcBerryPhase(H).TopologicalNumber - calcBerryPhase(H, rounds=false).TopologicalNumber) < 1e-10
     end
 
     @testset "2D case" begin
@@ -80,12 +83,13 @@ using Aqua
 
             @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
 
+            @test norm(calcZ2(H, rounds=false).TopologicalNumber - calcZ2(H).TopologicalNumber) < 1e-10
+
             @test calcZ2(H, TR=true) == (TopologicalNumber=[1, 1], TRTopologicalNumber=[1, 1], Total=0)
+
+            @test norm(calcZ2(H, rounds=false, TR=true).TRTopologicalNumber - calcZ2(H, TR=true).TRTopologicalNumber) < 1e-10
         end
 
     end
-
-    # test
-
 
 end

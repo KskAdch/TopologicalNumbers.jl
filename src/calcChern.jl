@@ -8,6 +8,23 @@ function psi_j!(j, psi_1, Evec1, p) # wave function
     end
 end
 
+@views function Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
+    l = 1
+    while l <= Hs
+        l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
+
+        if l == l0
+            link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
+            link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
+        else
+            link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
+            link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
+        end
+
+        l = 1 + l0
+    end
+end
+
 @views function U!(Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p) # link variable
     @unpack N, gapless, Hs = p
 
@@ -36,20 +53,7 @@ end
                 end
 
                 Enevec[:] = Evec1[i, :]
-                l = 1
-                while l <= Hs
-                    l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
-
-                    if l == l0
-                        link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
-                        link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
-                    else
-                        link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
-                        link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
-                    end
-
-                    l = 1 + l0
-                end
+                Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
 
                 Link0[:, :, i] .= [link10 link01]
                 LinkN .= Link0
@@ -81,20 +85,7 @@ end
             end
 
             Enevec[:] = Evec0[i, :]
-            l = 1
-            while l <= Hs
-                l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
-
-                if l == l0
-                    link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
-                    link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
-                else
-                    link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
-                    link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
-                end
-
-                l = 1 + l0
-            end
+            Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
 
             Link1[:, :, i] .= [link10 link01]
         end
@@ -182,8 +173,6 @@ A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 """
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    # function main(Hamiltonian, N, gapless, rounds)
-
     n0 = zeros(2)
     Hs = size(Hamiltonian(n0))[1]
     p = (; Hamiltonian, N, gapless, rounds, Hs)
@@ -199,7 +188,4 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
     Total = sum(TopologicalNumber)
 
     (; TopologicalNumber, Total)
-    # end
-
-    # main(Hamiltonian, N, gapless, rounds)
 end

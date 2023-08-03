@@ -43,8 +43,8 @@ end
     end
 end
 
-@views function Phase!(TopologicalNumber, p) # berry phase
-    @unpack N, rounds, Hs = p
+@views function BerryPhase_round!(TopologicalNumber, p) # berry phase
+    @unpack N, Hs = p
     Link = zeros(ComplexF64, Hs)
 
     Evec0 = zeros(Hs)
@@ -64,16 +64,36 @@ end
         TN[:] .+= phi[:]
     end
 
-    if rounds == true
-        TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
-    else
-        for i in 1:Hs
-            while abs(TN[i]) > 1.5pi
-                TN[i] = abs(TN[i]) - 2pi
-            end
-        end
-        TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
+    TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
+end
+
+@views function BerryPhase!(TopologicalNumber, p) # berry phase
+    @unpack N, Hs = p
+    Link = zeros(ComplexF64, Hs)
+
+    Evec0 = zeros(Hs)
+    Evec1 = zeros(Hs)
+
+    psi0 = zeros(ComplexF64, Hs, Hs)
+    psi1 = zeros(ComplexF64, Hs, Hs)
+    psiN1 = zeros(ComplexF64, Hs, Hs)
+
+    phi = zeros(Hs)
+
+    TN = zeros(Hs)
+
+    for i in 1:N
+        U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p)
+        F!(phi, Link, p)
+        TN[:] .+= phi[:]
     end
+
+    for i in 1:Hs
+        while abs(TN[i]) > 1.5pi
+            TN[i] = abs(TN[i]) - 2pi
+        end
+    end
+    TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
 end
 
 @views function F!(phi, Link, p) # lattice field strength
@@ -110,22 +130,20 @@ A_{n}(k)=\bra{\Psi_{n}(k)}\partial_{k}\ket{\Psi_{n}(k)}
 """
 function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    # function main(Hamiltonian, N, gapless, rounds)
-
     Hs = size(Hamiltonian(0.0))[1]
     p = (; Hamiltonian, N, gapless, rounds, Hs)
 
     if rounds == true
         TopologicalNumber = zeros(Int, Hs)
-    else
-        TopologicalNumber = zeros(Hs)
-    end
 
-    Phase!(TopologicalNumber, p)
+        BerryPhase_round!(TopologicalNumber, p)
 
-    if rounds == true
         Total = rem(sum(TopologicalNumber), 2)
     else
+        TopologicalNumber = zeros(Hs)
+
+        BerryPhase!(TopologicalNumber, p)
+
         Total = sum(TopologicalNumber)
         while Total > 1.5
             Total -= 2
@@ -134,7 +152,4 @@ function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rou
     end
 
     (; TopologicalNumber, Total)
-    # end
-
-    # main(Hamiltonian, N, gapless, rounds)
 end
