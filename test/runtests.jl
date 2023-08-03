@@ -1,4 +1,5 @@
 using TopologicalNumbers
+using LinearAlgebra
 using Test
 
 using CairoMakie
