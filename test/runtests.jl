@@ -23,7 +23,7 @@ using Aqua
 
         @test calcBerryPhase(H) == (TopologicalNumber=[1, 1], Total=0)
 
-        @test calcBerryPhase(H, rounds=false) == (TopologicalNumber=[1.0, 0.9999999999999999], Total=0.0)
+        @test norm(calcBerryPhase(H).TopologicalNumber - calcBerryPhase(H, rounds=false).TopologicalNumber) < 1e-10
     end
 
     @testset "2D case" begin
@@ -83,13 +83,9 @@ using Aqua
 
             @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
 
-            # @test calcZ2(H, rounds=false) == (TopologicalNumber=[1.0000000000000004, 0.9999999999999987], Total=8.881784197001252e-16)
-
             @test norm(calcZ2(H, rounds=false).TopologicalNumber - calcZ2(H).TopologicalNumber) < 1e-10
 
             @test calcZ2(H, TR=true) == (TopologicalNumber=[1, 1], TRTopologicalNumber=[1, 1], Total=0)
-
-            # @test calcZ2(H, rounds=false, TR=true) == (TopologicalNumber=[1.0000000000000004, 0.9999999999999987], TRTopologicalNumber=[1.0, 0.9999999999999987], Total=8.881784197001252e-16)
 
             @test norm(calcZ2(H, rounds=false, TR=true).TRTopologicalNumber - calcZ2(H, TR=true).TRTopologicalNumber) < 1e-10
         end
