@@ -43,7 +43,7 @@ end
     end
 end
 
-@views function Phase_round!(TopologicalNumber, p) # berry phase
+@views function BerryPhase_round!(TopologicalNumber, p) # berry phase
     @unpack N, Hs = p
     Link = zeros(ComplexF64, Hs)
 
@@ -67,7 +67,7 @@ end
     TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
 end
 
-@views function Phase!(TopologicalNumber, p) # berry phase
+@views function BerryPhase!(TopologicalNumber, p) # berry phase
     @unpack N, Hs = p
     Link = zeros(ComplexF64, Hs)
 
@@ -136,13 +136,13 @@ function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rou
     if rounds == true
         TopologicalNumber = zeros(Int, Hs)
 
-        Phase_round!(TopologicalNumber, p)
+        BerryPhase_round!(TopologicalNumber, p)
 
         Total = rem(sum(TopologicalNumber), 2)
     else
         TopologicalNumber = zeros(Hs)
 
-        Phase!(TopologicalNumber, p)
+        BerryPhase!(TopologicalNumber, p)
 
         Total = sum(TopologicalNumber)
         while Total > 1.5

@@ -8,7 +8,8 @@ function psi_j!(j, psi_1, Evec1, p) # wave function
     end
 end
 
-@views function Link!(psi00, psi01, psi10, Enevec, link01, link10)
+@views function Link!(psi00, psi01, psi10, Enevec, link01, link10, p)
+    @unpack gapless, Hs = p
     l = 1
     while l <= Hs
         l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
@@ -53,7 +54,7 @@ end
                 end
 
                 Enevec[:] = Evec1[i, :]
-                Link!(psi00, psi01, psi10, Enevec, link01, link10)
+                Link!(psi00, psi01, psi10, Enevec, link01, link10, p)
                 # l = 1
                 # while l <= Hs
                 #     l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
@@ -201,8 +202,6 @@ A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 """
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    # function main(Hamiltonian, N, gapless, rounds)
-
     n0 = zeros(2)
     Hs = size(Hamiltonian(n0))[1]
     p = (; Hamiltonian, N, gapless, rounds, Hs)
@@ -218,7 +217,4 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
     Total = sum(TopologicalNumber)
 
     (; TopologicalNumber, Total)
-    # end
-
-    # main(Hamiltonian, N, gapless, rounds)
 end
