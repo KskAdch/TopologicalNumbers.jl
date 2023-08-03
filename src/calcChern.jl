@@ -8,6 +8,23 @@ function psi_j!(j, psi_1, Evec1, p) # wave function
     end
 end
 
+@views function Link!(psi00, psi01, psi10, Enevec, link01, link10)
+    l = 1
+    while l <= Hs
+        l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
+
+        if l == l0
+            link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
+            link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
+        else
+            link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
+            link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
+        end
+
+        l = 1 + l0
+    end
+end
+
 @views function U!(Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p) # link variable
     @unpack N, gapless, Hs = p
 
@@ -36,20 +53,21 @@ end
                 end
 
                 Enevec[:] = Evec1[i, :]
-                l = 1
-                while l <= Hs
-                    l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
+                Link!(psi00, psi01, psi10, Enevec, link01, link10)
+                # l = 1
+                # while l <= Hs
+                #     l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
 
-                    if l == l0
-                        link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
-                        link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
-                    else
-                        link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
-                        link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
-                    end
+                #     if l == l0
+                #         link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
+                #         link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
+                #     else
+                #         link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
+                #         link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
+                #     end
 
-                    l = 1 + l0
-                end
+                #     l = 1 + l0
+                # end
 
                 Link0[:, :, i] .= [link10 link01]
                 LinkN .= Link0
@@ -81,20 +99,21 @@ end
             end
 
             Enevec[:] = Evec0[i, :]
-            l = 1
-            while l <= Hs
-                l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
+            Link!(psi00, psi01, psi10, Enevec, link01, link10)
+            # l = 1
+            # while l <= Hs
+            #     l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
 
-                if l == l0
-                    link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
-                    link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
-                else
-                    link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
-                    link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
-                end
+            #     if l == l0
+            #         link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
+            #         link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
+            #     else
+            #         link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
+            #         link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
+            #     end
 
-                l = 1 + l0
-            end
+            #     l = 1 + l0
+            # end
 
             Link1[:, :, i] .= [link10 link01]
         end

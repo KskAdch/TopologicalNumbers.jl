@@ -64,16 +64,7 @@ end
         TN[:] .+= phi[:]
     end
 
-    # if rounds == true
-        TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
-    # else
-    #     for i in 1:Hs
-    #         while abs(TN[i]) > 1.5pi
-    #             TN[i] = abs(TN[i]) - 2pi
-    #         end
-    #     end
-    #     TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
-    # end
+    TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
 end
 
 @views function Phase!(TopologicalNumber, p) # berry phase
@@ -97,16 +88,12 @@ end
         TN[:] .+= phi[:]
     end
 
-    # if rounds == true
-    #     TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
-    # else
-        for i in 1:Hs
-            while abs(TN[i]) > 1.5pi
-                TN[i] = abs(TN[i]) - 2pi
-            end
+    for i in 1:Hs
+        while abs(TN[i]) > 1.5pi
+            TN[i] = abs(TN[i]) - 2pi
         end
-        TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
-    # end
+    end
+    TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
 end
 
 @views function F!(phi, Link, p) # lattice field strength
