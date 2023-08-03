@@ -368,7 +368,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             if Total > 1.5
                 Total -= 2
             end
-            Total = rem(Total, 2)
+            Total = abs(rem(Total, 2))
         end
 
         (; TopologicalNumber, Total)
@@ -390,7 +390,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             if Total > 1.5
                 Total -= 2
             end
-            Total = rem(Total, 2)
+            Total = abs(rem(Total, 2))
         end
 
         (; TopologicalNumber, TRTopologicalNumber, Total)
