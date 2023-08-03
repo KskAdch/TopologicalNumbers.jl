@@ -21,6 +21,8 @@ using Aqua
         @test typeof(fig) == Makie.Figure
 
         @test calcBerryPhase(H) == (TopologicalNumber=[1, 1], Total=0)
+
+        @test calcBerryPhase(H, rounds=false) == (TopologicalNumber=[1.0, 1.0000000000000002], Total=0.0)
     end
 
     @testset "2D case" begin
@@ -80,12 +82,13 @@ using Aqua
 
             @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
 
+            @test calcZ2(H, rounds=false) == (TopologicalNumber=[1.0000000000000009, 1.0], Total=8.881784197001252e-16)
+
             @test calcZ2(H, TR=true) == (TopologicalNumber=[1, 1], TRTopologicalNumber=[1, 1], Total=0)
+
+            @test calcZ2(H, rounds=false, TR=true) == (TopologicalNumber=[1.0000000000000009, 1.0], TRTopologicalNumber=[1.0000000000000009, 1.0], Total=8.881784197001252e-16)
         end
 
     end
-
-    # test
-
 
 end

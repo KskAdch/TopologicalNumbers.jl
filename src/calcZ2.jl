@@ -40,10 +40,6 @@ end
                 end
 
                 Link!(psi00, psi10, psi01, link10, link01, Hshalf)
-                # for l in 1:Hshalf
-                #     link10[l] = det(psi00[:, 2l-1:2l]' * psi10[:, 2l-1:2l])
-                #     link01[l] = det(psi00[:, 2l-1:2l]' * psi01[:, 2l-1:2l])
-                # end
 
                 Link1[:, :, i] .= [link10 link01]
                 LinkN1 .= Link1
@@ -82,10 +78,6 @@ end
             end
 
             Link!(psi00, psi10, psi01, link10, link01, Hshalf)
-            # for l in 1:Hshalf
-            #     link10[l] = det(psi00[:, 2l-1:2l]' * psi10[:, 2l-1:2l])
-            #     link01[l] = det(psi00[:, 2l-1:2l]' * psi01[:, 2l-1:2l])
-            # end
 
             Link2[:, :, i] .= [link10 link01]
         end
@@ -160,11 +152,7 @@ end
 
     for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            # if rounds == true
-                TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-            # else
-            #     TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            # end
+            TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
         end
     end
 end
@@ -217,11 +205,7 @@ end
 
     for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            # if rounds == true
-            #     TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-            # else
-                TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            # end
+            TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
 end
@@ -276,13 +260,8 @@ end
 
     for l in 1:Hshalf
         if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
-            # if rounds == true
-                TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-                TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-            # else
-            #     TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            #     TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            # end
+            TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+            TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
         end
     end
 end
@@ -337,13 +316,8 @@ end
 
     for l in 1:Hshalf
         if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
-            # if rounds == true
-            #     TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-            #     TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-            # else
-                TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-                TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            # end
+            TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
 end
