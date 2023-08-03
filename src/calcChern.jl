@@ -8,8 +8,7 @@ function psi_j!(j, psi_1, Evec1, p) # wave function
     end
 end
 
-@views function Link!(psi00, psi01, psi10, Enevec, link01, link10, p)
-    @unpack gapless, Hs = p
+@views function Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
     l = 1
     while l <= Hs
         l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
@@ -54,21 +53,7 @@ end
                 end
 
                 Enevec[:] = Evec1[i, :]
-                Link!(psi00, psi01, psi10, Enevec, link01, link10, p)
-                # l = 1
-                # while l <= Hs
-                #     l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
-
-                #     if l == l0
-                #         link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
-                #         link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
-                #     else
-                #         link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
-                #         link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
-                #     end
-
-                #     l = 1 + l0
-                # end
+                Link!(psi00, psi01, psi10, Enevec, link01, link10, gapless, Hs)
 
                 Link0[:, :, i] .= [link10 link01]
                 LinkN .= Link0
@@ -100,21 +85,7 @@ end
             end
 
             Enevec[:] = Evec0[i, :]
-            Link!(psi00, psi01, psi10, Enevec, link01, link10, p)
-            # l = 1
-            # while l <= Hs
-            #     l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
-
-            #     if l == l0
-            #         link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
-            #         link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
-            #     else
-            #         link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
-            #         link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
-            #     end
-
-            #     l = 1 + l0
-            # end
+            Link!(psi00, psi01, psi10, Enevec, link01, link10, gapless, Hs)
 
             Link1[:, :, i] .= [link10 link01]
         end
