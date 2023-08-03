@@ -100,7 +100,7 @@ end
             end
 
             Enevec[:] = Evec0[i, :]
-            Link!(psi00, psi01, psi10, Enevec, link01, link10)
+            Link!(psi00, psi01, psi10, Enevec, link01, link10, p)
             # l = 1
             # while l <= Hs
             #     l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
