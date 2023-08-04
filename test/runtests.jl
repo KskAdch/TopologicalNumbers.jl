@@ -18,7 +18,7 @@ using Aqua
             ]
         end
 
-        @test sum(showBand(H)) == -2.220446049250313e-16
+        @test abs(sum(showBand(H))) < 1e-10
 
         @test calcBerryPhase(H) == (TopologicalNumber=[1, 1], Total=0)
 
@@ -50,7 +50,7 @@ using Aqua
                 Hmat
             end
 
-            @test sum(showBand(H)) == 0.0
+            @test abs(sum(showBand(H))) < 1e-10
 
             @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
         end
@@ -76,7 +76,7 @@ using Aqua
                 R3 * a3 + R4 * a4 + R5 * a5
             end
 
-            @test sum(showBand(H)) == 0.0
+            @test abs(sum(showBand(H))) < 1e-10
 
             @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
 
