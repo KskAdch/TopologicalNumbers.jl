@@ -144,11 +144,11 @@ function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rou
 
         BerryPhase!(TopologicalNumber, p)
 
-        Total = sum(TopologicalNumber)
+        Total = abs(sum(TopologicalNumber))
         while Total > 1.5
             Total -= 2
         end
-        Total = rem(Total, 2)
+        Total = abs(rem(Total, 2))
     end
 
     (; TopologicalNumber, Total)
