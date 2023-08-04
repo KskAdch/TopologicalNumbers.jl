@@ -365,7 +365,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             Z2Phase!(TopologicalNumber, p)
 
             Total = abs(sum(TopologicalNumber))
-            if Total > 1.5
+            while Total > 1.5
                 Total -= 2
             end
             Total = abs(rem(Total, 2))
@@ -387,7 +387,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
 
             Total = abs(sum(TopologicalNumber))
-            if Total > 1.5
+            while Total > 1.5
                 Total -= 2
             end
             Total = abs(rem(Total, 2))

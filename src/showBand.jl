@@ -34,9 +34,9 @@ function diagram(p)
     if dim == 1
 
         if labels == true
-            Axis(fig[1, 1], xlabel="k", ylabel="Eₖ")
+            Axis(fig[1, 1], xticks = ([0, pi, 2pi], ["0", "π", "2π"]), xminorticksvisible = true, xminorgridvisible = true, xminorticks = IntervalsBetween(2), xlabel="k", ylabel="Eₖ")
         else
-            Axis(fig[1, 1], xlabel="", ylabel="")
+            Axis(fig[1, 1], xlabelvisible = false, ylabelvisible = false)
         end
 
         Ene = Ene1D(p)
@@ -47,9 +47,9 @@ function diagram(p)
     elseif dim == 2
 
         if labels == true
-            Axis3(fig[1, 1], xlabel="k₁", ylabel="k₂", zlabel="Eₖ")
+            Axis3(fig[1, 1], xticks = ([0, pi, 2pi], ["0", "π", "2π"]), yticks = ([0, pi, 2pi], ["0", "π", "2π"]), xlabel="k₁", ylabel="k₂", zlabel="Eₖ")
         else
-            Axis3(fig[1, 1], xlabel="", ylabel="", zlabel="")
+            Axis3(fig[1, 1], xlabelvisible = false, ylabelvisible = false, zlabelvisible = false)
         end
 
         Ene = Ene2D(p)
@@ -58,11 +58,28 @@ function diagram(p)
             surface!(nrang, nrang, Ene[:, :, i])
         end
     end
+    
+    Ene, fig
+end
 
-    # save("Band.png", fig)
-    # save("Band.svg", fig)
-    # save("Band.pdf", fig)
-    fig
+function output(Ene, fig, p)
+    @unpack value, png, pdf, svg, fig3d = p
+    if png == true
+        save("Band.png", fig)
+    end
+    if pdf == true
+        save("Band.pdf", fig)
+    end
+    if svg == true
+        save("Band.svg", fig)
+    end
+    if fig3d == true
+        GLMakie.activate!()
+        display(fig)
+    end
+    if value == true
+        return Ene
+    end
 end
 
 @doc raw"""
@@ -79,19 +96,19 @@ end
 ```math
 ```
 """
-function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true)
-    # GLMakie.activate!(inline=false)
+function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, fig3d::Bool=false)
 
     dim = Hs = 0
 
     try
-        Hs = size(Hamiltonian(0.0))[1]
+        Hs = size(Hamiltonian(0))[1]
         dim = 1
     catch
         Hs = size(Hamiltonian(zeros(2)))[1]
         dim = 2
     end
 
-    p = (; Hamiltonian, dim, N, labels, Hs)
-    diagram(p)
+    p = (; Hamiltonian, dim, N, labels, Hs, value, png, pdf, svg, fig3d)
+    Ene, fig = diagram(p)
+    output(Ene, fig, p)
 end

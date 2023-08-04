@@ -18,7 +18,7 @@ using Aqua
             ]
         end
 
-        fig = showBand(H)
+        fig = showBand(H, value=false, fig3d=true)
         @test typeof(fig) == Makie.Figure
 
         @test calcBerryPhase(H) == (TopologicalNumber=[1, 1], Total=0)
@@ -51,7 +51,7 @@ using Aqua
                 Hmat
             end
 
-            fig = showBand(H)
+            fig = showBand(H, value=false, fig3d=true)
             @test typeof(fig) == Makie.Figure
 
             @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
@@ -78,7 +78,7 @@ using Aqua
                 R3 * a3 + R4 * a4 + R5 * a5
             end
 
-            fig = showBand(H)
+            fig = showBand(H, value=false, fig3d=true)
             @test typeof(fig) == Makie.Figure
 
             @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
