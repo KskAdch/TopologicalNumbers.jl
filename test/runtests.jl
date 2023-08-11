@@ -2,8 +2,8 @@ using TopologicalNumbers
 using LinearAlgebra
 using Test
 
-using CairoMakie
-using GLMakie
+# using CairoMakie
+# using GLMakie
 using Aqua
 
 # Aqua.test_all(TopologicalNumbers; ambiguities=false)
@@ -19,7 +19,17 @@ using Aqua
             ]
         end
 
-        @test abs(sum(showBand(H))) < 1e-10
+        N = 51
+        # k = range(-π, π, length=N)
+        bandsum = (-60.89985395515161, 60.89985395515161)
+        result = showBand(H)
+
+        # @test result.k .== k
+        for i in 1:size(result.Ene, 2)
+            @test sum(result.Ene[:, i]) ≈ bandsum[i]
+        end
+
+        @test abs(sum(result.Ene)) < 1e-10
 
         @test calcBerryPhase(H) == (TopologicalNumber=[1, 1], Total=0)
 
@@ -51,7 +61,18 @@ using Aqua
                 Hmat
             end
 
-            @test abs(sum(showBand(H))) < 1e-10
+            N = 51
+            # k = range(-π, π, length=N)
+            bandsum = (-8026.922381020278, -3931.3204155463714, -1076.7367579094316, 1076.7367579094316, 3931.320415546372, 8026.922381020279)
+            result = showBand(H)
+
+            # @test result.k[:, 1] .== k
+            # @test result.k[:, 2] .== k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+
+            @test abs(sum(result.Ene)) < 1e-10
 
             @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
         end
@@ -77,7 +98,18 @@ using Aqua
                 R3 * a3 + R4 * a4 + R5 * a5
             end
 
-            @test abs(sum(showBand(H))) < 1e-10
+            N = 51
+            # k = range(-π, π, length=N)
+            bandsum = (-7404.378662190171, -7404.378662190169, 7404.378662190169, 7404.378662190172)
+            result = showBand(H)
+
+            # @test result.k[:, 1] .== k
+            # @test result.k[:, 2] .== k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+
+            @test abs(sum(result.Ene)) < 1e-10
 
             @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
 
