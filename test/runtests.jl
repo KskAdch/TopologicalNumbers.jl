@@ -3,6 +3,7 @@ using LinearAlgebra
 using Test
 
 using CairoMakie
+using GLMakie
 using Aqua
 
 # Aqua.test_all(TopologicalNumbers; ambiguities=false)

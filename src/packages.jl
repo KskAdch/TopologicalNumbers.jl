@@ -1,5 +1,5 @@
 using LinearAlgebra
-# using GLMakie
+using GLMakie
 using CairoMakie
 using LaTeXStrings
 using StaticArrays
