@@ -1,45 +1,49 @@
 function Ene1D(p) # 1D Energy
     @unpack Hamiltonian, N, Hs = p
 
+    k = range(-π, π, length=N)
     Ene = zeros(N, Hs)
 
     for i in 1:N
-        k = 2pi * (i - 1) / (N - 1)
-        Ene[i, :] = eigvals!(Hamiltonian(k))
+        Ene[i, :] = eigvals!(Hamiltonian(k[i]))
     end
-    Ene
+    k, Ene
 end
 
 function Ene2D(p) # 2D Energy
     @unpack Hamiltonian, N, Hs = p
 
+    k = range(-π, π, length=N)
+    k0 = zeros(2)
     Ene = zeros(N, N, Hs)
 
     for j in 1:N
+        k0[2] = k[j]
         for i in 1:N
-            k = 2pi * [i - 1, j - 1] / (N - 1)
-            Ene[i, j, :] = eigvals!(Hamiltonian(k))
+            k0[1] = k[i]
+            Ene[i, j, :] .= eigvals!(Hamiltonian(k0))
         end
     end
-    Ene
+    k = hcat(k, k)
+    k, Ene
 end
 
 function diagram(p)
     @unpack dim, N, labels, Hs = p
 
-    nrang = range(0, 2pi, length=N)
+    nrang = range(-π, π, length=N)
 
     fig = Figure()
 
     if dim == 1
 
         if labels == true
-            Axis(fig[1, 1], xticks=([0, pi, 2pi], ["0", "π", "2π"]), xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="k", ylabel="Eₖ")
+            Axis(fig[1, 1], xticks=([-π, 0, π], ["-π", "0", "π"]), xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="k", ylabel="Eₖ")
         else
             Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
         end
 
-        Ene = Ene1D(p)
+        k, Ene = Ene1D(p)
 
         for i in 1:Hs
             lines!(nrang, Ene[:, i])
@@ -47,22 +51,22 @@ function diagram(p)
     elseif dim == 2
 
         if labels == true
-            Axis3(fig[1, 1], xticks=([0, pi, 2pi], ["0", "π", "2π"]), yticks=([0, pi, 2pi], ["0", "π", "2π"]), xlabel="k₁", ylabel="k₂", zlabel="Eₖ")
+            Axis3(fig[1, 1], xticks=([-π, 0, π], ["-π", "0", "π"]), yticks=([-π, 0, π], ["-π", "0", "π"]), xlabel="k₁", ylabel="k₂", zlabel="Eₖ")
         else
             Axis3(fig[1, 1], xlabelvisible=false, ylabelvisible=false, zlabelvisible=false)
         end
 
-        Ene = Ene2D(p)
+        k, Ene = Ene2D(p)
 
         for i in 1:Hs
             surface!(nrang, nrang, Ene[:, :, i])
         end
     end
 
-    Ene, fig
+    k, Ene, fig
 end
 
-function output(Ene, fig, p)
+function output(k, Ene, fig, p)
     @unpack value, disp, png, pdf, svg = p
     if png == true
         CairoMakie.activate!()
@@ -81,7 +85,7 @@ function output(Ene, fig, p)
         display(fig)
     end
     if value == true
-        return Ene
+        return (; k, Ene)
     end
 end
 
@@ -112,6 +116,6 @@ function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bo
     end
 
     p = (; Hamiltonian, dim, N, labels, Hs, value, disp, png, pdf, svg)
-    Ene, fig = diagram(p)
-    output(Ene, fig, p)
+    k, Ene, fig = diagram(p)
+    output(k, Ene, fig, p)
 end
