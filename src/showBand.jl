@@ -67,18 +67,18 @@ function diagram(p)
 end
 
 function output(k, Ene, fig, p)
-    @unpack value, disp, png, pdf, svg = p
+    @unpack value, disp, png, pdf, svg, filename = p
     if png == true
         CairoMakie.activate!()
-        save("Band.png", fig)
+        save(filename * ".png", fig)
     end
     if pdf == true
         CairoMakie.activate!()
-        save("Band.pdf", fig)
+        save(filename * ".pdf", fig)
     end
     if svg == true
         CairoMakie.activate!()
-        save("Band.svg", fig)
+        save(filename * ".svg", fig)
     end
     if disp == true
         GLMakie.activate!()
@@ -93,17 +93,23 @@ end
 
  Drawing the band structure of the Hamiltonian.
 
-    showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true)
+    showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
 
  Arguments
  - `Hamiltonian::Function`: the Hamiltonian matrix function of wave number $\bm k$.
  - `N::Int`: the number of divisions in the wave number space.
  - `labels::Bool`: whether to display the labels of the figure.
+ - `value::Bool`: whether to output the values of the wave number and the energy in the matrix form.
+ - `disp::Bool`: whether to display the figure.
+ - `png::Bool`: whether to save the figure as a PNG file.
+ - `pdf::Bool`: whether to save the figure as a PDF file.
+ - `svg::Bool`: whether to save the figure as a SVG file.
+ - `filename::String`: the name of the output file.
 
 ```math
 ```
 """
-function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false)
+function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
 
     dim = Hs = 0
 
@@ -115,7 +121,7 @@ function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bo
         dim = 2
     end
 
-    p = (; Hamiltonian, dim, N, labels, Hs, value, disp, png, pdf, svg)
+    p = (; Hamiltonian, dim, N, labels, Hs, value, disp, png, pdf, svg, filename)
     k, Ene, fig = diagram(p)
     output(k, Ene, fig, p)
 end

@@ -21,10 +21,10 @@ end
 The band structure is computed as follows:
 
 ```julia
-julia> showBand(H)
+julia> showBand(H; value=false, disp=true)
 ```
 
-![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/ec08e558-3b0c-4ab0-9c4f-99b977b20142)
+![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/a586aa22-6c79-454e-a82f-6f5056d98f6c)
 
 In this case, 1 signifies the dimension of the wavenumber space.
 
@@ -78,10 +78,10 @@ end
 To calculate the dispersion, run:
 
 ```julia
-julia> showBand(H)
+julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/abf47c01-94f3-4c66-8b54-bb243ce48b5f)
+![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/8470121f-bdad-4960-9848-7ade1ae805d3)
 
 
 Then we can compute the Chern numbers using `calcChern`:
@@ -138,10 +138,10 @@ end
 To calculate the dispersion, execute:
 
 ```julia
-julia> showBand(H)
+julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/7a7b67a3-7efc-44e6-8e28-bb607e17f7f5)
+![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/a9cf9768-6920-45e6-89bd-ed7ec434152c)
 
 
 Next, we can compute the $\mathbb{Z}_2$ numbers using `calcZ2`:
