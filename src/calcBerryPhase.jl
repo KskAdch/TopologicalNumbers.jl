@@ -102,6 +102,7 @@ end
     phi[:] .= [imag(log(Link[l])) for l in 1:Hs]
 end
 
+
 @doc raw"""
 
  Calculate the winding numbers in the one-dimensional case.
@@ -131,10 +132,10 @@ A_{n}(k)=\bra{\Psi_{n}(k)}\partial_{k}\ket{\Psi_{n}(k)}
 function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(0.0))[1]
-    p = (; Hamiltonian, N, gapless, rounds, Hs)
+    p = (; Hamiltonian, N, gapless, rounds, Hs, dim=1)
 
     if rounds == true
-        TopologicalNumber = zeros(Int, Hs)
+        TopologicalNumber = zeros(Int64, Hs)
 
         BerryPhase_round!(TopologicalNumber, p)
 

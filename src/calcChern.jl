@@ -1,4 +1,4 @@
-function psi_j!(j, psi_1, Evec1, p) # wave function
+function psi_j!(j, psi_1, Evec1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
         k = [i - 1, j - 1] * 2pi / N
@@ -25,7 +25,7 @@ end
     end
 end
 
-@views function U!(Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p) # link variable
+@views function U!(Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p::Params) # link variable
     @unpack N, gapless, Hs = p
 
     if j != 1
@@ -92,7 +92,7 @@ end
     end
 end
 
-@views function F!(phi, dphi, i, j, Link0, Link1, LinkN, p) # lattice field strength
+@views function F!(phi, dphi, i, j, Link0, Link1, LinkN, p::Params) # lattice field strength
     @unpack N, rounds, Hs = p
 
     if i == N && j == N
@@ -116,7 +116,7 @@ end
     end
 end
 
-@views function ChernPhase!(TopologicalNumber, p) # chern number
+@views function ChernPhase!(TopologicalNumber, p::Params) # chern number
     @unpack N, Hs = p
     Link0 = zeros(ComplexF64, Hs, 2, N)
     Link1 = zeros(ComplexF64, Hs, 2, N)
@@ -175,7 +175,7 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
 
     n0 = zeros(2)
     Hs = size(Hamiltonian(n0))[1]
-    p = (; Hamiltonian, N, gapless, rounds, Hs)
+    p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
     if rounds == true
         TopologicalNumber = zeros(Int, Hs)
