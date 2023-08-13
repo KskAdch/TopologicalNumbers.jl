@@ -183,35 +183,35 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             @test norm(calcZ2(H, rounds=false, TR=true).TRTopologicalNumber - calcZ2(H, TR=true).TRTopologicalNumber) < 1e-10
 
 
-            # function H(k, p) # 2d Kane-Mele
-            #     k1, k2 = k
-            #     t = p
+            function H(k, p) # 2d Kane-Mele
+                k1, k2 = k
+                t = p
 
-            #     R3 = 2(sin(k1) - sin(k2) - sin(k1 - k2))
-            #     R4 = -t * (sin(k1) + sin(k2))
-            #     R5 = -t * (cos(k1) + cos(k2) + 1)
+                R3 = 2(sin(k1) - sin(k2) - sin(k1 - k2))
+                R4 = -t * (sin(k1) + sin(k2))
+                R5 = -t * (cos(k1) + cos(k2) + 1)
 
-            #     s0 = [1 0; 0 1]
-            #     sx = [0 1; 1 0]
-            #     sy = [0 -im; im 0]
-            #     sz = [1 0; 0 -1]
+                s0 = [1 0; 0 1]
+                sx = [0 1; 1 0]
+                sy = [0 -im; im 0]
+                sz = [1 0; 0 -1]
 
-            #     a3 = kron(sz, sz)
-            #     a4 = kron(sy, s0)
-            #     a5 = kron(sx, s0)
+                a3 = kron(sz, sz)
+                a4 = kron(sy, s0)
+                a5 = kron(sx, s0)
 
-            #     R3 * a3 + R4 * a4 + R5 * a5
-            # end
-            # # H(k, p) = H0(k, (p, 1.0))
+                R3 * a3 + R4 * a4 + R5 * a5
+            end
+            # H(k, p) = H0(k, (p, 1.0))
 
-            # param = range(-2.0, 2.0, length=11)
-            # result = calcPhaseDiagram(H, param, "Chern")
+            param = range(-2.0, 2.0, length=11)
+            result = calcPhaseDiagram(H, param, "Z2")
 
-            # num = [0 0 0 0 1 1 1 0 0 0 0; 0 0 0 0 1 1 1 0 0 0 0]
-            # @test result == num
+            num = [1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1]
+            @test result == num
 
             # param = range(-2.0, 2.0, length=3)
-            # result = calcPhaseDiagram(H0, param, param, "Chern")
+            # result = calcPhaseDiagram(H0, param, param, "Z2")
             # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
             # @test result == num
 
