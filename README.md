@@ -81,6 +81,10 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
 
+![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/2b53e455-83ee-42d5-9824-84120c2be093)
+
+![Two-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/0ceef1a3-01fd-4e8b-9f01-4a4932039d26)
+
 
 ### Two-dimensional square lattice model with flux
 
