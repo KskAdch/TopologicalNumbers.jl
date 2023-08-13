@@ -2,7 +2,7 @@ using TopologicalNumbers
 using LinearAlgebra
 using Test
 
-# using CairoMakie
+using CairoMakie
 # using GLMakie
 using Aqua
 
@@ -51,6 +51,9 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         num = [0 0; 0 0; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 0 0; 0 0]
         @test result == num
 
+        fig = plot1D(result, param)
+        @test typeof(fig) == Makie.Figure
+
         param = range(-2.0, 2.0, length=3)
         result = calcPhaseDiagram(H0, param, param, "BerryPhase")
         num = zeros(2, 3, 3)
@@ -59,6 +62,9 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         num[:, :, 3] = [0 1 0; 1 1 0]
         # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
         @test result == num
+
+        fig = plot2D(result[1, :, :], param, param)
+        @test typeof(fig) == Makie.Figure
 
     end
 
@@ -209,6 +215,9 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
             num = [1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1]
             @test result == num
+
+            fig = plot1D(result, param)
+            @test typeof(fig) == Makie.Figure
 
             # param = range(-2.0, 2.0, length=3)
             # result = calcPhaseDiagram(H0, param, param, "Z2")
