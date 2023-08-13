@@ -17,6 +17,9 @@ function update2D!(nums, num0, H, alg!, range1::T, range2::T, p::Params) where {
     end
 end
 
+@doc raw"""
+    calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
+"""
 function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
 
     dim = Hs = 0
@@ -71,7 +74,9 @@ end
 
 
 
-
+@doc raw"""
+    calcPhaseDiagram(H::Function, param_range1::T, param_range2::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
+"""
 function calcPhaseDiagram(H::Function, param_range1::T, param_range2::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
 
     dim = Hs = 0

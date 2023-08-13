@@ -1,3 +1,6 @@
+@doc raw"""
+    plot1D(nums::Matrix, param_range::T; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T<:AbstractVector}
+"""
 function plot1D(nums::Matrix, param_range::T; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T<:AbstractVector}
 
     fig = Figure()
@@ -20,6 +23,9 @@ function plot1D(nums::Matrix, param_range::T; labels::Bool=true, png::Bool=false
     fig
 end
 
+@doc raw"""
+    plot2D(nums::T1, param_range1::T2, param_range2::T2; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector}
+"""
 function plot2D(nums::T1, param_range1::T2, param_range2::T2; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector}
 
     fig = Figure()
