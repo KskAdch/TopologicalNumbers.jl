@@ -53,7 +53,11 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
         param = range(-2.0, 2.0, length=3)
         result = calcPhaseDiagram(H0, param, param, "BerryPhase")
-        num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
+        num = zeros(2, 3, 3)
+        num[:, :, 1] = [0 1 0; 0 1 1]
+        num[:, :, 2] = [0 0 0; 0 0 0]
+        num[:, :, 3] = [0 1 0; 1 1 0]
+        # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
         @test result == num
 
     end
