@@ -1,45 +1,49 @@
 function Ene1D(p) # 1D Energy
     @unpack Hamiltonian, N, Hs = p
 
+    k = range(-π, π, length=N)
     Ene = zeros(N, Hs)
 
     for i in 1:N
-        k = 2pi * (i - 1) / (N - 1)
-        Ene[i, :] = eigvals!(Hamiltonian(k))
+        Ene[i, :] = eigvals!(Hamiltonian(k[i]))
     end
-    Ene
+    k, Ene
 end
 
 function Ene2D(p) # 2D Energy
     @unpack Hamiltonian, N, Hs = p
 
+    k = range(-π, π, length=N)
+    k0 = zeros(2)
     Ene = zeros(N, N, Hs)
 
     for j in 1:N
+        k0[2] = k[j]
         for i in 1:N
-            k = 2pi * [i - 1, j - 1] / (N - 1)
-            Ene[i, j, :] = eigvals!(Hamiltonian(k))
+            k0[1] = k[i]
+            Ene[i, j, :] .= eigvals!(Hamiltonian(k0))
         end
     end
-    Ene
+    k = hcat(k, k)
+    k, Ene
 end
 
 function diagram(p)
     @unpack dim, N, labels, Hs = p
 
-    nrang = range(0, 2pi, length=N)
+    nrang = range(-π, π, length=N)
 
     fig = Figure()
 
     if dim == 1
 
         if labels == true
-            Axis(fig[1, 1], xticks = ([0, pi, 2pi], ["0", "π", "2π"]), xminorticksvisible = true, xminorgridvisible = true, xminorticks = IntervalsBetween(2), xlabel="k", ylabel="Eₖ")
+            Axis(fig[1, 1], xticks=([-π, 0, π], ["-π", "0", "π"]), xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="k", ylabel="Eₖ")
         else
-            Axis(fig[1, 1], xlabelvisible = false, ylabelvisible = false)
+            Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
         end
 
-        Ene = Ene1D(p)
+        k, Ene = Ene1D(p)
 
         for i in 1:Hs
             lines!(nrang, Ene[:, i])
@@ -47,38 +51,41 @@ function diagram(p)
     elseif dim == 2
 
         if labels == true
-            Axis3(fig[1, 1], xticks = ([0, pi, 2pi], ["0", "π", "2π"]), yticks = ([0, pi, 2pi], ["0", "π", "2π"]), xlabel="k₁", ylabel="k₂", zlabel="Eₖ")
+            Axis3(fig[1, 1], xticks=([-π, 0, π], ["-π", "0", "π"]), yticks=([-π, 0, π], ["-π", "0", "π"]), xlabel="k₁", ylabel="k₂", zlabel="Eₖ")
         else
-            Axis3(fig[1, 1], xlabelvisible = false, ylabelvisible = false, zlabelvisible = false)
+            Axis3(fig[1, 1], xlabelvisible=false, ylabelvisible=false, zlabelvisible=false)
         end
 
-        Ene = Ene2D(p)
+        k, Ene = Ene2D(p)
 
         for i in 1:Hs
             surface!(nrang, nrang, Ene[:, :, i])
         end
     end
-    
-    Ene, fig
+
+    k, Ene, fig
 end
 
-function output(Ene, fig, p)
-    @unpack value, png, pdf, svg, fig3d = p
+function output(k, Ene, fig, p)
+    @unpack value, disp, png, pdf, svg, filename = p
     if png == true
-        save("Band.png", fig)
+        CairoMakie.activate!()
+        save(filename * ".png", fig)
     end
     if pdf == true
-        save("Band.pdf", fig)
+        CairoMakie.activate!()
+        save(filename * ".pdf", fig)
     end
     if svg == true
-        save("Band.svg", fig)
+        CairoMakie.activate!()
+        save(filename * ".svg", fig)
     end
-    if fig3d == true
+    if disp == true
         GLMakie.activate!()
         display(fig)
     end
     if value == true
-        return Ene
+        return (; k, Ene)
     end
 end
 
@@ -86,17 +93,23 @@ end
 
  Drawing the band structure of the Hamiltonian.
 
-    showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true)
+    showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
 
  Arguments
  - `Hamiltonian::Function`: the Hamiltonian matrix function of wave number $\bm k$.
  - `N::Int`: the number of divisions in the wave number space.
  - `labels::Bool`: whether to display the labels of the figure.
+ - `value::Bool`: whether to output the values of the wave number and the energy in the matrix form.
+ - `disp::Bool`: whether to display the figure.
+ - `png::Bool`: whether to save the figure as a PNG file.
+ - `pdf::Bool`: whether to save the figure as a PDF file.
+ - `svg::Bool`: whether to save the figure as a SVG file.
+ - `filename::String`: the name of the output file.
 
 ```math
 ```
 """
-function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, fig3d::Bool=false)
+function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
 
     dim = Hs = 0
 
@@ -108,7 +121,7 @@ function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bo
         dim = 2
     end
 
-    p = (; Hamiltonian, dim, N, labels, Hs, value, png, pdf, svg, fig3d)
-    Ene, fig = diagram(p)
-    output(Ene, fig, p)
+    p = (; Hamiltonian, dim, N, labels, Hs, value, disp, png, pdf, svg, filename)
+    k, Ene, fig = diagram(p)
+    output(k, Ene, fig, p)
 end

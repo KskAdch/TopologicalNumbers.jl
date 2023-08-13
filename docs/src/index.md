@@ -37,6 +37,10 @@ julia> using Pkg
 julia> Pkg.add("TopologicalNumbers")
 ```
 
+!!! note "Note"
+    If you are using a headless server, you may receive an error related to the `GLMakie` package. To resolve this issue, please refer to the [`Makie` documentation](https://docs.makie.org/stable/documentation/headless/) or the [`GLMakie` troubleshooting guide](https://github.com/MakieOrg/Makie.jl/tree/master/GLMakie#troubleshooting-opengl).
+
+
 
 ## Package Features
 

@@ -326,12 +326,11 @@ end
 
  Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Shiozaki2023discrete](@cite).
 
-    calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true)
+    calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
 
  Arguments
  - `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
  - `N::Int` is the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
- - `gapless::Real` is the threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
  - `rounds::Bool` is an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 # Definition
