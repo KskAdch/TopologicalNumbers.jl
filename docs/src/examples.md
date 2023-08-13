@@ -45,6 +45,35 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
 
+
+One-dimensional phase diagram is given by:
+
+```julia
+julia> function H0(k, p)
+            [
+                0 p[1]+p[2]*exp(-im * k)
+                p[1]+p[2]*exp(im * k) 0
+            ]
+        end
+julia> H(k, p) = H0(k, (p, 1.0))
+
+julia> param = range(-2.0, 2.0, length=1001)
+julia> calcPhaseDiagram(H, param, "BerryPhase"; plot=true)
+```
+
+![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/2b53e455-83ee-42d5-9824-84120c2be093)
+
+Also, two-dimensional phase diagram is given by:
+
+```julia
+julia> param = range(-2.0, 2.0, length=101)
+julia> calcPhaseDiagram(H0, param, param, "BerryPhase"; plot=true)
+```
+
+![Two-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/0ceef1a3-01fd-4e8b-9f01-4a4932039d26)
+
+
+
 ## Chern numbers
 
 ### Two-dimensional square lattice with flux model
