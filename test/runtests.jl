@@ -42,14 +42,17 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         result = calcPhaseDiagram(H, param, "BerryPhase")
 
         num = [0 0; 0 0; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 0 0; 0 0]
-        @test result == num
+        @test result.nums == num
 
-        fig = plot1D(result, param; disp=false)
+        fig = plot1D(result.nums, result.param; disp=false)
+        @test typeof(fig) == Makie.Figure
+
+        fig = plot1D(result; disp=false)
         @test typeof(fig) == Makie.Figure
 
         result = calcPhaseDiagram(H, param, "BerryPhase"; rounds=false)
         num = [2.8271597168564594e-16 1.987846675914698e-17; 0.0 1.766974823035287e-17; 5.654319433712919e-16 3.533949646070574e-17; 0.9999999999999989 1.0000000000000002; 1.000000000000001 1.0000000000000002; 1.0000000000000018 1.0; 1.0 1.0000000000000007; 1.0 0.9999999999999999; 5.654319433712919e-16 7.50964299789997e-17; 2.8271597168564594e-16 1.987846675914698e-17; 5.654319433712919e-16 3.3130777931911632e-18]
-        @test result ≈ num
+        @test result.nums ≈ num
 
 
         param = range(-2.0, 2.0, length=3)
@@ -59,9 +62,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         num[:, :, 2] = [0 0 0; 0 0 0]
         num[:, :, 3] = [0 1 0; 1 1 0]
         # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
-        @test result == num
+        @test result.nums == num
 
-        fig = plot2D(result[1, :, :], param, param; disp=false)
+        fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
+        @test typeof(fig) == Makie.Figure
+
+        fig = plot2D(result; disp=false)
         @test typeof(fig) == Makie.Figure
 
         param = range(-2.0, 2.0, length=4)
@@ -71,7 +77,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         num[:, :, 2] = [0.0 5.654319433712919e-16 0.4803921568627457 0.0; 2.2639364920139617e-17 2.7056801977727833e-16 0.9999999999999994 1.6565388965955818e-17]
         num[:, :, 3] = [0.0 0.4803921568627457 5.654319433712919e-16 0.0; 1.6565388965955818e-17 0.9999999999999994 2.7056801977727833e-16 2.2639364920139617e-17]
         num[:, :, 4] = [0.4803921568627457 0.9999999999999994 0.9999999999999994 8.481479150569378e-16; 0.9999999999999994 0.9999999999999997 0.9999999999999999 2.760898160992636e-16]
-        @test result ≈ num
+        @test result.nums ≈ num
 
     end
 
@@ -127,15 +133,18 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 #↓結果おかしい
                 num = [6 6 -12 -12 6 6; 0 6 -6 -6 6 0; 0 4 -2 -1 1 0; 0 -6 6 6 -6 0; -6 -6 12 12 -6 -6; 0 2 -6 1 0 0]
-                @test result == num
+                @test result.nums == num
 
-                fig = plot1D(result, param; disp=false)
+                fig = plot1D(result.nums, result.param; disp=false)
+                @test typeof(fig) == Makie.Figure
+
+                fig = plot1D(result; disp=false)
                 @test typeof(fig) == Makie.Figure
 
                 #↓結果おかしい
                 result = calcPhaseDiagram(H₀, param, "Chern"; rounds=false)
                 num = [6.000000000000002 6.0 -12.0 -12.0 6.0000000000000036 5.9999999999999964; -1.0784726957737412e-16 6.0 -6.0 -6.000000000000002 5.999999999999998 4.440892098500626e-16; 2.1763752123554674e-15 4.0 -2.0000000000000018 -1.000000000000003 1.000000000000001 -1.2492169914176273e-16; 5.358542476396547e-16 -6.0 5.999999999999998 6.0 -6.000000000000002 -3.3306690738754696e-15; -6.0000000000000036 -6.0 12.0 11.999999999999996 -6.0 -6.0; 4.018335873674939e-19 2.0 -5.999999999999998 0.9999999999999992 1.1113212383547472e-15 2.5759430987039272e-15]
-                @test result ≈ num
+                @test result.nums ≈ num
 
                 # param = range(-2.0, 2.0, length=3)
                 # result = calcPhaseDiagram(H₀, param, param, "Chern")
@@ -201,15 +210,18 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 result = calcPhaseDiagram(H, param, "Chern")
 
                 num = [0 0; 1 -1; 1 -1; 1 -1; 0 0; 0 0; -1 1; -1 1; -1 1; 0 0]
-                @test result == num
+                @test result.nums == num
 
-                fig = plot1D(result, param; disp=false)
+                fig = plot1D(result.nums, result.param; disp=false)
+                @test typeof(fig) == Makie.Figure
+
+                fig = plot1D(result; disp=false)
                 @test typeof(fig) == Makie.Figure
 
 
                 result = calcPhaseDiagram(H, param, "Chern"; rounds=false)
                 num = [1.1109801146677412e-15 -2.850714348572913e-16; 0.9999999999999996 -0.9999999999999991; 1.0000000000000007 -1.0000000000000002; 1.0 -1.000000000000001; 2.196996748971226e-15 4.455768167494754e-18; 6.938689780587844e-16 1.9512837637595136e-16; -0.999999999999998 0.9999999999999998; -0.9999999999999998 1.0; -1.0 0.9999999999999997; 6.668909048176786e-16 -2.7518073289070415e-16]
-                @test result ≈ num
+                @test result.nums ≈ num
 
                 param1 = range(-π, π, length=6)
                 param2 = range(-6.0, 6.0, length=6)
@@ -222,9 +234,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 num[:, :, 5] = [0 1 0 0 -1 0; 0 -1 0 0 1 0]
                 num[:, :, 6] = [0 0 0 0 0 0; 0 0 0 0 0 0]
                 # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
-                @test result == num
+                @test result.nums == num
 
-                fig = plot2D(result[1, :, :], param1, param2; disp=false)
+                fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
+                @test typeof(fig) == Makie.Figure
+
+                fig = plot2D(result; disp=false)
                 @test typeof(fig) == Makie.Figure
 
                 result = calcPhaseDiagram(H₀, param1, param2, "Chern"; rounds=false)
@@ -235,7 +250,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 num[:, :, 4] = [4.528604538904347e-16 1.0000000000000013 1.0000000000000022 -0.9999999999999989 -0.9999999999999991 6.74905058815466e-16; 2.3723648804926086e-17 -0.999999999999999 -0.9999999999999989 0.9999999999999998 1.0 5.532730494153866e-17]
                 num[:, :, 5] = [2.015700196865251e-15 1.0000000000000018 1.9702135958630458e-17 1.5461001801600323e-15 -1.0000000000000009 2.4597894067153135e-15; -8.92384864767788e-16 -1.0000000000000002 1.5185712878849862e-16 -3.9554093358765464e-16 0.9999999999999997 -8.745404034506849e-16]
                 num[:, :, 6] = [4.607397984077055e-16 1.5706863748485992e-16 7.33578008994055e-16 7.325091046230339e-16 2.22052100332148e-15 4.607397984077055e-16; -3.7796154778268895e-16 -5.0747412694646605e-17 -2.4612099824722765e-16 -2.1046482842831816e-17 -3.218757251068939e-16 -3.757530988728557e-16]
-                @test result ≈ num
+                @test result.nums ≈ num
             end
 
         end
@@ -291,14 +306,17 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             result = calcPhaseDiagram(H, param, "Z2")
 
             num = [1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1]
-            @test result == num
+            @test result.nums == num
 
-            fig = plot1D(result, param; disp=false)
+            fig = plot1D(result.nums, result.param; disp=false)
+            @test typeof(fig) == Makie.Figure
+
+            fig = plot1D(result; disp=false)
             @test typeof(fig) == Makie.Figure
 
             result = calcPhaseDiagram(H, param, "Z2"; rounds=false)
             num = [1.0000000000000004 1.0; 1.0 1.0; 1.0000000000000002 1.0000000000000009; 1.0 0.9999999999999991; 0.9999999999999997 1.0; 0.0 0.0; 0.9999999999999997 1.0; 1.0000000000000004 0.9999999999999991; 1.0000000000000002 1.0000000000000009; 1.0 1.0; 1.0000000000000004 1.0]
-            @test result ≈ num
+            @test result.nums ≈ num
 
 
             param = range(-2.0, 2.0, length=3)
@@ -308,9 +326,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             num[:, :, 2] = [1 0 1; 1 0 1]
             num[:, :, 3] = [1 0 1; 1 0 1]
             # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
-            @test result == num
+            @test result.nums == num
 
-            fig = plot2D(result[1, :, :], param, param; disp=false)
+            fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
+            @test typeof(fig) == Makie.Figure
+
+            fig = plot2D(result; disp=false)
             @test typeof(fig) == Makie.Figure
 
             result = calcPhaseDiagram(H₀, param, param, "Z2"; rounds=false)
@@ -318,7 +339,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             num[:, :, 1] = [0.9999999999999997 0.0 1.0; 0.9999999999999982 0.0 1.0000000000000009]
             num[:, :, 2] = [0.9999999999999997 0.0 0.9999999999999997; 0.9999999999999991 0.0 0.9999999999999991]
             num[:, :, 3] = [1.0 0.0 1.0; 1.0000000000000018 0.0 1.0000000000000018]
-            @test result ≈ num
+            @test result.nums ≈ num
 
         end
 
