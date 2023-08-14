@@ -1,7 +1,7 @@
 @doc raw"""
     plot1D(nums::Matrix, param_range::T; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T<:AbstractVector}
 """
-function plot1D(nums::Matrix, param_range::T; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T<:AbstractVector}
+function plot1D(nums::Matrix, param_range::T; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T<:AbstractVector}
 
     fig = Figure()
 
@@ -17,16 +17,16 @@ function plot1D(nums::Matrix, param_range::T; labels::Bool=true, png::Bool=false
     end
     Legend(fig[1, 2], ax)
 
-    p = (; png, pdf, svg, filename)
+    p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    display(fig)
+    # display(fig)
     fig
 end
 
 @doc raw"""
     plot2D(nums::T1, param_range1::T2, param_range2::T2; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector}
 """
-function plot2D(nums::T1, param_range1::T2, param_range2::T2; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector}
+function plot2D(nums::T1, param_range1::T2, param_range2::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector}
 
     fig = Figure()
 
@@ -41,14 +41,14 @@ function plot2D(nums::T1, param_range1::T2, param_range2::T2; labels::Bool=true,
     ax.aspect = AxisAspect(1)
     Colorbar(fig[1, 2], hm)
 
-    p = (; png, pdf, svg, filename)
-    output(fig, p)
+    p = (; disp, png, pdf, svg, filename)
+    # output(fig, p)
     display(fig)
     fig
 end
 
 function output(fig, p)
-    @unpack png, pdf, svg, filename = p
+    @unpack disp, png, pdf, svg, filename = p
     if png == true
         CairoMakie.activate!()
         save(filename * ".png", fig)
@@ -60,5 +60,9 @@ function output(fig, p)
     if svg == true
         CairoMakie.activate!()
         save(filename * ".svg", fig)
+    end
+    if disp == true
+        GLMakie.activate!()
+        display(fig)
     end
 end
