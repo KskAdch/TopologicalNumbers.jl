@@ -20,11 +20,11 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         end
 
         N = 51
-        # k = range(-π, π, length=N)
+        k = range(-π, π, length=N)
         bandsum = (-60.89985395515161, 60.89985395515161)
         result = showBand(H)
 
-        # @test result.k .== k
+        @test result.k == k
         for i in 1:size(result.Ene, 2)
             @test sum(result.Ene[:, i]) ≈ bandsum[i]
         end
@@ -51,7 +51,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         num = [0 0; 0 0; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 0 0; 0 0]
         @test result == num
 
-        fig = plot1D(result, param)
+        fig = plot1D(result, param; disp=false)
         @test typeof(fig) == Makie.Figure
 
         param = range(-2.0, 2.0, length=3)
@@ -63,7 +63,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
         @test result == num
 
-        fig = plot2D(result[1, :, :], param, param)
+        fig = plot2D(result[1, :, :], param, param; disp=false)
         @test typeof(fig) == Makie.Figure
 
     end
@@ -94,12 +94,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             end
 
             N = 51
-            # k = range(-π, π, length=N)
+            k = range(-π, π, length=N)
             bandsum = (-8026.922381020278, -3931.3204155463714, -1076.7367579094316, 1076.7367579094316, 3931.320415546372, 8026.922381020279)
             result = showBand(H)
 
-            # @test result.k[:, 1] .== k
-            # @test result.k[:, 2] .== k
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
             for i in 1:size(result.Ene, 3)
                 @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
             end
@@ -109,34 +109,37 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
 
-            # function H(k, p)
-            #     k1, k2 = k
-            #     t = p
+            function H(k, p)
+                k1, k2 = k
+                t = p
 
-            #     Hsize = 6
-            #     Hmat = zeros(ComplexF64, Hsize, Hsize)
+                Hsize = 6
+                Hmat = zeros(ComplexF64, Hsize, Hsize)
 
-            #     for i in 1:Hsize
-            #         Hmat[i, i] = -2 * cos(k2 - 2pi * i / Hsize)
-            #     end
+                for i in 1:Hsize
+                    Hmat[i, i] = -2 * cos(k2 - 2pi * i / Hsize)
+                end
 
-            #     for i in 1:Hsize-1
-            #         Hmat[i, i+1] = -t
-            #         Hmat[i+1, i] = -t
-            #     end
+                for i in 1:Hsize-1
+                    Hmat[i, i+1] = -t
+                    Hmat[i+1, i] = -t
+                end
 
-            #     Hmat[1, Hsize] = -t * exp(-im * k1)
-            #     Hmat[Hsize, 1] = -t * exp(im * k1)
+                Hmat[1, Hsize] = -t * exp(-im * k1)
+                Hmat[Hsize, 1] = -t * exp(im * k1)
 
-            #     Hmat
-            # end
-            # # H(k, p) = H0(k, (p, 1.0))
+                Hmat
+            end
+            # H(k, p) = H0(k, (p, 1.0))
 
-            # param = range(-2.0, 2.0, length=11)
-            # result = calcPhaseDiagram(H0, param, "Chern")
+            param = range(-2.0, 2.0, length=4)
+            result = calcPhaseDiagram(H, param, "Chern")
 
-            # num = [0 0 0 0 1 1 1 0 0 0 0; 0 0 0 0 1 1 1 0 0 0 0]
-            # @test result == num
+            num = [1 1 -2 -2 1 1; 1 1 -4 -4 1 1; 1 1 -4 -4 1 1; 1 1 -2 -2 1 1]
+            @test result == num
+
+            fig = plot1D(result, param; disp=false)
+            @test typeof(fig) == Makie.Figure
 
             # param = range(-2.0, 2.0, length=3)
             # result = calcPhaseDiagram(H, param, param, "Chern")
@@ -168,12 +171,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             end
 
             N = 51
-            # k = range(-π, π, length=N)
+            k = range(-π, π, length=N)
             bandsum = (-7404.378662190171, -7404.378662190169, 7404.378662190169, 7404.378662190172)
             result = showBand(H)
 
-            # @test result.k[:, 1] .== k
-            # @test result.k[:, 2] .== k
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
             for i in 1:size(result.Ene, 3)
                 @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
             end
@@ -216,7 +219,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             num = [1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1]
             @test result == num
 
-            fig = plot1D(result, param)
+            fig = plot1D(result, param; disp=false)
             @test typeof(fig) == Makie.Figure
 
             # param = range(-2.0, 2.0, length=3)
@@ -229,3 +232,4 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
     end
 
 end
+
