@@ -42,8 +42,8 @@ function plot2D(nums::T1, param_range1::T2, param_range2::T2; labels::Bool=true,
     Colorbar(fig[1, 2], hm)
 
     p = (; disp, png, pdf, svg, filename)
-    # output(fig, p)
-    display(fig)
+    output(fig, p)
+    # display(fig)
     fig
 end
 
