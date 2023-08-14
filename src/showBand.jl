@@ -1,4 +1,4 @@
-function Ene1D(p) # 1D Energy
+function Ene1D(p::Params) # 1D Energy
     @unpack Hamiltonian, N, Hs = p
 
     k = range(-π, π, length=N)
@@ -10,7 +10,7 @@ function Ene1D(p) # 1D Energy
     k, Ene
 end
 
-function Ene2D(p) # 2D Energy
+function Ene2D(p::Params) # 2D Energy
     @unpack Hamiltonian, N, Hs = p
 
     k = range(-π, π, length=N)
@@ -28,8 +28,9 @@ function Ene2D(p) # 2D Energy
     k, Ene
 end
 
-function diagram(p)
-    @unpack dim, N, labels, Hs = p
+function diagram(p::Params, p_out)
+    @unpack dim, N, Hs = p
+    @unpack labels = p_out
 
     nrang = range(-π, π, length=N)
 
@@ -121,7 +122,10 @@ function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bo
         dim = 2
     end
 
-    p = (; Hamiltonian, dim, N, labels, Hs, value, disp, png, pdf, svg, filename)
-    k, Ene, fig = diagram(p)
-    output(k, Ene, fig, p)
+    p = Params(; Hamiltonian, dim, N, Hs, gapless=0.0, rounds=false)
+    p_out = (; labels, value, disp, png, pdf, svg, filename)
+
+    k, Ene, fig = diagram(p, p_out)
+
+    output(k, Ene, fig, p_out)
 end

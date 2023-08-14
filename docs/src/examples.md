@@ -45,6 +45,35 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
 
+
+One-dimensional phase diagram is given by:
+
+```julia
+julia> function H0(k, p)
+            [
+                0 p[1]+p[2]*exp(-im * k)
+                p[1]+p[2]*exp(im * k) 0
+            ]
+        end
+julia> H(k, p) = H0(k, (p, 1.0))
+
+julia> param = range(-2.0, 2.0, length=1001)
+julia> calcPhaseDiagram(H, param, "BerryPhase"; plot=true)
+```
+
+![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/2b53e455-83ee-42d5-9824-84120c2be093)
+
+Also, two-dimensional phase diagram is given by:
+
+```julia
+julia> param = range(-2.0, 2.0, length=101)
+julia> calcPhaseDiagram(H0, param, param, "BerryPhase"; plot=true)
+```
+
+![Two-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/0ceef1a3-01fd-4e8b-9f01-4a4932039d26)
+
+
+
 ## Chern numbers
 
 ### Two-dimensional square lattice with flux model
@@ -100,6 +129,40 @@ The first argument `TopologicalNumber` in the named tuple is an vector that stor
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the first Chern numbers for each band.
 `Total` is a quantity that should always return zero.
+
+
+One-dimensional phase diagram is given by:
+
+```julia
+julia> function H(k, p)
+    k1, k2 = k
+    t = p
+
+    Hsize = 6
+    Hmat = zeros(ComplexF64, Hsize, Hsize)
+
+    for i in 1:Hsize
+        Hmat[i, i] = -2 * cos(k2 - 2pi * i / Hsize)
+    end
+
+    for i in 1:Hsize-1
+        Hmat[i, i+1] = -t
+        Hmat[i+1, i] = -t
+    end
+
+    Hmat[1, Hsize] = -t * exp(-im * k1)
+    Hmat[Hsize, 1] = -t * exp(im * k1)
+
+    Hmat
+end
+
+julia> param = range(-2.0, 2.0, length=500)
+julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
+```
+
+![One-dimensional phase diagram](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/f9c179c3-1275-4640-ac21-0d10737fcaf7)
+
+
 
 
 ## $\mathbb{Z}_2$ numbers

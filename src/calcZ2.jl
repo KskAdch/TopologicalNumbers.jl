@@ -1,4 +1,4 @@
-function psi_j!(j, psi_1, p) # wave function
+function psi_j!(j, psi_1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
         k = [i - 1, j - 1] * 2pi / N
@@ -13,8 +13,8 @@ end
     end
 end
 
-@views function U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p) # link variable
-    @unpack N, Nhalf, Hshalf = p
+@views function U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p::Params) # link variable
+    @unpack N = p
 
     if j != 1
         Link1 .= Link2
@@ -84,8 +84,8 @@ end
     end
 end
 
-@views function F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p) # lattice field strength
-    @unpack N, Nhalf, Hshalf = p
+@views function F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p::Params) # lattice field strength
+    @unpack N = p
 
     if i == N && j == N
         phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(LinkN1[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hshalf]
@@ -104,8 +104,11 @@ end
     end
 end
 
-@views function Z2Phase_round!(TopologicalNumber, p) # chern number
-    @unpack N, rounds, TR, Nhalf, Hshalf = p
+@views function Z2Phase_round!(TopologicalNumber, p::Params) # chern number
+    @unpack N, Hs, rounds = p
+    Nhalf = N ÷ 2 + 1
+    Hshalf = Hs ÷ 2
+
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)
     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
@@ -136,9 +139,9 @@ end
     TN = zeros(Hshalf)
 
     for j in 1:Nhalf
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
         for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
             if j < Nhalf
                 TN[:] .+= phi[:]
             end
@@ -157,8 +160,11 @@ end
     end
 end
 
-@views function Z2Phase!(TopologicalNumber, p) # chern number
-    @unpack N, rounds, TR, Nhalf, Hshalf = p
+@views function Z2Phase!(TopologicalNumber, p::Params) # chern number
+    @unpack N, Hs, rounds = p
+    Nhalf = N ÷ 2 + 1
+    Hshalf = Hs ÷ 2
+
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)
     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
@@ -189,9 +195,9 @@ end
     TN = zeros(Hshalf)
 
     for j in 1:Nhalf
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
         for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
             if j < Nhalf
                 TN[:] .+= phi[:]
             end
@@ -210,8 +216,11 @@ end
     end
 end
 
-@views function Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p) # chern number
-    @unpack N, rounds, TR, Nhalf, Hshalf = p
+@views function Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
+    @unpack N, Hs, rounds = p
+    Nhalf = N ÷ 2 + 1
+    Hshalf = Hs ÷ 2
+
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)
     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
@@ -242,9 +251,9 @@ end
     TN = zeros(Hshalf, 2)
 
     for j in 1:N
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
         for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
             if j < Nhalf
                 TN[:, 1] .+= phi[:]
             else
@@ -266,8 +275,11 @@ end
     end
 end
 
-@views function Z2Phase!(TopologicalNumber, TRTopologicalNumber, p) # chern number
-    @unpack N, rounds, TR, Nhalf, Hshalf = p
+@views function Z2Phase!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
+    @unpack N, Hs, rounds = p
+    Nhalf = N ÷ 2 + 1
+    Hshalf = Hs ÷ 2
+
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)
     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
@@ -298,9 +310,9 @@ end
     TN = zeros(Hshalf, 2)
 
     for j in 1:N
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, p)
+        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
         for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, p)
+            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
             if j < Nhalf
                 TN[:, 1] .+= phi[:]
             else
@@ -346,10 +358,10 @@ A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
 """
 function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
 
-    Nhalf = N ÷ 2 + 1
     n0 = zeros(2)
-    Hshalf = size(Hamiltonian(n0))[1] ÷ 2
-    p = (; Hamiltonian, N, rounds, TR, Nhalf, Hshalf)
+    Hs = size(Hamiltonian(n0))[1]
+    Hshalf = Hs ÷ 2
+    p = Params(; Hamiltonian, N, Hs, gapless=0.0, rounds, dim=2)
 
     if TR == false
         if rounds == true
