@@ -111,34 +111,34 @@ Hamiltonian of Haldane model is given by:
 
 ```julia
 julia> function H₀(k, p) # landau
-    k1, k2 = k
-    J = 1.0
-    K = 1.0
-    ϕ, M = p
+           k1, k2 = k
+           J = 1.0
+           K = 1.0
+           ϕ, M = p
 
-    h0 = 2K * cos(ϕ) * (cos(k1) + cos(k2) + cos(k1 + k2))
-    hx = -J * (1 + cos(k1) + cos(k2))
-    hy = -J * (-sin(k1) + sin(k2))
-    hz = M + 2K * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
+           h0 = 2K * cos(ϕ) * (cos(k1) + cos(k2) + cos(k1 + k2))
+           hx = J * (1 + cos(k1) + cos(k2))
+           hy = J * (-sin(k1) + sin(k2))
+           hz = M - 2K * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
 
-    s0 = [1 0; 0 1]
-    sx = [0 1; 1 0]
-    sy = [0 -im; im 0]
-    sz = [1 0; 0 -1]
+           s0 = [1 0; 0 1]
+           sx = [0 1; 1 0]
+           sy = [0 -im; im 0]
+           sz = [1 0; 0 -1]
 
-    h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
-end
+           h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+       end
 ```
 
 The band structure is computed as follows:
 
 ```julia
-julia> H(k) = H₀(k, (π / 2, 1.0))
+julia> H(k) = H₀(k, (π/3, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
 
-![Band structure of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/c9c0aa00-c412-4a4c-be94-d080a62bd14a)
+![Band structure of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/b05dd8a2-8047-43d6-a835-d4c18348ec97)
 
 
 Then we can compute the Chern numbers using `calcChern`:
@@ -150,7 +150,7 @@ julia> calcChern(H)
 The output is:
 
 ```julia
-(TopologicalNumber = [-1, 1], Total = 0)
+(TopologicalNumber = [1, -1], Total = 0)
 ```
 
 The first argument `TopologicalNumber` in the named tuple is an vector that stores the first Chern number for each band. 
@@ -169,7 +169,7 @@ julia> param = range(-π, π, length=1000)
 julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
 ```
 
-![One-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/bbbbd989-b2e2-4073-812f-a7c81bb253ba)
+![One-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/8af528e5-20df-4b9e-ad1b-cc11de0b902a)
 
 Also, two-dimensional phase diagram is given by:
 
@@ -179,7 +179,7 @@ julia> param2 = range(-6.0, 6.0, length=100)
 julia> calcPhaseDiagram(H₀, param1, param2, "Chern"; plot=true)
 ```
 
-![Two-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/81e4648d-4b6a-49e9-bb33-081557495a20)
+![Two-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/bafd50e9-2752-4f81-9b9d-e271a8d8061f)
 
 
 ### The Bernevig-Hughes-Zhang (BHZ) model
