@@ -19,8 +19,27 @@ makedocs(bib;
     ),
     pages=[
         "Home" => "index.md",
-        "Examples" => "examples.md",
-        "API" => "internal.md",
+        "Examples" => [
+            "One-dimensional case" => [
+                "SSH model" => "1D/SSH.md",
+                "Kitaev Chain" => "1D/Kitaev-Chain.md",
+                "Toda Lattice" => "1D/Toda-Lattice.md",
+            ],
+            "Two-dimensional case (Chern)" => [
+                "Square Lattice w/ Flux" => "2D/flux.md",
+                "Haldane model" => "2D/Haldane.md",
+                "Kitaev honeycomb model" => "2D/Kitaev-Honeycomb.md",
+            ],
+            "Two-dimensional case (Z2)" => [
+                "Thouless pumping" => "2D/Thouless.md",
+                "Kane-Mele model" => "2D/Kane-Mele.md",
+                "BHZ model" => "2D/BHZ.md",
+            ],
+        ],
+        "Library" => [
+            "Public" => "lib/public.md",
+            "Internal" => "lib/internal.md",
+        ],
         "References" => "references.md"
     ]
 )
