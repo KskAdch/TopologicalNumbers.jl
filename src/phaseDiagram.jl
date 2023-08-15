@@ -73,7 +73,7 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
         plot1D(nums, param_range)
     end
 
-    nums
+    (; param=param_range, nums)
 end
 
 
@@ -130,9 +130,9 @@ function calcPhaseDiagram(H::Function, param_range1::T, param_range2::T, alg::St
     end
 
     if plot == true && Hs % 2 == 0
-        nums_half = sum(@view(nums[1:Hs÷2, :, :]), dims=1)[1, :, :]
+        nums_half = sum(@view(nums[1:end÷2, :, :]), dims=1)[1, :, :]
         plot2D(nums_half, param_range1, param_range2) # half-filling case
     end
 
-    nums
+    (; param1=param_range1, param2=param_range2, nums)
 end

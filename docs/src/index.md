@@ -49,7 +49,8 @@ This package includes the following functions:
 - `showBand` to calculate the dispersion relation,
 - `calcBerryPhase` to calculate the winding numbers in the one-dimensional case,
 - `calcChern` to calculate the first Chern numbers in the two-dimensional case,
-- `calcZ2` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case.
+- `calcZ2` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case,
+- `calcPhaseDiagram` to calculate the phase diagram using the several methods.
 
 
 

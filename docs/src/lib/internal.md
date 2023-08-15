@@ -1,8 +1,6 @@
-# API
-
-```@index
-```
+# Internal
 
 ```@autodocs
 Modules = [TopologicalNumbers]
+Public = false
 ```
