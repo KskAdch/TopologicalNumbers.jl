@@ -137,7 +137,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 num[1, :] = [1, 1, -2, -2, 1, 1]
                 num[2, :] = [0, 1, -1, -1, 1, 0]
                 num[4, :] = [0, -1, 1, 1, -1, 0]
-                num[1, :] = [-1, -1, 2, 2, -1, -1]
+                num[5, :] = [-1, -1, 2, 2, -1, -1]
                 @test result.nums == num
 
                 fig = plot1D(result.nums, result.param; disp=false)
