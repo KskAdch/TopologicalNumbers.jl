@@ -134,14 +134,14 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 # #↓結果おかしい
                 # num = [6 6 -12 -12 6 6; 0 6 -6 -6 6 0; 0 4 -2 -1 1 0; 0 -6 6 6 -6 0; -6 -6 12 12 -6 -6; 0 2 -6 1 0 0]
-                num = [1 1 -2 -2 1 1; 0 1 -1 -1 1 0; 0 0 -2 0 0 0; 0 -1 1 1 -1 0; -1 -1 2 2 -1 -1; 0 -2 4 -1 2 0]
-                # @test result.nums[1, :] == [1, 1, -2, -2, 1, 1]
-                # @test result.nums[2, :] == [0, 1, -1, -1, 1, 0]
-                # @test result.nums[3, :] == [0, 0, -2, 0, 0, 0]
-                # @test result.nums[4, :] == [0, -1, 1, 1, -1, 0]
-                # @test result.nums[5, :] == [-1, -1, 2, 2, -1, -1]
-                # @test result.nums[6, :] == [0, -2, 4, -1, 2, 0]
-                @test result.nums == num
+                # num = [1 1 -2 -2 1 1; 0 1 -1 -1 1 0; 0 0 -2 0 0 0; 0 -1 1 1 -1 0; -1 -1 2 2 -1 -1; 0 -2 4 -1 2 0]
+                @test result.nums[1, :] == [1, 1, -2, -2, 1, 1]
+                @test result.nums[2, :] == [0, 1, -1, -1, 1, 0]
+                @test result.nums[3, :] == [0, 0, -2, 0, 0, 0]
+                @test result.nums[4, :] == [0, -1, 1, 1, -1, 0]
+                @test result.nums[5, :] == [-1, -1, 2, 2, -1, -1]
+                @test result.nums[6, :] == [0, -2, 4, -1, 2, 0]
+                # @test result.nums == num
 
                 fig = plot1D(result.nums, result.param; disp=false)
                 @test typeof(fig) == Makie.Figure
