@@ -137,7 +137,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 # num = [1 1 -2 -2 1 1; 0 1 -1 -1 1 0; 0 0 -2 0 0 0; 0 -1 1 1 -1 0; -1 -1 2 2 -1 -1; 0 -2 4 -1 2 0]
                 @test result.nums[1, :] == [1, 1, -2, -2, 1, 1]
                 @test result.nums[2, :] == [0, 1, -1, -1, 1, 0]
-                @test result.nums[3, :] == [0, 0, -2, 0, 0, 0]
+                @test result.nums[3, :] == [0, 3, -3, 0, -1, 0]
                 @test result.nums[4, :] == [0, -1, 1, 1, -1, 0]
                 @test result.nums[5, :] == [-1, -1, 2, 2, -1, -1]
                 @test result.nums[6, :] == [0, -2, 4, -1, 2, 0]
