@@ -103,8 +103,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                         Hmat[i+1, i] = -t
                     end
 
-                    Hmat[1, Hsize] = -t * exp(-im * Hsize * k1)
-                    Hmat[Hsize, 1] = -t * exp(im * Hsize * k1)
+                    Hmat[1, Hsize] = -t * exp(-im * k1)
+                    Hmat[Hsize, 1] = -t * exp(im * k1)
 
                     Hmat
                 end
@@ -112,7 +112,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 N = 51
                 k = range(-π, π, length=N)
-                bandsum = (-8027.411637742611, -3926.813524046014, -1090.4729277337524, 1090.4729277337524, 3926.813524046014, 8027.411637742611)
+                # bandsum = (-8027.411637742611, -3926.813524046014, -1090.4729277337524, 1090.4729277337524, 3926.813524046014, 8027.411637742611)
+                bandsum = (-8026.922381020279, -3931.320415546371, -1076.7367579094318, 1076.7367579094316, 3931.320415546371, 8026.92238102028)
                 result = showBand(H)
 
                 @test result.k[:, 1] == k
@@ -123,7 +124,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 @test abs(sum(result.Ene)) < 1e-10
 
-                @test calcChern(H) == (TopologicalNumber=[6, 6, -12, -12, 6, 6], Total=0)
+                @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
 
                 # H(k, p) = H₀(k, (p, 1.0))
@@ -133,7 +134,11 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 # #↓結果おかしい
                 # num = [6 6 -12 -12 6 6; 0 6 -6 -6 6 0; 0 4 -2 -1 1 0; 0 -6 6 6 -6 0; -6 -6 12 12 -6 -6; 0 2 -6 1 0 0]
-                # @test result.nums == num
+                num[1, :] = [1, 1, -2, -2, 1, 1]
+                num[2, :] = [0, 1, -1, -1, 1, 0]
+                num[4, :] = [0, -1, 1, 1, -1, 0]
+                num[1, :] = [-1, -1, 2, 2, -1, -1]
+                @test result.nums == num
 
                 fig = plot1D(result.nums, result.param; disp=false)
                 @test typeof(fig) == Makie.Figure
