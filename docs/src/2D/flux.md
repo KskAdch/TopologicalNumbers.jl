@@ -21,8 +21,8 @@ julia> function H₀(k, p) # landau
         Hmat[i+1, i] = -t
     end
 
-    Hmat[1, Hsize] = -t * exp(-im * Hsize * k1)
-    Hmat[Hsize, 1] = -t * exp(im * Hsize * k1)
+    Hmat[1, Hsize] = -t * exp(-im * k1)
+    Hmat[Hsize, 1] = -t * exp(im * k1)
 
     Hmat
 end
@@ -35,7 +35,7 @@ julia> H(k) = H₀(k, 1)
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/ddf6f7d1-232e-418a-9355-4fe7d3422f95)
+![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/8470121f-bdad-4960-9848-7ade1ae805d3)
 
 
 Then we can compute the Chern numbers using `calcChern`:
@@ -47,7 +47,7 @@ julia> calcChern(H)
 The output is:
 
 ```julia
-(TopologicalNumber = [6, 6, -12, -12, 6, 6], Total = 0)
+(TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
 ```
 
 The first argument `TopologicalNumber` in the named tuple is an vector that stores the first Chern number for each band. 
