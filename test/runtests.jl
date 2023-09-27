@@ -126,6 +126,15 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
+                C = zeros(6)
+                N = 51
+                for j in 1:N
+                    for i in 1:51
+                        C .+= calcBerryFlux(H, [i-1, j-1])
+                    end
+                end
+                @test C == calcChern(H, N = N).TopologicalNumber
+
 
                 # H(k, p) = H₀(k, (p, 1.0))
 
