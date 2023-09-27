@@ -1,4 +1,4 @@
-function psi!(n, psimat, Evec, p) # wave function
+function psimat!(n, psimat, Evec, p) # wave function □
     @unpack Hamiltonian, N = p
 
     if n[1] == N-1 && n[2] == N-1
@@ -32,7 +32,7 @@ function psi!(n, psimat, Evec, p) # wave function
     psimat[4, :, :] .= eigen!(Hamiltonian(k4)).vectors
 end
 
-@views function Link!(psimat, Evec, Linkmat, p)
+@views function Linkmat!(psimat, Evec, Linkmat, p)
     @unpack gapless, Hs = p
 
     l = 1
@@ -113,7 +113,7 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
         n[2] = mod(n[2], N)
     end
 
-    psi!(n, psimat, Evec, p)
-    Link!(psimat, Evec, Linkmat, p)
+    psimat!(n, psimat, Evec, p)
+    Linkmat!(psimat, Evec, Linkmat, p)
     F(Linkmat, p)
 end
