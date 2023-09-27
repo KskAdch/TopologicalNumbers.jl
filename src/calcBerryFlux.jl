@@ -102,7 +102,7 @@ end
 function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(n))[1]
-    p = Params(; Hamiltonian, N, gapless, rounds, Hs)
+    p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
     psimat = zeros(ComplexF64, 4, Hs, Hs)
     Evec = zeros(Hs)
