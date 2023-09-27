@@ -62,8 +62,6 @@ end
     phi = zeros(Hs)
     dphi = zeros(Hs)
 
-    # phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * Linkmat[3, l] * Linkmat[4, l])) for l in 1:Hs]
-    # dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) + log(Linkmat[3, l]) + log(Linkmat[4, l])) for l in 1:Hs]
     phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l]))) for l in 1:Hs]
     dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) - log(Linkmat[3, l]) - log(Linkmat[4, l])) for l in 1:Hs]
 
@@ -74,31 +72,31 @@ end
     end
 end
 
-# @doc raw"""
+@doc raw"""
 
-#  Calculate the Berry flux in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
+ Calculate the Berry flux in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-#     calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+    calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-#  Arguments
-#  - Hamiltionian::Function: the Hamiltonian matrix with one-dimensional wavenumber `k` as an argument.
-#  - n::Vector{Int64}: The wavenumber when calculating Berry flux.
-#  - N::Int=51: The number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
-#  - gapless::Real: The threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
-#  - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+ Arguments
+ - Hamiltionian::Function: the Hamiltonian matrix with one-dimensional wavenumber `k` as an argument.
+ - n::Vector{Int64}: The wavenumber when calculating Berry flux.
+ - N::Int=51: The number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - gapless::Real: The threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+ - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 
-# # Definition
-#  The Berry flux at the wavenumber $\bm{k}$ of the $n$th band $F_{n}(\bm{k})$ is defined by
-# ```math
-# F_{n}(\bm{k})=\frac{1}{2\pi i}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)
-# ```
-#  $A_{n,i}(\bm{k})$ is the Berry connection at wavenumber $\bm{k}$.
-# ```math
-# A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
-# ```
-#  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
-# """
+# Definition
+ The Berry flux at the wavenumber $\bm{k}$ of the $n$th band $F_{n}(\bm{k})$ is defined by
+```math
+F_{n}(\bm{k})=\frac{1}{2\pi i}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)
+```
+ $A_{n,i}(\bm{k})$ is the Berry connection at wavenumber $\bm{k}$.
+```math
+A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
+```
+ $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
+"""
 function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(n))[1]
@@ -108,13 +106,8 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64,4, Hs)
 
-    # if n[1] >= N
-        n[1] = mod(n[1], N)
-    # end
-    
-    # if n[2] >= N
-        n[2] = mod(n[2], N)
-    # end
+    n[1] = mod(n[1], N)
+    n[2] = mod(n[2], N)
 
     psimat!(n, psimat, Evec, p)
     Linkmat!(psimat, Evec, Linkmat, p)
