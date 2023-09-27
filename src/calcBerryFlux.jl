@@ -24,9 +24,9 @@ function psimat!(n, psimat, Evec, p) # wave function □
     k3 = 2pi * n11 / N
     k4 = 2pi * n01 / N
 
-    eigens1 = eigen!(Hamiltonian(k1))
-    psimat[1, :, :] .= eigens1.vectors
-    Evec[:] .= eigens1.values
+    eigens = eigen!(Hamiltonian(k1))
+    psimat[1, :, :] .= eigens.vectors
+    Evec[:] .= eigens.values
 
     psimat[2, :, :] .= eigen!(Hamiltonian(k2)).vectors
     psimat[3, :, :] .= eigen!(Hamiltonian(k3)).vectors
@@ -62,8 +62,10 @@ end
     phi = zeros(Hs)
     dphi = zeros(Hs)
 
-    phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * Linkmat[3, l] * Linkmat[4, l])) for l in 1:Hs]
-    dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) + log(Linkmat[3, l]) + log(Linkmat[4, l])) for l in 1:Hs]
+    # phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * Linkmat[3, l] * Linkmat[4, l])) for l in 1:Hs]
+    # dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) + log(Linkmat[3, l]) + log(Linkmat[4, l])) for l in 1:Hs]
+    phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l]))) for l in 1:Hs]
+    dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) - log(Linkmat[3, l]) - log(Linkmat[4, l])) for l in 1:Hs]
 
     if rounds == true
         phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
@@ -100,19 +102,19 @@ end
 function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(n))[1]
-    p = (; Hamiltonian, N, gapless, rounds, Hs)
+    p = Params(; Hamiltonian, N, gapless, rounds, Hs)
 
     psimat = zeros(ComplexF64, 4, Hs, Hs)
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64,4, Hs)
 
-    if n[1] >= N
+    # if n[1] >= N
         n[1] = mod(n[1], N)
-    end
+    # end
     
-    if n[2] >= N
+    # if n[2] >= N
         n[2] = mod(n[2], N)
-    end
+    # end
 
     psimat!(n, psimat, Evec, p)
     Linkmat!(psimat, Evec, Linkmat, p)
