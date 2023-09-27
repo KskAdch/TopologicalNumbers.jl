@@ -15,7 +15,8 @@ This package mainly includes the following functions:
 - `calcBerryPhase` to calculate the winding numbers in the one-dimensional case,
 - `calcChern` to calculate the first Chern numbers in the two-dimensional case,
 - `calcZ2` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case,
-- `calcPhaseDiagram` to calculate the phase diagram using the several methods.
+- `calcPhaseDiagram` to calculate the phase diagram using the several methods,
+- `calcBerryFlux` to calculate the Berry flux in the two-dimensional case.
 
 
 This software is released under the MIT License, please see the LICENSE file for more details.  

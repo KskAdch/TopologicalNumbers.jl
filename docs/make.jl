@@ -6,7 +6,8 @@ bib = CitationBibliography(joinpath(@__DIR__, "src", "docs.bib"); style=:numeric
 
 DocMeta.setdocmeta!(TopologicalNumbers, :DocTestSetup, :(using TopologicalNumbers); recursive=true)
 
-makedocs(bib;
+makedocs(;
+    plugins=[bib],
     modules=[TopologicalNumbers],
     authors="Keisuke Adachi <18s2002x@gmail.com>, Minoru Kanega <phys_chibaraki@yahoo.co.jp>",
     repo="https://github.com/KskAdch/TopologicalNumbers.jl/blob/{commit}{path}#{line}",
