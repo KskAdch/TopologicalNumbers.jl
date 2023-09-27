@@ -137,7 +137,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 end
 
                 @test C1 == calcChern(H).TopologicalNumber
-                @test C2 == [0.9999999999999989, 1.0000000000000009, -2.0, -1.9999999999999998, 1.0000000000000027, 0.9999999999999996]
+                @test C2 ≈ [1, 1, -2, -2, 1, 1]
 
 
                 # H(k, p) = H₀(k, (p, 1.0))
