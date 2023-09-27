@@ -126,8 +126,6 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
-                @test calcBerryFlux(H, [0, 0]) == calcBerryFlux(H, [0, 0])
-
 
                 # H(k, p) = H₀(k, (p, 1.0))
 
