@@ -18,7 +18,7 @@ julia> function H₀(k, p)
 The band structure is computed as follows:
 
 ```julia
-julia> H(k) = H₀(k, (1.0, 0.5))
+julia> H(k) = H₀(k, (-1.0, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
@@ -48,7 +48,7 @@ One-dimensional phase diagram is given by:
 ```julia
 julia> H(k, p) = H₀(k, (p, 1.0))
 
-julia> param = range(-2.0, 2.0, length=1001)
+julia> param = range(-3.0, 0, length=601)
 julia> calcPhaseDiagram(H, param, "BerryPhase"; plot=true)
 ```
 
