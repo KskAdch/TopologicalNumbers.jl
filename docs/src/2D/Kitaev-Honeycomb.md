@@ -7,17 +7,15 @@ julia> function H₀(k, p) # Kitaev
            k1, k2 = k
            K, κ = p
 
-           h0 = 0
            hx = -κ * (sin(k2) - sin(k1) + sin(k1 - k2))
            hy = K * (sin(k1) + sin(k2))
            hz = K * (cos(k1) + cos(k2) + 1)
 
-           s0 = [1 0; 0 1]
            sx = [0 1; 1 0]
            sy = [0 -im; im 0]
            sz = [1 0; 0 -1]
 
-           h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+           hx .* sx .+ hy .* sy .+ hz .* sz
        end
 ```
 
