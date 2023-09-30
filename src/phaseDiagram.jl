@@ -8,7 +8,7 @@ function update1D!(nums, num0, H, alg!, range1::T, p::Params) where {T<:Abstract
 end
 
 function update2D!(nums, num0, H, alg!, range1::T, range2::T, p::Params) where {T<:AbstractVector}
-    for j in eachindex(range1), i in eachindex(range2)
+    for i in eachindex(range1), j in eachindex(range2)
         param = (range1[i], range2[j])
         Ham0(k) = H(k, param)
         p.Hamiltonian = Ham0
