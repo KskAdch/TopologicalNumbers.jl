@@ -89,11 +89,11 @@ end
 # Definition
  The Berry flux at the wavenumber $\bm{k}$ of the $n$th band $F_{n}(\bm{k})$ is defined by
 ```math
-F_{n}(\bm{k})=\frac{1}{2\pi i}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)
+F_{n}(\bm{k})=\frac{1}{2\pi}\Im\log\left(U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right)
 ```
- $A_{n,i}(\bm{k})$ is the Berry connection at wavenumber $\bm{k}$.
+ $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is primitive translation vector.
 ```math
-A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
+U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
