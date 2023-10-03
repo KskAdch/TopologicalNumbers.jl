@@ -352,11 +352,11 @@ end
 ```
  $F_{n}$ is the Berry flux of the $n$th band in the $\mathrm{BZ}'$. The range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone).
 ```math
-F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\mathrm{Im}\mathrm{Log}\left[U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right]
+F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\mathrm{Im}\left[\mathrm{Log}\left[U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right]\right]
 ```
  $P_{n}(k_{2})$ is the time-reversal polarization at wavenumber $k_{2}$.
 ```math
-P_{n}(k_{2})=\frac{1}{2\pi}\sum_{\bm{k_{1}}=0}^{\pi-\bm{e}_{1}}U_{n,1}(\bm{k})\frac{\mathrm{PF}[\omega(0,k_{2})]}{\mathrm{Pf}[\omega(\pi,k_{2})]}
+P_{n}(k_{2})=\frac{1}{2\pi}\frac{\mathrm{Pf}[\omega(0,k_{2})]}{\mathrm{Pf}[\omega(\pi,k_{2})]}\sum_{\bm{k_{1}}=0}^{\pi-\bm{e}_{1}}U_{n,1}(\bm{k})
 ```
  $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
 ```math

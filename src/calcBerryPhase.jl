@@ -125,7 +125,7 @@ end
 ```
  The range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $U_{n,i}(k)$ is the link variable at wavenumber $k$. $e_{1}$ is the unit vector.
 ```math
-U_{n,i}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
+U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
 ```
  $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
 """
