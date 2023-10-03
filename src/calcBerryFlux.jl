@@ -97,7 +97,7 @@ f_{n}(\bm{k})=\frac{1}{2\pi}\Im\log\left(U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1
 ```math
 df_{n}(\bm{k})=\frac{1}{2\pi}\Im\left(\logU_{n,1}(\bm{k})+\logU_{n,2}(\bm{k}+\bm{e}_{1})-\logU_{n,1}(\bm{k}+\bm{e}_{2})-\logU_{n,1}(\bm{k})\right)
 ```
- $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is primitive translation vector.
+ $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
 ```math
 U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```

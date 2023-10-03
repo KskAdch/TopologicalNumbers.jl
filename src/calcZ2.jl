@@ -348,13 +348,25 @@ end
 # Definition
  The $\mathbb{Z}_{2}$ number of the $2n$th (and $2n-1$th) band $\nu_{n}$ is defined by
 ```math
-\nu_{n}=\frac{1}{2\pi i}\int_{\mathrm{BZ}'}d\bm{k}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)-\frac{1}{2\pi i}\oint_{\partial\mathrm{BZ}'}dk_{i}A_{n,j\neq i}(\bm{k})
+\nu_{n}=F_{n}-\left(P_{n}(0)-P_{n}(\pi)\right)
 ```
- The integral range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone). $A_{n,i}(\bm{k})$ is the Berry connection at wavenumber $\bm{k}$.
+ $F_{n}$ is the Berry flux of the $n$th band in $\mathrm{BZ}'$. The range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone).
 ```math
-A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
+F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\Im\log\left(U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right)
 ```
- $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band.
+ $P_{n}(k_{2})$ is the time-reversal polarization at wavenumber $k_{2}$.
+```math
+P_{n}(k_{2})=\frac{1}{2\pi}\sum_{\bm{k_{1}}=0}^{\pi-\bm{e}_{1}}U_{n,1}(\bm{k})\frac{\mathrm{PF}[\moega(0,k_{2})]}{\mathrm{\Pf}[\omega(\pi,k_{2})]}
+```
+ $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
+```math
+U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
+```
+ $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band. $\omega(\bm{k})$ is the unitary matrix given by
+'''math
+\omega(\bm{k})=\bra{\Psi(\bm{-k})}T\ket{\Psi(\bm{k})}
+'''
+ $T$ is the time-reversal operator.
 """
 function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
 

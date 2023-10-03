@@ -166,10 +166,10 @@ end
 ```math
 \nu_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}}\Im\log\left(U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right)
 ```
- The range $\mathrm{BZ}$(Brillouin Zone) is $\bm{k}\in[0,2\pi]^{2}$. $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is primitive translation vector.
- ```math
- U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
- ```
+ The range $\mathrm{BZ}$(Brillouin Zone) is $\bm{k}\in[0,2\pi]^{2}$. $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
+```math
+U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
+```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
