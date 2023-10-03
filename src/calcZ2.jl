@@ -356,11 +356,11 @@ F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\mathrm{Im}\mathrm{Log}\left[U_{
 ```
  $P_{n}(k_{2})$ is the time-reversal polarization at wavenumber $k_{2}$.
 ```math
-P_{n}(k_{2})=\frac{1}{2\pi}\sum_{\bm{k_{1}}=0}^{\pi-\bm{e}_{1}}U_{n,1}(\bm{k})\frac{\mathrm{PF}[\moega(0,k_{2})]}{\mathrm{\Pf}[\omega(\pi,k_{2})]}
+P_{n}(k_{2})=\frac{1}{2\pi}\sum_{\bm{k_{1}}=0}^{\pi-\bm{e}_{1}}U_{n,1}(\bm{k})\frac{\mathrm{PF}[\omega(0,k_{2})]}{\mathrm{Pf}[\omega(\pi,k_{2})]}
 ```
  $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
 ```math
-U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
+U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band. $\omega(\bm{k})$ is the unitary matrix given by
 '''math
