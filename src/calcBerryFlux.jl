@@ -80,7 +80,7 @@ end
 
  Arguments
  - Hamiltionian::Function: the Hamiltonian matrix with one-dimensional wavenumber `k` as an argument.
- - n::Vector{Int64}: The wavenumber when calculating Berry flux.
+ - n::Vector{Int64}: The wavenumber($2\pi*n/N$) when calculating Berry flux.
  - N::Int=51: The number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
  - gapless::Real: The threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
  - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
@@ -89,11 +89,17 @@ end
 # Definition
  The Berry flux at the wavenumber $\bm{k}$ of the $n$th band $F_{n}(\bm{k})$ is defined by
 ```math
-F_{n}(\bm{k})=\frac{1}{2\pi i}\left(\partial_{k_{1}}A_{n,2}(\bm{k})-\partial_{k_{2}}A_{n,1}(\bm{k})\right)
+F_{n}(\bm{k})=f_{n}(\bm{k})-df_{n}(\bm{k})
 ```
- $A_{n,i}(\bm{k})$ is the Berry connection at wavenumber $\bm{k}$.
 ```math
-A_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\partial_{k_{i}}\ket{\Psi_{n}(\bm{k})}
+f_{n}(\bm{k})=\frac{1}{2\pi}\Im\log\left(U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right)
+```
+```math
+df_{n}(\bm{k})=\frac{1}{2\pi}\Im\left(\logU_{n,1}(\bm{k})+\logU_{n,2}(\bm{k}+\bm{e}_{1})-\logU_{n,1}(\bm{k}+\bm{e}_{2})-\logU_{n,1}(\bm{k})\right)
+```
+ $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
+```math
+U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
