@@ -350,9 +350,9 @@ end
 ```math
 \nu_{n}=F_{n}-\left(P_{n}(0)-P_{n}(\pi)\right)
 ```
- $F_{n}$ is the Berry flux of the $n$th band in $\mathrm{BZ}'$. The range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone).
+ $F_{n}$ is the Berry flux of the $n$th band in the $\mathrm{BZ}'$. The range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone).
 ```math
-F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\Im\log\left(U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right)
+F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\mathrm{Im}\mathrm{Log}\left[U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right]
 ```
  $P_{n}(k_{2})$ is the time-reversal polarization at wavenumber $k_{2}$.
 ```math
@@ -364,7 +364,7 @@ U_{n,i}(\bm{k})=\bra{\Psi_{n}(\bm{k})}\ket{\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band. $\omega(\bm{k})$ is the unitary matrix given by
 '''math
-\omega(\bm{k})=\bra{\Psi(\bm{-k})}T\ket{\Psi(\bm{k})}
+\omega(\bm{k})=\bra{\Psi(-\bm{k})}T\ket{\Psi(\bm{k})}
 '''
  $T$ is the time-reversal operator.
 """
