@@ -121,11 +121,11 @@ end
 
  The Berry phase of the $n$th band $\nu_{n}$ is defined by
 ```math
-\nu_{n}=\frac{1}{\pi i}\int_{\mathrm{BZ}}dkA_{n}(k)
+\nu_{n}=\frac{1}{\pi}\sum_{k\in\mathrm{BZ}}U_{n}(k)
 ```
- The integral range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $A_{n}(k)$ is the Berry conection at wavenumber $k$.
+ The range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $U_{n,i}(k)$ is the link variable at wavenumber $k$. $e_{1}$ is the unit vector.
 ```math
-A_{n}(k)=\bra{\Psi_{n}(k)}\partial_{k}\ket{\Psi_{n}(k)}
+U_{n,i}(k)=\bra{\Psi_{n}(k)}\ket{\Psi_{n}(k+e_{1})}
 ```
  $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
 """
