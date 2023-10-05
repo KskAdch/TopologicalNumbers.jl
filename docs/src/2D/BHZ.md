@@ -9,24 +9,24 @@ julia> function H₀(k, p) # BHZ
     t₁ = ϵ₁ = 2
     ϵ₂, t₂ = p
 
-    R0 = -t₁*(cos(k1) + cos(k2)) + ϵ₁/2
+    ϵ = -t₁*(cos(k1) + cos(k2)) + ϵ₁/2
     R3 = 2tₛₚ*sin(k2)
     R4 = 2tₛₚ*sin(k1)
-    R5 = -t₂*(cos(k1) + cos(k2)) + ϵ₂/2
+    R0 = -t₂*(cos(k1) + cos(k2)) + ϵ₂/2
 
     s0 = [1 0; 0 1]
     sx = [0 1; 1 0]
     sy = [0 -im; im 0]
     sz = [1 0; 0 -1]
 
-    a0 = kron(s0, s0)
-    a1 = kron(sx, sx)
-    a2 = kron(sx, sy)
-    a3 = kron(sx, sz)
+    I = Matrix{Int64}(I, 4, 4)
+    a1 = kron(sz, sx)
+    a2 = kron(sz, sy)
+    a3 = kron(sz, sz)
     a4 = kron(sy, s0)
-    a5 = kron(sz, s0)
+    a0 = kron(sx, s0)
 
-    R0 .* a0 .+ R3 .* a3 .+ R4 .* a4 .+ R5 .* a5
+    ϵ .* I .+ R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
 end
 ```
 

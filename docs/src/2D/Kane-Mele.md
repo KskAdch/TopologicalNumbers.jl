@@ -7,23 +7,24 @@ julia> function H₀(k, p) # Kane-Mele
     k1, k2 = k
     t, λₛₒ = p
 
+    R1 = 0
+    R2 = 0
     R3 = 2λₛₒ*(sin(k1) - sin(k2) - sin(k1-k2))
     R4 = -t*(sin(k1) + sin(k2))
-    R5 = -t*(cos(k1) + cos(k2) + 1)
+    R0 = -t*(cos(k1) + cos(k2) + 1)
 
     s0 = [1 0; 0 1]
     sx = [0 1; 1 0]
     sy = [0 -im; im 0]
     sz = [1 0; 0 -1]
 
-    a0 = kron(s0, s0)
-    a1 = kron(sx, sx)
-    a2 = kron(sx, sy)
-    a3 = kron(sx, sz)
+    a1 = kron(sz, sx)
+    a2 = kron(sz, sy)
+    a3 = kron(sz, sz)
     a4 = kron(sy, s0)
-    a5 = kron(sz, s0)
+    a0 = kron(sx, s0)
 
-    R3 .* a3 .+ R4 .* a4 .+ R5 .* a5
+    R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
 end
 ```
 
