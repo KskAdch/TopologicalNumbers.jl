@@ -2,7 +2,7 @@
 
 Hamiltonian of the Su-Schrieffer-Heeger model.
 
-     SSH(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
+     SSH(k::T1, p::T2) where {T1<:Real, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: one-dimensional wavenumber `k`.
@@ -16,7 +16,7 @@ H(k)=
 ```
 where,,,
 """
-function SSH(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
+function SSH(k::T1, p::T2) where {T1<:Real, T2<:Union{AbstractVector,Tuple}}
     [
         0 p[1]+p[2]*exp(-im * k)
         p[1]+p[2]*exp(im * k) 0
@@ -27,7 +27,7 @@ end
 
 Hamiltonian of the Kitaev chain model.
 
-     KitaevChain(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
+     KitaevChain(k::T1, p::T2) where {T1<:Real, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: one-dimensional wavenumber `k`.
@@ -41,7 +41,7 @@ H(k)=
 ```
 where,,,
 """
-function KitaevChain(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
+function KitaevChain(k::T1, p::T2) where {T1<:Real, T2<:Union{AbstractVector,Tuple}}
     μ, Δ = p
     t = 1
 
@@ -55,7 +55,7 @@ end
 
 Hamiltonian of the two-dimensional square lattice with flux model.
 
-     Flux2d(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+     Flux2d(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: one-dimensional wavenumber `k`.
@@ -69,7 +69,7 @@ H(k)=
 ```
 where,,,
 """
-function Flux2d(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+function Flux2d(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     Hsize, ν = p
     t = 1
@@ -98,7 +98,7 @@ end
 
 Hamiltonian of the Haldane model.
 
-     Haldane(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+     Haldane(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: two-dimensional wavenumber `k`.
@@ -112,7 +112,7 @@ H(k)=
 ```
 where,,,
 """
-function Haldane(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+function Haldane(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     J = 1.0
     K = 1.0
@@ -135,7 +135,7 @@ end
 
 Hamiltonian of the Kitaev honeycomb model.
 
-     KitaevHoneycomb(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+     KitaevHoneycomb(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: two-dimensional wavenumber `k`.
@@ -149,7 +149,7 @@ H(k)=
 ```
 where,,,
 """
-function KitaevHoneycomb(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+function KitaevHoneycomb(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     K, κ = p
 
@@ -168,7 +168,7 @@ end
 
 Hamiltonian of the Thouless pumping model.
 
-     ThoulessPump(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+     ThoulessPump(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: two-dimensional wavenumber `k`.
@@ -182,14 +182,14 @@ H(k)=
 ```
 where,,,
 """
-function ThoulessPump(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+function ThoulessPump(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
 end
 
 @doc raw"""
 
 Hamiltonian of the Kane--Mele model.
 
-     KaneMele(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+     KaneMele(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: two-dimensional wavenumber `k`.
@@ -203,7 +203,7 @@ H(k)=
 ```
 where,,,
 """
-function KaneMele(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+function KaneMele(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     t, λₛₒ = p
 
@@ -232,7 +232,7 @@ end
 
 Hamiltonian of the Bernevig--Hughes--Zhang (BHZ) model.
 
-     BHZ(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+     BHZ(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
 
  Arguments
  - `k::T1`: two-dimensional wavenumber `k`.
@@ -246,7 +246,7 @@ H(k)=
 ```
 where,,,
 """
-function BHZ(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
+function BHZ(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     tₛₚ = 1
     t₁ = ϵ₁ = 2
