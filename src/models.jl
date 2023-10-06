@@ -2,11 +2,11 @@
 
 Hamiltonian of the Su-Schrieffer-Heeger model.
 
-     SSH(k, p)
+     SSH(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
 
  Arguments
- - k::Float64: one-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: one-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -16,7 +16,7 @@ H(k)=
 ```
 where,,,
 """
-function SSH(k, p)
+function SSH(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
     [
         0 p[1]+p[2]*exp(-im * k)
         p[1]+p[2]*exp(im * k) 0
@@ -27,11 +27,11 @@ end
 
 Hamiltonian of the Kitaev chain model.
 
-     KitaevChain(k, p)
+     KitaevChain(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
 
  Arguments
- - k::Float64: one-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: one-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -41,7 +41,7 @@ H(k)=
 ```
 where,,,
 """
-function KitaevChain(k, p)
+function KitaevChain(k::T1, p::T2) where {T1<:AbstractFloat, T2<:AbstractVector}
     μ, Δ = p
     t = 1
 
@@ -55,11 +55,11 @@ end
 
 Hamiltonian of the two-dimensional square lattice with flux model.
 
-     Flux2d(k, p)
+     Flux2d(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
 
  Arguments
- - k::Float64: one-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: one-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -69,7 +69,7 @@ H(k)=
 ```
 where,,,
 """
-function Flux2d(k, p)
+function Flux2d(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
     k1, k2 = k
     Hsize, ν = p
     t = 1
@@ -98,11 +98,11 @@ end
 
 Hamiltonian of the Haldane model.
 
-     Haldane(k, p)
+     Haldane(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
 
  Arguments
- - k::Float64: two-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: two-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -112,7 +112,7 @@ H(k)=
 ```
 where,,,
 """
-function Haldane(k, p)
+function Haldane(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
     k1, k2 = k
     J = 1.0
     K = 1.0
@@ -135,11 +135,11 @@ end
 
 Hamiltonian of the Kitaev honeycomb model.
 
-     KitaevHoneycomb(k, p)
+     KitaevHoneycomb(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
 
  Arguments
- - k::Float64: two-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: two-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -149,7 +149,7 @@ H(k)=
 ```
 where,,,
 """
-function KitaevHoneycomb(k, p)
+function KitaevHoneycomb(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
     k1, k2 = k
     K, κ = p
 
@@ -168,11 +168,11 @@ end
 
 Hamiltonian of the Thouless pumping model.
 
-     ThoulessPump(k, p)
+     ThoulessPump(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
 
  Arguments
- - k::Float64: two-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: two-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -182,18 +182,18 @@ H(k)=
 ```
 where,,,
 """
-function ThoulessPump(k, p)
+function ThoulessPump(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
 end
 
 @doc raw"""
 
 Hamiltonian of the Kane--Mele model.
 
-     KaneMele(k, p)
+     KaneMele(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
 
  Arguments
- - k::Float64: two-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: two-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -203,7 +203,7 @@ H(k)=
 ```
 where,,,
 """
-function KaneMele(k, p)
+function KaneMele(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
     k1, k2 = k
     t, λₛₒ = p
 
@@ -232,11 +232,11 @@ end
 
 Hamiltonian of the Bernevig--Hughes--Zhang (BHZ) model.
 
-     BHZ(k, p)
+     BHZ(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
 
  Arguments
- - k::Float64: two-dimensional wavenumber `k`.
- - p::Tuple{Float64, Float64}: parameters defined as below.
+ - `k::T1`: two-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
 
 
 # Definition
@@ -246,7 +246,7 @@ H(k)=
 ```
 where,,,
 """
-function BHZ(k, p)
+function BHZ(k::T1, p::T2) where {T1<:AbstractVector, T2<:AbstractVector}
     k1, k2 = k
     tₛₚ = 1
     t₁ = ϵ₁ = 2
