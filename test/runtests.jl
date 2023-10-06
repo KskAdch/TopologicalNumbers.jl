@@ -17,6 +17,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 p[1]+p[2]*exp(im * k) 0
             ]
         end
+        @test H₀(0.0, (1.0, 1.0)) == SSH(0.0, (1.0, 1.0))
         H(k) = H₀(k, (0.9, 1.0))
 
         N = 51
@@ -88,11 +89,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 function H₀(k, p) # landau
                     k1, k2 = k
                     t = 1
+                    Hsize, ν = p
 
-                    Hsize = 6
+                    # Hsize = 6
                     Hmat = zeros(ComplexF64, Hsize, Hsize)
 
-                    ϕ = 2π * p / Hsize
+                    ϕ = 2π * ν / Hsize
 
                     for i in 1:Hsize
                         Hmat[i, i] = -2t * cos(k2 - i * ϕ)
@@ -108,7 +110,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                     Hmat
                 end
-                H(k) = H₀(k, 1)
+                @test H₀((0.0, 0.0), (6, 1)) == Flux2d((0.0, 0.0), (6, 1))
+                H(k) = H₀(k, (6, 1))
 
                 N = 51
                 k = range(-π, π, length=N)
@@ -140,10 +143,10 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 @test C2 ≈ [1, 1, -2, -2, 1, 1]
 
 
-                # H(k, p) = H₀(k, (p, 1.0))
+                H(k, p) = H₀(k, (6, p))
 
                 param = 1:6 # range(1, 6, length=6)
-                result = calcPhaseDiagram(H₀, param, "Chern")
+                result = calcPhaseDiagram(H, param, "Chern")
 
                 # #↓結果おかしい
                 # num = [6 6 -12 -12 6 6; 0 6 -6 -6 6 0; 0 4 -2 -1 1 0; 0 -6 6 6 -6 0; -6 -6 12 12 -6 -6; 0 2 -6 1 0 0]
@@ -188,6 +191,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                     h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
                 end
+                @test H₀((0.0, 0.0), (0.5, 1.0)) == Haldane((0.0, 0.0), (0.5, 1.0))
                 H(k) = H₀(k, (π / 2, 1.0))
 
                 N = 51
@@ -269,28 +273,33 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
             function H₀(k, p) # 2d Kane-Mele
                 k1, k2 = k
-                t, λₛ = p
-
-                R3 = 2λₛ * (sin(k1) - sin(k2) - sin(k1 - k2))
-                R4 = -t * (sin(k1) + sin(k2))
-                R5 = -t * (cos(k1) + cos(k2) + 1)
-
+                t, λₛₒ = p
+            
+                R1 = 0
+                R2 = 0
+                R3 = 2λₛₒ*(sin(k1) - sin(k2) - sin(k1-k2))
+                R4 = -t*(sin(k1) + sin(k2))
+                R0 = -t*(cos(k1) + cos(k2) + 1)
+            
                 s0 = [1 0; 0 1]
                 sx = [0 1; 1 0]
                 sy = [0 -im; im 0]
                 sz = [1 0; 0 -1]
-
+            
+                a1 = kron(sz, sx)
+                a2 = kron(sz, sy)
                 a3 = kron(sz, sz)
                 a4 = kron(sy, s0)
-                a5 = kron(sx, s0)
-
-                R3 * a3 + R4 * a4 + R5 * a5
+                a0 = kron(sx, s0)
+            
+                R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
             end
+            @test H₀((0.0, 0.0), (0.5, 1.0)) == KaneMele((0.0, 0.0), (0.5, 1.0))
             H(k) = H₀(k, (1.0, 1.0))
 
             N = 51
             k = range(-π, π, length=N)
-            bandsum = (-7404.378662190171, -7404.378662190169, 7404.378662190169, 7404.378662190172)
+            bandsum = (-7404.378662190171, -7404.378662190167, 7404.378662190169, 7404.37866219017)
             result = showBand(H)
 
             @test result.k[:, 1] == k
@@ -325,7 +334,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             @test typeof(fig) == Makie.Figure
 
             result = calcPhaseDiagram(H, param, "Z2"; rounds=false)
-            num = [1.0000000000000004 1.0; 1.0 1.0; 1.0000000000000002 1.0000000000000009; 1.0 0.9999999999999991; 0.9999999999999997 1.0; 0.0 0.0; 0.9999999999999997 1.0; 1.0000000000000004 0.9999999999999991; 1.0000000000000002 1.0000000000000009; 1.0 1.0; 1.0000000000000004 1.0]
+            num = [1.000000000000001 0.9999999999999991; 0.9999999999999996 1.0; 1.0 1.0000000000000009; 0.9999999999999996 1.0; 0.9999999999999996 1.0; 0.0 0.0; 0.9999999999999996 1.0; 0.9999999999999996 1.0; 1.0 1.0000000000000009; 0.9999999999999996 1.0; 1.000000000000001 0.9999999999999991]
             @test result.nums ≈ num
 
 
@@ -346,13 +355,127 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
             result = calcPhaseDiagram(H₀, param, param, "Z2"; rounds=false)
             num = zeros(2, 3, 3)
-            num[:, :, 1] = [0.9999999999999997 0.0 1.0; 0.9999999999999982 0.0 1.0000000000000009]
-            num[:, :, 2] = [0.9999999999999997 0.0 0.9999999999999997; 0.9999999999999991 0.0 0.9999999999999991]
-            num[:, :, 3] = [1.0 0.0 1.0; 1.0000000000000018 0.0 1.0000000000000018]
+            num[:, :, 1] = [1.0 0.0 1.0; 1.0 0.0 1.0]
+            num[:, :, 2] = [1.0 0.0 1.0; 1.0 0.0 1.0]
+            num[:, :, 3] = [1.0 0.0 1.0; 1.0 0.0 1.0]
             @test result.nums ≈ num
 
         end
 
+    end
+
+    @testset "model" begin
+        @testset "SSH" begin
+            H(k) = SSH(k, (0.3, 0.5))
+
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-27.505964588866973, 27.505964588866973)
+            result = showBand(H)
+
+            @test result.k == k
+            for i in 1:size(result.Ene, 2)
+                @test sum(result.Ene[:, i]) ≈ bandsum[i]
+            end
+
+            @test abs(sum(result.Ene)) < 1e-10
+        end
+
+        @testset "KitaevChain" begin
+            H(k) = KitaevChain(k, (0.5, 0.2))
+
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-70.31377676120336, 70.31377676120336)
+            result = showBand(H)
+
+            @test result.k == k
+            for i in 1:size(result.Ene, 2)
+                @test sum(result.Ene[:, i]) ≈ bandsum[i]
+            end
+
+            @test abs(sum(result.Ene)) < 1e-10
+        end
+
+        @testset "Flux2d" begin
+            H(k) = Flux2d(k, (6, 1))
+
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-8026.922381020279, -3931.320415546371, -1076.736757909432, 1076.7367579094318, 3931.320415546371, 8026.92238102028)
+            result = showBand(H)
+
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+            @test abs(sum(result.Ene)) < 1e-10
+        end
+
+        @testset "Haldane" begin
+            H(k) = Haldane(k, (0.5, 0.5))
+
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-5563.582717519327, 5209.0393625156175)
+            result = showBand(H)
+
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+            # @test abs(sum(result.Ene)) < 1e-10
+        end
+
+        @testset "KitaevHoneycomb" begin
+            H(k) = KitaevHoneycomb(k, (1.0, 0.2))
+
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-4136.787430207456, 4136.787430207456)
+            result = showBand(H)
+
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+            @test abs(sum(result.Ene)) < 1e-10
+        end
+
+        @testset "KaneMele" begin
+            H(k) = KaneMele(k, (1.0, 0.3))
+
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-4652.438396310186, -4652.438396310185, 4652.438396310186, 4652.438396310186)
+            result = showBand(H)
+
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+            @test abs(sum(result.Ene)) < 1e-10
+        end
+
+        @testset "BHZ" begin
+            H(k) = BHZ(k, (0.5, 1.0))
+
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-2874.262392663075, -2874.2623926630727, 8484.262392663073, 8484.262392663073)
+            result = showBand(H)
+
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+            # @test abs(sum(result.Ene)) < 1e-10
+        end
     end
 
 end
