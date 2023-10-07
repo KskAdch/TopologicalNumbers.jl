@@ -1,23 +1,5 @@
 function psimat!(n, psimat, Evec, p) # wave function □
     @unpack Hamiltonian, N = p
-
-    # if n[1] == N-1 && n[2] == N-1
-    #     n10 = [0, n[2]]
-    #     n11 = [0, 0]
-    #     n01 = [n[1], 0]
-    # elseif n[1] == N-1
-    #     n10 = [0, n[2]]
-    #     n11 = [0, n[2]+1]
-    #     n01 = [n[1], n[2]+1]
-    # elseif n[2] == N-1
-    #     n10 = [n[1]+1, n[2]]
-    #     n11 = [n[1]+1, 0]
-    #     n01 = [n[1], 0]
-    # else
-    #     n10 = n .+ [1, 0]
-    #     n11 = n .+ [1, 1]
-    #     n01 = n .+ [0, 1]
-    # end
     
     n100 = n .+ [1, 0, 0]
     n110 = n .+ [1, 1, 0]
@@ -103,8 +85,7 @@ end
 function F!(Linkmat, phi, node, p)
     @unpack rounds, Hs = p
 
-    # phi = zeros(Hs)
-    dphi = zeros(Hs)
+    dphi = zeros(6, Hs)
 
     phi[1, :] = [angle(Linkmat[4, l] * Linkmat[8, l] * conj(Linkmat[12, l]) * conj(Linkmat[5, l])) for l in 1:Hs]
     dphi[1, :] = [angle(Linkmat[4, l]) + angle(Linkmat[8, l]) - angle(Linkmat[12, l]) - angle(Linkmat[5, l]) for l in 1:Hs]
@@ -149,7 +130,7 @@ end
  - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 """
-function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(n))[1]
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
@@ -161,9 +142,6 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     node = zeros(Hs)
 
     n .= [mod(n[i], N) for i in 1:3]
-    # n[1] = mod(n[1], N)
-    # n[2] = mod(n[2], N)
-    # n[3] = mod(n[3], N)
 
     psimat!(n, psimat, Evec, p)
     Linkmat!(psimat, Evec, Linkmat, p)
