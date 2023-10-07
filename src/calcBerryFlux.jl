@@ -46,10 +46,10 @@ end
             Linkmat[3, l:l0] .= dot(psimat[4, :, l:l0], psimat[3, :, l:l0])
             Linkmat[4, l:l0] .= dot(psimat[1, :, l:l0], psimat[4, :, l:l0])
         else
-            Linkmat[1, l:l0] .= det(psimat[1, :, l:l0]' * psimat[1, :, l:l0])
-            Linkmat[2, l:l0] .= det(psimat[2, :, l:l0]' * psimat[2, :, l:l0])
-            Linkmat[3, l:l0] .= det(psimat[4, :, l:l0]' * psimat[4, :, l:l0])
-            Linkmat[4, l:l0] .= det(psimat[1, :, l:l0]' * psimat[1, :, l:l0])
+            Linkmat[1, l:l0] .= det(psimat[1, :, l:l0]' * psimat[2, :, l:l0])
+            Linkmat[2, l:l0] .= det(psimat[2, :, l:l0]' * psimat[3, :, l:l0])
+            Linkmat[3, l:l0] .= det(psimat[4, :, l:l0]' * psimat[3, :, l:l0])
+            Linkmat[4, l:l0] .= det(psimat[1, :, l:l0]' * psimat[4, :, l:l0])
         end
 
         l = 1 + l0
@@ -110,7 +110,7 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
 
     psimat = zeros(ComplexF64, 4, Hs, Hs)
     Evec = zeros(Hs)
-    Linkmat = zeros(ComplexF64,4, Hs)
+    Linkmat = zeros(ComplexF64, 4, Hs)
 
     n[1] = mod(n[1], N)
     n[2] = mod(n[2], N)
