@@ -82,7 +82,7 @@ end
     end
 end
 
-function F!(Linkmat, phi, node, p)
+function F!(Linkmat, phi, TopologicalNumber, p)
     @unpack rounds, Hs = p
 
     dphi = zeros(6, Hs)
@@ -112,7 +112,7 @@ function F!(Linkmat, phi, node, p)
             phi[j, :] .= (phi[j, :] - dphi[j, :]) / 2pi
         end
 
-        node .+= phi[j, :]
+        TopologicalNumber .+= phi[j, :]
     end
 end
 
@@ -139,12 +139,12 @@ function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaples
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64, 12, Hs)
     phi = zeros(6, Hs)
-    node = zeros(Hs)
+    TopologicalNumber = zeros(Hs)
 
     n .= [mod(n[i], N) for i in 1:3]
 
     psimat!(n, psimat, Evec, p)
     Linkmat!(psimat, Evec, Linkmat, p)
-    F!(Linkmat, phi, node, p)
-    node
+    F!(Linkmat, phi, TopologicalNumber, p)
+    (; TopologicalNumber, n)
 end
