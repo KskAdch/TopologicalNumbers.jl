@@ -1,5 +1,5 @@
 ---
-title: 'TopologicalNumbers.jl: A Julia package for calculate topological numbers'
+title: 'TopologicalNumbers.jl: A Julia package for calculating topological numbers'
 tags:
   - Julia
   - 
