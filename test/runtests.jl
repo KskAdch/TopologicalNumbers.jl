@@ -387,7 +387,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         @test calcWeylNode(H₀, [3, 10, 0]; N=N, rounds=false) == (TopologicalNumber=[1.0, -2.220446049250313e-16], n=[3, 10, 0])
         nodes = zeros(N, N, N)
         for i in 1:N, j in 1:N, k in 1:N
-            nodes[i, j, k] = calcWeylNode(Ham, [i-1, j-1, k-1]; N=N).TopologicalNumber[1]
+            nodes[i, j, k] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N).TopologicalNumber[1]
         end
         @test [sum(nodes[i, :, :]) for i in 1:N] == [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0]
         # @test calcWeylNode(H₀, [20, 30, 0]; N=31, rounds=false) == (TopologicalNumber=[-1.0, 0.0], n=[20, 30, 0])
