@@ -133,8 +133,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 N = 51
                 for j in 1:N
                     for i in 1:N
-                        C1 .+= calcBerryFlux(H, [i-1, j-1])
-                        C2 .+= calcBerryFlux(H, [i-1, j-1], rounds=false)
+                        C1 .+= calcBerryFlux(H, [i-1, j-1]).TopologicalNumber
+                        C2 .+= calcBerryFlux(H, [i-1, j-1], rounds=false).TopologicalNumber
                     end
                 end
 

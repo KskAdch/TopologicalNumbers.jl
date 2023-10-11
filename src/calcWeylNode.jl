@@ -1,4 +1,4 @@
-function psimat_cube!(n, psimat, Evec, p) # wave function □
+function psimat_cube!(n, psimat, Evec, p::Params) # wave function □
     @unpack Hamiltonian, N = p
     
     n100 = n .+ [1, 0, 0]
@@ -39,7 +39,7 @@ function psimat_cube!(n, psimat, Evec, p) # wave function □
     psimat[8, :, :] .= eigen!(Hamiltonian(k8)).vectors
 end
 
-@views function Linkmat!(psimat, Evec, Linkmat, p)
+@views function Linkmat_cube!(psimat, Evec, Linkmat, p::Params)
     @unpack gapless, Hs = p
 
     l = 1
@@ -82,7 +82,7 @@ end
     end
 end
 
-function F!(Linkmat, phi, TopologicalNumber, p)
+function F!(Linkmat, phi, TopologicalNumber, p::Params)
     @unpack rounds, Hs = p
 
     dphi = zeros(6, Hs)
@@ -144,7 +144,7 @@ function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaples
     n .= [mod(n[i], N) for i in 1:3]
 
     psimat_cube!(n, psimat, Evec, p)
-    Linkmat!(psimat, Evec, Linkmat, p)
+    Linkmat_cube!(psimat, Evec, Linkmat, p)
     F!(Linkmat, phi, TopologicalNumber, p)
     (; TopologicalNumber, n)
 end

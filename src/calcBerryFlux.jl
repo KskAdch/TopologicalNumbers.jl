@@ -1,23 +1,31 @@
-function psimat_square!(n, psimat, Evec, p) # wave function □
+function psimat_square!(n, psimat, Evec, p::Params) # wave function □
     @unpack Hamiltonian, N = p
 
-    if n[1] == N-1 && n[2] == N-1
-        n10 = [0, n[2]]
-        n11 = [0, 0]
-        n01 = [n[1], 0]
-    elseif n[1] == N-1
-        n10 = [0, n[2]]
-        n11 = [0, n[2]+1]
-        n01 = [n[1], n[2]+1]
-    elseif n[2] == N-1
-        n10 = [n[1]+1, n[2]]
-        n11 = [n[1]+1, 0]
-        n01 = [n[1], 0]
-    else
-        n10 = n .+ [1, 0]
-        n11 = n .+ [1, 1]
-        n01 = n .+ [0, 1]
-    end
+    # if n[1] == N-1 && n[2] == N-1
+    #     n10 = [0, n[2]]
+    #     n11 = [0, 0]
+    #     n01 = [n[1], 0]
+    # elseif n[1] == N-1
+    #     n10 = [0, n[2]]
+    #     n11 = [0, n[2]+1]
+    #     n01 = [n[1], n[2]+1]
+    # elseif n[2] == N-1
+    #     n10 = [n[1]+1, n[2]]
+    #     n11 = [n[1]+1, 0]
+    #     n01 = [n[1], 0]
+    # else
+    #     n10 = n .+ [1, 0]
+    #     n11 = n .+ [1, 1]
+    #     n01 = n .+ [0, 1]
+    # end
+
+    n10 = n .+ [1, 0]
+    n11 = n .+ [1, 1]
+    n01 = n .+ [0, 1]
+
+    n100 .= [mod(n10[i], N) for i in 1:2]
+    n110 .= [mod(n11[i], N) for i in 1:2]
+    n010 .= [mod(n01[i], N) for i in 1:2]
 
     k1 = 2pi * n / N
     k2 = 2pi * n10 / N
@@ -33,7 +41,7 @@ function psimat_square!(n, psimat, Evec, p) # wave function □
     psimat[4, :, :] .= eigen!(Hamiltonian(k4)).vectors
 end
 
-@views function Linkmat!(psimat, Evec, Linkmat, p)
+@views function Linkmat_square!(psimat, Evec, Linkmat, p::Params)
     @unpack gapless, Hs = p
 
     l = 1
@@ -56,7 +64,7 @@ end
     end
 end
 
-@views function F(Linkmat, p) # lattice field strength
+@views function F(Linkmat, p::Params) # lattice field strength
     @unpack rounds, Hs = p
 
     phi = zeros(Hs)
@@ -112,10 +120,11 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64, 4, Hs)
 
-    n[1] = mod(n[1], N)
-    n[2] = mod(n[2], N)
+    # n[1] = mod(n[1], N)
+    # n[2] = mod(n[2], N)
+    n .= [mod(n[i], N) for i in 1:2]
 
     psimat_square!(n, psimat, Evec, p)
-    Linkmat!(psimat, Evec, Linkmat, p)
-    F(Linkmat, p)
+    Linkmat_square!(psimat, Evec, Linkmat, p)
+    (; TopologicalNumber=F(Linkmat, p), n)
 end
