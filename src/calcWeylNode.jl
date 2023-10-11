@@ -99,8 +99,8 @@ function F!(Linkmat, phi, TopologicalNumber, p)
     phi[4, :] = [angle(Linkmat[3, l] * Linkmat[7, l] * conj(Linkmat[11, l]) * conj(Linkmat[8, l])) for l in 1:Hs]
     # dphi[4, :] = [angle(Linkmat[3, l]) + angle(Linkmat[7, l]) - angle(Linkmat[11, l]) - angle(Linkmat[8, l]) for l in 1:Hs]
 
-    phi[5, :] = [angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for l in 1:Hs]
-    # dphi[5, :] = [angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) - angle(Linkmat[4, l]) for l in 1:Hs]
+    phi[5, :] = [angle(Linkmat[4, l] * Linkmat[3, l] * conj(Linkmat[2, l]) * conj(Linkmat[1, l])) for l in 1:Hs]
+    # dphi[5, :] = [angle(Linkmat[4, l]) + angle(Linkmat[3, l]) - angle(Linkmat[2, l]) - angle(Linkmat[1, l]) for l in 1:Hs]
 
     phi[6, :] = [angle(Linkmat[9, l] * Linkmat[10, l] * conj(Linkmat[11, l]) * conj(Linkmat[12, l])) for l in 1:Hs]
     # dphi[6, :] = [angle(Linkmat[9, l]) + angle(Linkmat[10, l]) - angle(Linkmat[11, l]) - angle(Linkmat[12, l]) for l in 1:Hs]
