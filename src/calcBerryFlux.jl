@@ -1,4 +1,4 @@
-function psimat!(n, psimat, Evec, p) # wave function □
+function psimat_square!(n, psimat, Evec, p) # wave function □
     @unpack Hamiltonian, N = p
 
     if n[1] == N-1 && n[2] == N-1
@@ -115,7 +115,7 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     n[1] = mod(n[1], N)
     n[2] = mod(n[2], N)
 
-    psimat!(n, psimat, Evec, p)
+    psimat_square!(n, psimat, Evec, p)
     Linkmat!(psimat, Evec, Linkmat, p)
     F(Linkmat, p)
 end
