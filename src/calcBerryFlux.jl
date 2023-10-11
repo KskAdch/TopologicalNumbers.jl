@@ -23,9 +23,9 @@ function psimat_square!(n, psimat, Evec, p::Params) # wave function □
     n11 = n .+ [1, 1]
     n01 = n .+ [0, 1]
 
-    n100 .= [mod(n10[i], N) for i in 1:2]
-    n110 .= [mod(n11[i], N) for i in 1:2]
-    n010 .= [mod(n01[i], N) for i in 1:2]
+    n10 .= [mod(n10[i], N) for i in 1:2]
+    n11 .= [mod(n11[i], N) for i in 1:2]
+    n01 .= [mod(n01[i], N) for i in 1:2]
 
     k1 = 2pi * n / N
     k2 = 2pi * n10 / N
