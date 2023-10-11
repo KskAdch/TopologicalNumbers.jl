@@ -231,7 +231,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
                 # param1 = range(-π, π, length=6)
                 param1 = range(-π, π, length=7)
-                param2 = range(-6.0, 6.0, length=6)
+                # param2 = range(-6.0, 6.0, length=6)
+                param2 = [-6.0, -3.6, -1.2, 1.2, 3.6, 6.0]
                 result = calcPhaseDiagram(H₀, param1, param2, "Chern")
                 num = zeros(2, 7, 6)
                 # num[:, :, 1] = [0 0 0 0 0 0; 0 0 0 0 0 0]
