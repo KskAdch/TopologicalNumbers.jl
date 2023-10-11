@@ -7,7 +7,7 @@ function update1D!(nums, num0, H, alg!, range1::T, p::Params) where {T<:Abstract
     end
 end
 
-function update2D!(nums, num0, H, alg!, range1::T, range2::T, p::Params) where {T<:AbstractVector}
+function update2D!(nums, num0, H, alg!, range1::T1, range2::T2, p::Params) where {T1<:AbstractVector,T2<:AbstractVector}
     for i in eachindex(range1), j in eachindex(range2)
         param = (range1[i], range2[j])
         Ham0(k) = H(k, param)
@@ -81,7 +81,7 @@ end
 @doc raw"""
     calcPhaseDiagram(H::Function, param_range1::T, param_range2::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
 """
-function calcPhaseDiagram(H::Function, param_range1::T, param_range2::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
+function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T1<:AbstractVector,T2<:AbstractVector}
 
     dim = Hs = 0
     Hamiltonian(k) = H(k, (0.0, 0.0))
