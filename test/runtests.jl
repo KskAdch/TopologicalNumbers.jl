@@ -383,7 +383,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
         end
 
-        @test calcWeylNode(H₀, [0, 0, 0]) == (TopologicalNumber=[0, 0], n=[0, 0, 0])
+        @test calcWeylNode(H₀, [10, 30, 0]; N=31) == (TopologicalNumber=[1, 0], n=[10, 30, 0])
+        # @test calcWeylNode(H₀, [20, 30, 0]; N=31, rounds=false) == (TopologicalNumber=[-1.0, 0.0], n=[20, 30, 0])
     end
 
     @testset "model" begin
