@@ -82,28 +82,28 @@ end
     end
 end
 
-function F!(Linkmat, phi, node, p)
+function F!(Linkmat, phi, TopologicalNumber, p)
     @unpack rounds, Hs = p
 
     dphi = zeros(6, Hs)
 
     phi[1, :] = [angle(Linkmat[4, l] * Linkmat[8, l] * conj(Linkmat[12, l]) * conj(Linkmat[5, l])) for l in 1:Hs]
-    dphi[1, :] = [angle(Linkmat[4, l]) + angle(Linkmat[8, l]) - angle(Linkmat[12, l]) - angle(Linkmat[5, l]) for l in 1:Hs]
+    # dphi[1, :] = [angle(Linkmat[4, l]) + angle(Linkmat[8, l]) - angle(Linkmat[12, l]) - angle(Linkmat[5, l]) for l in 1:Hs]
 
     phi[2, :] = [angle(Linkmat[2, l] * Linkmat[7, l] * conj(Linkmat[10, l]) * conj(Linkmat[6, l])) for l in 1:Hs]
-    dphi[2, :] = [angle(Linkmat[2, l]) + angle(Linkmat[7, l]) - angle(Linkmat[10, l]) - angle(Linkmat[6, l]) for l in 1:Hs]
+    # dphi[2, :] = [angle(Linkmat[2, l]) + angle(Linkmat[7, l]) - angle(Linkmat[10, l]) - angle(Linkmat[6, l]) for l in 1:Hs]
 
     phi[3, :] = [angle(Linkmat[1, l] * Linkmat[6, l] * conj(Linkmat[9, l]) * conj(Linkmat[5, l])) for l in 1:Hs]
-    dphi[3, :] = [angle(Linkmat[1, l]) + angle(Linkmat[6, l]) - angle(Linkmat[9, l]) - angle(Linkmat[5, l]) for l in 1:Hs]
+    # dphi[3, :] = [angle(Linkmat[1, l]) + angle(Linkmat[6, l]) - angle(Linkmat[9, l]) - angle(Linkmat[5, l]) for l in 1:Hs]
 
     phi[4, :] = [angle(Linkmat[3, l] * Linkmat[7, l] * conj(Linkmat[11, l]) * conj(Linkmat[8, l])) for l in 1:Hs]
-    dphi[4, :] = [angle(Linkmat[3, l]) + angle(Linkmat[7, l]) - angle(Linkmat[11, l]) - angle(Linkmat[8, l]) for l in 1:Hs]
+    # dphi[4, :] = [angle(Linkmat[3, l]) + angle(Linkmat[7, l]) - angle(Linkmat[11, l]) - angle(Linkmat[8, l]) for l in 1:Hs]
 
     phi[5, :] = [angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for l in 1:Hs]
-    dphi[5, :] = [angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) - angle(Linkmat[4, l]) for l in 1:Hs]
+    # dphi[5, :] = [angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) - angle(Linkmat[4, l]) for l in 1:Hs]
 
     phi[6, :] = [angle(Linkmat[9, l] * Linkmat[10, l] * conj(Linkmat[11, l]) * conj(Linkmat[12, l])) for l in 1:Hs]
-    dphi[6, :] = [angle(Linkmat[9, l]) + angle(Linkmat[10, l]) - angle(Linkmat[11, l]) - angle(Linkmat[12, l]) for l in 1:Hs]
+    # dphi[6, :] = [angle(Linkmat[9, l]) + angle(Linkmat[10, l]) - angle(Linkmat[11, l]) - angle(Linkmat[12, l]) for l in 1:Hs]
 
     for j in 1:6
         if rounds == true
@@ -112,7 +112,7 @@ function F!(Linkmat, phi, node, p)
             phi[j, :] .= (phi[j, :] - dphi[j, :]) / 2pi
         end
 
-        node .+= phi[j, :]
+        TopologicalNumber .+= phi[j, :]
     end
 end
 
@@ -139,12 +139,12 @@ function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaples
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64, 12, Hs)
     phi = zeros(6, Hs)
-    node = zeros(Hs)
+    TopologicalNumber = zeros(Hs)
 
     n .= [mod(n[i], N) for i in 1:3]
 
     psimat!(n, psimat, Evec, p)
     Linkmat!(psimat, Evec, Linkmat, p)
-    F!(Linkmat, phi, node, p)
-    node
+    F!(Linkmat, phi, TopologicalNumber, p)
+    (; TopologicalNumber, n)
 end

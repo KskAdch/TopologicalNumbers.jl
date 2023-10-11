@@ -83,7 +83,6 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
     end
 
     @testset "2D case" begin
-
         @testset "Chern" begin
             @testset "Square Flux" begin
                 function H₀(k, p) # landau
@@ -361,7 +360,30 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             @test result.nums ≈ num
 
         end
+    end
 
+    @testset "3D case" begin
+        function H₀(k) # Weyl
+            k1, k2, k3 = k
+            t1 = 1
+            t2 = 1
+            t3 = 1
+            m = 2
+        
+            h0 = 0
+            hx = 2t1*(cos(k1) - cos(2pi*10/31)) + m*(2 - cos(k2) - cos(k3))
+            hy = 2t2*sin(k2)
+            hz = 2t3*sin(k3)
+        
+            s0 = [1 0; 0 1]
+            sx = [0 1; 1 0]
+            sy = [0 -im; im 0]
+            sz = [1 0; 0 -1]
+        
+            h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+        end
+
+        @test calcWeylNode(H₀, [0, 0, 0]) == (TopologicalNumber=[0, 0], n=[0, 0, 0])
     end
 
     @testset "model" begin
