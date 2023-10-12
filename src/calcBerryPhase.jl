@@ -1,4 +1,4 @@
-function psi!(i, psi1, Evec1, p) # wave function
+function psi!(i, psi1, Evec1, p::Params) # wave function
     @unpack Hamiltonian, N = p
 
     k = 2pi * (i - 1) / N
@@ -7,7 +7,7 @@ function psi!(i, psi1, Evec1, p) # wave function
     Evec1[:] .= eigens.values
 end
 
-@views function U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p) # link variable
+@views function U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p::Params) # link variable
     @unpack N, gapless, Hs = p
 
     if i == 1
@@ -43,7 +43,7 @@ end
     end
 end
 
-@views function BerryPhase_round!(TopologicalNumber, p) # berry phase
+@views function BerryPhase_round!(TopologicalNumber, p::Params) # berry phase
     @unpack N, Hs = p
     Link = zeros(ComplexF64, Hs)
 
@@ -60,14 +60,14 @@ end
 
     for i in 1:N
         U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p)
-        F!(phi, Link, p)
+        L!(phi, Link, p)
         TN[:] .+= phi[:]
     end
 
     TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
 end
 
-@views function BerryPhase!(TopologicalNumber, p) # berry phase
+@views function BerryPhase!(TopologicalNumber, p::Params) # berry phase
     @unpack N, Hs = p
     Link = zeros(ComplexF64, Hs)
 
@@ -84,7 +84,7 @@ end
 
     for i in 1:N
         U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p)
-        F!(phi, Link, p)
+        L!(phi, Link, p)
         TN[:] .+= phi[:]
     end
 
@@ -96,7 +96,7 @@ end
     TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
 end
 
-@views function F!(phi, Link, p) # lattice field strength
+@views function L!(phi, Link, p::Params) # lattice field strength
     @unpack N, Hs = p
 
     phi[:] .= [imag(log(Link[l])) for l in 1:Hs]
@@ -132,7 +132,7 @@ U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
 function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(0.0))[1]
-    p = (; Hamiltonian, N, gapless, rounds, Hs, dim=1)
+    p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=1)
 
     if rounds == true
         TopologicalNumber = zeros(Int64, Hs)

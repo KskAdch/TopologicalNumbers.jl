@@ -83,7 +83,6 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
     end
 
     @testset "2D case" begin
-
         @testset "Chern" begin
             @testset "Square Flux" begin
                 function H₀(k, p) # landau
@@ -134,8 +133,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 N = 51
                 for j in 1:N
                     for i in 1:N
-                        C1 .+= calcBerryFlux(H, [i-1, j-1])
-                        C2 .+= calcBerryFlux(H, [i-1, j-1], rounds=false)
+                        C1 .+= calcBerryFlux(H, [i-1, j-1]).TopologicalNumber
+                        C2 .+= calcBerryFlux(H, [i-1, j-1], rounds=false).TopologicalNumber
                     end
                 end
 
@@ -362,7 +361,39 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             @test result.nums ≈ num
 
         end
+    end
 
+    @testset "3D case" begin
+        function H₀(k) # Weyl
+            k1, k2, k3 = k
+            t1 = 1
+            t2 = 1
+            t3 = 1
+            m = 2
+        
+            h0 = 0
+            hx = 2t1*(cos(k1) - cos(2pi*3/11)) + m*(2 - cos(k2) - cos(k3))
+            hy = 2t2*sin(k2)
+            hz = 2t3*sin(k3)
+        
+            s0 = [1 0; 0 1]
+            sx = [0 1; 1 0]
+            sy = [0 -im; im 0]
+            sz = [1 0; 0 -1]
+        
+            h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+        end
+
+        @test calcWeylNode(H₀, [3, 10, 0]; N=11, rounds=false) == (TopologicalNumber=[1.0, -2.220446049250313e-16], n=[3, 10, 0])
+
+        N = 6
+        nodes = zeros(N, N, N, 2)
+        for i in 1:N, j in 1:N, k in 1:N
+            nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N).TopologicalNumber
+        end
+        Chern_i = [[sum(nodes[i, :, :, 1]) for i in 1:N] [sum(nodes[i, :, :, 2]) for i in 1:N]]
+        @test Chern_i[:, 1] == [0, 1, 0, 0, -1, 0]
+        @test Chern_i[:, 1] == -Chern_i[:, 2]
     end
 
     @testset "model" begin

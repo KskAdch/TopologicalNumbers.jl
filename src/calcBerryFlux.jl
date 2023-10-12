@@ -1,23 +1,31 @@
-function psimat!(n, psimat, Evec, p) # wave function □
+function psimat_square!(n, psimat, Evec, p::Params) # wave function □
     @unpack Hamiltonian, N = p
 
-    if n[1] == N-1 && n[2] == N-1
-        n10 = [0, n[2]]
-        n11 = [0, 0]
-        n01 = [n[1], 0]
-    elseif n[1] == N-1
-        n10 = [0, n[2]]
-        n11 = [0, n[2]+1]
-        n01 = [n[1], n[2]+1]
-    elseif n[2] == N-1
-        n10 = [n[1]+1, n[2]]
-        n11 = [n[1]+1, 0]
-        n01 = [n[1], 0]
-    else
-        n10 = n .+ [1, 0]
-        n11 = n .+ [1, 1]
-        n01 = n .+ [0, 1]
-    end
+    # if n[1] == N-1 && n[2] == N-1
+    #     n10 = [0, n[2]]
+    #     n11 = [0, 0]
+    #     n01 = [n[1], 0]
+    # elseif n[1] == N-1
+    #     n10 = [0, n[2]]
+    #     n11 = [0, n[2]+1]
+    #     n01 = [n[1], n[2]+1]
+    # elseif n[2] == N-1
+    #     n10 = [n[1]+1, n[2]]
+    #     n11 = [n[1]+1, 0]
+    #     n01 = [n[1], 0]
+    # else
+    #     n10 = n .+ [1, 0]
+    #     n11 = n .+ [1, 1]
+    #     n01 = n .+ [0, 1]
+    # end
+
+    n10 = n .+ [1, 0]
+    n11 = n .+ [1, 1]
+    n01 = n .+ [0, 1]
+
+    n10 .= [mod(n10[i], N) for i in 1:2]
+    n11 .= [mod(n11[i], N) for i in 1:2]
+    n01 .= [mod(n01[i], N) for i in 1:2]
 
     k1 = 2pi * n / N
     k2 = 2pi * n10 / N
@@ -33,7 +41,7 @@ function psimat!(n, psimat, Evec, p) # wave function □
     psimat[4, :, :] .= eigen!(Hamiltonian(k4)).vectors
 end
 
-@views function Linkmat!(psimat, Evec, Linkmat, p)
+@views function Linkmat_square!(psimat, Evec, Linkmat, p::Params)
     @unpack gapless, Hs = p
 
     l = 1
@@ -46,20 +54,19 @@ end
             Linkmat[3, l:l0] .= dot(psimat[4, :, l:l0], psimat[3, :, l:l0])
             Linkmat[4, l:l0] .= dot(psimat[1, :, l:l0], psimat[4, :, l:l0])
         else
-            Linkmat[1, l:l0] .= det(psimat[1, :, l:l0]' * psimat[1, :, l:l0])
-            Linkmat[2, l:l0] .= det(psimat[2, :, l:l0]' * psimat[2, :, l:l0])
-            Linkmat[3, l:l0] .= det(psimat[4, :, l:l0]' * psimat[4, :, l:l0])
-            Linkmat[4, l:l0] .= det(psimat[1, :, l:l0]' * psimat[1, :, l:l0])
+            Linkmat[1, l:l0] .= det(psimat[1, :, l:l0]' * psimat[2, :, l:l0])
+            Linkmat[2, l:l0] .= det(psimat[2, :, l:l0]' * psimat[3, :, l:l0])
+            Linkmat[3, l:l0] .= det(psimat[4, :, l:l0]' * psimat[3, :, l:l0])
+            Linkmat[4, l:l0] .= det(psimat[1, :, l:l0]' * psimat[4, :, l:l0])
         end
 
         l = 1 + l0
     end
 end
 
-@views function F(Linkmat, p) # lattice field strength
+@views function F!(Linkmat, phi, p::Params) # lattice field strength
     @unpack rounds, Hs = p
 
-    phi = zeros(Hs)
     dphi = zeros(Hs)
 
     phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l]))) for l in 1:Hs]
@@ -110,12 +117,24 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
 
     psimat = zeros(ComplexF64, 4, Hs, Hs)
     Evec = zeros(Hs)
-    Linkmat = zeros(ComplexF64,4, Hs)
+    Linkmat = zeros(ComplexF64, 4, Hs)
+    phi = zeros(Hs)
 
-    n[1] = mod(n[1], N)
-    n[2] = mod(n[2], N)
+    # n[1] = mod(n[1], N)
+    # n[2] = mod(n[2], N)
+    n .= [mod(n[i], N) for i in 1:2]
 
-    psimat!(n, psimat, Evec, p)
-    Linkmat!(psimat, Evec, Linkmat, p)
-    F(Linkmat, p)
+    if round == true
+        TopologicalNumber = zeros(Int, Hs)
+    else
+        TopologicalNumber = zeros(Hs)
+    end
+
+    psimat_square!(n, psimat, Evec, p)
+    Linkmat_square!(psimat, Evec, Linkmat, p)
+    F!(Linkmat, phi, p)
+
+    TopologicalNumber .= phi
+    
+    (; TopologicalNumber, n)
 end
