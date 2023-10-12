@@ -391,7 +391,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         for i in 1:N, j in 1:N, k in 1:N
             nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N, rounds=false).TopologicalNumber
         end
-        Chern_i = [[sum(nodes[i, :, :, 1]) for i in 1:N] [sum(nodes[i, :, :, 2]) for i in 1:N]]
+        Chern_i = [[round(Int, sum(nodes[i, :, :, 1])) for i in 1:N] [round(Int, sum(nodes[i, :, :, 2])) for i in 1:N]]
         # @test Chern_i[:, 1] == [0, 1, 0, 0, -1, 0]
         # @test Chern_i[:, 1] == -Chern_i[:, 2]
         @test -Chern_i[:, 2] == [0, 1, 0, 0, -1, 0]
