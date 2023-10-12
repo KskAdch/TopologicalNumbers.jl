@@ -388,7 +388,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         N = 6
         nodes = zeros(N, N, N, 2)
         for i in 1:N, j in 1:N, k in 1:N
-            nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N).TopologicalNumber
+            nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N, gapless=1e-5).TopologicalNumber
         end
         Chern_i = [[sum(nodes[i, :, :, 1]) for i in 1:N] [sum(nodes[i, :, :, 2]) for i in 1:N]]
         @test Chern_i[:, 1] == [0, 1, 0, 0, -1, 0]
