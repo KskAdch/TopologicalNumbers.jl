@@ -372,7 +372,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             m = 2
         
             h0 = 0
-            hx = 2t1*(cos(k1) - cos(2pi*3/11)) + m*(2 - cos(k2) - cos(k3))
+            hx = 2t1*(cos(k1) - cos(2pi*2/5)) + m*(2 - cos(k2) - cos(k3))
+            # hx = 2t1*(cos(k1) - cos(2pi*3/11)) + m*(2 - cos(k2) - cos(k3))
             hy = 2t2*sin(k2)
             hz = 2t3*sin(k3)
         
@@ -386,15 +387,24 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
         @test calcWeylNode(H₀, [3, 10, 0]; N=11) == (TopologicalNumber=[1, 0], n=[3, 10, 0])
 
-        N = 6
+        N = 11
         nodes = zeros(N, N, N, 2)
         for i in 1:N, j in 1:N, k in 1:N
             nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N, rounds=false).TopologicalNumber
         end
         Chern_i = [[round(Int, sum(nodes[i, :, :, 1])) for i in 1:N] [round(Int, sum(nodes[i, :, :, 2])) for i in 1:N]]
-        # @test Chern_i[:, 1] == [0, 1, 0, 0, -1, 0]
-        # @test Chern_i[:, 1] == -Chern_i[:, 2]
+        @test Chern_i[:, 1] == [0, 1, 0, 0, -1, 0]
+        @test Chern_i[:, 1] == -Chern_i[:, 2]
         @test -Chern_i[:, 2] == [0, 1, 0, 0, -1, 0]
+        # N = 6
+        # nodes = zeros(N, N, N, 2)
+        # for i in 1:N, j in 1:N, k in 1:N
+        #     nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N, rounds=false).TopologicalNumber
+        # end
+        # Chern_i = [[round(Int, sum(nodes[i, :, :, 1])) for i in 1:N] [round(Int, sum(nodes[i, :, :, 2])) for i in 1:N]]
+        # # @test Chern_i[:, 1] == [0, 1, 0, 0, -1, 0]
+        # # @test Chern_i[:, 1] == -Chern_i[:, 2]
+        # @test -Chern_i[:, 2] == [0, 1, 0, 0, -1, 0]
     end
 
     @testset "model" begin
