@@ -109,7 +109,7 @@ function F!(Linkmat, phi, TopologicalNumber, p::Params)
         if rounds == true
             phi[j, :] = [round(Int, (phi[j, i] - dphi[j, i]) / 2pi) for i in 1:Hs]
         else
-            phi[j, :] .= (phi[j, :] - dphi[j, :]) / 2pi
+            phi[j, :] .= (phi[j, :] - dphi[j, :]) ./ 2pi
         end
 
         TopologicalNumber .+= phi[j, :]
