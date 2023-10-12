@@ -383,14 +383,16 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
         end
 
-        N = 11
-        @test calcWeylNode(H₀, [3, 10, 0]; N=N, rounds=false) == (TopologicalNumber=[1.0, -2.220446049250313e-16], n=[3, 10, 0])
-        nodes = zeros(N, N, N)
+        @test calcWeylNode(H₀, [3, 10, 0]; N=11, rounds=false) == (TopologicalNumber=[1.0, -2.220446049250313e-16], n=[3, 10, 0])
+
+        N = 6
+        nodes = zeros(N, N, N, 2)
         for i in 1:N, j in 1:N, k in 1:N
-            nodes[i, j, k] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N).TopologicalNumber[1]
+            nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N).TopologicalNumber
         end
-        @test [sum(nodes[i, :, :]) for i in 1:N] == [0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0]
-        # @test calcWeylNode(H₀, [20, 30, 0]; N=31, rounds=false) == (TopologicalNumber=[-1.0, 0.0], n=[20, 30, 0])
+        Chern_i = [[sum(nodes[i, :, :, 1]) for i in 1:N] [sum(nodes[i, :, :, 2]) for i in 1:N]]
+        @test Chern_i[:, 1] == [0, 1, 0, 0, -1, 0]
+        @test Chern_i[:, 1] == -Chern_i[:, 2]
     end
 
     @testset "model" begin
