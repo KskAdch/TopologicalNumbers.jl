@@ -372,10 +372,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             m = 2
         
             h0 = 0
-            hx = 2t1*(cos(k1) - cos(2pi*2/5)) + m*(2 - cos(k2) - cos(k3))
+            hx = 2t1*(cos(k1) - cos(2pi*2/5)) + m*(2 - cos(k2+2pi*1e-3) - cos(k3+2pi*1e-3))
+            hy = 2t2*sin(k2+2pi*1e-3)
+            hz = 2t3*sin(k3+2pi*1e-3)
             # hx = 2t1*(cos(k1) - cos(2pi*3/11)) + m*(2 - cos(k2) - cos(k3))
-            hy = 2t2*sin(k2)
-            hz = 2t3*sin(k3)
+            # hy = 2t2*sin(k2)
+            # hz = 2t3*sin(k3)
         
             s0 = [1 0; 0 1]
             sx = [0 1; 1 0]
@@ -385,9 +387,9 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
         end
 
-        @test calcWeylNode(H₀, [3, 10, 0]; N=11) == (TopologicalNumber=[1, 0], n=[3, 10, 0])
+        @test calcWeylNode(H₀, [5, 10, 10]; N=11) == (TopologicalNumber=[1, -1], n=[5, 10, 10])
 
-        N = 12
+        N = 11
         nodes = zeros(N, N, N, 2)
         for i in 1:N, j in 1:N, k in 1:N
             nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N, rounds=false).TopologicalNumber
