@@ -1,24 +1,6 @@
 function psimat_square!(n, psimat, Evec, p::Params) # wave function □
     @unpack Hamiltonian, N = p
 
-    # if n[1] == N-1 && n[2] == N-1
-    #     n10 = [0, n[2]]
-    #     n11 = [0, 0]
-    #     n01 = [n[1], 0]
-    # elseif n[1] == N-1
-    #     n10 = [0, n[2]]
-    #     n11 = [0, n[2]+1]
-    #     n01 = [n[1], n[2]+1]
-    # elseif n[2] == N-1
-    #     n10 = [n[1]+1, n[2]]
-    #     n11 = [n[1]+1, 0]
-    #     n01 = [n[1], 0]
-    # else
-    #     n10 = n .+ [1, 0]
-    #     n11 = n .+ [1, 1]
-    #     n01 = n .+ [0, 1]
-    # end
-
     n10 = n .+ [1, 0]
     n11 = n .+ [1, 1]
     n01 = n .+ [0, 1]
@@ -120,8 +102,6 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     Linkmat = zeros(ComplexF64, 4, Hs)
     phi = zeros(Hs)
 
-    # n[1] = mod(n[1], N)
-    # n[2] = mod(n[2], N)
     n .= [mod(n[i], N) for i in 1:2]
 
     if round == true
