@@ -13,7 +13,7 @@ function plot1D(nums::Matrix, param_range::T; labels::Bool=true, disp::Bool=true
 
 
     for i in 1:size(nums, 2)
-        lines!(ax, param_range, nums[:, i], label="Band$(i)", linewidth=5)
+        scatter!(ax, param_range, nums[:, i], label="Band$(i)", markersize=15)
     end
     Legend(fig[1, 2], ax)
 
@@ -38,7 +38,7 @@ function plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Boo
 
 
     for i in 1:size(result.nums, 2)
-        lines!(ax, result.param, result.nums[:, i], label="Band$(i)", linewidth=5)
+        scatter!(ax, result.param, result.nums[:, i], label="Band$(i)", markersize=15)
     end
     Legend(fig[1, 2], ax)
 

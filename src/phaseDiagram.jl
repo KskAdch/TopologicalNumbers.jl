@@ -48,6 +48,8 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
             num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
+        else
+            throw(ArgumentError("Unknown algorithm $alg"))
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
@@ -63,6 +65,8 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
             num0 = zeros(Float64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
+        else
+            throw(ArgumentError("Unknown algorithm $alg"))
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
@@ -109,6 +113,8 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
             num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
+        else
+            throw(ArgumentError("Unknown algorithm $alg"))
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
@@ -124,6 +130,8 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
             num0 = zeros(Float64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
+        else
+            throw(ArgumentError("Unknown algorithm $alg"))
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
