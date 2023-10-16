@@ -1,7 +1,7 @@
 function psi_j!(j, psi_1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
-        k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 0]
+        k = [i-1, j-1] * 2pi / N
         psi_1[i, :, :] .= eigen!(Hamiltonian(k)).vectors
     end
 end
