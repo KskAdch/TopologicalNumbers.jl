@@ -130,9 +130,9 @@ end
     # end
 
     phi .= (phi - dphi) / 2pi
-    if rounds == true
-        phi[:] = [round(Int, phi[i]) for i in 1:Hs]
-    end
+    # if rounds == true
+    #     phi[:] = round.(Int, phi[i])
+    # end
 end
 
 @views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat,Int}} # chern number
