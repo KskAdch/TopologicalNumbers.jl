@@ -88,12 +88,13 @@ end
         TN[:] .+= phi[:]
     end
 
-    for i in 1:Hs
-        while abs(TN[i]) > 1.5pi
-            TN[i] = abs(TN[i]) - 2pi
-        end
-    end
-    TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
+    # for i in 1:Hs
+    #     while abs(TN[i]) > 1.5pi
+    #         TN[i] = abs(TN[i]) - 2pi
+    #     end
+    # end
+    TopologicalNumber .= 1 .- abs.(1 - rem.(abs.(TN[i]) / pi, 2))
+    # TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
 end
 
 @views function L!(phi, Link, p::Params) # lattice field strength
@@ -134,22 +135,28 @@ function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rou
     Hs = size(Hamiltonian(0.0))[1]
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=1)
 
-    if rounds == true
-        TopologicalNumber = zeros(Int64, Hs)
+    TopologicalNumber = zeros(Hs)
+    BerryPhase!(TopologicalNumber, p)
 
-        BerryPhase_round!(TopologicalNumber, p)
+    if rounds == true
+        # TopologicalNumber = zeros(Int64, Hs)
+
+        # BerryPhase_round!(TopologicalNumber, p)
+
+        TopologicalNumber = round.(Int, TopologicalNumber)
 
         Total = rem(sum(TopologicalNumber), 2)
     else
-        TopologicalNumber = zeros(Hs)
+        # TopologicalNumber = zeros(Hs)
 
-        BerryPhase!(TopologicalNumber, p)
+        # BerryPhase!(TopologicalNumber, p)
 
         Total = abs(sum(TopologicalNumber))
-        while Total > 1.5
-            Total -= 2
-        end
-        Total = abs(rem(Total, 2))
+        # while Total > 1.5
+        #     Total -= 2
+        # end
+        Total = rem(1 - abs(1 - Total), 2)
+        # Total = abs(rem(Total, 2))
     end
 
     (; TopologicalNumber, Total)

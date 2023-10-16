@@ -206,7 +206,7 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
     ChernPhase!(TopologicalNumber, p)
 
     if rounds == true
-        TopologicalNumber = Int.(TopologicalNumber)
+        TopologicalNumber = round.(Int, TopologicalNumber)
     end
 
     Total = sum(TopologicalNumber)

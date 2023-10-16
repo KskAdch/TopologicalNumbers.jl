@@ -433,7 +433,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
 
             # Z2Phase_round!(TopologicalNumber, p)
 
-            TopologicalNumber = Int.(TopologicalNumber)
+            TopologicalNumber = round.(Int, TopologicalNumber)
 
             Total = rem(sum(TopologicalNumber), 2)
         else
@@ -460,8 +460,8 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
 
             # Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p)
 
-            TopologicalNumber = Int.(TopologicalNumber)
-            TRTopologicalNumber = Int.(TRTopologicalNumber)
+            TopologicalNumber = round.(Int, TopologicalNumber)
+            TRTopologicalNumber = round.(Int, TRTopologicalNumber)
 
             Total = rem(sum(TopologicalNumber), 2)
         else
@@ -474,7 +474,8 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             # while Total > 1.5
             #     Total -= 2
             # end
-            Total = abs(rem(Total, 2))
+            Total = rem(1 - abs(1 - Total), 2)
+            # Total = abs(rem(Total, 2))
         end
 
         (; TopologicalNumber, TRTopologicalNumber, Total)
