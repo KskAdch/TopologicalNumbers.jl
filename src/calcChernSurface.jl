@@ -13,13 +13,13 @@ function calcChernSurface(Hamiltonian::Function, kn::String, kn_range::T; N::Int
     H0(k, p) = Hamiltonian(k0(k, p))
 
     Hs = size(Hamiltonian(zeros(3)))[1]
-    param = Params(; Hamiltonian, dim=2, N, gapless, rounds, Hs)
+    param = Params(; Hamiltonian=H0, dim=2, N, gapless, rounds, Hs)
     # capcPhaseDigram(Hamiltonian, kn_range, "Chern")
-    calc_data1D!(nums, param)
+    calc_data1D!(nums, H, param_range, alg, param)
     
     if plot == true
         plot1D(nums, param_range)
     end
 
-    (; param=param_range, nums)
+    (; kn=kn_range, nums)
 end

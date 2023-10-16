@@ -17,7 +17,7 @@ function update2D!(nums, num0, H, alg!, range1::T1, range2::T2, p::Params) where
     end
 end
 
-function calc_data1D!(nums, param_range, alg, p::Params)
+function calc_data1D!(nums, H, param_range, alg, p::Params)
     @unpack rounds, Hs = p
 
     if rounds == true
@@ -57,7 +57,7 @@ function calc_data1D!(nums, param_range, alg, p::Params)
     end
 end
 
-function calc_data2D!(nums, param_range1, param_range2, alg, p::Params)
+function calc_data2D!(nums, H, param_range1, param_range2, alg, p::Params)
     @unpack rounds, Hs = p
 
     if rounds == true
@@ -116,7 +116,7 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
 
     nums = zeros(Float64, Hs, size(param_range, 1))
 
-    calc_data1D!(nums, param_range, alg, p)
+    calc_data1D!(nums, H, param_range, alg, p)
 
     # if rounds == true
     #     num0 = zeros(Int64, Hs)
@@ -183,7 +183,7 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
 
     nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
 
-    calc_data2D!(nums, param_range1, param_range2, alg, p)
+    calc_data2D!(nums, H, param_range1, param_range2, alg, p)
 
     # if rounds == true
     #     num0 = zeros(Int64, Hs)
