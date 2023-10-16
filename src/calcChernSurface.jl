@@ -1,5 +1,7 @@
-function calcChernSurface(Hamiltonian::Function, kn::String, kn_range::T; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
+function calcChernSurface(H::Function, kn::String, kn_range::T; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
     
+    Hs = size(H(zeros(3)))[1]
+
     if kn == "k1"
         k0(k, p) = [p, k[1], k[2]]
     elseif kn == "k2"
@@ -10,12 +12,12 @@ function calcChernSurface(Hamiltonian::Function, kn::String, kn_range::T; N::Int
         throw(ArgumentError("Unknown keyword $kn"))
     end
     
-    H0(k, p) = Hamiltonian(k0(k, p))
+    H0(k, p) = H(k0(k, p))
+    Hamiltonian(k) = H0(k, 0.0)
 
-    Hs = size(Hamiltonian(zeros(3)))[1]
-    param = Params(; Hamiltonian=H0, dim=2, N, gapless, rounds, Hs)
-    # capcPhaseDigram(Hamiltonian, kn_range, "Chern")
-    calc_data1D!(nums, H, param_range, alg, param)
+    param = Params(; Hamiltonian, dim=2, N, gapless, rounds, Hs)
+
+    nums = calc_data1D(H0, param_range, alg, param)
     
     if plot == true
         plot1D(nums, param_range)
