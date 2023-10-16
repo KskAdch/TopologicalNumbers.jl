@@ -38,7 +38,8 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
     nums = zeros(Float64, Hs, size(param_range, 1))
 
     if rounds == true
-        num0 = zeros(Int64, Hs)
+        num0 = zeros(Float64, Hs)
+        # num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase_round!
@@ -104,7 +105,8 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
     nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
 
     if rounds == true
-        num0 = zeros(Int64, Hs)
+        num0 = zeros(Float64, Hs)
+        # num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase_round!
