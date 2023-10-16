@@ -237,7 +237,7 @@ end
 
     for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            TopologicalNumber[l] = 1 - abs(1 - rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
 
@@ -366,12 +366,20 @@ end
     #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
     # end
 
+    
     for l in 1:Hshalf
-        if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+        if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
+            TopologicalNumber[l] = 1 - abs(1 - rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            TRTopologicalNumber[l] = 1 - abs(1 - rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
+
+    # for l in 1:Hshalf
+    #     if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
+    #         TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+    #         TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+    #     end
+    # end
 end
 
 @doc raw"""
@@ -434,9 +442,9 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             # Z2Phase!(TopologicalNumber, p)
 
             Total = abs(sum(TopologicalNumber))
-            while Total > 1.5
-                Total -= 2
-            end
+            # while Total > 1.5
+            #     Total -= 2
+            # end
             Total = abs(rem(Total, 2))
         end
 
@@ -463,9 +471,9 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
             # Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
 
             Total = abs(sum(TopologicalNumber))
-            while Total > 1.5
-                Total -= 2
-            end
+            # while Total > 1.5
+            #     Total -= 2
+            # end
             Total = abs(rem(Total, 2))
         end
 
