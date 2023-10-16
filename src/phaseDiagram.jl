@@ -55,7 +55,8 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
-        nums = Int.(transpose(nums))
+        # nums = Int.(transpose(nums))
+        nums = round.(Int, transpose(nums))
     elseif rounds == false
         num0 = zeros(Float64, Hs)
 
@@ -122,7 +123,8 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
-        nums = Int.(nums)
+        # nums = Int.(nums)
+        nums = round.(Int, nums)
     elseif rounds == false
         num0 = zeros(Float64, Hs)
 
