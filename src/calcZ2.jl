@@ -237,7 +237,7 @@ end
 
     for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = 1 - abs(1 - rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
 
@@ -369,8 +369,8 @@ end
     
     for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = 1 - abs(1 - rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            TRTopologicalNumber[l] = 1 - abs(1 - rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+            TRTopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
 
