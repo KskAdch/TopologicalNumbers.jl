@@ -135,7 +135,7 @@ end
     # end
 end
 
-@views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat}} # chern number
+@views function ChernPhase!(TopologicalNumber::AbstractVector, p::Params) # chern number
 # @views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat,Int}} # chern number
     @unpack N, Hs = p
     TopologicalNumber[:] .= zero(T)
