@@ -82,7 +82,8 @@ function calc_data2D(H, param_range1, param_range2, alg, p::Params)
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
-        nums = Int.(nums)
+        # nums = Int.(nums)
+        return Int.(nums)
     elseif rounds == false
         num0 = zeros(Float64, Hs)
 
@@ -99,6 +100,7 @@ function calc_data2D(H, param_range1, param_range2, alg, p::Params)
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
+        return nums
     end
 end
 
