@@ -45,7 +45,8 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
         elseif alg == "Z2"
             algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range, 1))
-            num0 = zeros(Int64, Hs ÷ 2)
+            num0 = zeros(Float64, Hs ÷ 2)
+            # num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
         else
@@ -110,7 +111,8 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
         elseif alg == "Z2"
             algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
-            num0 = zeros(Int64, Hs ÷ 2)
+            num0 = zeros(Float64, Hs ÷ 2)
+            # num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
         else

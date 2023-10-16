@@ -100,7 +100,8 @@ end
 @views function L!(phi, Link, p::Params) # lattice field strength
     @unpack N, Hs = p
 
-    phi[:] .= [imag(log(Link[l])) for l in 1:Hs]
+    phi .= angle.(Link)
+    # phi[:] .= [imag(log(Link[l])) for l in 1:Hs]
 end
 
 
