@@ -1,7 +1,7 @@
 function psi_j!(j, psi_1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
-        k = [i - 1, j - 1] * 2pi / N
+        k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 1e-5]
         psi_1[i, :, :] .= eigen!(Hamiltonian(k)).vectors
     end
 end
@@ -88,20 +88,36 @@ end
     @unpack N = p
 
     if i == N && j == N
-        phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(LinkN1[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hshalf]
+        phi[:] = [angle(Link1[l, 1, N] * Link1[l, 2, 1] * conj(LinkN1[l, 1, N]) * conj(Link1[l, 2, N])) for l in 1:Hshalf]
     elseif i == N
-        phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(Link2[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hshalf]
+        phi[:] = [angle(Link1[l, 1, N] * Link1[l, 2, 1] * conj(Link2[l, 1, N]) * conj(Link1[l, 2, N])) for l in 1:Hshalf]
     elseif j == N
-        phi[:] = [imag(log(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(LinkN1[l, 1, i]) * conj(Link1[l, 2, i]))) for l in 1:Hshalf]
+        phi[:] = [angle(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(LinkN1[l, 1, i]) * conj(Link1[l, 2, i])) for l in 1:Hshalf]
     else
-        phi[:] = [imag(log(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(Link2[l, 1, i]) * conj(Link1[l, 2, i]))) for l in 1:Hshalf]
+        phi[:] = [angle(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(Link2[l, 1, i]) * conj(Link1[l, 2, i])) for l in 1:Hshalf]
     end
 
+    # if i == N && j == N
+    #     phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(LinkN1[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hshalf]
+    # elseif i == N
+    #     phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(Link2[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hshalf]
+    # elseif j == N
+    #     phi[:] = [imag(log(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(LinkN1[l, 1, i]) * conj(Link1[l, 2, i]))) for l in 1:Hshalf]
+    # else
+    #     phi[:] = [imag(log(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(Link2[l, 1, i]) * conj(Link1[l, 2, i]))) for l in 1:Hshalf]
+    # end
+
     if j == 1 && i < Nhalf
-        Px0 .-= [imag(log(Link1[l, 1, i])) for l in 1:Hshalf]
+        Px0 .-= [angle(Link1[l, 1, i]) for l in 1:Hshalf]
     elseif j == Nhalf && i < Nhalf
-        Pxp .-= [imag(log(Link1[l, 1, i])) for l in 1:Hshalf]
+        Pxp .-= [angle(Link1[l, 1, i]) for l in 1:Hshalf]
     end
+
+    # if j == 1 && i < Nhalf
+    #     Px0 .-= [imag(log(Link1[l, 1, i])) for l in 1:Hshalf]
+    # elseif j == Nhalf && i < Nhalf
+    #     Pxp .-= [imag(log(Link1[l, 1, i])) for l in 1:Hshalf]
+    # end
 end
 
 @views function Z2Phase_round!(TopologicalNumber, p::Params) # chern number
@@ -149,9 +165,14 @@ end
     end
 
     for l in 1:Hshalf
-        Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-        Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
+        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
     end
+
+    # for l in 1:Hshalf
+    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
+    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+    # end
 
     for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
@@ -205,9 +226,14 @@ end
     end
 
     for l in 1:Hshalf
-        Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-        Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
+        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
     end
+
+    # for l in 1:Hshalf
+    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
+    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+    # end
 
     for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
@@ -263,9 +289,14 @@ end
     end
 
     for l in 1:Hshalf
-        Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-        Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
+        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
     end
+
+    # for l in 1:Hshalf
+    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
+    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+    # end
 
     for l in 1:Hshalf
         if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
@@ -322,9 +353,14 @@ end
     end
 
     for l in 1:Hshalf
-        Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-        Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
+        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
     end
+    
+    # for l in 1:Hshalf
+    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
+    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+    # end
 
     for l in 1:Hshalf
         if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
