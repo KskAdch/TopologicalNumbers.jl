@@ -1,7 +1,7 @@
 function psi_j!(j, psi_1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
-        k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 1e-5]
+        k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 0]
         psi_1[i, :, :] .= eigen!(Hamiltonian(k)).vectors
     end
 end
@@ -240,6 +240,10 @@ end
             TopologicalNumber[l] = abs(rem((TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
+
+    # if rounds == true
+    #     TopologicalNumber = (Int.(TopologicalNumber[i]))
+    # end
 end
 
 @views function Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
@@ -411,17 +415,23 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
     Hshalf = Hs ÷ 2
     p = Params(; Hamiltonian, N, Hs, gapless=0.0, rounds, dim=2)
 
+    TopologicalNumber = zeros(Hshalf)
     if TR == false
-        if rounds == true
-            TopologicalNumber = zeros(Int, Hshalf)
 
-            Z2Phase_round!(TopologicalNumber, p)
+        Z2Phase!(TopologicalNumber, p)
+
+        if rounds == true
+            # TopologicalNumber = zeros(Int, Hshalf)
+
+            # Z2Phase_round!(TopologicalNumber, p)
+
+            TopologicalNumber = Int.(TopologicalNumber)
 
             Total = rem(sum(TopologicalNumber), 2)
         else
-            TopologicalNumber = zeros(Hshalf)
+            # TopologicalNumber = zeros(Hshalf)
 
-            Z2Phase!(TopologicalNumber, p)
+            # Z2Phase!(TopologicalNumber, p)
 
             Total = abs(sum(TopologicalNumber))
             while Total > 1.5
@@ -432,18 +442,25 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
 
         (; TopologicalNumber, Total)
     else
-        if rounds == true
-            TopologicalNumber = zeros(Int, Hshalf)
-            TRTopologicalNumber = zeros(Int, Hshalf)
 
-            Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p)
+        TRTopologicalNumber = zeros(Hshalf)
+        Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
+
+        if rounds == true
+            # TopologicalNumber = zeros(Int, Hshalf)
+            # TRTopologicalNumber = zeros(Int, Hshalf)
+
+            # Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p)
+
+            TopologicalNumber = Int.(TopologicalNumber)
+            TRTopologicalNumber = Int.(TRTopologicalNumber)
 
             Total = rem(sum(TopologicalNumber), 2)
         else
-            TopologicalNumber = zeros(Hshalf)
-            TRTopologicalNumber = zeros(Hshalf)
+            # TopologicalNumber = zeros(Hshalf)
+            # TRTopologicalNumber = zeros(Hshalf)
 
-            Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
+            # Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
 
             Total = abs(sum(TopologicalNumber))
             while Total > 1.5
