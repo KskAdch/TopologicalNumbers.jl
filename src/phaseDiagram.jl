@@ -17,8 +17,10 @@ function update2D!(nums, num0, H, alg!, range1::T1, range2::T2, p::Params) where
     end
 end
 
-function calc_data1D!(nums, H, param_range, alg, p::Params)
+function calc_data1D(H, param_range, alg, p::Params)
     @unpack rounds, Hs = p
+
+    nums = zeros(Float64, Hs, size(param_range, 1))
 
     if rounds == true
         num0 = zeros(Int64, Hs)
@@ -36,7 +38,8 @@ function calc_data1D!(nums, H, param_range, alg, p::Params)
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
-        nums = Int.(transpose(nums))
+        # nums = Int.(transpose(nums))
+        return Int.(transpose(nums))
     elseif rounds == false
         num0 = zeros(Float64, Hs)
 
@@ -53,12 +56,15 @@ function calc_data1D!(nums, H, param_range, alg, p::Params)
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
-        nums = transpose(nums)
+        # nums = transpose(nums)
+        return transpose(nums)
     end
 end
 
-function calc_data2D!(nums, H, param_range1, param_range2, alg, p::Params)
+function calc_data2D(H, param_range1, param_range2, alg, p::Params)
     @unpack rounds, Hs = p
+
+    nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
 
     if rounds == true
         num0 = zeros(Int64, Hs)
@@ -114,9 +120,9 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
 
     p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
 
-    nums = zeros(Float64, Hs, size(param_range, 1))
+    # nums = zeros(Float64, Hs, size(param_range, 1))
 
-    calc_data1D!(nums, H, param_range, alg, p)
+    nums = calc_data1D(H, param_range, alg, p)
 
     # if rounds == true
     #     num0 = zeros(Int64, Hs)
@@ -181,9 +187,9 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
 
     p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
 
-    nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
+    # nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
 
-    calc_data2D!(nums, H, param_range1, param_range2, alg, p)
+    nums = calc_data2D(H, param_range1, param_range2, alg, p)
 
     # if rounds == true
     #     num0 = zeros(Int64, Hs)
