@@ -93,7 +93,7 @@ end
     #         TN[i] = abs(TN[i]) - 2pi
     #     end
     # end
-    TopologicalNumber .= 1 .- abs.(1 .- rem.(abs.(TN) / pi, 2))
+    TopologicalNumber .= [1 - abs(1 - rem(abs(TN[i]) / pi, 2)) for i in 1:Hs]
     # TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
 end
 
