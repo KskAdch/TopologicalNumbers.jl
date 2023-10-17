@@ -124,16 +124,13 @@ end
     #     dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(Link1[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
     # end
 
-    # if rounds == true
-    #     phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
-    # else
-    #     phi .= (phi - dphi) / 2pi
-    # end
+    if rounds == true
+        phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
+    else
+        phi .= (phi - dphi) / 2pi
+    end
 
-    phi .= (phi - dphi) / 2pi
-    # if rounds == true
-    #     phi[:] = round.(Int, phi[i])
-    # end
+    # phi .= (phi - dphi) / 2pi
 end
 
 @views function ChernPhase!(TopologicalNumber::AbstractVector, p::Params) # chern number
@@ -199,17 +196,17 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
     Hs = size(Hamiltonian(n0))[1]
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
-    # if rounds == true
-    #     TopologicalNumber = zeros(Int, Hs)
-    # else
+    if rounds == true
+        TopologicalNumber = zeros(Int, Hs)
+    else
         TopologicalNumber = zeros(Hs)
-    # end
+    end
 
     ChernPhase!(TopologicalNumber, p)
 
-    if rounds == true
-        TopologicalNumber = round.(Int, TopologicalNumber)
-    end
+    # if rounds == true
+    #     TopologicalNumber = round.(Int, TopologicalNumber)
+    # end
 
     Total = sum(TopologicalNumber)
 
