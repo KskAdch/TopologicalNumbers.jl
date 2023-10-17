@@ -96,33 +96,33 @@ end
 @views function F!(phi, dphi, i, j, Link0, Link1, LinkN, p::Params) # lattice field strength
     @unpack N, rounds, Hs = p
 
-    if i == N && j == N
-        phi[:] = [angle(Link0[l, 1, N] * Link0[l, 2, 1] * conj(LinkN[l, 1, N]) * conj(Link0[l, 2, N])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, N]) + angle(Link0[l, 2, 1]) - angle(LinkN[l, 1, N]) - angle(Link0[l, 2, N]) for l in 1:Hs]
-    elseif i == N
-        phi[:] = [angle(Link0[l, 1, N] * Link0[l, 2, 1] * conj(Link1[l, 1, N]) * conj(Link0[l, 2, N])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, N]) + angle(Link0[l, 2, 1]) - angle(Link1[l, 1, N]) - angle(Link0[l, 2, N]) for l in 1:Hs]
-    elseif j == N
-        phi[:] = [angle(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(LinkN[l, 1, i]) * conj(Link0[l, 2, i])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, i]) + angle(Link0[l, 2, i+1]) - angle(LinkN[l, 1, i]) - angle(Link0[l, 2, i]) for l in 1:Hs]
-    else
-        phi[:] = [angle(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, i]) + angle(Link0[l, 2, i+1]) - angle(Link1[l, 1, i]) - angle(Link0[l, 2, i]) for l in 1:Hs]
-    end
-
     # if i == N && j == N
-    #     phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(LinkN[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(LinkN[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
+    #     phi[:] = [angle(Link0[l, 1, N] * Link0[l, 2, 1] * conj(LinkN[l, 1, N]) * conj(Link0[l, 2, N])) for l in 1:Hs]
+    #     dphi[:] = [angle(Link0[l, 1, N]) + angle(Link0[l, 2, 1]) - angle(LinkN[l, 1, N]) - angle(Link0[l, 2, N]) for l in 1:Hs]
     # elseif i == N
-    #     phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(Link1[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(Link1[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
+    #     phi[:] = [angle(Link0[l, 1, N] * Link0[l, 2, 1] * conj(Link1[l, 1, N]) * conj(Link0[l, 2, N])) for l in 1:Hs]
+    #     dphi[:] = [angle(Link0[l, 1, N]) + angle(Link0[l, 2, 1]) - angle(Link1[l, 1, N]) - angle(Link0[l, 2, N]) for l in 1:Hs]
     # elseif j == N
-    #     phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(LinkN[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(LinkN[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
+    #     phi[:] = [angle(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(LinkN[l, 1, i]) * conj(Link0[l, 2, i])) for l in 1:Hs]
+    #     dphi[:] = [angle(Link0[l, 1, i]) + angle(Link0[l, 2, i+1]) - angle(LinkN[l, 1, i]) - angle(Link0[l, 2, i]) for l in 1:Hs]
     # else
-    #     phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(Link1[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
+    #     phi[:] = [angle(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i])) for l in 1:Hs]
+    #     dphi[:] = [angle(Link0[l, 1, i]) + angle(Link0[l, 2, i+1]) - angle(Link1[l, 1, i]) - angle(Link0[l, 2, i]) for l in 1:Hs]
     # end
+
+    if i == N && j == N
+        phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(LinkN[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(LinkN[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
+    elseif i == N
+        phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(Link1[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(Link1[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
+    elseif j == N
+        phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(LinkN[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(LinkN[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
+    else
+        phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
+        dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(Link1[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
+    end
 
     if rounds == true
         phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
@@ -133,10 +133,10 @@ end
     # phi .= (phi - dphi) / 2pi
 end
 
-@views function ChernPhase!(TopologicalNumber::AbstractVector, p::Params) # chern number
-# @views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat,Int}} # chern number
+# @views function ChernPhase!(TopologicalNumber::AbstractVector, p::Params) # chern number
+@views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat,Int}} # chern number
     @unpack N, Hs = p
-    # TopologicalNumber[:] .= zero(T)
+    TopologicalNumber[:] .= zero(T)
     Link0 = zeros(ComplexF64, Hs, 2, N)
     Link1 = zeros(ComplexF64, Hs, 2, N)
     LinkN = zeros(ComplexF64, Hs, 2, N)
