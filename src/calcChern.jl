@@ -1,8 +1,8 @@
 function psi_j!(j, psi_1, Evec1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
-        k = [i-1, j-1] * 2pi / N
-        # k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 1e-5]
+        # k = [i-1, j-1] * 2pi / N
+        k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 1e-5]
         eigens = eigen!(Hamiltonian(k))
         psi_1[i, :, :] .= eigens.vectors
         Evec1[i, :] .= eigens.values
