@@ -51,14 +51,17 @@ end
 
     dphi = zeros(Hs)
 
-    phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l]))) for l in 1:Hs]
-    dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) - log(Linkmat[3, l]) - log(Linkmat[4, l])) for l in 1:Hs]
+    phi[:] = [angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for l in 1:Hs]
+    dphi[:] = [angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) - angle(Linkmat[4, l]) for l in 1:Hs]
 
-    if rounds == true
-        phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
-    else
-        phi .= (phi - dphi) / 2pi
-    end
+    # phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l]))) for l in 1:Hs]
+    # dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) - log(Linkmat[3, l]) - log(Linkmat[4, l])) for l in 1:Hs]
+
+    # if rounds == true
+    #     phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
+    # else
+        phi .= (phi - dphi) ./ 2pi
+    # end
 end
 
 @doc raw"""
@@ -94,7 +97,7 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 """
 function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    Hs = size(Hamiltonian(n))[1]
+    Hs = size(Hamiltonian(n), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
     psimat = zeros(ComplexF64, 4, Hs, Hs)
@@ -104,17 +107,21 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
 
     n .= [mod(n[i], N) for i in 1:2]
 
-    if round == true
-        TopologicalNumber = zeros(Int, Hs)
-    else
+    # if round == true
+    #     TopologicalNumber = zeros(Int, Hs)
+    # else
         TopologicalNumber = zeros(Hs)
-    end
+    # end
 
     psimat_square!(n, psimat, Evec, p)
     Linkmat_square!(psimat, Evec, Linkmat, p)
     F!(Linkmat, phi, p)
 
     TopologicalNumber .= phi
+
+    if rounds == true
+        TopologicalNumber = round.(Int, TopologicalNumber)
+    end
     
     (; TopologicalNumber, n)
 end

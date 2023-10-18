@@ -418,8 +418,8 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 """
 function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
 
-    n0 = zeros(2)
-    Hs = size(Hamiltonian(n0))[1]
+    # n0 = zeros(2)
+    Hs = size(Hamiltonian(zeros(2)), 1)
     Hshalf = Hs ÷ 2
     p = Params(; Hamiltonian, N, Hs, gapless=0.0, rounds, dim=2)
 

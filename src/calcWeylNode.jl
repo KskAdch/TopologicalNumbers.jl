@@ -132,7 +132,7 @@ end
 """
 function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    Hs = size(Hamiltonian(n))[1]
+    Hs = size(Hamiltonian(n), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=3)
 
     n .= [mod(n[i], N) for i in 1:3]

@@ -133,7 +133,7 @@ U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
 """
 function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    Hs = size(Hamiltonian(0.0))[1]
+    Hs = size(Hamiltonian(0.0), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=1)
 
     TopologicalNumber = zeros(Hs)

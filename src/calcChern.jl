@@ -130,7 +130,7 @@ end
     #     phi .= (phi - dphi) / 2pi
     # end
 
-    phi .= (phi - dphi) / 2pi
+    phi .= (phi - dphi) ./ 2pi
 end
 
 @views function ChernPhase!(TopologicalNumber::AbstractVector, p::Params) # where {T<:AbstractVector} # chern number # Bug
@@ -193,7 +193,7 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     # n0 = zeros(2)
-    Hs = size(Hamiltonian(zeros(2)))[1]
+    Hs = size(Hamiltonian(zeros(2)), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
     # if rounds == true
