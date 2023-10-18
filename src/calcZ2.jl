@@ -104,66 +104,66 @@ end
     end
 end
 
-@views function Z2Phase_round!(TopologicalNumber, p::Params) # chern number
-    @unpack N, Hs, rounds = p
-    Nhalf = N ÷ 2 + 1
-    Hshalf = Hs ÷ 2
+# @views function Z2Phase_round!(TopologicalNumber, p::Params) # chern number
+#     @unpack N, Hs, rounds = p
+#     Nhalf = N ÷ 2 + 1
+#     Hshalf = Hs ÷ 2
 
-    Link1 = zeros(ComplexF64, Hshalf, 2, N)
-    Link2 = zeros(ComplexF64, Hshalf, 2, N)
-    LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
-    link10 = zeros(ComplexF64, Hshalf)
-    link01 = zeros(ComplexF64, Hshalf)
+#     Link1 = zeros(ComplexF64, Hshalf, 2, N)
+#     Link2 = zeros(ComplexF64, Hshalf, 2, N)
+#     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
+#     link10 = zeros(ComplexF64, Hshalf)
+#     link01 = zeros(ComplexF64, Hshalf)
 
-    psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+#     psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+#     psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+#     psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
 
-    psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
-    phi = zeros(Hshalf)
-    Px0 = zeros(Hshalf)
-    Pxp = zeros(Hshalf)
+#     phi = zeros(Hshalf)
+#     Px0 = zeros(Hshalf)
+#     Pxp = zeros(Hshalf)
 
-    s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
-    sy = [0 -1; 1 0]
-    T = kron(s0, sy)
+#     s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
+#     sy = [0 -1; 1 0]
+#     T = kron(s0, sy)
 
-    w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
-    TN = zeros(Hshalf)
+#     TN = zeros(Hshalf)
 
-    for j in 1:Nhalf
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
-        for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
-            if j < Nhalf
-                TN[:] .+= phi[:]
-            end
-        end
-    end
+#     for j in 1:Nhalf
+#         U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
+#         for i in 1:N
+#             F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
+#             if j < Nhalf
+#                 TN[:] .+= phi[:]
+#             end
+#         end
+#     end
 
-    for l in 1:Hshalf
-        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
-        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-    end
+#     for l in 1:Hshalf
+#         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
+#         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
+#     end
 
-    # for l in 1:Hshalf
-    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
-    # end
+#     # for l in 1:Hshalf
+#     #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
+#     #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+#     # end
 
-    for l in 1:Hshalf
-        if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-        end
-    end
-end
+#     for l in 1:Hshalf
+#         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
+#             TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+#         end
+#     end
+# end
 
 @views function Z2Phase!(TopologicalNumber, p::Params) # chern number
     @unpack N, Hs, rounds = p
@@ -212,78 +212,76 @@ end
     for l in 1:Hshalf
         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-    # end
-
-    # for l in 1:Hshalf
+        
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
             TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
 end
 
-@views function Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
-    @unpack N, Hs, rounds = p
-    Nhalf = N ÷ 2 + 1
-    Hshalf = Hs ÷ 2
+# @views function Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
+#     @unpack N, Hs, rounds = p
+#     Nhalf = N ÷ 2 + 1
+#     Hshalf = Hs ÷ 2
 
-    Link1 = zeros(ComplexF64, Hshalf, 2, N)
-    Link2 = zeros(ComplexF64, Hshalf, 2, N)
-    LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
-    link10 = zeros(ComplexF64, Hshalf)
-    link01 = zeros(ComplexF64, Hshalf)
+#     Link1 = zeros(ComplexF64, Hshalf, 2, N)
+#     Link2 = zeros(ComplexF64, Hshalf, 2, N)
+#     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
+#     link10 = zeros(ComplexF64, Hshalf)
+#     link01 = zeros(ComplexF64, Hshalf)
 
-    psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+#     psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+#     psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+#     psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
 
-    psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
-    phi = zeros(Hshalf)
-    Px0 = zeros(Hshalf)
-    Pxp = zeros(Hshalf)
+#     phi = zeros(Hshalf)
+#     Px0 = zeros(Hshalf)
+#     Pxp = zeros(Hshalf)
 
-    s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
-    sy = [0 -1; 1 0]
-    T = kron(s0, sy)
+#     s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
+#     sy = [0 -1; 1 0]
+#     T = kron(s0, sy)
 
-    w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+#     wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
-    TN = zeros(Hshalf, 2)
+#     TN = zeros(Hshalf, 2)
 
-    for j in 1:N
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
-        for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
-            if j < Nhalf
-                TN[:, 1] .+= phi[:]
-            else
-                TN[:, 2] .+= phi[:]
-            end
-        end
-    end
+#     for j in 1:N
+#         U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
+#         for i in 1:N
+#             F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
+#             if j < Nhalf
+#                 TN[:, 1] .+= phi[:]
+#             else
+#                 TN[:, 2] .+= phi[:]
+#             end
+#         end
+#     end
 
-    for l in 1:Hshalf
-        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
-        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-    end
+#     for l in 1:Hshalf
+#         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
+#         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
+#     end
 
-    # for l in 1:Hshalf
-    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
-    # end
+#     # for l in 1:Hshalf
+#     #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
+#     #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
+#     # end
 
-    for l in 1:Hshalf
-        if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-            TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-        end
-    end
-end
+#     for l in 1:Hshalf
+#         if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
+#             TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+#             TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
+#         end
+#     end
+# end
 
 @views function Z2Phase!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
     @unpack N, Hs, rounds = p
@@ -334,10 +332,7 @@ end
     for l in 1:Hshalf
         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-    # end
 
-    
-    # for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
             TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
             TRTopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
