@@ -149,7 +149,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 H(k, p) = H₀(k, (6, p))
 
                 param = 1:6 # range(1, 6, length=6)
-                result = calcPhaseDiagram(H, param, "Chern"; rounds=false)
+                result = calcPhaseDiagram(H, param, "Chern")
 
                 # #↓結果おかしい
                 # num = [6 6 -12 -12 6 6; 0 6 -6 -6 6 0; 0 4 -2 -1 1 0; 0 -6 6 6 -6 0; -6 -6 12 12 -6 -6; 0 2 -6 1 0 0]
