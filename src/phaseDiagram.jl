@@ -26,10 +26,10 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
     Hamiltonian(k) = H(k, 0.0)
 
     try
-        Hs = size(Hamiltonian(0.0))[1]
+        Hs = size(Hamiltonian(0.0), 1)
         dim = 1
     catch
-        Hs = size(Hamiltonian(zeros(2)))[1]
+        Hs = size(Hamiltonian(zeros(2)), 1)
         dim = 2
     end
 
@@ -43,9 +43,11 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
         # num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
-            algorithm! = BerryPhase_round!
+            algorithm! = BerryPhase!
+            # algorithm! = BerryPhase_round!
         elseif alg == "Z2"
-            algorithm! = Z2Phase_round!
+            algorithm! = Z2Phase!
+            # algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range, 1))
             num0 = zeros(Float64, Hs ÷ 2)
             # num0 = zeros(Int64, Hs ÷ 2)
@@ -95,10 +97,10 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
     Hamiltonian(k) = H(k, (0.0, 0.0))
 
     try
-        Hs = size(Hamiltonian(0.0))[1]
+        Hs = size(Hamiltonian(0.0), 1)
         dim = 1
     catch
-        Hs = size(Hamiltonian(zeros(2)))[1]
+        Hs = size(Hamiltonian(zeros(2)), 1)
         dim = 2
     end
 
@@ -112,9 +114,11 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
         # num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
-            algorithm! = BerryPhase_round!
+            algorithm! = BerryPhase!
+            # algorithm! = BerryPhase_round!
         elseif alg == "Z2"
-            algorithm! = Z2Phase_round!
+            algorithm! = Z2Phase!
+            # algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
             num0 = zeros(Float64, Hs ÷ 2)
             # num0 = zeros(Int64, Hs ÷ 2)
