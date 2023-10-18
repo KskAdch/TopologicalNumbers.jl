@@ -39,18 +39,13 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
     num0 = zeros(Float64, Hs)
 
     if rounds == true
-        # num0 = zeros(Float64, Hs)
-        # num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase!
-            # algorithm! = BerryPhase_round!
         elseif alg == "Z2"
             algorithm! = Z2Phase!
-            # algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range, 1))
             num0 = zeros(Float64, Hs ÷ 2)
-            # num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
         else
@@ -58,10 +53,8 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
-        # nums = Int.(transpose(nums))
         nums = round.(Int, transpose(nums))
     elseif rounds == false
-        # num0 = zeros(Float64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase!
@@ -110,18 +103,13 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
     num0 = zeros(Float64, Hs)
 
     if rounds == true
-        # num0 = zeros(Float64, Hs)
-        # num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase!
-            # algorithm! = BerryPhase_round!
         elseif alg == "Z2"
             algorithm! = Z2Phase!
-            # algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
             num0 = zeros(Float64, Hs ÷ 2)
-            # num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
         else
@@ -129,10 +117,8 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
-        # nums = Int.(nums)
         nums = round.(Int, nums)
     elseif rounds == false
-        # num0 = zeros(Float64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase!

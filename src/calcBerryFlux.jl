@@ -96,7 +96,6 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     psimat = zeros(ComplexF64, 4, Hs, Hs)
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64, 4, Hs)
-    phi = zeros(Hs)
     TopologicalNumber = zeros(Hs)
 
     n .= [mod(n[i], N) for i in 1:2]
@@ -104,8 +103,6 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     psimat_square!(n, psimat, Evec, p)
     Linkmat_square!(psimat, Evec, Linkmat, p)
     F!(Linkmat, TopologicalNumber, p)
-
-    # TopologicalNumber .= phi
 
     if rounds == true
         TopologicalNumber = round.(Int, TopologicalNumber)
