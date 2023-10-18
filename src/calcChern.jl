@@ -199,7 +199,7 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
     # if rounds == true
     #     TopologicalNumber = zeros(Int, Hs)
     # else
-        TopologicalNumber = zeros(Hs)
+        TopologicalNumber = zeros(Hs) # OK
     # end
 
     ChernPhase!(TopologicalNumber, p)
