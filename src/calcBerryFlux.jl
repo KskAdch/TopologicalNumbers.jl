@@ -51,10 +51,10 @@ end
 
     dphi = zeros(Hs)
 
-    phi[:] = [angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for l in 1:Hs]
+    TopologicalNumber[:] = [angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for l in 1:Hs]
     dphi[:] = [angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) - angle(Linkmat[4, l]) for l in 1:Hs]
 
-    TopologicalNumber .= (phi - dphi) ./ 2pi
+    TopologicalNumber .= (TopologicalNumber - dphi) ./ 2pi
 end
 
 @doc raw"""
