@@ -46,7 +46,7 @@ end
     end
 end
 
-@views function F!(Linkmat, phi, p::Params) # lattice field strength
+@views function F!(Linkmat, TopologicalNumber, p::Params) # lattice field strength
     @unpack rounds, Hs = p
 
     dphi = zeros(Hs)
@@ -54,14 +54,7 @@ end
     phi[:] = [angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for l in 1:Hs]
     dphi[:] = [angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) - angle(Linkmat[4, l]) for l in 1:Hs]
 
-    # phi[:] = [imag(log(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l]))) for l in 1:Hs]
-    # dphi[:] = [imag(log(Linkmat[1, l]) + log(Linkmat[2, l]) - log(Linkmat[3, l]) - log(Linkmat[4, l])) for l in 1:Hs]
-
-    # if rounds == true
-    #     phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
-    # else
-        phi .= (phi - dphi) ./ 2pi
-    # end
+    TopologicalNumber .= (phi - dphi) ./ 2pi
 end
 
 @doc raw"""
@@ -104,20 +97,15 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64, 4, Hs)
     phi = zeros(Hs)
+    TopologicalNumber = zeros(Hs)
 
     n .= [mod(n[i], N) for i in 1:2]
 
-    # if round == true
-    #     TopologicalNumber = zeros(Int, Hs)
-    # else
-        TopologicalNumber = zeros(Hs)
-    # end
-
     psimat_square!(n, psimat, Evec, p)
     Linkmat_square!(psimat, Evec, Linkmat, p)
-    F!(Linkmat, phi, p)
+    F!(Linkmat, TopologicalNumber, p)
 
-    TopologicalNumber .= phi
+    # TopologicalNumber .= phi
 
     if rounds == true
         TopologicalNumber = round.(Int, TopologicalNumber)

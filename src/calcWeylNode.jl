@@ -142,15 +142,19 @@ function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaples
     Linkmat = zeros(ComplexF64, 12, Hs)
     phi = zeros(6, Hs)
     
-    if rounds == true
-        TopologicalNumber = zeros(Int, Hs)
-    else
+    # if rounds == true
+    #     TopologicalNumber = zeros(Int, Hs)
+    # else
         TopologicalNumber = zeros(Hs)
-    end
+    # end
 
     psimat_cube!(n, psimat, Evec, p)
     Linkmat_cube!(psimat, Evec, Linkmat, p)
     F!(Linkmat, phi, TopologicalNumber, p)
+
+    if rounds == true
+        TopologicalNumber = round.(Int, TopologicalNumber)
+    end
     
     (; TopologicalNumber, n)
 end

@@ -97,27 +97,11 @@ end
         phi[:] = [angle(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(Link2[l, 1, i]) * conj(Link1[l, 2, i])) for l in 1:Hshalf]
     end
 
-    # if i == N && j == N
-    #     phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(LinkN1[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hshalf]
-    # elseif i == N
-    #     phi[:] = [imag(log(Link1[l, 1, N] * Link1[l, 2, 1] * conj(Link2[l, 1, N]) * conj(Link1[l, 2, N]))) for l in 1:Hshalf]
-    # elseif j == N
-    #     phi[:] = [imag(log(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(LinkN1[l, 1, i]) * conj(Link1[l, 2, i]))) for l in 1:Hshalf]
-    # else
-    #     phi[:] = [imag(log(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(Link2[l, 1, i]) * conj(Link1[l, 2, i]))) for l in 1:Hshalf]
-    # end
-
     if j == 1 && i < Nhalf
         Px0 .-= [angle(Link1[l, 1, i]) for l in 1:Hshalf]
     elseif j == Nhalf && i < Nhalf
         Pxp .-= [angle(Link1[l, 1, i]) for l in 1:Hshalf]
     end
-
-    # if j == 1 && i < Nhalf
-    #     Px0 .-= [imag(log(Link1[l, 1, i])) for l in 1:Hshalf]
-    # elseif j == Nhalf && i < Nhalf
-    #     Pxp .-= [imag(log(Link1[l, 1, i])) for l in 1:Hshalf]
-    # end
 end
 
 @views function Z2Phase_round!(TopologicalNumber, p::Params) # chern number
@@ -228,22 +212,13 @@ end
     for l in 1:Hshalf
         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-    end
-
-    # for l in 1:Hshalf
-    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
     # end
 
-    for l in 1:Hshalf
+    # for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
             TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
-
-    # if rounds == true
-    #     TopologicalNumber = (Int.(TopologicalNumber[i]))
-    # end
 end
 
 @views function Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
@@ -359,27 +334,15 @@ end
     for l in 1:Hshalf
         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-    end
-    
-    # for l in 1:Hshalf
-    #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-    #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
     # end
 
     
-    for l in 1:Hshalf
+    # for l in 1:Hshalf
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
             TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
             TRTopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
     end
-
-    # for l in 1:Hshalf
-    #     if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
-    #         TopologicalNumber[l] = abs(rem((TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-    #         TRTopologicalNumber[l] = abs(rem((TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-    #     end
-    # end
 end
 
 @doc raw"""
@@ -418,64 +381,34 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 """
 function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
 
-    # n0 = zeros(2)
     Hs = size(Hamiltonian(zeros(2)), 1)
     Hshalf = Hs ÷ 2
     p = Params(; Hamiltonian, N, Hs, gapless=0.0, rounds, dim=2)
 
     TopologicalNumber = zeros(Hshalf)
     if TR == false
-
         Z2Phase!(TopologicalNumber, p)
 
         if rounds == true
-            # TopologicalNumber = zeros(Int, Hshalf)
-
-            # Z2Phase_round!(TopologicalNumber, p)
-
             TopologicalNumber = round.(Int, TopologicalNumber)
-
             Total = rem(sum(TopologicalNumber), 2)
         else
-            # TopologicalNumber = zeros(Hshalf)
-
-            # Z2Phase!(TopologicalNumber, p)
-
             Total = abs(sum(TopologicalNumber))
-            # while Total > 1.5
-            #     Total -= 2
-            # end
             Total = abs(rem(Total, 2))
         end
 
         (; TopologicalNumber, Total)
     else
-
         TRTopologicalNumber = zeros(Hshalf)
         Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
 
         if rounds == true
-            # TopologicalNumber = zeros(Int, Hshalf)
-            # TRTopologicalNumber = zeros(Int, Hshalf)
-
-            # Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p)
-
             TopologicalNumber = round.(Int, TopologicalNumber)
             TRTopologicalNumber = round.(Int, TRTopologicalNumber)
-
             Total = rem(sum(TopologicalNumber), 2)
         else
-            # TopologicalNumber = zeros(Hshalf)
-            # TRTopologicalNumber = zeros(Hshalf)
-
-            # Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
-
             Total = abs(sum(TopologicalNumber))
-            # while Total > 1.5
-            #     Total -= 2
-            # end
             Total = rem(1 - abs(1 - Total), 2)
-            # Total = abs(rem(Total, 2))
         end
 
         (; TopologicalNumber, TRTopologicalNumber, Total)

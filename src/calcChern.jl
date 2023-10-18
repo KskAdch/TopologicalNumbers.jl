@@ -1,8 +1,7 @@
 function psi_j!(j, psi_1, Evec1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
-        # k = [i-1, j-1] * 2pi / N
-        k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 1e-5] # OK
+        k = [i-1, j-1] * 2pi / N .+ 2pi * [1e-5, 1e-5]
         eigens = eigen!(Hamiltonian(k))
         psi_1[i, :, :] .= eigens.vectors
         Evec1[i, :] .= eigens.values
@@ -108,35 +107,14 @@ end
     else
         phi[:] = [angle(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i])) for l in 1:Hs]
         dphi[:] = [angle(Link0[l, 1, i]) + angle(Link0[l, 2, i+1]) - angle(Link1[l, 1, i]) - angle(Link0[l, 2, i]) for l in 1:Hs]
-    end # OK
-
-    # if i == N && j == N
-    #     phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(LinkN[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(LinkN[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
-    # elseif i == N
-    #     phi[:] = [imag(log(Link0[l, 1, N] * Link0[l, 2, 1] * conj(Link1[l, 1, N]) * conj(Link0[l, 2, N]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, N])) + imag(log(Link0[l, 2, 1])) - imag(log(Link1[l, 1, N])) - imag(log(Link0[l, 2, N])) for l in 1:Hs]
-    # elseif j == N
-    #     phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(LinkN[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(LinkN[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
-    # else
-    #     phi[:] = [imag(log(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i]))) for l in 1:Hs]
-    #     dphi[:] = [imag(log(Link0[l, 1, i])) + imag(log(Link0[l, 2, i+1])) - imag(log(Link1[l, 1, i])) - imag(log(Link0[l, 2, i])) for l in 1:Hs]
-    # end
-
-    # if rounds == true
-    #     phi[:] = [round(Int, (phi[i] - dphi[i]) / 2pi) for i in 1:Hs]
-    # else
-    #     phi .= (phi - dphi) / 2pi
-    # end
+    end
 
     phi .= (phi - dphi) ./ 2pi
 end
 
-@views function ChernPhase!(TopologicalNumber::AbstractVector, p::Params) # where {T<:AbstractVector} # chern number # Bug
-# @views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat,Int}} # chern number
+@views function ChernPhase!(TopologicalNumber, p::Params) # chern number # Bug
     @unpack N, Hs = p
-    TopologicalNumber[:] .= zero(Float64) # Bug
+    TopologicalNumber[:] .= zero(Float64)
     Link0 = zeros(ComplexF64, Hs, 2, N)
     Link1 = zeros(ComplexF64, Hs, 2, N)
     LinkN = zeros(ComplexF64, Hs, 2, N)
@@ -192,15 +170,10 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 """
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    # n0 = zeros(2)
     Hs = size(Hamiltonian(zeros(2)), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
-    # if rounds == true
-    #     TopologicalNumber = zeros(Int, Hs)
-    # else
-        TopologicalNumber = zeros(Hs) # OK
-    # end
+    TopologicalNumber = zeros(Hs)
 
     ChernPhase!(TopologicalNumber, p)
 
