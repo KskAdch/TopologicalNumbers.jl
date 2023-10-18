@@ -67,11 +67,11 @@ end
 #     TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
 # end
 
-# @views function L!(phi, Link, p::Params) # lattice field strength
-#     @unpack N, Hs = p
-
-#     phi .= angle.(Link)
-# end
+@views function L!(phi, Link, p::Params) # lattice field strength
+    @unpack N, Hs = p
+    
+    phi .= angle.(Link)
+end
 
 @views function BerryPhase!(TopologicalNumber, p::Params) # berry phase
     @unpack N, Hs = p
