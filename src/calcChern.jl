@@ -133,10 +133,10 @@ end
     phi .= (phi - dphi) / 2pi
 end
 
-@views function ChernPhase!(TopologicalNumber::T, p::Params) where {T<:AbstractVector} # chern number # Bug
-# @views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat,Int}} # chern number
+# @views function ChernPhase!(TopologicalNumber::T, p::Params) where {T<:AbstractVector} # chern number # Bug
+@views function ChernPhase!(TopologicalNumber::AbstractVector{T}, p::Params) where {T<:Union{AbstractFloat,Int}} # chern number
     @unpack N, Hs = p
-    TopologicalNumber[:] .= zero(T) # Bug
+    # TopologicalNumber[:] .= zero(T) # Bug
     Link0 = zeros(ComplexF64, Hs, 2, N)
     Link1 = zeros(ComplexF64, Hs, 2, N)
     LinkN = zeros(ComplexF64, Hs, 2, N)
