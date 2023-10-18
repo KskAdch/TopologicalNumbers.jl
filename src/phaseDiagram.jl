@@ -26,26 +26,26 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
     Hamiltonian(k) = H(k, 0.0)
 
     try
-        Hs = size(Hamiltonian(0.0))[1]
+        Hs = size(Hamiltonian(0.0), 1)
         dim = 1
     catch
-        Hs = size(Hamiltonian(zeros(2)))[1]
+        Hs = size(Hamiltonian(zeros(2)), 1)
         dim = 2
     end
 
     p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
 
     nums = zeros(Float64, Hs, size(param_range, 1))
+    num0 = zeros(Float64, Hs)
 
     if rounds == true
-        num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
-            algorithm! = BerryPhase_round!
+            algorithm! = BerryPhase!
         elseif alg == "Z2"
-            algorithm! = Z2Phase_round!
+            algorithm! = Z2Phase!
             nums = zeros(Float64, Hs ÷ 2, size(param_range, 1))
-            num0 = zeros(Int64, Hs ÷ 2)
+            num0 = zeros(Float64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
         else
@@ -53,9 +53,8 @@ function calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, g
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
-        nums = Int.(transpose(nums))
+        nums = round.(Int, transpose(nums))
     elseif rounds == false
-        num0 = zeros(Float64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase!
@@ -91,26 +90,26 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
     Hamiltonian(k) = H(k, (0.0, 0.0))
 
     try
-        Hs = size(Hamiltonian(0.0))[1]
+        Hs = size(Hamiltonian(0.0), 1)
         dim = 1
     catch
-        Hs = size(Hamiltonian(zeros(2)))[1]
+        Hs = size(Hamiltonian(zeros(2)), 1)
         dim = 2
     end
 
     p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
 
     nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
+    num0 = zeros(Float64, Hs)
 
     if rounds == true
-        num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
-            algorithm! = BerryPhase_round!
+            algorithm! = BerryPhase!
         elseif alg == "Z2"
-            algorithm! = Z2Phase_round!
+            algorithm! = Z2Phase!
             nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
-            num0 = zeros(Int64, Hs ÷ 2)
+            num0 = zeros(Float64, Hs ÷ 2)
         elseif alg == "Chern"
             algorithm! = ChernPhase!
         else
@@ -118,9 +117,8 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
-        nums = Int.(nums)
+        nums = round.(Int, nums)
     elseif rounds == false
-        num0 = zeros(Float64, Hs)
 
         if alg == "BerryPhase"
             algorithm! = BerryPhase!

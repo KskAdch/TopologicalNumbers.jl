@@ -1,7 +1,7 @@
 function psi!(i, psi1, Evec1, p::Params) # wave function
     @unpack Hamiltonian, N = p
 
-    k = 2pi * (i - 1) / N
+    k = 2pi * (i-1) / N .+ 2pi * 1e-5
     eigens = eigen!(Hamiltonian(k))
     psi1[:, :] .= eigens.vectors
     Evec1[:] .= eigens.values
@@ -67,6 +67,12 @@ end
     TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
 end
 
+@views function L!(phi, Link, p::Params) # lattice field strength
+    @unpack N, Hs = p
+
+    phi .= angle.(Link)
+end
+
 @views function BerryPhase!(TopologicalNumber, p::Params) # berry phase
     @unpack N, Hs = p
     Link = zeros(ComplexF64, Hs)
@@ -88,20 +94,8 @@ end
         TN[:] .+= phi[:]
     end
 
-    for i in 1:Hs
-        while abs(TN[i]) > 1.5pi
-            TN[i] = abs(TN[i]) - 2pi
-        end
-    end
-    TopologicalNumber .= [abs(rem(TN[i] / pi, 2)) for i in 1:Hs]
+    TopologicalNumber .= [1 - abs(1 - rem(abs(TN[i]) / pi, 2)) for i in 1:Hs]
 end
-
-@views function L!(phi, Link, p::Params) # lattice field strength
-    @unpack N, Hs = p
-
-    phi[:] .= [imag(log(Link[l])) for l in 1:Hs]
-end
-
 
 @doc raw"""
 
@@ -131,25 +125,18 @@ U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
 """
 function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    Hs = size(Hamiltonian(0.0))[1]
+    Hs = size(Hamiltonian(0.0), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=1)
 
+    TopologicalNumber = zeros(Hs)
+    BerryPhase!(TopologicalNumber, p)
+
     if rounds == true
-        TopologicalNumber = zeros(Int64, Hs)
-
-        BerryPhase_round!(TopologicalNumber, p)
-
+        TopologicalNumber = round.(Int, TopologicalNumber)
         Total = rem(sum(TopologicalNumber), 2)
     else
-        TopologicalNumber = zeros(Hs)
-
-        BerryPhase!(TopologicalNumber, p)
-
         Total = abs(sum(TopologicalNumber))
-        while Total > 1.5
-            Total -= 2
-        end
-        Total = abs(rem(Total, 2))
+        Total = rem(1 - abs(1 - Total), 2)
     end
 
     (; TopologicalNumber, Total)

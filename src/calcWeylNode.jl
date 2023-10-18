@@ -132,7 +132,7 @@ end
 """
 function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    Hs = size(Hamiltonian(n))[1]
+    Hs = size(Hamiltonian(n), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=3)
 
     n .= [mod(n[i], N) for i in 1:3]
@@ -141,16 +141,15 @@ function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaples
     Evec = zeros(Hs)
     Linkmat = zeros(ComplexF64, 12, Hs)
     phi = zeros(6, Hs)
-    
-    if rounds == true
-        TopologicalNumber = zeros(Int, Hs)
-    else
-        TopologicalNumber = zeros(Hs)
-    end
+    TopologicalNumber = zeros(Hs)
 
     psimat_cube!(n, psimat, Evec, p)
     Linkmat_cube!(psimat, Evec, Linkmat, p)
     F!(Linkmat, phi, TopologicalNumber, p)
+
+    if rounds == true
+        TopologicalNumber = round.(Int, TopologicalNumber)
+    end
     
     (; TopologicalNumber, n)
 end
