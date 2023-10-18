@@ -43,35 +43,35 @@ end
     end
 end
 
-@views function BerryPhase_round!(TopologicalNumber, p::Params) # berry phase
-    @unpack N, Hs = p
-    Link = zeros(ComplexF64, Hs)
+# @views function BerryPhase_round!(TopologicalNumber, p::Params) # berry phase
+#     @unpack N, Hs = p
+#     Link = zeros(ComplexF64, Hs)
 
-    Evec0 = zeros(Hs)
-    Evec1 = zeros(Hs)
+#     Evec0 = zeros(Hs)
+#     Evec1 = zeros(Hs)
 
-    psi0 = zeros(ComplexF64, Hs, Hs)
-    psi1 = zeros(ComplexF64, Hs, Hs)
-    psiN1 = zeros(ComplexF64, Hs, Hs)
+#     psi0 = zeros(ComplexF64, Hs, Hs)
+#     psi1 = zeros(ComplexF64, Hs, Hs)
+#     psiN1 = zeros(ComplexF64, Hs, Hs)
 
-    phi = zeros(Hs)
+#     phi = zeros(Hs)
 
-    TN = zeros(Hs)
+#     TN = zeros(Hs)
 
-    for i in 1:N
-        U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p)
-        L!(phi, Link, p)
-        TN[:] .+= phi[:]
-    end
+#     for i in 1:N
+#         U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p)
+#         L!(phi, Link, p)
+#         TN[:] .+= phi[:]
+#     end
 
-    TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
-end
+#     TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
+# end
 
-@views function L!(phi, Link, p::Params) # lattice field strength
-    @unpack N, Hs = p
+# @views function L!(phi, Link, p::Params) # lattice field strength
+#     @unpack N, Hs = p
 
-    phi .= angle.(Link)
-end
+#     phi .= angle.(Link)
+# end
 
 @views function BerryPhase!(TopologicalNumber, p::Params) # berry phase
     @unpack N, Hs = p
