@@ -257,43 +257,43 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
 
     p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
 
-    nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
-    num0 = zeros(Float64, Hs)
+    # nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
+    # num0 = zeros(Float64, Hs)
 
-    # nums = calc_data2D(H, param_range1, param_range2, alg, p)
+    nums = calc_data2D(H, param_range1, param_range2, alg, p)
 
-    if rounds == true
+    # if rounds == true
 
-        if alg == "BerryPhase"
-            algorithm! = BerryPhase!
-        elseif alg == "Z2"
-            algorithm! = Z2Phase!
-            nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
-            num0 = zeros(Float64, Hs ÷ 2)
-        elseif alg == "Chern"
-            algorithm! = ChernPhase!
-        else
-            throw(ArgumentError("Unknown algorithm $alg"))
-        end
+    #     if alg == "BerryPhase"
+    #         algorithm! = BerryPhase!
+    #     elseif alg == "Z2"
+    #         algorithm! = Z2Phase!
+    #         nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
+    #         num0 = zeros(Float64, Hs ÷ 2)
+    #     elseif alg == "Chern"
+    #         algorithm! = ChernPhase!
+    #     else
+    #         throw(ArgumentError("Unknown algorithm $alg"))
+    #     end
 
-        update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
-        nums = round.(Int, nums)
-    elseif rounds == false
+    #     update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
+    #     nums = round.(Int, nums)
+    # elseif rounds == false
 
-        if alg == "BerryPhase"
-            algorithm! = BerryPhase!
-        elseif alg == "Z2"
-            algorithm! = Z2Phase!
-            nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
-            num0 = zeros(Float64, Hs ÷ 2)
-        elseif alg == "Chern"
-            algorithm! = ChernPhase!
-        else
-            throw(ArgumentError("Unknown algorithm $alg"))
-        end
+    #     if alg == "BerryPhase"
+    #         algorithm! = BerryPhase!
+    #     elseif alg == "Z2"
+    #         algorithm! = Z2Phase!
+    #         nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
+    #         num0 = zeros(Float64, Hs ÷ 2)
+    #     elseif alg == "Chern"
+    #         algorithm! = ChernPhase!
+    #     else
+    #         throw(ArgumentError("Unknown algorithm $alg"))
+    #     end
 
-        update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
-    end
+    #     update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
+    # end
 
     if plot == true && Hs % 2 == 0
         nums_half = sum(@view(nums[1:end÷2, :, :]), dims=1)[1, :, :]
