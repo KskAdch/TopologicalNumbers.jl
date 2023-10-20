@@ -26,11 +26,11 @@ function calc_data1D(H, param_range, alg, p::Params)
         num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
-            algorithm! = BerryPhase!
-            # algorithm! = BerryPhase_round!
+            # algorithm! = BerryPhase!
+            algorithm! = BerryPhase_round!
         elseif alg == "Z2"
-            algorithm! = Z2Phase!
-            # algorithm! = Z2Phase_round!
+            # algorithm! = Z2Phase!
+            algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range, 1))
             num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
@@ -72,11 +72,11 @@ function calc_data2D(H, param_range1, param_range2, alg, p::Params)
         num0 = zeros(Int64, Hs)
 
         if alg == "BerryPhase"
-            algorithm! = BerryPhase!
-            # algorithm! = BerryPhase_round!
+            # algorithm! = BerryPhase!
+            algorithm! = BerryPhase_round!
         elseif alg == "Z2"
-            algorithm! = Z2Phase!
-            # algorithm! = Z2Phase_round!
+            # algorithm! = Z2Phase!
+            algorithm! = Z2Phase_round!
             nums = zeros(Float64, Hs ÷ 2, size(param_range1, 1), size(param_range2, 1))
             num0 = zeros(Int64, Hs ÷ 2)
         elseif alg == "Chern"
