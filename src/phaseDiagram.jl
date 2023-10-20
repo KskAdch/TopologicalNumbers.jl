@@ -102,8 +102,8 @@ function calc_data2D(H, param_range1, param_range2, alg, p::Params)
     nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
     num0 = zeros(Float64, Hs)
 
-    if rounds == true
-        num0 = zeros(Int64, Hs)
+    # if rounds == true
+    #     num0 = zeros(Int64, Hs)
 
     #     if alg == "BerryPhase"
     #         algorithm! = BerryPhase_round!
