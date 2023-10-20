@@ -76,7 +76,7 @@ function calc_data1D(H, param_range, alg, p::Params)
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
-        nums = round.(Int, transpose(nums))
+        round.(Int, transpose(nums))
     elseif rounds == false
 
         if alg == "BerryPhase"
@@ -92,7 +92,7 @@ function calc_data1D(H, param_range, alg, p::Params)
         end
 
         update1D!(nums, num0, H, algorithm!, param_range, p)
-        nums = transpose(nums)
+        transpose(nums)
     end
 end
 
@@ -154,7 +154,7 @@ function calc_data2D(H, param_range1, param_range2, alg, p::Params)
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
-        nums = round.(Int, nums)
+        round.(Int, nums)
     elseif rounds == false
 
         if alg == "BerryPhase"
@@ -170,6 +170,7 @@ function calc_data2D(H, param_range1, param_range2, alg, p::Params)
         end
 
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, p)
+        nums
     end
 end
 
