@@ -398,6 +398,10 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         Chern_i = [[round(Int, sum(nodes[i, :, :, 1])) for i in 1:N] [round(Int, sum(nodes[i, :, :, 2])) for i in 1:N]]
         @test Chern_i[:, 1] == [0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]
         @test Chern_i[:, 1] == -Chern_i[:, 2]
+
+        result = calcChernSurface(H₀, "k1", 0:10)
+        @test result.nums[1, :] == Chern_i[:, 1]
+        @test result.nums[2, :] == Chern_i[:, 2]
     end
 
     @testset "model" begin
