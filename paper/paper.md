@@ -35,7 +35,7 @@ bibliography: paper.bib
 ---
 
 # Summary
-
+The topological number is a physical quantity that plays an important role in characterizing phase transitions in condensed matter physics. Recently, topological phase transitions have been of great interest in condensed matter physics. A typical example is the integer quantum Hall effect, where the quantized Hall conductivity can be calculated by the Chern number, one of the topological numbers. The quantization of such physical quantities is closely related to the concept of topology. However, the calculation of this topological number often requires numerical calculations. In addition, it may require an enormous amount of computation before convergence is achieved. Creating tools to easily calculate such topological numbers will lead to advances in condensed matter physics.
 
 
 # Statement of need
