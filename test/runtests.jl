@@ -400,8 +400,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         @test Chern_i[:, 1] == -Chern_i[:, 2]
 
         result = calcChernSurface(H₀, "k1", 0:10)
-        @test result.nums[1, :] == Chern_i[:, 1]
-        @test result.nums[2, :] == Chern_i[:, 2]
+        @test result.nums[:, 1] == Chern_i[:, 1]
+        @test result.nums[:, 2] == Chern_i[:, 2]
     end
 
     @testset "model" begin
