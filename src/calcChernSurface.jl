@@ -17,7 +17,7 @@ function calcChernSurface(H::Function, kn::String, kn_range::T; N::Int=51, gaple
 
     param = Params(; Hamiltonian, dim=2, N, gapless, rounds, Hs)
 
-    nums = calc_data1D(H0, param_range, alg, param)
+    nums = calc_data1D(H0, kn_range, "Chern", param)
     
     if plot == true
         plot1D(nums, param_range)
