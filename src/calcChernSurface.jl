@@ -2,7 +2,7 @@ function numsk1(H, kn_range, N, gapless, rounds, Hs)
     H0(k, p) = H([p, k[1], k[2]])
     Hamiltonian(k) = H0(k, 0.0)
 
-    param = (; Hamiltonian, dim=2, N, gapless, rounds, Hs)
+    param = Params(; Hamiltonian, dim=2, N, gapless, rounds, Hs)
 
     calc_data1D(H0, kn_range, "Chern", param)
 end
@@ -11,7 +11,7 @@ function numsk2(H, kn_range, N, gapless, rounds, Hs)
     H0(k, p) = H([k[1], p, k[2]])
     Hamiltonian(k) = H0(k, 0.0)
 
-    param = (; Hamiltonian, dim=2, N, gapless, rounds, Hs)
+    param = Params(; Hamiltonian, dim=2, N, gapless, rounds, Hs)
 
     calc_data1D(H0, kn_range, "Chern", param)
 end
@@ -20,7 +20,7 @@ function numsk3(H, kn_range, N, gapless, rounds, Hs)
     H0(k, p) = H([k[1], k[2], p])
     Hamiltonian(k) = H0(k, 0.0)
 
-    param = (; Hamiltonian, dim=2, N, gapless, rounds, Hs)
+    param = Params(; Hamiltonian, dim=2, N, gapless, rounds, Hs)
 
     calc_data1D(H0, kn_range, "Chern", param)
 end
