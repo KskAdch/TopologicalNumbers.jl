@@ -1,6 +1,6 @@
 function calcChernSurface(H::Function, kn::String, kn_range::T; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
     
-    Hs = size(H(zeros(3)))[1]
+    Hs = size(H(zeros(3)), 1)
 
     if kn == "k1"
         k0(k, p) = [p, k[1], k[2]]
