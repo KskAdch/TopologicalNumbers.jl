@@ -40,7 +40,7 @@ function calcChernSurface(H::Function, kn::String; kn_mesh::Int=51, N::Int=51, g
     
     Hs = size(H(zeros(3)), 1)
     # kn_range = range(0.0, 2pi, length = kn_mesh) #  .+ 2pi*1e-5
-    kn_range = 2pi*(0:(kn_mesh-1)) / kn_mesh
+    kn_range = 2pi*(0:(kn_mesh-1)) / kn_mesh .+ 2pi*1e-5
 
     if kn == "k1"
         nums = nums_k1(H, kn_range, N, gapless, rounds, Hs)
