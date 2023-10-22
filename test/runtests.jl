@@ -402,6 +402,14 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         result = calcChernSurface(H₀, "k1", 2pi*(0:(N-1))/N)
         @test result.nums[:, 1] == [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]
         @test result.nums[:, 2] == -result.nums[:, 1]
+
+        result = calcChernSurface(H₀, "k2", 2pi*(0:(N-1))/N)
+        @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        @test result.nums[:, 2] == -result.nums[:, 1]
+
+        result = calcChernSurface(H₀, "k3", 2pi*(0:(N-1))/N)
+        @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        @test result.nums[:, 2] == -result.nums[:, 1]
     end
 
     @testset "model" begin
