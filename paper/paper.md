@@ -40,9 +40,11 @@ interest in recent condensed matter physics. A typical example is the integer qu
 
 
 # Statement of need
+`TopologicalNumbers.jl` is a package for computing various topological invariants. These quantities are very important physical quantities in the study of condensed matter physics. However, their computation can be very computationally intensive. In addition, the calculation of topological invariants is often not the essence of the research. Therefore, this package is very useful for researchers in the field of condensed matter physics to easily and efficiently calculate topological invariants.
 
+There are currently various methods for computing topological invariants, the first of which was the Fukui-Hatsugai-Suzuki method [@Fukui2005] in 2005 for computing two-dimensional Chern numbers. In general, topological invariants are obtained by integrating the eigenstates of the Hamiltonian in the Brillouin zone, and this method can efficiently calculate them by discretizing the range of integration. This method can be useful in a practical computation for more complicated systems with a topological order for which a number of data points of the wave functions cannot easily be increased. Also, methods have been proposed to compute various topological invariants using this method. One is the method of [@Shiozaki2023discrete], which computes the Z2 number in two dimensions in 2023. This method does not require any gauge fixing conditions and is quantized for any discrete approximation of the Brillouin zone. It is also used for methods to find three-dimensional Weil points [@Hirayama2017,@Yang2011,@Hirayama2015,@Du2017].
 
-
+There is no Julia package yet that comprehensively implements these methods. This package is easy for beginners to use because calculations can be done with a minimum of arguments. It is also easy for researchers to use because it is designed with many optional arguments so that it can be used for general-purpose calculations. It is designed to be more accessible and with clear documentation.
 
 
 # Mathematics
