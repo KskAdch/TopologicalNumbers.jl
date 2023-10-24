@@ -13,8 +13,8 @@ Hamiltonian of the Su-Schrieffer-Heeger model.
  Hamiltonian of the Su-Schrieffer-Heeger model is defined as
 ```math
 H(k)=\begin{pmatrix}
-    0                 & p_{1}+p_{2}e^{-ik} \\
-    p_{1}+p_{2}e^{ik} & 0
+    0                 & t_{1}+t_{2}e^{-ik} \\
+    t_{1}+t_{2}e^{ik} & 0
 \end{pmatrix}
 ```
 where,,,
@@ -114,7 +114,16 @@ Hamiltonian of the Haldane model.
 # Definition
  Hamiltonian of the Haldane model is defined as
 ```math
-H(k)=
+H(\bm{k})=\begin{pmatrix}
+    h0(\bm{k})+h3(\bm{k})  & h1(\bm{k})-ih2(\bm{k}) \\
+    h1(\bm{k})+ih2(\bm{k}) & h0(\bm{k})-h3(\bm{k})
+\end{pmatrix}
+```
+```math
+h0(\bm{k})=2K\cos(ϕ)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2}))
+h1(\bm{k})=-J(1+\cos(k_{1})+\cos(k_{2}))
+h2(\bm{k})=-J(-\sin(k_{1})+\sin(k_{2}))
+h3(\bm{k})=M+2K\sin(ϕ)(\sin(k_{1})+\sin(k_{2})-\sin(k_{1}+k_{2}))
 ```
 where,,,
 """
@@ -152,9 +161,14 @@ Hamiltonian of the Kitaev honeycomb model.
  Hamiltonian of the Kitaev honeycomb model is defined as
 ```math
 H(\bm{k})=\begin{pmatrix}
-    K(\cos(k_{1})+\cos(k_{2})+1)                                             & -iK(\sin(k_{1})+\sin(k_{2}))-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) \\
-    iK(\sin(k_{1})+\sin(k_{2}))-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) & -K(\cos(k_{1})+\cos(k_{2})+1)
+    h3(\bm{k})             & h1(\bm{k})-ih2(\bm{k}) \\
+    h1(\bm{k})+ih2(\bm{k}) & -h3(\bm{k})
 \end{pmatrix}
+```
+```math
+h1(\bm{k})=-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2}))
+h2(\bm{k})=K(\sin(k_{1})+\sin(k_{2}))
+h3(\bm{k})=K(\cos(k_{1})+\cos(k_{2})+1)
 ```
 where,,,
 """
