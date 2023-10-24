@@ -75,7 +75,7 @@ H(k)=\begin{pmatrix}
     -2t\cos(k_{2}-\frac{2\pi p}{q})  & -t                               & 0      & 0  & \cdots                               & e^{-ik_{1}}           \\
     -t                               & -2t\cos(k_{2}-2\frac{2\pi p}{q}) & -t     & 0  & \cdots                               & 0                     \\
     0                                & -t                               & \ddots & -t & \cdots                               & \vdots                \\
-    \vdots                           & \vdots                           & \vdots & -t & -2t\cos(k_{2}-(q-1)\frac{2\pi p}{q}) & -t                    \\
+    \vdots                           & \vdots                           &        & -t & -2t\cos(k_{2}-(q-1)\frac{2\pi p}{q}) & -t                    \\
     e^{ik_{1}}                       & 0                                & \cdots & 0  & -t                                   & -2t\cos(k_{2}-2\pi p)
 \end{pmatrix}
 ```
@@ -126,9 +126,9 @@ H(\bm{k})=\begin{pmatrix}
 \end{pmatrix}
 ```
 ```math
-h_{0}(\bm{k})=2K\cos(\phi)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2}))
-h_{1}(\bm{k})=-J(1+\cos(k_{1})+\cos(k_{2}))
-h_{2}(\bm{k})=-J(-\sin(k_{1})+\sin(k_{2}))
+h_{0}(\bm{k})=2K\cos(\phi)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2})) \\
+h_{1}(\bm{k})=-J(1+\cos(k_{1})+\cos(k_{2})) \\
+h_{2}(\bm{k})=-J(-\sin(k_{1})+\sin(k_{2})) \\
 h_{3}(\bm{k})=M+2K\sin(\phi)(\sin(k_{1})+\sin(k_{2})-\sin(k_{1}+k_{2}))
 ```
 where,,,
@@ -172,8 +172,8 @@ H(\bm{k})=\begin{pmatrix}
 \end{pmatrix}
 ```
 ```math
-h_{1}(\bm{k})=-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2}))
-h_{2}(\bm{k})=K(\sin(k_{1})+\sin(k_{2}))
+h_{1}(\bm{k})=-\kappa(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) \\
+h_{2}(\bm{k})=K(\sin(k_{1})+\sin(k_{2})) \\
 h_{3}(\bm{k})=K(\cos(k_{1})+\cos(k_{2})+1)
 ```
 where,,,
@@ -228,7 +228,17 @@ Hamiltonian of the Kane--Mele model.
 # Definition
  Hamiltonian of the Kane--Mele model is defined as
 ```math
-H(k)=
+H(k)=\begin{pmatrix}
+    h_{3}(\bm{k})                & 0                            & h_{5}(\bm{k})-ih_{4}(\bm{k}) & 0                            \\
+    0                            & -h_{3}(\bm{k})               & 0                            & h_{5}(\bm{k})-ih_{4}(\bm{k}) \\
+    h_{5}(\bm{k})+ih_{4}(\bm{k}) & 0                            & -h_{3}(\bm{k})               & 0                            \\
+    0                            & h_{5}(\bm{k})+ih_{4}(\bm{k}) & 0                            & h_{3}(\bm{k})
+\end{pmatrix}
+```
+```math
+h_{3}(\bm{k})=2\lambda_{\mathrm{SO}}(\sin(k_{1})-\sin(k_{2})-\sin(k_{1}-k_{2})) \\
+h_{4}(\bm{k})=-t(\sin(k_{1})+\sin(k_{2})) \\
+h_{5}(\bm{k})=-t(\cos(k_{1})+\cos(k_{2})+1)
 ```
 where,,,
 """
@@ -271,7 +281,18 @@ Hamiltonian of the Bernevig--Hughes--Zhang (BHZ) model.
 # Definition
  Hamiltonian of the BHZ model is defined as
 ```math
-H(k)=
+H(k)=\begin{pmatrix}
+    h_{0}(\bm{k})+h_{3}(\bm{k})  & 0                            & h_{5}(\bm{k})-ih_{4}(\bm{k}) & 0                            \\
+    0                            & h_{0}(\bm{k})-h_{3}(\bm{k})  & 0                            & h_{5}(\bm{k})-ih_{4}(\bm{k}) \\
+    h_{5}(\bm{k})+ih_{4}(\bm{k}) & 0                            & h_{0}(\bm{k})-h_{3}(\bm{k})  & 0                            \\
+    0                            & h_{5}(\bm{k})+ih_{4}(\bm{k}) & 0                            & h_{0}(\bm{k})+h_{3}(\bm{k})
+\end{pmatrix}
+```
+```math
+h_{0}(\bm{k})=-(t_{ss}-t_{pp})(\cos(k_{1})+\cos(k_{2}))+\frac{(\epsilon_{s}+\epsilon_{p})}{2} \\
+h_{3}(\bm{k})=2t_{sp}\sin(k_{2}) \\
+h_{4}(\bm{k})=2t_{sp}\sin(k_{1}) \\
+h_{5}(\bm{k})=-(t_{ss}+t_{pp})(\cos(k_{1})+\cos(k_{2}))+\frac{(\epsilon_{s}-\epsilon_{p})}{2}
 ```
 where,,,
 """
