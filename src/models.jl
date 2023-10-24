@@ -71,7 +71,13 @@ Hamiltonian of the two-dimensional square lattice with flux model.
 # Definition
  Hamiltonian of the two-dimensional square lattice with flux model is defined as
 ```math
-H(k)=
+H(k)=\begin{pmatrix}
+    -2t\cos(k_{2}-\frac{2\pi p}{q})  & -t                               & 0      & 0  & \cdots                               & e^{-ik_{1}}           \\
+    -t                               & -2t\cos(k_{2}-2\frac{2\pi p}{q}) & -t     & 0  & \cdots                               & 0                     \\
+    0                                & -t                               & \ddots & -t & \cdots                               & \vdots                \\
+    \vdots                           & \vdots                           & \vdots & -t & -2t\cos(k_{2}-(q-1)\frac{2\pi p}{q}) & -t                    \\
+    e^{ik_{1}}                       & 0                                & \cdots & 0  & -t                                   & -2t\cos(k_{2}-2\pi p)
+\end{pmatrix}
 ```
 where,,,
 """
@@ -115,15 +121,15 @@ Hamiltonian of the Haldane model.
  Hamiltonian of the Haldane model is defined as
 ```math
 H(\bm{k})=\begin{pmatrix}
-    h0(\bm{k})+h3(\bm{k})  & h1(\bm{k})-ih2(\bm{k}) \\
-    h1(\bm{k})+ih2(\bm{k}) & h0(\bm{k})-h3(\bm{k})
+    h_{0}(\bm{k})+h_{3}(\bm{k})  & h_{1}(\bm{k})-ih_{2}(\bm{k}) \\
+    h_{1}(\bm{k})+ih_{2}(\bm{k}) & h_{0}(\bm{k})-h_{3}(\bm{k})
 \end{pmatrix}
 ```
 ```math
-h0(\bm{k})=2K\cos(ϕ)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2}))
-h1(\bm{k})=-J(1+\cos(k_{1})+\cos(k_{2}))
-h2(\bm{k})=-J(-\sin(k_{1})+\sin(k_{2}))
-h3(\bm{k})=M+2K\sin(ϕ)(\sin(k_{1})+\sin(k_{2})-\sin(k_{1}+k_{2}))
+h_{0}(\bm{k})=2K\cos(\phi)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2}))
+h_{1}(\bm{k})=-J(1+\cos(k_{1})+\cos(k_{2}))
+h_{2}(\bm{k})=-J(-\sin(k_{1})+\sin(k_{2}))
+h_{3}(\bm{k})=M+2K\sin(\phi)(\sin(k_{1})+\sin(k_{2})-\sin(k_{1}+k_{2}))
 ```
 where,,,
 """
@@ -161,14 +167,14 @@ Hamiltonian of the Kitaev honeycomb model.
  Hamiltonian of the Kitaev honeycomb model is defined as
 ```math
 H(\bm{k})=\begin{pmatrix}
-    h3(\bm{k})             & h1(\bm{k})-ih2(\bm{k}) \\
-    h1(\bm{k})+ih2(\bm{k}) & -h3(\bm{k})
+    h_{3}(\bm{k})                & h_{1}(\bm{k})-ih_{2}(\bm{k}) \\
+    h_{1}(\bm{k})+ih_{2}(\bm{k}) & -h_{3}(\bm{k})
 \end{pmatrix}
 ```
 ```math
-h1(\bm{k})=-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2}))
-h2(\bm{k})=K(\sin(k_{1})+\sin(k_{2}))
-h3(\bm{k})=K(\cos(k_{1})+\cos(k_{2})+1)
+h_{1}(\bm{k})=-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2}))
+h_{2}(\bm{k})=K(\sin(k_{1})+\sin(k_{2}))
+h_{3}(\bm{k})=K(\cos(k_{1})+\cos(k_{2})+1)
 ```
 where,,,
 """
