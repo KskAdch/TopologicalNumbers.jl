@@ -12,7 +12,10 @@ Hamiltonian of the Su-Schrieffer-Heeger model.
 # Definition
  Hamiltonian of the Su-Schrieffer-Heeger model is defined as
 ```math
-H(k)=
+H(k)=\begin{pmatrix}
+    0    & p\_{1}+p\_{2}e^{-ik} \\
+    p\_{1}+p\_{2}e^{ik} & 0
+\end{pmatrix}
 ```
 where,,,
 """
