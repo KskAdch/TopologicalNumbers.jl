@@ -13,8 +13,8 @@ Hamiltonian of the Su-Schrieffer-Heeger model.
  Hamiltonian of the Su-Schrieffer-Heeger model is defined as
 ```math
 H(k)=\begin{pmatrix}
-    0    & p\_{1}+p\_{2}e^{-ik} \\
-    p\_{1}+p\_{2}e^{ik} & 0
+    0                 & p_{1}+p_{2}e^{-ik} \\
+    p_{1}+p_{2}e^{ik} & 0
 \end{pmatrix}
 ```
 where,,,
@@ -40,7 +40,10 @@ Hamiltonian of the Kitaev chain model.
 # Definition
  Hamiltonian of the Kitaev chain model is defined as
 ```math
-H(k)=
+H(k)=\begin{pmatrix}
+    -\mu-2t\cos(k)   & 2i\Delta\sin(k) \\
+    -2i\Delta\sin(k) & \mu+2t\cos(k)
+\end{pmatrix}
 ```
 where,,,
 """
@@ -148,7 +151,10 @@ Hamiltonian of the Kitaev honeycomb model.
 # Definition
  Hamiltonian of the Kitaev honeycomb model is defined as
 ```math
-H(k)=
+H(\bm{k})=\begin{pmatrix}
+    K(\cos(k_{1})+\cos(k_{2})+1)                                             & -iK(\sin(k_{1})+\sin(k_{2}))-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) \\
+    iK(\sin(k_{1})+\sin(k_{2}))-κ(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) & -K(\cos(k_{1})+\cos(k_{2})+1)
+\end{pmatrix}
 ```
 where,,,
 """
