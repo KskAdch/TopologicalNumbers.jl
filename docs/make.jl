@@ -36,6 +36,9 @@ makedocs(;
                 "Kane-Mele model" => "2D/Kane-Mele.md",
                 "BHZ model" => "2D/BHZ.md",
             ],
+            "Three-dimensional case (Z)" => [
+                "Weyl semimetal" => "3D/Weyl.md",
+            ],
         ],
         "Library" => [
             "Public" => "lib/public.md",
