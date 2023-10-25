@@ -10,18 +10,20 @@ authors:
   - name: Keisuke Adachi
     orcid: 0000-0000-0000-0000
     equal-contrib: true
-    affiliation: 1 # (Multiple affiliations must be quoted)
+    corresponding: true
+    affiliation: "1, 2" # (Multiple affiliations must be quoted)
   - name: Minoru Kanega
     equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
+    corresponding: true
     affiliation: 2
 #   - given-names: Ludwig
 #     dropping-particle: van
 #     surname: Beethoven
 #     affiliation: 3
 affiliations:
- - name: Ibaraki University, Japan
+ - name: Department of Physics, Ibaraki University, Mito, Ibaraki, Japan
    index: 1
- - name: Chiba University, Japan
+ - name: Department of Physics, Chiba University, Chiba, Japan
    index: 2
 #  - name: Independent Researcher, Country
 #    index: 3
@@ -60,7 +62,8 @@ There is no Julia package yet that comprehensively implements these methods. Thi
 
 
 # Acknowledgements
-
+The authors are grateful to Takahiro Fukui for fruitful discussions.
+M.K. was supported by JST, the establishment of university fellowships towards the creation of science technology innovation, Grant No. JPMJFS2107.
 
 
 # References
