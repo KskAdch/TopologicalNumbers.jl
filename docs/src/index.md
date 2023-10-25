@@ -16,7 +16,7 @@ Documentation for [TopologicalNumbers](https://github.com/KskAdch/TopologicalNum
 ## Overview
 
 TopologicalNumbers.jl is a Julia package designed to calculate topological numbers, such as the Chern numbers and $\mathbb{Z}_2$ numbers, 
-using a numerical approach based on the Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite), the Shiozaki method [Shiozaki2023discrete](@cite) or method of calculating the Weyl node[Hirayama2017,Yang2011,Hirayama2015,Du2017](@cite).
+using a numerical approach based on the Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite), the Shiozaki method [Shiozaki2023discrete](@cite) or method of calculating the Weyl node [Hirayama2017,Yang2011,Hirayama2015,Du2017](@cite).
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
 It is confirmed to work on Julia 1.6 (LTS) and 1.9.
