@@ -8,3 +8,6 @@ desktop.ini
 /Manifest.toml
 /docs/Manifest.toml
 /docs/build/
+
+/paper/*.jats
+/paper/*.pdf
