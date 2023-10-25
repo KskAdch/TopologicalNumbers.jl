@@ -13,6 +13,7 @@ authors:
     corresponding: true
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
   - name: Minoru Kanega
+    orcid: 0009-0008-4623-8010
     equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
     corresponding: true
     affiliation: 2
