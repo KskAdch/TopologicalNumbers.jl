@@ -125,6 +125,7 @@ H(\bm{k})=\begin{pmatrix}
     h_{1}(\bm{k})+ih_{2}(\bm{k}) & h_{0}(\bm{k})-h_{3}(\bm{k})
 \end{pmatrix}
 ```
+
 ```math
 h_{0}(\bm{k})&=&2K\cos(\phi)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2})) \\
 h_{1}(\bm{k})&=&-J(1+\cos(k_{1})+\cos(k_{2})) \\
@@ -171,6 +172,7 @@ H(\bm{k})=\begin{pmatrix}
     h_{1}(\bm{k})+ih_{2}(\bm{k}) & -h_{3}(\bm{k})
 \end{pmatrix}
 ```
+
 ```math
 h_{1}(\bm{k})&=&-\kappa(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) \\
 h_{2}(\bm{k})&=&K(\sin(k_{1})+\sin(k_{2})) \\
@@ -235,6 +237,7 @@ H(k)=\begin{pmatrix}
     0                            & h_{5}(\bm{k})+ih_{4}(\bm{k}) & 0                            & h_{3}(\bm{k})
 \end{pmatrix}
 ```
+
 ```math
 h_{3}(\bm{k})&=&2\lambda_{\mathrm{SO}}(\sin(k_{1})-\sin(k_{2})-\sin(k_{1}-k_{2})) \\
 h_{4}(\bm{k})&=&-t(\sin(k_{1})+\sin(k_{2})) \\
@@ -288,6 +291,7 @@ H(k)=\begin{pmatrix}
     0                            & h_{5}(\bm{k})+ih_{4}(\bm{k}) & 0                            & h_{0}(\bm{k})+h_{3}(\bm{k})
 \end{pmatrix}
 ```
+
 ```math
 h_{0}(\bm{k})&=&-(t_{ss}-t_{pp})(\cos(k_{1})+\cos(k_{2}))+\frac{(\epsilon_{s}+\epsilon_{p})}{2} \\
 h_{3}(\bm{k})&=&2t_{sp}\sin(k_{2}) \\
