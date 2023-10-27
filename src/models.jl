@@ -127,10 +127,10 @@ H(\bm{k})=\begin{pmatrix}
 ```
 
 ```math
-h_{0}(\bm{k})&=&2K\cos(\phi)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2})) \\
-h_{1}(\bm{k})&=&-J(1+\cos(k_{1})+\cos(k_{2})) \\
-h_{2}(\bm{k})&=&-J(-\sin(k_{1})+\sin(k_{2})) \\
-h_{3}(\bm{k})&=&M+2K\sin(\phi)(\sin(k_{1})+\sin(k_{2})-\sin(k_{1}+k_{2}))
+h_{0}(\bm{k})=&2K\cos(\phi)(\sin(k_{1})+\sin(k_{2})+\sin(k_{1}+k_{2})) \\
+h_{1}(\bm{k})=&-J(1+\cos(k_{1})+\cos(k_{2})) \\
+h_{2}(\bm{k})=&-J(-\sin(k_{1})+\sin(k_{2})) \\
+h_{3}(\bm{k})=&M+2K\sin(\phi)(\sin(k_{1})+\sin(k_{2})-\sin(k_{1}+k_{2}))
 ```
 where,,,
 """
@@ -174,9 +174,9 @@ H(\bm{k})=\begin{pmatrix}
 ```
 
 ```math
-h_{1}(\bm{k})&=&-\kappa(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) \\
-h_{2}(\bm{k})&=&K(\sin(k_{1})+\sin(k_{2})) \\
-h_{3}(\bm{k})&=&K(\cos(k_{1})+\cos(k_{2})+1)
+h_{1}(\bm{k})=&-\kappa(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) \\
+h_{2}(\bm{k})=&K(\sin(k_{1})+\sin(k_{2})) \\
+h_{3}(\bm{k})=&K(\cos(k_{1})+\cos(k_{2})+1)
 ```
 where,,,
 """
@@ -293,10 +293,10 @@ H(k)=\begin{pmatrix}
 ```
 
 ```math
-h_{0}(\bm{k})&=&-(t_{ss}-t_{pp})(\cos(k_{1})+\cos(k_{2}))+\frac{(\epsilon_{s}+\epsilon_{p})}{2} \\
-h_{3}(\bm{k})&=&2t_{sp}\sin(k_{2}) \\
-h_{4}(\bm{k})&=&2t_{sp}\sin(k_{1}) \\
-h_{5}(\bm{k})&=&-(t_{ss}+t_{pp})(\cos(k_{1})+\cos(k_{2}))+\frac{(\epsilon_{s}-\epsilon_{p})}{2}
+h_{0}(\bm{k})=&-(t_{ss}-t_{pp})(\cos(k_{1})+\cos(k_{2}))+\frac{(\epsilon_{s}+\epsilon_{p})}{2} \\
+h_{3}(\bm{k})=&2t_{sp}\sin(k_{2}) \\
+h_{4}(\bm{k})=&2t_{sp}\sin(k_{1}) \\
+h_{5}(\bm{k})=&-(t_{ss}+t_{pp})(\cos(k_{1})+\cos(k_{2}))+\frac{(\epsilon_{s}-\epsilon_{p})}{2}
 ```
 where,,,
 """
