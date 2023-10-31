@@ -410,6 +410,10 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         result = calcChernSurface(H₀, "k3"; kn_mesh=11)
         @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         @test result.nums[:, 2] == -result.nums[:, 1]
+
+        result = findWeylPoint(H₀)
+        @test reslt.WeylPoint == [[[4000, 9990, 9990], [6000, 9990, 9990]], [[4000, 9990, 9990], [6000, 9990, 9990]]]
+        @test result.Nodes == [[1, -1], [-1, 1]]
     end
 
     @testset "model" begin
