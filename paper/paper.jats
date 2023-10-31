@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.2 20190208//EN"
+                  "JATS-publishing1.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.2" article-type="other">
+<front>
+<journal-meta>
+<journal-id></journal-id>
+<journal-title-group>
+<journal-title>Journal of Open Source Software</journal-title>
+<abbrev-journal-title>JOSS</abbrev-journal-title>
+</journal-title-group>
+<issn publication-format="electronic">2475-9066</issn>
+<publisher>
+<publisher-name>Open Journals</publisher-name>
+</publisher>
+</journal-meta>
+<article-meta>
+<article-id pub-id-type="publisher-id">0</article-id>
+<article-id pub-id-type="doi">N/A</article-id>
+<title-group>
+<article-title>TopologicalNumbers.jl: A Julia package for calculating
+topological numbers</article-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author" equal-contrib="yes" corresp="yes">
+<name>
+<surname>Adachi</surname>
+<given-names>Keisuke</given-names>
+</name>
+<xref ref-type="aff" rid="aff-1"/>
+<xref ref-type="aff" rid="aff-2"/>
+<xref ref-type="corresp" rid="cor-1"><sup>*</sup></xref>
+</contrib>
+<contrib contrib-type="author" equal-contrib="yes" corresp="yes">
+<contrib-id contrib-id-type="orcid">https://orcid.org/0009-0008-4623-8010</contrib-id>
+<name>
+<surname>Kanega</surname>
+<given-names>Minoru</given-names>
+</name>
+<xref ref-type="aff" rid="aff-2"/>
+<xref ref-type="corresp" rid="cor-2"><sup>*</sup></xref>
+</contrib>
+<aff id="aff-1">
+<institution-wrap>
+<institution>Department of Physics, Ibaraki University, Mito, Ibaraki,
+Japan</institution>
+</institution-wrap>
+</aff>
+<aff id="aff-2">
+<institution-wrap>
+<institution>Department of Physics, Chiba University, Chiba,
+Japan</institution>
+</institution-wrap>
+</aff>
+</contrib-group>
+<author-notes>
+<corresp id="cor-1">* E-mail: <email></email></corresp>
+<corresp id="cor-2">* E-mail: <email></email></corresp>
+</author-notes>
+<volume>¿VOL?</volume>
+<issue>¿ISSUE?</issue>
+<fpage>¿PAGE?</fpage>
+<permissions>
+<copyright-statement>Authors of papers retain copyright and release the
+work under a Creative Commons Attribution 4.0 International License (CC
+BY 4.0)</copyright-statement>
+<copyright-year>2022</copyright-year>
+<copyright-holder>The article authors</copyright-holder>
+<license license-type="open-access" xlink:href="https://creativecommons.org/licenses/by/4.0/">
+<license-p>Authors of papers retain copyright and release the work under
+a Creative Commons Attribution 4.0 International License (CC BY
+4.0)</license-p>
+</license>
+</permissions>
+<kwd-group kwd-group-type="author">
+<kwd>Julia</kwd>
+<kwd></kwd>
+<kwd></kwd>
+<kwd></kwd>
+<kwd></kwd>
+</kwd-group>
+</article-meta>
+</front>
+<body>
+<sec id="summary">
+  <title>Summary</title>
+  <p>The topological number is a physical quantity that plays an
+  important role in characterizing phase transitions in condensed matter
+  physics. Recently, topological phase transitions have been of
+  considerable interest in recent condensed matter physics. A typical
+  example is the integer quantum Hall transition, where the quantized
+  Hall conductivity can be calculated by the Chern number, one of the
+  topological numbers. The quantization of such physical quantities is
+  closely related to the concept of topology. However, the calculation
+  of this topological number often requires numerical calculations. In
+  addition, it may require an enormous amount of computation before
+  convergence is achieved. Creating tools to easily calculate such
+  topological numbers will lead to advances in condensed matter
+  physics.</p>
+</sec>
+<sec id="statement-of-need">
+  <title>Statement of need</title>
+  <p><monospace>TopologicalNumbers.jl</monospace> is a package for
+  computing various topological invariants. These quantities are very
+  important physical quantities in the study of condensed matter
+  physics. However, their computation can be very computationally
+  intensive. In addition, the calculation of topological invariants is
+  often not the essence of the research. Therefore, this package is very
+  useful for researchers in the field of condensed matter physics to
+  easily and efficiently calculate topological invariants.</p>
+  <p>There are currently various methods for computing topological
+  invariants, the first of which was the Fukui-Hatsugai-Suzuki method
+  (<xref alt="Fukui et al., 2005" rid="ref-Fukui2005" ref-type="bibr">Fukui
+  et al., 2005</xref>) in 2005 for computing two-dimensional Chern
+  numbers. In general, topological invariants are obtained by
+  integrating the eigenstates of the Hamiltonian in the Brillouin zone,
+  and this method can efficiently calculate them by discretizing the
+  range of integration. This method can be useful in a practical
+  computation for more complicated systems with a topological order for
+  which a number of data points of the wave functions cannot easily be
+  increased. Also, methods have been proposed to compute various
+  topological invariants using this method. One is the method of
+  (<xref alt="Shiozaki, 2023" rid="ref-Shiozaki2023discrete" ref-type="bibr">Shiozaki,
+  2023</xref>), which computes the Z2 number in two dimensions in 2023.
+  This method does not require any gauge fixing conditions and is
+  quantized for any discrete approximation of the Brillouin zone. It is
+  also used for methods to find three-dimensional Weil points Du et al.
+  (<xref alt="2017" rid="ref-Du2017" ref-type="bibr">2017</xref>).</p>
+  <p>There is no Julia package yet that comprehensively implements these
+  methods. This package is easy for beginners to use because
+  calculations can be done with a minimum of arguments. It is also easy
+  for researchers to use because it is designed with many optional
+  arguments so that it can be used for general-purpose calculations. It
+  is designed to be more accessible and with clear documentation.</p>
+</sec>
+<sec id="mathematics">
+  <title>Mathematics</title>
+</sec>
+<sec id="citations">
+  <title>Citations</title>
+</sec>
+<sec id="figures">
+  <title>Figures</title>
+</sec>
+<sec id="acknowledgements">
+  <title>Acknowledgements</title>
+  <p>The authors are grateful to Takahiro Fukui for fruitful
+  discussions. M.K. was supported by JST, the establishment of
+  university fellowships towards the creation of science technology
+  innovation, Grant No. JPMJFS2107.</p>
+</sec>
+</body>
+<back>
+<ref-list>
+  <ref id="ref-Fukui2005">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Fukui</surname><given-names>Takahiro</given-names></name>
+        <name><surname>Hatsugai</surname><given-names>Yasuhiro</given-names></name>
+        <name><surname>Suzuki</surname><given-names>Hiroshi</given-names></name>
+      </person-group>
+      <article-title>Chern numbers in discretized brillouin zone: Efficient method of computing (spin) hall conductances</article-title>
+      <source>Journal of the Physical Society of Japan</source>
+      <year iso-8601-date="2005-03">2005</year><month>03</month>
+      <volume>74</volume>
+      <issn>0031-9015</issn>
+      <uri>http://arxiv.org/abs/cond-mat/0503172 http://dx.doi.org/10.1143/JPSJ.74.1674</uri>
+      <pub-id pub-id-type="doi">10.1143/JPSJ.74.1674</pub-id>
+      <fpage>1674</fpage>
+      <lpage>1677</lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-Shiozaki2023discrete">
+    <element-citation>
+      <person-group person-group-type="author">
+        <name><surname>Shiozaki</surname><given-names>Ken</given-names></name>
+      </person-group>
+      <article-title>A discrete formulation of the kane-mele {\mathbb Z}_2 invariant</article-title>
+      <publisher-name>arXiv</publisher-name>
+      <year iso-8601-date="2023-05">2023</year><month>05</month>
+      <date-in-citation content-type="access-date"><year iso-8601-date="2023-07-29">2023</year><month>07</month><day>29</day></date-in-citation>
+      <uri>https://arxiv.org/abs/2305.05615</uri>
+      <pub-id pub-id-type="doi">10.48550/arXiv.2305.05615</pub-id>
+    </element-citation>
+  </ref>
+  <ref id="ref-Hirayama2017">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Hirayama</surname><given-names>Motoaki</given-names></name>
+        <name><surname>Okugawa</surname><given-names>Ryo</given-names></name>
+        <name><surname>Murakami</surname><given-names>Shuichi</given-names></name>
+      </person-group>
+      <article-title>Topological semimetals studied by ab initio calculations</article-title>
+      <source>Journal of the Physical Society of Japan</source>
+      <publisher-name>Physical Society of Japan</publisher-name>
+      <year iso-8601-date="2017-08">2017</year><month>08</month>
+      <volume>87</volume>
+      <issn>0031-9015</issn>
+      <uri>http://arxiv.org/abs/1708.05791 http://dx.doi.org/10.7566/JPSJ.87.041002</uri>
+      <pub-id pub-id-type="doi">10.7566/JPSJ.87.041002</pub-id>
+      <fpage>041002</fpage>
+      <lpage></lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-Yang2011">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Yang</surname><given-names>Kai-Yu</given-names></name>
+        <name><surname>Lu</surname><given-names>Yuan-Ming</given-names></name>
+        <name><surname>Ran</surname><given-names>Ying</given-names></name>
+      </person-group>
+      <article-title>Quantum hall effects in a weyl semimetal: Possible application in pyrochlore iridates</article-title>
+      <source>Physical Review B</source>
+      <year iso-8601-date="2011-08">2011</year><month>08</month>
+      <volume>84</volume>
+      <issn>1098-0121</issn>
+      <uri>https://link.aps.org/doi/10.1103/PhysRevB.84.075129</uri>
+      <pub-id pub-id-type="doi">10.1103/PhysRevB.84.075129</pub-id>
+      <fpage>075129</fpage>
+      <lpage></lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-Hirayama2015">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Hirayama</surname><given-names>Motoaki</given-names></name>
+        <name><surname>Okugawa</surname><given-names>Ryo</given-names></name>
+        <name><surname>Ishibashi</surname><given-names>Shoji</given-names></name>
+        <name><surname>Murakami</surname><given-names>Shuichi</given-names></name>
+        <name><surname>Miyake</surname><given-names>Takashi</given-names></name>
+      </person-group>
+      <article-title>Weyl node and spin texture in trigonal tellurium and selenium</article-title>
+      <source>Physical Review Letters</source>
+      <publisher-name>American Physical Society</publisher-name>
+      <year iso-8601-date="2015-05">2015</year><month>05</month>
+      <volume>114</volume>
+      <issn>0031-9007</issn>
+      <uri>https://link.aps.org/doi/10.1103/PhysRevLett.114.206401</uri>
+      <pub-id pub-id-type="doi">10.1103/PhysRevLett.114.206401</pub-id>
+      <fpage>206401</fpage>
+      <lpage></lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-Du2017">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Du</surname><given-names>Yongping</given-names></name>
+        <name><surname>Bo</surname><given-names>Xiangyan</given-names></name>
+        <name><surname>Wang</surname><given-names>Di</given-names></name>
+        <name><surname>Kan</surname><given-names>Er-jun</given-names></name>
+        <name><surname>Duan</surname><given-names>Chun-Gang</given-names></name>
+        <name><surname>Savrasov</surname><given-names>Sergey Y.</given-names></name>
+        <name><surname>Wan</surname><given-names>Xiangang</given-names></name>
+      </person-group>
+      <article-title>Emergence of topological nodal lines and type-II weyl nodes in the strong spin-orbit coupling system InNb x 2 ( x = s ,se)</article-title>
+      <source>Physical Review B</source>
+      <publisher-name>American Physical Society</publisher-name>
+      <year iso-8601-date="2017-12">2017</year><month>12</month>
+      <volume>96</volume>
+      <issn>2469-9950</issn>
+      <uri>https://link.aps.org/doi/10.1103/PhysRevB.96.235152</uri>
+      <pub-id pub-id-type="doi">10.1103/PhysRevB.96.235152</pub-id>
+      <fpage>235152</fpage>
+      <lpage></lpage>
+    </element-citation>
+  </ref>
+</ref-list>
+</back>
+</article>
