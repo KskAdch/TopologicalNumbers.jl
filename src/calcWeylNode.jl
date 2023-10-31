@@ -130,7 +130,7 @@ end
  - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 """
-function calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+function calcWeylNode(Hamiltonian::Function, n::T; N::Int=51, gapless::Real=0.0, rounds::Bool=true) where {T<:AbstractVector{Int64}}
 
     Hs = size(Hamiltonian(n), 1)
     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=3)
