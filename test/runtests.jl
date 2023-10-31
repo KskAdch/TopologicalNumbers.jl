@@ -412,7 +412,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         @test result.nums[:, 2] == -result.nums[:, 1]
 
         result = findWeylPoint(H₀)
-        @test reslt.WeylPoint == [[[4000, 9990, 9990], [6000, 9990, 9990]], [[4000, 9990, 9990], [6000, 9990, 9990]]]
+        @test result.WeylPoint == [[[4000, 9990, 9990], [6000, 9990, 9990]], [[4000, 9990, 9990], [6000, 9990, 9990]]]
         @test result.Nodes == [[1, -1], [-1, 1]]
     end
 
