@@ -100,8 +100,8 @@ a Creative Commons Attribution 4.0 International License (CC BY
   will lead to advances in condensed matter physics. In fact, several
   papers
   (<xref alt="Fukui et al., 2005" rid="ref-Fukui2005" ref-type="bibr">Fukui
-  et al.,
-  2005</xref>),(<xref alt="Shiozaki, 2023" rid="ref-Shiozaki2023discrete" ref-type="bibr">Shiozaki,
+  et al., 2005</xref>;
+  <xref alt="Shiozaki, 2023" rid="ref-Shiozaki2023discrete" ref-type="bibr">Shiozaki,
   2023</xref>) have been reported that suggest that some topological
   numbers can be computed efficiently. We have taken these papers as
   references and produced a package that easily and efficiently computes
@@ -139,20 +139,22 @@ a Creative Commons Attribution 4.0 International License (CC BY
   fixing conditions and is quantized for any discrete approximation of
   the Brillouin zone. It is also used for methods to find Weil points
   and Weyl node
-  (<xref alt="Hirayama et al., 2017" rid="ref-Hirayama2017" ref-type="bibr">Hirayama
-  et al.,
-  2017</xref>),(<xref alt="Yang et al., 2011" rid="ref-Yang2011" ref-type="bibr">Yang
-  et al.,
-  2011</xref>),(<xref alt="Hirayama et al., 2015" rid="ref-Hirayama2015" ref-type="bibr">Hirayama
-  et al.,
-  2015</xref>),(<xref alt="Du et al., 2017" rid="ref-Du2017" ref-type="bibr">Du
-  et al., 2017</xref>) in three-dimensional.</p>
+  (<xref alt="Du et al., 2017" rid="ref-Du2017" ref-type="bibr">Du et
+  al., 2017</xref>;
+  <xref alt="Hirayama et al., 2015" rid="ref-Hirayama2015" ref-type="bibr">Hirayama
+  et al., 2015</xref>,
+  <xref alt="2017" rid="ref-Hirayama2017" ref-type="bibr">2017</xref>;
+  <xref alt="Yang et al., 2011" rid="ref-Yang2011" ref-type="bibr">Yang
+  et al., 2011</xref>) in three-dimensional.</p>
   <p>There is no Julia package yet that comprehensively implements these
-  methods. This package is easy for beginners to use because
-  calculations can be done with a minimum of arguments. It is also easy
-  for researchers to use because it is designed with many optional
-  arguments so that it can be used for general-purpose calculations. It
-  is designed to be more accessible and with clear documentation.</p>
+  methods. The basic topological numbers in this package can be
+  calculated if only the Hamiltonian is given. The calculations can be
+  performed with a minimum number of arguments, making them easy to use
+  even for Julia beginners and beginning students of condensed matter
+  physics. It is also easy for researchers to use because it is designed
+  with many optional arguments so that it can be used for
+  general-purpose calculations. It is designed to be more accessible and
+  with clear documentation.</p>
 </sec>
 <sec id="mathematics">
   <title>Mathematics</title>
