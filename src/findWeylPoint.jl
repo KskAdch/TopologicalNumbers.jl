@@ -103,7 +103,7 @@ end
 @doc raw"""
     findWeylPoint(Hamiltonian::Function; N::Int=10, gapless::Vector{Float64}=[1e-1, 1e-2, 1e-3, 1e-4], rounds::Bool=true)
 """
-function findWeylPoint(Hamiltonian::Function; N::Int=10, gapless::Vector{Float64}=[1e-1, 1e-2, 1e-3, 1e-4], rounds::Bool=true)
+function findWeylPoint(Hamiltonian::Function; N::Int=10, gapless::T=[1e-1, 1e-2, 1e-3, 1e-4], rounds::Bool=true) where {T<:AbstractVector{Float64}}
 
     Hs = size(Hamiltonian(zeros(3)), 1)
     k0list = [Vector{Int64}[] for i in 1:Hs]
