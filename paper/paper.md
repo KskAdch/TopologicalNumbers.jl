@@ -49,15 +49,17 @@ There are currently various methods for computing topological numbers, the first
 There is no Julia package yet that comprehensively implements these methods. The basic topological numbers in this package can be calculated if only the Hamiltonian is given. The calculations can be performed with a minimum number of arguments, making them easy to use even for Julia beginners and beginning students of condensed matter physics. It is also easy for researchers to use because it is designed with many optional arguments so that it can be used for general-purpose calculations. It is designed to be more accessible and with clear documentation.
 
 
-# Mathematics
+
+<!-- # State of the field -->
 
 
 
-# Citations
+<!-- # Installation -->
 
 
 
-# Figures
+<!-- # Example -->
+
 
 
 
