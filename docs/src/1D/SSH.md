@@ -4,7 +4,7 @@ Here's a simple example of the SSH Hamiltonian:
 
 ```julia
 julia> using TopologicalNumbers
-julia> function H₀(k, p)
+julia> function H₀(k, p) # SSH
             [
                 0 p[1]+p[2]*exp(-im * k)
                 p[1]+p[2]*exp(im * k) 0

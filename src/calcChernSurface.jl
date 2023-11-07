@@ -52,7 +52,7 @@ function calcChernSurface(H::Function, kn::String; kn_mesh::Int=51, N::Int=51, g
     end
     
     if plot == true
-        plot1D(nums, param_range)
+        plot1D(nums, kn_range)
     end
 
     (; kn, kn_range, nums)

@@ -3,7 +3,7 @@
 Hamiltonian of Haldane model is given by:
 
 ```julia
-julia> function H₀(k, p) # landau
+julia> function H₀(k, p) # Haldane
            k1, k2 = k
            J = 1.0
            K = 1.0
