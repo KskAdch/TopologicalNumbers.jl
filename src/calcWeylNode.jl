@@ -151,5 +151,5 @@ function calcWeylNode(Hamiltonian::Function, n::T; N::Int=51, gapless::Real=0.0,
         TopologicalNumber = round.(Int, TopologicalNumber)
     end
     
-    (; TopologicalNumber, n)
+    (; TopologicalNumber, n, N)
 end

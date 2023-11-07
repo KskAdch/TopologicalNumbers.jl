@@ -76,3 +76,14 @@ julia> (WeylPoint = [[[4000, 0, 0], [6000, 0, 0]], [[4000, 0, 0], [6000, 0, 0]]]
 The second argument `N` in the named tuple is the number of Brillouin zone divisions.
 The first argument `WeylPoint` represents the the wavenumber vector of position with the Weyl point.
 The third argument `Nodes` stores the node at the Wel point.
+
+If you already know the wavenumber vector of the Weyl point, you can calculate the node as follows:
+
+```julia
+julia> H(k) = H₀(k .- 2pi*1e-5, p0)
+julia> calcWeylNode(H, result.WeylPoint[1][1], N = result.N)
+```
+
+```julia
+julia> (TopologicalNumber = [1, -1], n = [4000, 0, 0], N = 10000)
+```
