@@ -400,14 +400,17 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         @test Chern_i[:, 1] == -Chern_i[:, 2]
 
         result = calcChernSurface(H₀, "k1"; kn_mesh=11)
+        @test result.kn == "k1"
         @test result.nums[:, 1] == [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]
         @test result.nums[:, 2] == -result.nums[:, 1]
 
         result = calcChernSurface(H₀, "k2"; kn_mesh=11)
+        @test result.kn == "k2"
         @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         @test result.nums[:, 2] == -result.nums[:, 1]
 
         result = calcChernSurface(H₀, "k3"; kn_mesh=11)
+        @test result.kn == "k3"
         @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         @test result.nums[:, 2] == -result.nums[:, 1]
 
