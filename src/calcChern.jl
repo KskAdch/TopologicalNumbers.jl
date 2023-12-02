@@ -144,6 +144,38 @@ end
     end
 end
 
+@views function SecondChernPhase!(TopologicalNumber, p::Params) # chern number # Bug
+    @unpack N, Hs = p
+    TopologicalNumber[:] .= zero(Float64)
+    # Link0 = zeros(ComplexF64, Hs, 2, N)
+    # Link1 = zeros(ComplexF64, Hs, 2, N)
+    # LinkN = zeros(ComplexF64, Hs, 2, N)
+    # link1 = zeros(ComplexF64, Hs)
+    # link2 = zeros(ComplexF64, Hs)
+
+    # psi_0 = zeros(ComplexF64, N, Hs, Hs)
+    # psi_1 = zeros(ComplexF64, N, Hs, Hs)
+    # psi_N = zeros(ComplexF64, N, Hs, Hs)
+    # Evec0 = zeros(N, Hs)
+    # Evec1 = zeros(N, Hs)
+
+    # psi00 = zeros(ComplexF64, Hs, Hs)
+    # psi10 = zeros(ComplexF64, Hs, Hs)
+    # psi01 = zeros(ComplexF64, Hs, Hs)
+    # Enevec = zeros(Hs)
+
+    # phi = zeros(Hs)
+    # dphi = zeros(Hs)
+
+    # for j in 1:N
+    #     U!(Link0, Link1, LinkN, link1, link2, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p)
+    #     for i in 1:N
+    #         F!(phi, dphi, i, j, Link0, Link1, LinkN, p)
+    #         TopologicalNumber[:] .+= phi[:]
+    #     end
+    # end
+end
+
 @doc raw"""
 
  Calculate the first Chern numbers in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
@@ -170,12 +202,24 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 """
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
-    Hs = size(Hamiltonian(zeros(2)), 1)
-    p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
+    # Hs = size(Hamiltonian(zeros(2)), 1)
+    try
+        Hs = size(Hamiltonian(zeros(2)), 1)
+        dim = 2
+    catch
+        Hs = size(Hamiltonian(zeros(4)), 1)
+        dim = 4
+    end
+    p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim)
 
     TopologicalNumber = zeros(Hs)
 
-    ChernPhase!(TopologicalNumber, p)
+    # ChernPhase!(TopologicalNumber, p)
+    if dim == 2
+        ChernPhase!(TopologicalNumber, p)
+    elseif dim == 4
+        SecondChernPhase!(TopologicalNumber, p)
+    end
 
     if rounds == true
         TopologicalNumber = round.(Int, TopologicalNumber)
