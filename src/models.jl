@@ -178,7 +178,7 @@ H(\bm{k})=\begin{pmatrix}
 ```math
 \begin{align*}
      h_{1}(\bm{k})=&-\kappa(\sin(k_{2})-\sin(k_{1})+\sin(k_{1}-k_{2})) \\
-     h_{2}(\bm{k})=&K(\sin(k_{1})+\sin(k_{2})) \\
+     h_{2}(\bm{k})=&-K(\sin(k_{1})+\sin(k_{2})) \\
      h_{3}(\bm{k})=&K(\cos(k_{1})+\cos(k_{2})+1)
 \end{align*}
 ```
@@ -189,7 +189,7 @@ function KitaevHoneycomb(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T
     K, κ = p
 
     hx = -κ * (sin(k2) - sin(k1) + sin(k1 - k2))
-    hy = K * (sin(k1) + sin(k2))
+    hy = -K * (sin(k1) + sin(k2))
     hz = K * (cos(k1) + cos(k2) + 1)
 
     sx = [0 1; 1 0]
