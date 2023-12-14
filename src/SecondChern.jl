@@ -11,7 +11,6 @@ using Parameters
     evec::T3
     P::T4
     H::T4
-    evec::T4
     Ux::T4
     Uy::T4
     Uz::T4
