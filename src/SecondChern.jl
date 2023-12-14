@@ -202,7 +202,7 @@ function makeFigure(mList, ChernList)
 
     fig = figure(figsize=(4, 3))
     ax = fig.add_subplot(111)
-    ax.plot(mList, ChernList)
+    ax.plot(mList, ChernList, "o--")
     ax.set_xlabel(L"m")
     ax.set_ylabel("Second Chern number")
     ax.grid(true)
@@ -228,10 +228,10 @@ function setParams()
 
     basis = (; g1, g2, g3, g4, g5)
 
-    Nx = 20
-    Ny = 20
-    Nz = 20
-    Nw = 20
+    Nx = 50
+    Ny = 50
+    Nz = 50
+    Nw = 50
 
     Kxrange = range(-pi, pi, length=Nx)
     Kyrange = range(-pi, pi, length=Ny)
@@ -243,9 +243,9 @@ function setParams()
     NH = 4
     Nfill = 2
 
-    mN = 1 # 10
-    # mList = range(-5.0, 5.0, length=mN)
-    mList = [-1.0]
+    mN = 10
+    mList = range(-5.0, 5.0, length=mN)
+    # mList = [-1.0]
     ChernList = zeros(ComplexF64, mN)
 
     r = (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange, threshold, NH, Nfill)
@@ -474,7 +474,7 @@ function main()
 
         updateChern!(p)
 
-        s.chern /= 4(pi^2)
+        s.chern /= 4pi^2
         display(p.m)
         display(s.chern)
         p.ChernList[i] = s.chern
