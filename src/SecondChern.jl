@@ -41,73 +41,60 @@ function H(p)
 
     p.sys.H = h1 .* b.g1 .+ h2 .* b.g2 .+ h3 .* b.g3 .+ h4 .* b.g4 .+ h5 .* b.g5
     threshold_zero!(p.sys.H, p)
+    p.sys.H
+end
+
+function H!(p)
+    k1, k2, k3, k4 = p.sys.k
+    b = p.basis
+
+    h1 = p.m + cos(k1) + cos(k2) + cos(k3) + cos(k4)
+    h2 = sin(k1)
+    h3 = sin(k2)
+    h4 = sin(k3)
+    h5 = sin(k4)
+
+    p.sys.H = h1 .* b.g1 .+ h2 .* b.g2 .+ h3 .* b.g3 .+ h4 .* b.g4 .+ h5 .* b.g5
+    threshold_zero!(p.sys.H, p)
 end
 
 function linkUx!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m] * P
-    # return adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m]
     s.Ux = s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m] * s.P
     threshold_zero!(s.Ux, p)
 end
 
 function linkUx_inv!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i+1, j, l, m]) * evec[i, j, l, m] * P
-    # return adjoint(evec[i+1, j, l, m]) * evec[i, j, l, m]
-    # return inv(adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m])
-    s.Ux_inv = s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m]) * s.P
+    s.Ux_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m] * s.P)
     threshold_zero!(s.Ux_inv, p)
 end
 
 function linkUy!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m] * P
-    # return adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m]
     s.Uy = s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m] * s.P
     threshold_zero!(s.Uy, p)
 end
 
 function linkUy_inv!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i, j+1, l, m]) * evec[i, j, l, m] * P
-    # return adjoint(evec[i, j+1, l, m]) * evec[i, j, l, m]
-    # return inv(adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m])
-    s.Uy_inv = s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m]) * s.P
+    s.Uy_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m] * s.P)
     threshold_zero!(s.Uy_inv, p)
 end
 
 function linkUz!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m] * P
-    # return adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m]
     s.Uz = s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m] * s.P
     threshold_zero!(s.Uz, p)
 end
 
 function linkUz_inv!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i, j, l+1, m]) * evec[i, j, l, m] * P
-    # return adjoint(evec[i, j, l+1, m]) * evec[i, j, l, m]
-    # return inv(adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m])
-    s.Uz_inv = s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m]) * s.P
+    s.Uz_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m] * s.P)
     threshold_zero!(s.Uz_inv, p)
 end
 
 function linkUw!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1] * P
-    # return adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1]
     s.Uw = s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1] * s.P
     threshold_zero!(s.Uw, p)
 end
 
 function linkUw_inv!(i, j, l, m, s, p)
-    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
-    # return P * adjoint(evec[i, j, l, m+1]) * evec[i, j, l, m] * P
-    # return adjoint(evec[i, j, l, m+1]) * evec[i, j, l, m]
-    # return inv(adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1])
-    s.Uw_inv = s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1]) * s.P
+    s.Uw_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1] * s.P)
     threshold_zero!(s.Uw_inv, p)
 end
 
@@ -118,6 +105,8 @@ function Fxy!(i, j, l, m, s, p)
     linkUy_inv!(i, j, l, m, s, p)
     s.Fxy = log(s.Ux * s.Uy * s.Ux_inv * s.Uy_inv)
     threshold_zero!(s.Fxy, p)
+    display(s.Ux * s.Uy * s.Ux_inv * s.Uy_inv)
+    display(s.Fxy)
 end
 function Fzw!(i, j, l, m, s, p)
     linkUz!(i, j, l, m, s, p)
@@ -162,8 +151,7 @@ end
 
 function chernF!(i, j, l, m, p)
     s = p.sys
-    # display(linkUz(i, j, l, m, evec) * linkUw(i, j, l + 1, m, evec) * linkUz_inv(i, j, l, m + 1, evec) * linkUw_inv(i, j, l, m, evec))
-    # println(i, " ", j, " ", l, " ", m)
+
     s.P = s.evec[i, j, l, m][:, 1] * adjoint(s.evec[i, j, l, m][:, 1]) + s.evec[i, j, l, m][:, 2] * adjoint(s.evec[i, j, l, m][:, 2])
     threshold_zero!(s.P, p)
     Fxy!(i, j, l, m, s, p)
@@ -175,6 +163,7 @@ function chernF!(i, j, l, m, p)
     s.Fxy = s.Fxy * s.Fzw + s.Fwx * s.Fzy + s.Fzx * s.Fyw
     threshold_zero!(s.Fxy, p)
     s.chern += tr(s.Fxy)
+    # display(s.Fzw)
 end
 
 function makeFigure(mList, ChernList)
@@ -191,14 +180,14 @@ function makeFigure(mList, ChernList)
 end
 
 function setParams()
-    # σ₀ = [1 0; 0 1]
-    # σ₁ = [0 1; 1 0]
-    # σ₂ = [0 -im; im 0]
-    # σ₃ = [1 0; 0 -1]
-    σ₀ = @MMatrix [1 0; 0 1]
-    σ₁ = @MMatrix [0 1; 1 0]
-    σ₂ = @MMatrix [0 -im; im 0]
-    σ₃ = @MMatrix [1 0; 0 -1]
+    σ₀ = [1 0; 0 1]
+    σ₁ = [0 1; 1 0]
+    σ₂ = [0 -im; im 0]
+    σ₃ = [1 0; 0 -1]
+    # σ₀ = @MMatrix [1 0; 0 1]
+    # σ₁ = @MMatrix [0 1; 1 0]
+    # σ₂ = @MMatrix [0 -im; im 0]
+    # σ₃ = @MMatrix [1 0; 0 -1]
     g1 = σ₁ ⊗ σ₀
     g2 = σ₂ ⊗ σ₀
     g3 = σ₂ ⊗ σ₁
@@ -217,7 +206,7 @@ function setParams()
     Kzrange = range(-pi, pi, length=Nz)
     Kwrange = range(-pi, pi, length=Nw)
 
-    threshold = 1e-12
+    threshold = 1e-15
 
     mN = 1 # 10
     # mList = range(-5.0, 5.0, length=mN)
@@ -227,35 +216,56 @@ function setParams()
     r = (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange, threshold)
 
 
-    k = @MVector [0.0, 0.0, 0.0, 0.0]
-    # k = [0.0, 0.0, 0.0, 0.0]
+    # k = @MVector [0.0, 0.0, 0.0, 0.0]
+    k = [0.0, 0.0, 0.0, 0.0]
 
     # evec = [@MMatrix zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
     # evec = [zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
-    # evec = [zeros(ComplexF64, 4, 4) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
-    evec = [@MMatrix zeros(ComplexF64, 4, 4) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    evec = [zeros(ComplexF64, 4, 4) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    # evec = [@MMatrix zeros(ComplexF64, 4, 4) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
 
-    # P = zeros(ComplexF64, 4, 4)
-    P = @MMatrix zeros(ComplexF64, 4, 4)
-    H = @MMatrix zeros(ComplexF64, 4, 4)
-    Ux = @MMatrix zeros(ComplexF64, 4, 4)
-    Uy = @MMatrix zeros(ComplexF64, 4, 4)
-    Uz = @MMatrix zeros(ComplexF64, 4, 4)
-    Uw = @MMatrix zeros(ComplexF64, 4, 4)
-    Ux_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    Uy_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    Uz_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    Uw_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    Fxy = @MMatrix zeros(ComplexF64, 4, 4)
-    Fzw = @MMatrix zeros(ComplexF64, 4, 4)
-    Fwx = @MMatrix zeros(ComplexF64, 4, 4)
-    Fzy = @MMatrix zeros(ComplexF64, 4, 4)
-    Fzx = @MMatrix zeros(ComplexF64, 4, 4)
-    Fyw = @MMatrix zeros(ComplexF64, 4, 4)
+    P = zeros(ComplexF64, 4, 4)
+    H = zeros(ComplexF64, 4, 4)
+    Ux = zeros(ComplexF64, 4, 4)
+    Uy = zeros(ComplexF64, 4, 4)
+    Uz = zeros(ComplexF64, 4, 4)
+    Uw = zeros(ComplexF64, 4, 4)
+    Ux_inv = zeros(ComplexF64, 4, 4)
+    Uy_inv = zeros(ComplexF64, 4, 4)
+    Uz_inv = zeros(ComplexF64, 4, 4)
+    Uw_inv = zeros(ComplexF64, 4, 4)
+    Fxy = zeros(ComplexF64, 4, 4)
+    Fzw = zeros(ComplexF64, 4, 4)
+    Fwx = zeros(ComplexF64, 4, 4)
+    Fzy = zeros(ComplexF64, 4, 4)
+    Fzx = zeros(ComplexF64, 4, 4)
+    Fyw = zeros(ComplexF64, 4, 4)
+    # P = @MMatrix zeros(ComplexF64, 4, 4)
+    # H = @MMatrix zeros(ComplexF64, 4, 4)
+    # Ux = @MMatrix zeros(ComplexF64, 4, 4)
+    # Uy = @MMatrix zeros(ComplexF64, 4, 4)
+    # Uz = @MMatrix zeros(ComplexF64, 4, 4)
+    # Uw = @MMatrix zeros(ComplexF64, 4, 4)
+    # Ux_inv = @MMatrix zeros(ComplexF64, 4, 4)
+    # Uy_inv = @MMatrix zeros(ComplexF64, 4, 4)
+    # Uz_inv = @MMatrix zeros(ComplexF64, 4, 4)
+    # Uw_inv = @MMatrix zeros(ComplexF64, 4, 4)
+    # Fxy = @MMatrix zeros(ComplexF64, 4, 4)
+    # Fzw = @MMatrix zeros(ComplexF64, 4, 4)
+    # Fwx = @MMatrix zeros(ComplexF64, 4, 4)
+    # Fzy = @MMatrix zeros(ComplexF64, 4, 4)
+    # Fzx = @MMatrix zeros(ComplexF64, 4, 4)
+    # Fyw = @MMatrix zeros(ComplexF64, 4, 4)
 
     sys = Temporal(; chern=zero(ComplexF64), k, evec, P, H, Ux, Uy, Uz, Uw, Ux_inv, Uy_inv, Uz_inv, Uw_inv, Fxy, Fzw, Fwx, Fzy, Fzx, Fyw)
 
     (; m=zero(Float64), mN, mList, ChernList, basis, r, sys)
+end
+
+function warn_zeroEigen!(p)
+    if any(abs.(eigvals(H(p))) .< 1e-10)
+        println("Zero eigen value detected!")
+    end
 end
 
 function setBasis!(p)
@@ -263,11 +273,14 @@ function setBasis!(p)
     s = p.sys
 
     for m in eachindex(Kwrange), l in eachindex(Kzrange), j in eachindex(Kyrange), i in eachindex(Kxrange)
-        s.k = @MVector [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
-        # s.k = [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
+        # s.k = @MVector [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
+        s.k = [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
         # s.evec[i, j, l, m] = @view(eigvecs(H(k, p))[:, 1:2])
-        s.evec[i, j, l, m] = eigvecs(H(p))
-        threshold_zero!(s.evec[i, j, l, m], p)
+        H!(p)
+        warn_zeroEigen!(p)
+        s.H = eigvecs(s.H)
+        # threshold_zero!(s.H, p)
+        s.evec[i, j, l, m] = s.H
     end
 
     for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
@@ -351,7 +364,7 @@ function test(p)
     s = p.sys
 
     for i in 1:p.r.Nx+1, j in 1:p.r.Ny+1, l in 1:p.r.Nz+1, m in 1:p.r.Nw+1
-        if s.evec[i, j, l, m] == zeros(ComplexF64, 4, 2)
+        if s.evec[i, j, l, m] == zeros(ComplexF64, 4, 4)
             println(i, " ", j, " ", l, " ", m)
         end
     end
