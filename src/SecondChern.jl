@@ -228,10 +228,10 @@ function setParams()
 
     basis = (; g1, g2, g3, g4, g5)
 
-    Nx = 50
-    Ny = 50
-    Nz = 50
-    Nw = 50
+    Nx = 20
+    Ny = 20
+    Nz = 20
+    Nw = 20
 
     Kxrange = range(-pi, pi, length=Nx)
     Kyrange = range(-pi, pi, length=Ny)
@@ -243,9 +243,9 @@ function setParams()
     NH = 4
     Nfill = 2
 
-    mN = 10
-    mList = range(-5.0, 5.0, length=mN)
-    # mList = [-1.0]
+    mN = 1 # 10
+    # mList = range(-5.0, 5.0, length=mN)
+    mList = [-2.1]
     ChernList = zeros(ComplexF64, mN)
 
     r = (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange, threshold, NH, Nfill)
@@ -456,6 +456,31 @@ function test(p)
     display(B)
 end
 
+function plotband(Kxrange, A)
+    fig = figure(figsize=(4, 3))
+    ax = fig.add_subplot(111)
+    for i in 1:size(A, 1)
+        ax.plot(Kxrange, A[i, :])
+    end
+    ax.set_xlabel(L"k_x")
+    ax.set_ylabel(L"E")
+    ax.grid(true)
+    tight_layout()
+    savefig("band.png")
+    plotshow()
+end
+
+function band(p)
+    s = p.sys
+    A = zeros(p.r.NH, p.r.Nx)
+    for i in eachindex(p.r.Kxrange)
+        s.k = [p.r.Kxrange[i], 0.0, 0.0, 0.0]
+        H!(p)
+        A[:, i] = eigvals(s.H)
+    end
+    plotband(p.r.Kxrange, A)
+end
+
 function main()
 
     p = setParams()
@@ -469,6 +494,8 @@ function main()
         @reset p.m = p.mList[i]
 
         setBasis!(p)
+
+        # band(p)
 
         # test(p) # Bug check
 
