@@ -3,11 +3,17 @@ using LinearAlgebra
 using LaTeXStrings
 using StaticArrays
 using Accessors
+using Parameters
+
+@with_kw mutable struct Temporal{T}
+    P::T
+end
 
 ⊗(x, y) = kron(x, y)
 
-function H(k, p)
-    k1, k2, k3, k4 = k
+function H(p)
+    k1, k2, k3, k4 = p.sys.k
+    b = p.basis
 
     h1 = p.m + cos(k1) + cos(k2) + cos(k3) + cos(k4)
     h2 = sin(k1)
@@ -15,85 +21,95 @@ function H(k, p)
     h4 = sin(k3)
     h5 = sin(k4)
 
-    return h1 .* p.g1 .+ h2 .* p.g2 .+ h3 .* p.g3 .+ h4 .* p.g4 .+ h5 .* p.g5
+    return h1 .* b.g1 .+ h2 .* b.g2 .+ h3 .* b.g3 .+ h4 .* b.g4 .+ h5 .* b.g5
 end
 
-function linkUx(i, j, l, m, evec)
+function linkUx(i, j, l, m, s)
     # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m] * P
-    return adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m]
+    # return adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m]
+    return s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m] * s.P
 end
 
-function linkUx_inv(i, j, l, m, evec)
-    P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
+function linkUx_inv(i, j, l, m, s)
+    # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i+1, j, l, m]) * evec[i, j, l, m] * P
     # return adjoint(evec[i+1, j, l, m]) * evec[i, j, l, m]
     # return inv(adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m])
-    return P * inv(adjoint(evec[i, j, l, m]) * evec[i+1, j, l, m]) * P
+    return s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m]) * s.P
 end
 
-function linkUy(i, j, l, m, evec)
+function linkUy(i, j, l, m, s)
     # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m] * P
-    return adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m]
+    # return adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m]
+    return s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m] * s.P
 end
 
-function linkUy_inv(i, j, l, m, evec)
+function linkUy_inv(i, j, l, m, s)
     # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i, j+1, l, m]) * evec[i, j, l, m] * P
     # return adjoint(evec[i, j+1, l, m]) * evec[i, j, l, m]
-    return inv(adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m])
+    # return inv(adjoint(evec[i, j, l, m]) * evec[i, j+1, l, m])
+    return s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m]) * s.P
 end
 
-function linkUz(i, j, l, m, evec)
+function linkUz(i, j, l, m, s)
     # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m] * P
-    return adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m]
+    # return adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m]
+    return s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m] * s.P
 end
 
-function linkUz_inv(i, j, l, m, evec)
+function linkUz_inv(i, j, l, m, s)
     # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i, j, l+1, m]) * evec[i, j, l, m] * P
     # return adjoint(evec[i, j, l+1, m]) * evec[i, j, l, m]
-    return inv(adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m])
+    # return inv(adjoint(evec[i, j, l, m]) * evec[i, j, l+1, m])
+    return s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m]) * s.P
 end
 
-function linkUw(i, j, l, m, evec)
+function linkUw(i, j, l, m, s)
     # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1] * P
-    return adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1]
+    # return adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1]
+    return s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1] * s.P
 end
 
-function linkUw_inv(i, j, l, m, evec)
+function linkUw_inv(i, j, l, m, s)
     # P = evec[i, j, l, m][:, 1] * adjoint(evec[i, j, l, m][:, 1]) + evec[i, j, l, m][:, 2] * adjoint(evec[i, j, l, m][:, 2])
     # return P * adjoint(evec[i, j, l, m+1]) * evec[i, j, l, m] * P
     # return adjoint(evec[i, j, l, m+1]) * evec[i, j, l, m]
-    return inv(adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1])
+    # return inv(adjoint(evec[i, j, l, m]) * evec[i, j, l, m+1])
+    return s.P * inv(adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1]) * s.P
 end
 
-function Fxy(i, j, l, m, evec)
-    return log(linkUx(i, j, l, m, evec) * linkUy(i + 1, j, l, m, evec) * linkUx_inv(i, j + 1, l, m, evec) * linkUy_inv(i, j, l, m, evec))
+function Fxy(i, j, l, m, s)
+    return log(linkUx(i, j, l, m, s) * linkUy(i + 1, j, l, m, s) * linkUx_inv(i, j + 1, l, m, s) * linkUy_inv(i, j, l, m, s))
 end
-function Fzw(i, j, l, m, evec)
-    return log(linkUz(i, j, l, m, evec) * linkUw(i, j, l + 1, m, evec) * linkUz_inv(i, j, l, m + 1, evec) * linkUw_inv(i, j, l, m, evec))
+function Fzw(i, j, l, m, s)
+    return log(linkUz(i, j, l, m, s) * linkUw(i, j, l + 1, m, s) * linkUz_inv(i, j, l, m + 1, s) * linkUw_inv(i, j, l, m, s))
 end
-function Fwx(i, j, l, m, evec)
-    return log(linkUw(i, j, l, m, evec) * linkUx(i, j, l, m + 1, evec) * linkUw_inv(i + 1, j, l, m, evec) * linkUx_inv(i, j, l, m, evec))
+function Fwx(i, j, l, m, s)
+    return log(linkUw(i, j, l, m, s) * linkUx(i, j, l, m + 1, s) * linkUw_inv(i + 1, j, l, m, s) * linkUx_inv(i, j, l, m, s))
 end
-function Fzy(i, j, l, m, evec)
-    return log(linkUz(i, j, l, m, evec) * linkUy(i, j, l + 1, m, evec) * linkUz_inv(i, j + 1, l, m, evec) * linkUy_inv(i, j, l, m, evec))
+function Fzy(i, j, l, m, s)
+    return log(linkUz(i, j, l, m, s) * linkUy(i, j, l + 1, m, s) * linkUz_inv(i, j + 1, l, m, s) * linkUy_inv(i, j, l, m, s))
 end
-function Fzx(i, j, l, m, evec)
-    return log(linkUz(i, j, l, m, evec) * linkUx(i, j, l + 1, m, evec) * linkUz_inv(i + 1, j, l, m, evec) * linkUx_inv(i, j, l, m, evec))
+function Fzx(i, j, l, m, s)
+    return log(linkUz(i, j, l, m, s) * linkUx(i, j, l + 1, m, s) * linkUz_inv(i + 1, j, l, m, s) * linkUx_inv(i, j, l, m, s))
 end
-function Fyw(i, j, l, m, evec)
-    return log(linkUy(i, j, l, m, evec) * linkUw(i, j + 1, l, m, evec) * linkUy_inv(i, j, l, m + 1, evec) * linkUw_inv(i, j, l, m, evec))
+function Fyw(i, j, l, m, s)
+    return log(linkUy(i, j, l, m, s) * linkUw(i, j + 1, l, m, s) * linkUy_inv(i, j, l, m + 1, s) * linkUw_inv(i, j, l, m, s))
 end
 
-function chernF(i, j, l, m, evec)
+function chernF!(i, j, l, m, p)
+    s = p.sys
+    evec = s.evec
     # display(linkUz(i, j, l, m, evec) * linkUw(i, j, l + 1, m, evec) * linkUz_inv(i, j, l, m + 1, evec) * linkUw_inv(i, j, l, m, evec))
     # println(i, " ", j, " ", l, " ", m)
-    tr(Fxy(i, j, l, m, evec) * Fzw(i, j, l, m, evec) + Fwx(i, j, l, m, evec) * Fzy(i, j, l, m, evec) + Fzx(i, j, l, m, evec) * Fyw(i, j, l, m, evec))
+    s.P = s.evec[i, j, l, m][:, 1] * adjoint(s.evec[i, j, l, m][:, 1]) + s.evec[i, j, l, m][:, 2] * adjoint(s.evec[i, j, l, m][:, 2])
+    s.chern += tr(Fxy(i, j, l, m, s) * Fzw(i, j, l, m, s) + Fwx(i, j, l, m, s) * Fzy(i, j, l, m, s) + Fzx(i, j, l, m, s) * Fyw(i, j, l, m, s))
 end
 
 function makeFigure(mList, ChernList)
@@ -122,10 +138,9 @@ function setParams()
     g3 = σ₂ ⊗ σ₁
     g4 = σ₂ ⊗ σ₂
     g5 = σ₃ ⊗ σ₃
-    (; g1, g2, g3, g4, g5, m=0.0)
-end
 
-function main()
+    basis = (; g1, g2, g3, g4, g5)
+
     Nx = 50
     Ny = 50
     Nz = 50
@@ -135,82 +150,107 @@ function main()
     Kyrange = range(-pi, pi, length=Ny)
     Kzrange = range(-pi, pi, length=Nz)
     Kwrange = range(-pi, pi, length=Nw)
-    r = (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange)
 
     mN = 10
     mList = range(-5.0, 5.0, length=mN)
     # mList = [-3.0]
     ChernList = zeros(ComplexF64, mN)
 
-    p = setParams()
+    r = (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange)
+
+
     # k = @MVector [0.0, 0.0, 0.0, 0.0]
     k = [0.0, 0.0, 0.0, 0.0]
 
-    # evec = [@SMatrix zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    # evec = [@MMatrix zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    # evec = [zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    evec = [zeros(ComplexF64, 4, 4) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
 
-    for i in eachindex(mList)
+    P = zeros(ComplexF64, 4, 4)
+    sys = Temporal(; chern=zero(ComplexF64), k, evec, P)
 
-        # evec = [@MMatrix zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
-        evec = [zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
-        # evec = [zeros(ComplexF64, 4, 4) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    (; m=zero(Float64), mN, mList, ChernList, basis, r, sys)
+end
 
-        Chern = 0.0 + 0.0im
+function setBasis!(p)
+    (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange) = p.r
+    s = p.sys
 
-        @reset p.m = mList[i]
+    for m in eachindex(Kwrange), l in eachindex(Kzrange), j in eachindex(Kyrange), i in eachindex(Kxrange)
+        # k = @SVector [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
+        s.k .= [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
+        # s.evec[i, j, l, m] = @view(eigvecs(H(k, p))[:, 1:2])
+        s.evec[i, j, l, m] .= eigvecs(H(p))
+    end
 
-        for m in eachindex(Kwrange), l in eachindex(Kzrange), j in eachindex(Kyrange), i in eachindex(Kxrange)
-            # k = @SVector [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
-            k = [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
-            evec[i, j, l, m] = @view(eigvecs(H(k, p))[:, 1:2])
-            # evec[i, j, l, m] = eigvecs(H(k, p))
-        end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
+        s.evec[l, j, i, Nz+1] = s.evec[l, j, i, 1]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
+        s.evec[l, j, Nz+1, i] = s.evec[l, j, 1, i]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
+        s.evec[l, Ny+1, j, i] = s.evec[l, 1, j, i]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
+        s.evec[Nz+1, l, j, i] = s.evec[1, l, j, i]
+    end
 
-        for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
-            evec[l, j, i, Nz+1] = evec[l, j, i, 1]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
-            evec[l, j, Nz+1, i] = evec[l, j, 1, i]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
-            evec[l, Ny+1, j, i] = evec[l, 1, j, i]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange)
-            evec[Nz+1, l, j, i] = evec[1, l, j, i]
-        end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange)
+        s.evec[j, i, Nz+1, Nw+1] = s.evec[j, i, 1, 1]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange)
+        s.evec[j, Nz+1, i, Nw+1] = s.evec[j, 1, i, 1]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange)
+        s.evec[Ny+1, j, i, Nw+1] = s.evec[1, j, i, 1]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange)
+        s.evec[j, Nz+1, Nw+1, i] = s.evec[j, 1, 1, i]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange)
+        s.evec[Nz+1, j, Nw+1, i] = s.evec[1, j, 1, i]
+    end
+    for i in eachindex(Kxrange), j in eachindex(Kyrange)
+        s.evec[Ny+1, Nz+1, j, i] = s.evec[1, 1, j, i]
+    end
 
-        for i in eachindex(Kxrange), j in eachindex(Kyrange)
-            evec[j, i, Nz+1, Nw+1] = evec[j, i, 1, 1]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange)
-            evec[j, Nz+1, i, Nw+1] = evec[j, 1, i, 1]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange)
-            evec[Ny+1, j, i, Nw+1] = evec[1, j, i, 1]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange)
-            evec[j, Nz+1, Nw+1, i] = evec[j, 1, 1, i]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange)
-            evec[Nz+1, j, Nw+1, i] = evec[1, j, 1, i]
-        end
-        for i in eachindex(Kxrange), j in eachindex(Kyrange)
-            evec[Ny+1, Nz+1, j, i] = evec[1, 1, j, i]
-        end
+    for i in eachindex(Kxrange)
+        s.evec[i, Ny+1, Nz+1, Nw+1] = s.evec[i, 1, 1, 1]
+    end
+    for i in eachindex(Kxrange)
+        s.evec[Nz+1, i, Ny+1, Nw+1] = s.evec[1, i, 1, 1]
+    end
+    for i in eachindex(Kxrange)
+        s.evec[Ny+1, Nz+1, i, Nw+1] = s.evec[1, 1, i, 1]
+    end
+    for i in eachindex(Kxrange)
+        s.evec[Nz+1, Ny+1, Nw+1, i] = s.evec[1, 1, 1, i]
+    end
 
-        for i in eachindex(Kxrange)
-            evec[i, Ny+1, Nz+1, Nw+1] = evec[i, 1, 1, 1]
-        end
-        for i in eachindex(Kxrange)
-            evec[Nz+1, i, Ny+1, Nw+1] = evec[1, i, 1, 1]
-        end
-        for i in eachindex(Kxrange)
-            evec[Ny+1, Nz+1, i, Nw+1] = evec[1, 1, i, 1]
-        end
-        for i in eachindex(Kxrange)
-            evec[Nz+1, Ny+1, Nw+1, i] = evec[1, 1, 1, i]
-        end
+    s.evec[Nx+1, Ny+1, Nz+1, Nw+1] = s.evec[1, 1, 1, 1]
+end
 
-        evec[Nx+1, Ny+1, Nz+1, Nw+1] = evec[1, 1, 1, 1]
+function updateChern!(p)
+    r = p.r
+    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange), m in eachindex(r.Kwrange)
+        chernF!(i, j, l, m, p)
+    end
+end
+
+function main()
+
+    p = setParams()
+
+    s = p.sys
+
+    for i in eachindex(p.mList)
+
+        s.chern = 0.0 + 0.0im
+
+        @reset p.m = p.mList[i]
+
+        setBasis!(p)
 
         # for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1
         #     if evec[i, j, l, m] == zeros(ComplexF64, 4, 2)
@@ -232,17 +272,15 @@ function main()
         # display(adjoint(evec[1, 1, 1, 1][:, 1]) * evec[1, 1, 1, 1][:, 1])
         # display(adjoint(evec[1, 1, 1, 1][:, 1]) * H(k, p) * evec[1, 1, 1, 1][:, 1])
 
-        for i in eachindex(Kxrange), j in eachindex(Kyrange), l in eachindex(Kzrange), m in eachindex(Kwrange)
-            Chern += chernF(i, j, l, m, evec)
-        end
+        updateChern!(p)
 
-        Chern /= 4(pi^2)
+        s.chern /= 4(pi^2)
         display(p.m)
-        display(Chern)
-        ChernList[i] = Chern
+        display(s.chern)
+        p.ChernList[i] = s.chern
     end
 
-    # makeFigure(mList, ChernList)
+    makeFigure(mList, ChernList)
 
 end
 
