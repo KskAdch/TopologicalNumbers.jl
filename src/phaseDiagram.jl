@@ -22,7 +22,7 @@ function calc_data1D(H, param_range, alg, p::Params)
 
     nums = zeros(Float64, Hs, size(param_range, 1))
     num0 = zeros(Float64, Hs)
-    
+
     if alg == "BerryPhase"
         algorithm! = BerryPhase!
     elseif alg == "Z2"
@@ -48,7 +48,7 @@ function calc_data2D(H, param_range1, param_range2, alg, p::Params)
 
     nums = zeros(Float64, Hs, size(param_range1, 1), size(param_range2, 1))
     num0 = zeros(Float64, Hs)
-    
+
     if alg == "BerryPhase"
         algorithm! = BerryPhase!
     elseif alg == "Z2"
@@ -193,7 +193,7 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
 
     if plot == true && Hs % 2 == 0
         nums_half = sum(@view(nums[1:end÷2, :, :]), dims=1)[1, :, :]
-        plot2D(nums_half, param_range1, param_range2) # half-filling case
+        plot2D(transpose(nums_half), param_range1, param_range2) # half-filling case
     end
 
     (; param1=param_range1, param2=param_range2, nums)

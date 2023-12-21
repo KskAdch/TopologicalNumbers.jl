@@ -54,17 +54,20 @@ end
 function plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
 
     fig = figure()
+    ax = fig.add_subplot(111)
 
     if labels == true
-        ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p₁", ylabel="p₂")
-    else
-        ax = Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
+        ax.set_xlabel(L"p_1")
+        ax.set_ylabel(L"p_2")
     end
 
+    im = ax.imshow(nums, cmap="jet", interpolation="none", origin="lower", extent=(param_range1[1], param_range1[end], param_range2[1], param_range2[end]), aspect="auto")
+    fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
 
-    hm = heatmap!(ax, param_range1, param_range2, nums, colormap=:jet1)
-    ax.aspect = AxisAspect(1)
-    Colorbar(fig[1, 2], hm)
+
+    # hm = heatmap!(ax, param_range1, param_range2, nums, colormap=:jet1)
+    # ax.aspect = AxisAspect(1)
+    # Colorbar(fig[1, 2], hm)
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
@@ -78,18 +81,21 @@ end
 function plot2D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
 
     fig = figure()
+    ax = fig.add_subplot(111)
 
     if labels == true
-        ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p₁", ylabel="p₂")
-    else
-        ax = Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
+        ax.set_xlabel(L"p_1")
+        ax.set_ylabel(L"p_2")
     end
 
-    nums_half = sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :]
+    nums_half = transpose(sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :])
 
-    hm = heatmap!(ax, result.param1, result.param2, nums_half, colormap=:jet1)
-    ax.aspect = AxisAspect(1)
-    Colorbar(fig[1, 2], hm)
+    im = ax.imshow(nums_half, cmap="jet", interpolation="none", origin="lower", extent=(result.param1[1], result.param1[end], result.param2[1], result.param2[end]), aspect="auto")
+    fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+
+    # hm = heatmap!(ax, result.param1, result.param2, nums_half, colormap=:jet1)
+    # ax.aspect = AxisAspect(1)
+    # Colorbar(fig[1, 2], hm)
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
@@ -100,19 +106,15 @@ end
 function output(fig, p)
     @unpack disp, png, pdf, svg, filename = p
     if png == true
-        CairoMakie.activate!()
-        save(filename * ".png", fig)
+        savefig(filename * ".png")
     end
     if pdf == true
-        CairoMakie.activate!()
-        save(filename * ".pdf", fig)
+        savefig(filename * ".pdf")
     end
     if svg == true
-        CairoMakie.activate!()
-        save(filename * ".svg", fig)
+        savefig(filename * ".svg")
     end
     if disp == true
-        GLMakie.activate!()
-        display(fig)
+        plotshow()
     end
 end
