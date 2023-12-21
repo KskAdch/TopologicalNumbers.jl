@@ -54,6 +54,8 @@ function diagram(p::Params, p_out)
             for i in 1:Hs
                 ax.plot(nrang, Ene[:, i])
             end
+        else
+            plotclose()
         end
     elseif dim == 2
 
@@ -78,6 +80,8 @@ function diagram(p::Params, p_out)
             for i in 1:Hs
                 ax.plot_surface(X, Y, Ene[:, :, i], shade=true, antialiased=false)
             end
+        else
+            plotclose()
         end
     end
 

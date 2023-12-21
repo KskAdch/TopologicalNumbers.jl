@@ -46,9 +46,11 @@ using PythonPlot
 
         fig = plot1D(result.nums, result.param; disp=false)
         @test typeof(fig) == Figure
+        plotclose()
 
         fig = plot1D(result; disp=false)
         @test typeof(fig) == Figure
+        plotclose()
 
         result = calcPhaseDiagram(H, param, "BerryPhase"; rounds=false)
         num = [2.8271597168564594e-16 1.987846675914698e-17; 0.0 1.766974823035287e-17; 5.654319433712919e-16 3.533949646070574e-17; 0.9999999999999989 1.0000000000000002; 1.000000000000001 1.0000000000000002; 1.0000000000000018 1.0; 1.0 1.0000000000000007; 1.0 0.9999999999999999; 5.654319433712919e-16 7.50964299789997e-17; 2.8271597168564594e-16 1.987846675914698e-17; 5.654319433712919e-16 3.3130777931911632e-18]
@@ -66,9 +68,11 @@ using PythonPlot
 
         fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
         @test typeof(fig) == Figure
+        plotclose()
 
         fig = plot2D(result; disp=false)
         @test typeof(fig) == Figure
+        plotclose()
 
         param = range(-2.0, 2.0, length=4)
         result = calcPhaseDiagram(H₀, param, param, "BerryPhase"; rounds=false)
@@ -163,9 +167,11 @@ using PythonPlot
 
                 fig = plot1D(result.nums, result.param; disp=false)
                 @test typeof(fig) == Figure
+                plotclose()
 
                 fig = plot1D(result; disp=false)
                 @test typeof(fig) == Figure
+                plotclose()
 
                 #↓結果おかしい
                 # result = calcPhaseDiagram(H₀, param, "Chern"; rounds=false)
@@ -222,9 +228,11 @@ using PythonPlot
 
                 fig = plot1D(result.nums, result.param; disp=false)
                 @test typeof(fig) == Figure
+                plotclose()
 
                 fig = plot1D(result; disp=false)
                 @test typeof(fig) == Figure
+                plotclose()
 
 
                 result = calcPhaseDiagram(H, param, "Chern"; rounds=false)
@@ -254,9 +262,11 @@ using PythonPlot
 
                 fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
                 @test typeof(fig) == Figure
+                plotclose()
 
                 fig = plot2D(result; disp=false)
                 @test typeof(fig) == Figure
+                plotclose()
 
                 param1 = range(-π, π, length=6)
                 result = calcPhaseDiagram(H₀, param1, param2, "Chern"; rounds=false)
@@ -332,9 +342,11 @@ using PythonPlot
 
             fig = plot1D(result.nums, result.param; disp=false)
             @test typeof(fig) == Figure
+            plotclose()
 
             fig = plot1D(result; disp=false)
             @test typeof(fig) == Figure
+            plotclose()
 
             result = calcPhaseDiagram(H, param, "Z2"; rounds=false)
             num = [1.000000000000001 0.9999999999999991; 0.9999999999999996 1.0; 1.0 1.0000000000000009; 0.9999999999999996 1.0; 0.9999999999999996 1.0; 0.0 0.0; 0.9999999999999996 1.0; 0.9999999999999996 1.0; 1.0 1.0000000000000009; 0.9999999999999996 1.0; 1.000000000000001 0.9999999999999991]
@@ -352,9 +364,11 @@ using PythonPlot
 
             fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
             @test typeof(fig) == Figure
+            plotclose()
 
             fig = plot2D(result; disp=false)
             @test typeof(fig) == Figure
+            plotclose()
 
             result = calcPhaseDiagram(H₀, param, param, "Z2"; rounds=false)
             num = zeros(2, 3, 3)
