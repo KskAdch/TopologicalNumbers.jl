@@ -21,10 +21,12 @@ function plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, p
     ax.grid()
     ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
 
-    for i in axes(nums, 2)
-        ax.scatter(param_range, nums[:, i], marker=marker(i), label="Band$(i)")
+    if disp == true || png == true || pdf == true || svg == true
+        for i in axes(nums, 2)
+            ax.scatter(param_range, nums[:, i], marker=marker(i), label="Band$(i)")
+        end
+        ax.legend()
     end
-    ax.legend()
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
@@ -46,11 +48,12 @@ function plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Boo
     ax.grid()
     ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
 
-
-    for i in axes(result.nums, 2)
-        ax.scatter(result.param, result.nums[:, i], marker=marker(i), label="Band$(i)")
+    if disp == true || png == true || pdf == true || svg == true
+        for i in axes(result.nums, 2)
+            ax.scatter(result.param, result.nums[:, i], marker=marker(i), label="Band$(i)")
+        end
+        ax.legend()
     end
-    ax.legend()
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
@@ -70,8 +73,10 @@ function plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true,
         ax.set_ylabel(L"p_2")
     end
 
-    im = ax.imshow(nums, cmap="jet", interpolation="none", origin="lower", extent=(param_range1[1], param_range1[end], param_range2[1], param_range2[end]), aspect="auto")
-    fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+    if disp == true || png == true || pdf == true || svg == true
+        im = ax.imshow(nums, cmap="jet", interpolation="none", origin="lower", extent=(param_range1[1], param_range1[end], param_range2[1], param_range2[end]), aspect="auto")
+        fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+    end
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
@@ -93,8 +98,10 @@ function plot2D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Boo
 
     nums_half = transpose(sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :])
 
-    im = ax.imshow(nums_half, cmap="jet", interpolation="none", origin="lower", extent=(result.param1[1], result.param1[end], result.param2[1], result.param2[end]), aspect="auto")
-    fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+    if disp == true || png == true || pdf == true || svg == true
+        im = ax.imshow(nums_half, cmap="jet", interpolation="none", origin="lower", extent=(result.param1[1], result.param1[end], result.param2[1], result.param2[end]), aspect="auto")
+        fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+    end
 
 
     p = (; disp, png, pdf, svg, filename)
