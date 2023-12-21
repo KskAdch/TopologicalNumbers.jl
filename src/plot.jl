@@ -3,7 +3,7 @@
 """
 function plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
 
-    fig = Figure()
+    fig = figure()
 
     if labels == true
         ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p", ylabel="ν")
@@ -28,7 +28,7 @@ end
 """
 function plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
 
-    fig = Figure()
+    fig = figure()
 
     if labels == true
         ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p", ylabel="ν")
@@ -53,7 +53,7 @@ end
 """
 function plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
 
-    fig = Figure()
+    fig = figure()
 
     if labels == true
         ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p₁", ylabel="p₂")
@@ -77,7 +77,7 @@ end
 """
 function plot2D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
 
-    fig = Figure()
+    fig = figure()
 
     if labels == true
         ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p₁", ylabel="p₂")
