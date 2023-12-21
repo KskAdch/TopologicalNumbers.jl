@@ -30,7 +30,7 @@ end
 
 function diagram(p::Params, p_out)
     @unpack dim, N, Hs = p
-    @unpack labels = p_out
+    @unpack labels, disp, png, pdf, svg = p_out
 
     nrang = range(-π, π, length=N)
 
@@ -50,8 +50,10 @@ function diagram(p::Params, p_out)
 
         k, Ene = Ene1D(p)
 
-        for i in 1:Hs
-            ax.plot(nrang, Ene[:, i])
+        if disp == true || png == true || pdf == true || svg == true
+            for i in 1:Hs
+                ax.plot(nrang, Ene[:, i])
+            end
         end
     elseif dim == 2
 
@@ -70,14 +72,16 @@ function diagram(p::Params, p_out)
 
         k, Ene = Ene2D(p)
 
-        X, Y = complex.(nrang', nrang) |> z -> (real.(z), imag.(z))
+        if disp == true || png == true || pdf == true || svg == true
+            X, Y = complex.(nrang', nrang) |> z -> (real.(z), imag.(z))
 
-        for i in 1:Hs
-            ax.plot_surface(X, Y, Ene[:, :, i], shade=true, antialiased=false)
+            for i in 1:Hs
+                ax.plot_surface(X, Y, Ene[:, :, i], shade=true, antialiased=false)
+            end
         end
     end
 
-    k, Ene, fig
+    return k, Ene, fig
 end
 
 function output(k, Ene, fig, p)
