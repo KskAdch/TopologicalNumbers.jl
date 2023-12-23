@@ -1,25 +1,35 @@
+function marker(i)
+    markers = ("o", "v", "^", ",", "<", ">", "8", "s", "*", "h", "H", "D", "d", ".", "1", "2", "3", "4", "+", "x", "|", "_", "p")
+    if i > length(markers)
+        i = i % length(markers)
+    end
+    return markers[i]
+end
+
 @doc raw"""
     plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
 """
 function plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
 
-    fig = Figure()
+    fig = figure()
+    ax = fig.add_subplot(111)
 
     if labels == true
-        ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p", ylabel="ν")
-    else
-        ax = Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
+        ax.set_xlabel(L"p")
+        ax.set_ylabel(L"\nu")
     end
+    ax.grid()
+    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
 
-
-    for i in 1:size(nums, 2)
-        scatter!(ax, param_range, nums[:, i], label="Band$(i)", markersize=15)
+    if disp == true || png == true || pdf == true || svg == true
+        for i in axes(nums, 2)
+            ax.scatter(param_range, nums[:, i], marker=marker(i), label="Band$(i)")
+        end
+        ax.legend()
     end
-    Legend(fig[1, 2], ax)
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    # display(fig)
     fig
 end
 
@@ -28,23 +38,25 @@ end
 """
 function plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
 
-    fig = Figure()
+    fig = figure()
+    ax = fig.add_subplot(111)
 
     if labels == true
-        ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p", ylabel="ν")
-    else
-        ax = Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
+        ax.set_xlabel(L"p")
+        ax.set_ylabel(L"\nu")
     end
+    ax.grid()
+    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
 
-
-    for i in 1:size(result.nums, 2)
-        scatter!(ax, result.param, result.nums[:, i], label="Band$(i)", markersize=15)
+    if disp == true || png == true || pdf == true || svg == true
+        for i in axes(result.nums, 2)
+            ax.scatter(result.param, result.nums[:, i], marker=marker(i), label="Band$(i)")
+        end
+        ax.legend()
     end
-    Legend(fig[1, 2], ax)
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    # display(fig)
     fig
 end
 
@@ -53,22 +65,21 @@ end
 """
 function plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
 
-    fig = Figure()
+    fig = figure()
+    ax = fig.add_subplot(111)
 
     if labels == true
-        ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p₁", ylabel="p₂")
-    else
-        ax = Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
+        ax.set_xlabel(L"p_1")
+        ax.set_ylabel(L"p_2")
     end
 
-
-    hm = heatmap!(ax, param_range1, param_range2, nums, colormap=:jet1)
-    ax.aspect = AxisAspect(1)
-    Colorbar(fig[1, 2], hm)
+    if disp == true || png == true || pdf == true || svg == true
+        im = ax.imshow(nums, cmap="jet", interpolation="none", origin="lower", extent=(param_range1[1], param_range1[end], param_range2[1], param_range2[end]), aspect="auto")
+        fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+    end
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    # display(fig)
     fig
 end
 
@@ -77,42 +88,39 @@ end
 """
 function plot2D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
 
-    fig = Figure()
+    fig = figure()
+    ax = fig.add_subplot(111)
 
     if labels == true
-        ax = Axis(fig[1, 1], xminorticksvisible=true, xminorgridvisible=true, xminorticks=IntervalsBetween(2), xlabel="p₁", ylabel="p₂")
-    else
-        ax = Axis(fig[1, 1], xlabelvisible=false, ylabelvisible=false)
+        ax.set_xlabel(L"p_1")
+        ax.set_ylabel(L"p_2")
     end
 
-    nums_half = sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :]
+    nums_half = transpose(sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :])
 
-    hm = heatmap!(ax, result.param1, result.param2, nums_half, colormap=:jet1)
-    ax.aspect = AxisAspect(1)
-    Colorbar(fig[1, 2], hm)
+    if disp == true || png == true || pdf == true || svg == true
+        im = ax.imshow(nums_half, cmap="jet", interpolation="none", origin="lower", extent=(result.param1[1], result.param1[end], result.param2[1], result.param2[end]), aspect="auto")
+        fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+    end
+
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    # display(fig)
     fig
 end
 
 function output(fig, p)
     @unpack disp, png, pdf, svg, filename = p
     if png == true
-        CairoMakie.activate!()
-        save(filename * ".png", fig)
+        savefig(filename * ".png")
     end
     if pdf == true
-        CairoMakie.activate!()
-        save(filename * ".pdf", fig)
+        savefig(filename * ".pdf")
     end
     if svg == true
-        CairoMakie.activate!()
-        save(filename * ".svg", fig)
+        savefig(filename * ".svg")
     end
     if disp == true
-        GLMakie.activate!()
-        display(fig)
+        plotshow()
     end
 end

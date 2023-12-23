@@ -1,6 +1,5 @@
-using LinearAlgebra
-using GLMakie
-using CairoMakie
 using LaTeXStrings
-using StaticArrays
+using LinearAlgebra
 using Parameters
+using PythonPlot
+using StaticArrays

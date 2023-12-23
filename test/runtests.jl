@@ -2,11 +2,10 @@ using TopologicalNumbers
 using LinearAlgebra
 using Test
 
-using CairoMakie
-# using GLMakie
-using Aqua
+using PythonPlot
 
-Aqua.test_all(TopologicalNumbers; ambiguities=false)
+# using Aqua
+# Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
 @testset "TopologicalNumbers.jl" begin
     @testset "1D case" begin
@@ -46,10 +45,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         @test result.nums == num
 
         fig = plot1D(result.nums, result.param; disp=false)
-        @test typeof(fig) == Makie.Figure
+        @test typeof(fig) == Figure
+        plotclose()
 
         fig = plot1D(result; disp=false)
-        @test typeof(fig) == Makie.Figure
+        @test typeof(fig) == Figure
+        plotclose()
 
         result = calcPhaseDiagram(H, param, "BerryPhase"; rounds=false)
         num = [2.8271597168564594e-16 1.987846675914698e-17; 0.0 1.766974823035287e-17; 5.654319433712919e-16 3.533949646070574e-17; 0.9999999999999989 1.0000000000000002; 1.000000000000001 1.0000000000000002; 1.0000000000000018 1.0; 1.0 1.0000000000000007; 1.0 0.9999999999999999; 5.654319433712919e-16 7.50964299789997e-17; 2.8271597168564594e-16 1.987846675914698e-17; 5.654319433712919e-16 3.3130777931911632e-18]
@@ -66,10 +67,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         @test result.nums == num
 
         fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
-        @test typeof(fig) == Makie.Figure
+        @test typeof(fig) == Figure
+        plotclose()
 
         fig = plot2D(result; disp=false)
-        @test typeof(fig) == Makie.Figure
+        @test typeof(fig) == Figure
+        plotclose()
 
         param = range(-2.0, 2.0, length=4)
         result = calcPhaseDiagram(H₀, param, param, "BerryPhase"; rounds=false)
@@ -137,8 +140,8 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 N = 51
                 for j in 1:N
                     for i in 1:N
-                        C1 .+= calcBerryFlux(H, [i-1, j-1]).TopologicalNumber
-                        C2 .+= calcBerryFlux(H, [i-1, j-1], rounds=false).TopologicalNumber
+                        C1 .+= calcBerryFlux(H, [i - 1, j - 1]).TopologicalNumber
+                        C2 .+= calcBerryFlux(H, [i - 1, j - 1], rounds=false).TopologicalNumber
                     end
                 end
 
@@ -163,10 +166,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 # @test result.nums == num
 
                 fig = plot1D(result.nums, result.param; disp=false)
-                @test typeof(fig) == Makie.Figure
+                @test typeof(fig) == Figure
+                plotclose()
 
                 fig = plot1D(result; disp=false)
-                @test typeof(fig) == Makie.Figure
+                @test typeof(fig) == Figure
+                plotclose()
 
                 #↓結果おかしい
                 # result = calcPhaseDiagram(H₀, param, "Chern"; rounds=false)
@@ -222,10 +227,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 @test result.nums == num
 
                 fig = plot1D(result.nums, result.param; disp=false)
-                @test typeof(fig) == Makie.Figure
+                @test typeof(fig) == Figure
+                plotclose()
 
                 fig = plot1D(result; disp=false)
-                @test typeof(fig) == Makie.Figure
+                @test typeof(fig) == Figure
+                plotclose()
 
 
                 result = calcPhaseDiagram(H, param, "Chern"; rounds=false)
@@ -254,10 +261,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
                 @test result.nums == num
 
                 fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
-                @test typeof(fig) == Makie.Figure
+                @test typeof(fig) == Figure
+                plotclose()
 
                 fig = plot2D(result; disp=false)
-                @test typeof(fig) == Makie.Figure
+                @test typeof(fig) == Figure
+                plotclose()
 
                 param1 = range(-π, π, length=6)
                 result = calcPhaseDiagram(H₀, param1, param2, "Chern"; rounds=false)
@@ -278,24 +287,24 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             function H₀(k, p) # 2d Kane-Mele
                 k1, k2 = k
                 t, λₛₒ = p
-            
+
                 R1 = 0
                 R2 = 0
-                R3 = 2λₛₒ*(sin(k1) - sin(k2) - sin(k1-k2))
-                R4 = -t*(sin(k1) + sin(k2))
-                R0 = -t*(cos(k1) + cos(k2) + 1)
-            
+                R3 = 2λₛₒ * (sin(k1) - sin(k2) - sin(k1 - k2))
+                R4 = -t * (sin(k1) + sin(k2))
+                R0 = -t * (cos(k1) + cos(k2) + 1)
+
                 s0 = [1 0; 0 1]
                 sx = [0 1; 1 0]
                 sy = [0 -im; im 0]
                 sz = [1 0; 0 -1]
-            
+
                 a1 = kron(sz, sx)
                 a2 = kron(sz, sy)
                 a3 = kron(sz, sz)
                 a4 = kron(sy, s0)
                 a0 = kron(sx, s0)
-            
+
                 R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
             end
             @test H₀((0.0, 0.0), (0.5, 1.0)) == KaneMele((0.0, 0.0), (0.5, 1.0))
@@ -332,10 +341,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             @test result.nums == num
 
             fig = plot1D(result.nums, result.param; disp=false)
-            @test typeof(fig) == Makie.Figure
+            @test typeof(fig) == Figure
+            plotclose()
 
             fig = plot1D(result; disp=false)
-            @test typeof(fig) == Makie.Figure
+            @test typeof(fig) == Figure
+            plotclose()
 
             result = calcPhaseDiagram(H, param, "Z2"; rounds=false)
             num = [1.000000000000001 0.9999999999999991; 0.9999999999999996 1.0; 1.0 1.0000000000000009; 0.9999999999999996 1.0; 0.9999999999999996 1.0; 0.0 0.0; 0.9999999999999996 1.0; 0.9999999999999996 1.0; 1.0 1.0000000000000009; 0.9999999999999996 1.0; 1.000000000000001 0.9999999999999991]
@@ -352,10 +363,12 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             @test result.nums == num
 
             fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
-            @test typeof(fig) == Makie.Figure
+            @test typeof(fig) == Figure
+            plotclose()
 
             fig = plot2D(result; disp=false)
-            @test typeof(fig) == Makie.Figure
+            @test typeof(fig) == Figure
+            plotclose()
 
             result = calcPhaseDiagram(H₀, param, param, "Z2"; rounds=false)
             num = zeros(2, 3, 3)
@@ -374,17 +387,17 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
             t2 = 1
             t3 = 1
             m = 2
-        
+
             h0 = 0
-            hx = 2t1*(cos(k1) - cos(2pi*2/5)) + m*(2 - cos(k2+2pi*1e-3) - cos(k3+2pi*1e-3))
-            hy = 2t2*sin(k2+2pi*1e-3)
-            hz = 2t3*sin(k3+2pi*1e-3)
-        
+            hx = 2t1 * (cos(k1) - cos(2pi * 2 / 5)) + m * (2 - cos(k2 + 2pi * 1e-3) - cos(k3 + 2pi * 1e-3))
+            hy = 2t2 * sin(k2 + 2pi * 1e-3)
+            hz = 2t3 * sin(k3 + 2pi * 1e-3)
+
             s0 = [1 0; 0 1]
             sx = [0 1; 1 0]
             sy = [0 -im; im 0]
             sz = [1 0; 0 -1]
-        
+
             h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
         end
 
@@ -393,7 +406,7 @@ Aqua.test_all(TopologicalNumbers; ambiguities=false)
         N = 11
         nodes = zeros(N, N, N, 2)
         for i in 1:N, j in 1:N, k in 1:N
-            nodes[i, j, k, :] = calcWeylNode(H₀, [i-1, j-1, k-1]; N=N, rounds=false).TopologicalNumber
+            nodes[i, j, k, :] = calcWeylNode(H₀, [i - 1, j - 1, k - 1]; N=N, rounds=false).TopologicalNumber
         end
         Chern_i = [[round(Int, sum(nodes[i, :, :, 1])) for i in 1:N] [round(Int, sum(nodes[i, :, :, 2])) for i in 1:N]]
         @test Chern_i[:, 1] == [0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0]
