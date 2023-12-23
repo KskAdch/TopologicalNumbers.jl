@@ -54,7 +54,7 @@ function compute_all_projectors(vecs, p)
     return allProjs
 end
 
-# Loop function
+# Loop function (F)
 function proj_loop(allProjs, a, b, c, d, e, f, vecs, p)
     P1 = allProjs[a, b, c, d, :, :]
     P2 = allProjs[a+KroneckerDelta(e, 1),
@@ -72,7 +72,7 @@ function proj_loop(allProjs, a, b, c, d, e, f, vecs, p)
 
     v = vecs[a, b, c, d, :, :]
     y = v' * P4 * P3 * P2 * v
-    z = y * p.Nocc / tr(y)
+    z = y * p.Nocc / tr(y) # U
     x = log(z)
     return x
 end
@@ -107,6 +107,7 @@ function main()
 
     # Parameters
     mList = range(-5.0, 5.0, length=10)
+    # mList = [-3.0]
     ChernList = zeros(ComplexF64, length(mList))
     Nocc, m0, pts = 2, -3, 30
 
@@ -127,7 +128,7 @@ function main()
         ChernList[i] = C2
     end
 
-    makeFigure(mList, ChernList)
+    # makeFigure(mList, ChernList)
 
 
 end
