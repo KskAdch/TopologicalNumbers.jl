@@ -5,27 +5,28 @@ using StaticArrays
 using Accessors
 using Parameters
 
-@with_kw mutable struct Temporal{T1,T2,T3,T4,T5}
+@with_kw mutable struct Temporal{T1,T2,T3,T4,T5,T6,T7}
     chern::T1
     k::T2
     evec::T3
-    allP::T3
-    P::T4
-    H::T4
-    Ux::T5
-    Uy::T5
-    Uz::T5
-    Uw::T5
-    Ux_inv::T5
-    Uy_inv::T5
-    Uz_inv::T5
-    Uw_inv::T5
-    Fxy::T5
-    Fzw::T5
-    Fwx::T5
-    Fzy::T5
-    Fzx::T5
-    Fyw::T5
+    allP::T4
+    P::T5
+    H::T5
+    Ux::T6
+    Uy::T6
+    Uz::T6
+    Uw::T6
+    Ux_inv::T6
+    Uy_inv::T6
+    Uz_inv::T6
+    Uw_inv::T6
+    Fxy::T6
+    Fzw::T6
+    Fwx::T6
+    Fzy::T6
+    Fzx::T6
+    Fyw::T6
+    Ftemp::T7
 end
 
 ⊗(x, y) = kron(x, y)
@@ -60,50 +61,41 @@ function H!(p)
 end
 
 function linkUx!(i, j, l, m, s, p)
-    # s.Ux = s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m] * s.P
     s.Ux = adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m]
     # threshold_zero!(s.Ux, p)
 end
 
 function linkUx_inv!(i, j, l, m, s, p)
-    # linkUx!(i, j, l, m, s, p)
-    # s.Ux_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m] * s.P)
-    s.Ux_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m]
-    # s.Ux_inv = adjoint(s.evec[i+1, j, l, m]) * s.evec[i, j, l, m]
+    # s.Ux_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i+1, j, l, m]
+    s.Ux_inv = adjoint(s.evec[i+1, j, l, m]) * s.evec[i, j, l, m]
     # threshold_zero!(s.Ux_inv, p)
-    s.Ux_inv = inv(s.Ux_inv)
+    # s.Ux_inv = inv(s.Ux_inv)
     # threshold_zero!(s.Ux_inv, p)
 end
 
 function linkUy!(i, j, l, m, s, p)
-    # s.Uy = s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m] * s.P
     s.Uy = adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m]
     # threshold_zero!(s.Uy, p)
 end
 
 function linkUy_inv!(i, j, l, m, s, p)
-    # linkUy!(i, j, l, m, s, p)
-    # s.Uy_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m] * s.P)
-    s.Uy_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m]
-    # s.Uy_inv = adjoint(s.evec[i, j+1, l, m]) * s.evec[i, j, l, m]
+    # s.Uy_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i, j+1, l, m]
+    s.Uy_inv = adjoint(s.evec[i, j+1, l, m]) * s.evec[i, j, l, m]
     # threshold_zero!(s.Uy_inv, p)
-    s.Uy_inv = inv(s.Uy_inv)
+    # s.Uy_inv = inv(s.Uy_inv)
     # threshold_zero!(s.Uy_inv, p)
 end
 
 function linkUz!(i, j, l, m, s, p)
-    # s.Uz = s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m] * s.P
     s.Uz = adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m]
     # threshold_zero!(s.Uz, p)
 end
 
 function linkUz_inv!(i, j, l, m, s, p)
-    # linkUz!(i, j, l, m, s, p)
-    # s.Uz_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m] * s.P)
-    s.Uz_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m]
-    # s.Uz_inv = adjoint(s.evec[i, j, l+1, m]) * s.evec[i, j, l, m]
+    # s.Uz_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l+1, m]
+    s.Uz_inv = adjoint(s.evec[i, j, l+1, m]) * s.evec[i, j, l, m]
     # threshold_zero!(s.Uz_inv, p)
-    s.Uz_inv = inv(s.Uz_inv)
+    # s.Uz_inv = inv(s.Uz_inv)
     # threshold_zero!(s.Uz_inv, p)
 end
 
@@ -114,12 +106,10 @@ function linkUw!(i, j, l, m, s, p)
 end
 
 function linkUw_inv!(i, j, l, m, s, p)
-    # linkUw!(i, j, l, m, s, p)
-    # s.Uw_inv = inv(s.P * adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1] * s.P)
-    s.Uw_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1]
-    # s.Uw_inv = adjoint(s.evec[i, j, l, m+1]) * s.evec[i, j, l, m]
+    # s.Uw_inv = adjoint(s.evec[i, j, l, m]) * s.evec[i, j, l, m+1]
+    s.Uw_inv = adjoint(s.evec[i, j, l, m+1]) * s.evec[i, j, l, m]
     # threshold_zero!(s.Uw_inv, p)
-    s.Uw_inv = inv(s.Uw_inv)
+    # s.Uw_inv = inv(s.Uw_inv)
     # threshold_zero!(s.Uw_inv, p)
 end
 
@@ -130,8 +120,9 @@ function Fxy!(i, j, l, m, s, p)
     linkUy_inv!(i, j, l, m, s, p)
     s.Fxy = s.Ux * s.Uy * s.Ux_inv * s.Uy_inv
     # threshold_zero!(s.Ux, p)
-    # s.Fxy = s.Fxy * p.r.Nfill / tr(s.Fxy)
-    s.Fxy = log(s.Fxy)
+    s.Ftemp .= s.Fxy * p.r.Nfill / tr(s.Fxy)
+    # display(s.Fxy)
+    s.Fxy = log(s.Ftemp)
     # threshold_zero!(s.Fxy, p)
     # display(s.Ux * s.Uy * s.Ux_inv * s.Uy_inv)
     # display(s.Fxy)
@@ -143,8 +134,9 @@ function Fzw!(i, j, l, m, s, p)
     linkUw_inv!(i, j, l, m, s, p)
     s.Fzw = s.Uz * s.Uw * s.Uz_inv * s.Uw_inv
     # threshold_zero!(s.Uz, p)
-    # s.Fzw = s.Fzw * p.r.Nfill / tr(s.Fzw)
-    s.Fzw = log(s.Fzw)
+    s.Ftemp .= s.Fzw * p.r.Nfill / tr(s.Fzw)
+    # display(s.Fzw)
+    s.Fzw = log(s.Ftemp)
     # threshold_zero!(s.Fzw, p)
 end
 function Fwx!(i, j, l, m, s, p)
@@ -154,8 +146,9 @@ function Fwx!(i, j, l, m, s, p)
     linkUx_inv!(i, j, l, m, s, p)
     s.Fwx = s.Uw * s.Ux * s.Uw_inv * s.Ux_inv
     # threshold_zero!(s.Uw, p)
-    # s.Fwx = s.Fwx * p.r.Nfill / tr(s.Fwx)
-    s.Fwx = log(s.Fwx)
+    s.Ftemp .= s.Fwx * p.r.Nfill / tr(s.Fwx)
+    # display(s.Fwx)
+    s.Fwx = log(s.Ftemp)
     # threshold_zero!(s.Fwx, p)
 end
 function Fzy!(i, j, l, m, s, p)
@@ -165,8 +158,9 @@ function Fzy!(i, j, l, m, s, p)
     linkUy_inv!(i, j, l, m, s, p)
     s.Fzy = s.Uz * s.Uy * s.Uz_inv * s.Uy_inv
     # threshold_zero!(s.Uz, p)
-    # s.Fzy = s.Fzy * p.r.Nfill / tr(s.Fzy)
-    s.Fzy = log(s.Fzy)
+    s.Ftemp .= s.Fzy * p.r.Nfill / tr(s.Fzy)
+    # display(s.Fzy)
+    s.Fzy = log(s.Ftemp)
     # threshold_zero!(s.Fzy, p)
 end
 function Fzx!(i, j, l, m, s, p)
@@ -176,8 +170,9 @@ function Fzx!(i, j, l, m, s, p)
     linkUx_inv!(i, j, l, m, s, p)
     s.Fzx = s.Uz * s.Ux * s.Uz_inv * s.Ux_inv
     # threshold_zero!(s.Uz, p)
-    # s.Fzx = s.Fzx * p.r.Nfill / tr(s.Fzx)
-    s.Fzx = log(s.Fzx)
+    s.Ftemp .= s.Fzx * p.r.Nfill / tr(s.Fzx)
+    # display(s.Fzx)
+    s.Fzx = log(s.Ftemp)
     # threshold_zero!(s.Fzx, p)
 end
 function Fyw!(i, j, l, m, s, p)
@@ -187,13 +182,16 @@ function Fyw!(i, j, l, m, s, p)
     linkUw_inv!(i, j, l, m, s, p)
     s.Fyw = s.Uy * s.Uw * s.Uy_inv * s.Uw_inv
     # threshold_zero!(s.Uy, p)
-    # s.Fyw = s.Fyw * p.r.Nfill / tr(s.Fyw)
-    s.Fyw = log(s.Fyw)
+    s.Ftemp .= s.Fyw * p.r.Nfill / tr(s.Fyw)
+    # display(s.Fyw)
+    s.Fyw = log(s.Ftemp)
     # threshold_zero!(s.Fyw, p)
 end
 
 function chernF!(i, j, l, m, p)
     s = p.sys
+
+    # println("i: ", i, ", j: ", j, ", l: ", l, ", m: ", m)
 
     # s.P = s.evec[i, j, l, m][:, 1] * adjoint(s.evec[i, j, l, m][:, 1]) + s.evec[i, j, l, m][:, 2] * adjoint(s.evec[i, j, l, m][:, 2])
     # threshold_zero!(s.P, p)
@@ -224,14 +222,14 @@ function makeFigure(mList, ChernList)
 end
 
 function setParams()
-    σ₀ = [1 0; 0 1]
-    σ₁ = [0 1; 1 0]
-    σ₂ = [0 -im; im 0]
-    σ₃ = [1 0; 0 -1]
-    # σ₀ = @MMatrix [1 0; 0 1]
-    # σ₁ = @MMatrix [0 1; 1 0]
-    # σ₂ = @MMatrix [0 -im; im 0]
-    # σ₃ = @MMatrix [1 0; 0 -1]
+    # σ₀ = [1 0; 0 1]
+    # σ₁ = [0 1; 1 0]
+    # σ₂ = [0 -im; im 0]
+    # σ₃ = [1 0; 0 -1]
+    σ₀ = @SMatrix [1 0; 0 1]
+    σ₁ = @SMatrix [0 1; 1 0]
+    σ₂ = @SMatrix [0 -im; im 0]
+    σ₃ = @SMatrix [1 0; 0 -1]
     g1 = σ₁ ⊗ σ₀
     g2 = σ₂ ⊗ σ₀
     g3 = σ₃ ⊗ σ₁
@@ -264,50 +262,35 @@ function setParams()
     r = (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange, threshold, NH, Nfill)
 
 
-    # k = @MVector [0.0, 0.0, 0.0, 0.0]
-    k = [0.0, 0.0, 0.0, 0.0]
+    k = @SVector [0.0, 0.0, 0.0, 0.0]
+    # k = [0.0, 0.0, 0.0, 0.0]
 
     # evec = [@MMatrix zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
     # evec = [zeros(ComplexF64, 4, 2) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
-    evec = [zeros(ComplexF64, NH, Nfill) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    evec = [@SMatrix zeros(ComplexF64, NH, Nfill) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
     # evec = [@MMatrix zeros(ComplexF64, 4, 4) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
 
-    allP = [zeros(ComplexF64, NH, NH) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    allP = [@SMatrix zeros(ComplexF64, NH, NH) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
 
-    P = zeros(ComplexF64, NH, NH)
-    H = zeros(ComplexF64, NH, NH)
-    Ux = zeros(ComplexF64, Nfill, Nfill)
-    Uy = zeros(ComplexF64, Nfill, Nfill)
-    Uz = zeros(ComplexF64, Nfill, Nfill)
-    Uw = zeros(ComplexF64, Nfill, Nfill)
-    Ux_inv = zeros(ComplexF64, Nfill, Nfill)
-    Uy_inv = zeros(ComplexF64, Nfill, Nfill)
-    Uz_inv = zeros(ComplexF64, Nfill, Nfill)
-    Uw_inv = zeros(ComplexF64, Nfill, Nfill)
-    Fxy = zeros(ComplexF64, Nfill, Nfill)
-    Fzw = zeros(ComplexF64, Nfill, Nfill)
-    Fwx = zeros(ComplexF64, Nfill, Nfill)
-    Fzy = zeros(ComplexF64, Nfill, Nfill)
-    Fzx = zeros(ComplexF64, Nfill, Nfill)
-    Fyw = zeros(ComplexF64, Nfill, Nfill)
-    # P = @MMatrix zeros(ComplexF64, 4, 4)
-    # H = @MMatrix zeros(ComplexF64, 4, 4)
-    # Ux = @MMatrix zeros(ComplexF64, 4, 4)
-    # Uy = @MMatrix zeros(ComplexF64, 4, 4)
-    # Uz = @MMatrix zeros(ComplexF64, 4, 4)
-    # Uw = @MMatrix zeros(ComplexF64, 4, 4)
-    # Ux_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    # Uy_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    # Uz_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    # Uw_inv = @MMatrix zeros(ComplexF64, 4, 4)
-    # Fxy = @MMatrix zeros(ComplexF64, 4, 4)
-    # Fzw = @MMatrix zeros(ComplexF64, 4, 4)
-    # Fwx = @MMatrix zeros(ComplexF64, 4, 4)
-    # Fzy = @MMatrix zeros(ComplexF64, 4, 4)
-    # Fzx = @MMatrix zeros(ComplexF64, 4, 4)
-    # Fyw = @MMatrix zeros(ComplexF64, 4, 4)
+    P = @SMatrix zeros(ComplexF64, NH, NH)
+    H = @SMatrix zeros(ComplexF64, NH, NH)
+    Ux = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Uy = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Uz = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Uw = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Ux_inv = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Uy_inv = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Uz_inv = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Uw_inv = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Fxy = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Fzw = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Fwx = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Fzy = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Fzx = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Fyw = @SMatrix zeros(ComplexF64, Nfill, Nfill)
+    Ftemp = zeros(ComplexF64, Nfill, Nfill)
 
-    sys = Temporal(; chern=zero(ComplexF64), k, evec, allP, P, H, Ux, Uy, Uz, Uw, Ux_inv, Uy_inv, Uz_inv, Uw_inv, Fxy, Fzw, Fwx, Fzy, Fzx, Fyw)
+    sys = Temporal(; chern=zero(ComplexF64), k, evec, allP, P, H, Ux, Uy, Uz, Uw, Ux_inv, Uy_inv, Uz_inv, Uw_inv, Fxy, Fzw, Fwx, Fzy, Fzx, Fyw, Ftemp)
 
     (; m=zero(Float64), mN, mList, ChernList, basis, r, sys)
 end
@@ -323,11 +306,11 @@ function setBasis!(p)
     s = p.sys
 
     for m in eachindex(Kwrange), l in eachindex(Kzrange), j in eachindex(Kyrange), i in eachindex(Kxrange)
-        # s.k = @MVector [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
-        s.k = [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
+        s.k = @SVector [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
+        # s.k = [Kxrange[i], Kyrange[j], Kzrange[l], Kwrange[m]]
         # s.evec[i, j, l, m] = @view(eigvecs(H(k, p))[:, 1:2])
         H!(p)
-        warn_zeroEigen!(p)
+        # warn_zeroEigen!(p)
         s.H = eigvecs(s.H)
         # threshold_zero!(s.H, p)
         s.evec[i, j, l, m] = @view s.H[:, 1:Nfill]
@@ -400,7 +383,7 @@ end
 
 function updateChern!(p)
     r = p.r
-    for i in eachindex(r.Kxrange)[1:end-1], j in eachindex(r.Kyrange)[1:end-1], l in eachindex(r.Kzrange)[1:end-1], m in eachindex(r.Kwrange)[1:end-1]
+    for m in eachindex(r.Kwrange)[1:end-1], l in eachindex(r.Kzrange)[1:end-1], j in eachindex(r.Kyrange)[1:end-1], i in eachindex(r.Kxrange)[1:end-1]
         chernF!(i, j, l, m, p)
     end
 end
@@ -546,6 +529,7 @@ function main()
 end
 
 @time main()
+@time main()
 
 
 
@@ -554,3 +538,26 @@ end
 
 # inv使うver.
 # 907.860957 seconds (2.68 G allocations: 579.615 GiB, 8.86% gc time)
+
+
+# Benchmarks (inv使うver.)
+
+# 1回目
+# m: -3.0, Second Chern number: 0.9792956713277512 - 1.0237402388473857e-16im
+# 112.240905 seconds (268.87 M allocations: 58.056 GiB, 11.05% gc time)
+
+# m: -3.0, Second Chern number: 0.9792956713277512 - 1.0237402388473857e-16im
+# 105.275859 seconds (268.85 M allocations: 58.055 GiB, 9.87% gc time)
+
+# 2回目
+# m: -3.0, Second Chern number: 0.9792956713277515 - 1.0237402388473857e-16im
+#  97.521954 seconds (268.85 M allocations: 58.055 GiB, 10.00% gc time)
+
+# m: -3.0, Second Chern number: 0.9792956713277515 - 1.0237402388473857e-16im
+# 105.103001 seconds (268.85 M allocations: 58.055 GiB, 9.37% gc time)
+
+# 3回目
+# m: -3.0, Second Chern number: 0.9793607631927379 - 3.90140613426141e-16im
+# 110.723529 seconds (251.33 M allocations: 31.571 GiB, 4.39% gc time)
+# m: -3.0, Second Chern number: 0.9793607631927379 - 3.90140613426141e-16im
+#  96.559988 seconds (225.91 M allocations: 29.996 GiB, 4.40% gc time)
