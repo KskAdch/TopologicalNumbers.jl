@@ -531,6 +531,11 @@ end
 @time main()
 @time main()
 
+# using Profile
+# main()
+# Profile.clear_malloc_data()
+# main()
+
 
 
 # inv使わないver.
@@ -559,5 +564,8 @@ end
 # 3回目
 # m: -3.0, Second Chern number: 0.9793607631927379 - 3.90140613426141e-16im
 # 110.723529 seconds (251.33 M allocations: 31.571 GiB, 4.39% gc time)
+
 # m: -3.0, Second Chern number: 0.9793607631927379 - 3.90140613426141e-16im
 #  96.559988 seconds (225.91 M allocations: 29.996 GiB, 4.40% gc time)
+
+# 4回目
