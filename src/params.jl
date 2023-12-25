@@ -1,10 +1,11 @@
-@with_kw mutable struct Params{T1<:Int,T2<:AbstractFloat,T3<:Bool}
-    Hamiltonian::Function
-    dim::T1
-    N::T1
-    Hs::T1
-    gapless::T2
-    rounds::T3
+@with_kw mutable struct Params{T1,T2<:Int,T3<:Union{Int,Tuple,AbstractVector},T4<:AbstractFloat,T5<:Bool}
+    Hamiltonian::T1
+    dim::T2
+    Nfill::T2 = 0
+    Hs::T2
+    N::T3
+    gapless::T4
+    rounds::T5
 end
 
 # Define a mutable struct named TemporalSecondChern with multiple type parameters
@@ -12,7 +13,7 @@ end
     chern::T1      # Second Chern number
     k::T2          # Momentum vector
     evec::T3       # Eigenvectors
-    H::T4          # Hamiltonian
+    H::T4          # Hamiltonian or eigen vectors
     Ux::T5         # Link variables
     Uy::T5
     Uz::T5
