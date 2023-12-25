@@ -13,12 +13,13 @@ include("./calcBerryFlux.jl")
 include("./calcWeylNode.jl")
 include("./calcChernSurface.jl")
 include("./findWeylPoint.jl")
+include("secondChern.jl")
 
 export SSH, KitaevChain
 export Flux2d, Haldane, KitaevHoneycomb
 export ThoulessPump, KaneMele, BHZ
 
-export showBand, calcZ2, calcChern, calcBerryPhase
+export showBand, calcZ2, calcChern, calcSecondChern, calcBerryPhase
 export calcPhaseDiagram
 export plot1D, plot2D
 export calcBerryFlux
