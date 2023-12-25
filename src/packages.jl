@@ -1,3 +1,4 @@
+using Accessors
 using LaTeXStrings
 using LinearAlgebra
 using Parameters
