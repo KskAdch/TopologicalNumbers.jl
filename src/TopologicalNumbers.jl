@@ -18,6 +18,7 @@ include("secondChern.jl")
 export SSH, KitaevChain
 export Flux2d, Haldane, KitaevHoneycomb
 export ThoulessPump, KaneMele, BHZ
+export LatticeDirac
 
 export showBand, calcZ2, calcChern, calcSecondChern, calcBerryPhase
 export calcPhaseDiagram
