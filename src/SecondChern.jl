@@ -31,21 +31,6 @@ end
 # Define a tensor product function
 ⊗(x, y) = kron(x, y)
 
-# Function to update the Hamiltonian H in place
-function H!(p)
-    k1, k2, k3, k4 = p.sys.k
-    b = p.basis
-
-    h1 = p.m + cos(k1) + cos(k2) + cos(k3) + cos(k4)
-    h2 = sin(k1)
-    h3 = sin(k2)
-    h4 = sin(k3)
-    h5 = sin(k4)
-
-    # Update the Hamiltonian matrix in place
-    p.sys.H = h1 .* b.g1 .+ h2 .* b.g2 .+ h3 .* b.g3 .+ h4 .* b.g4 .+ h5 .* b.g5
-end
-
 # Functions to calculate and update Link variables and their inverses
 # for the links in the x, y, z, and w directions
 function linkUx!(i, j, l, m, s)
@@ -171,10 +156,14 @@ end
 # Function to set temporal parameters for the simulation
 function setParams()
     # Define Pauli matrices and Gamma matrices
-    σ₀ = @SMatrix [1 0; 0 1]
-    σ₁ = @SMatrix [0 1; 1 0]
-    σ₂ = @SMatrix [0 -im; im 0]
-    σ₃ = @SMatrix [1 0; 0 -1]
+    # σ₀ = @SMatrix [1 0; 0 1]
+    # σ₁ = @SMatrix [0 1; 1 0]
+    # σ₂ = @SMatrix [0 -im; im 0]
+    # σ₃ = @SMatrix [1 0; 0 -1]
+    σ₀ = [1 0; 0 1]
+    σ₁ = [0 1; 1 0]
+    σ₂ = [0 -im; im 0]
+    σ₃ = [1 0; 0 -1]
     g1 = σ₁ ⊗ σ₀
     g2 = σ₂ ⊗ σ₀
     g3 = σ₃ ⊗ σ₁
@@ -197,16 +186,17 @@ function setParams()
     NH = 4 # Hamiltonian size
     Nfill = 2 # Filling number
 
-    mN = 1 # Number of m values
-    # mN = 10 # Number of m values
-    # mList = range(-5.0, 5.0, length=mN) # List of m values
-    mList = [-3.0] # List of m values
+    # mN = 1 # Number of m values
+    mN = 50 # Number of m values
+    mList = range(-4.9, 4.9, length=mN) # List of m values
+    # mList = [-3.0] # List of m values
     ChernList = zeros(ComplexF64, mN) # Initialize Chern number list
 
     r = (; Nx, Ny, Nz, Nw, Kxrange, Kyrange, Kzrange, Kwrange, NH, Nfill) # Parameters for the ranges
 
 
-    k = @SVector zeros(4) # Initialize momentum vector
+    # k = @SVector zeros(4) # Initialize momentum vector
+    k = zeros(4) # Initialize momentum vector
 
     # Initialize matrices for eigenvectors, Hamiltonian, unitary matrices, and field strength tensors
     evec = [@SMatrix zeros(ComplexF64, NH, Nfill) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
@@ -292,9 +282,11 @@ function setBasis!(p)
 
     # Loop over the grid to calculate the eigenvectors
     for m in eachindex(r.Kwrange), l in eachindex(r.Kzrange), j in eachindex(r.Kyrange), i in eachindex(r.Kxrange)
-        s.k = @SVector [r.Kxrange[i], r.Kyrange[j], r.Kzrange[l], r.Kwrange[m]]
-        H!(p)
-        s.H = eigvecs(s.H)
+        # s.k = @SVector [r.Kxrange[i], r.Kyrange[j], r.Kzrange[l], r.Kwrange[m]]
+        s.k .= [r.Kxrange[i], r.Kyrange[j], r.Kzrange[l], r.Kwrange[m]]
+        # H!(p)
+        # s.H = eigvecs(s.H)
+        s.H = eigvecs(H(p))
         s.evec[i, j, l, m] = @view s.H[:, 1:r.Nfill]
     end
 
@@ -334,8 +326,88 @@ function main()
         p.ChernList[i] = s.chern # Store the calculated Chern number
     end
 
-    # makeFigure(p.mList, p.ChernList)
+    makeFigure(p.mList, p.ChernList)
 
 end
 
-@time main() # Execute the main function and measure the execution time
+function calcSecondChern()
+    main()
+end
+
+@time main()
+# @time main()
+
+
+# @views function ChernPhase!(TopologicalNumber, p::Params) # chern number # Bug
+#     @unpack N, Hs = p
+#     TopologicalNumber[:] .= zero(Float64)
+#     Link0 = zeros(ComplexF64, Hs, 2, N)
+#     Link1 = zeros(ComplexF64, Hs, 2, N)
+#     LinkN = zeros(ComplexF64, Hs, 2, N)
+#     link1 = zeros(ComplexF64, Hs)
+#     link2 = zeros(ComplexF64, Hs)
+
+#     psi_0 = zeros(ComplexF64, N, Hs, Hs)
+#     psi_1 = zeros(ComplexF64, N, Hs, Hs)
+#     psi_N = zeros(ComplexF64, N, Hs, Hs)
+#     Evec0 = zeros(N, Hs)
+#     Evec1 = zeros(N, Hs)
+
+#     psi00 = zeros(ComplexF64, Hs, Hs)
+#     psi10 = zeros(ComplexF64, Hs, Hs)
+#     psi01 = zeros(ComplexF64, Hs, Hs)
+#     Enevec = zeros(Hs)
+
+#     phi = zeros(Hs)
+#     dphi = zeros(Hs)
+
+#     for j in 1:N
+#         U!(Link0, Link1, LinkN, link1, link2, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p)
+#         for i in 1:N
+#             F!(phi, dphi, i, j, Link0, Link1, LinkN, p)
+#             TopologicalNumber[:] .+= phi[:]
+#         end
+#     end
+# end
+
+# @doc raw"""
+
+#  Calculate the first Chern numbers in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
+
+#     calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+#  Arguments
+#  - Hamiltionian::Function: The Hamiltonian matrix with two-dimensional wavenumber `k` as an argument.
+#  - N::Int=51: The number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+#  - gapless::Real: The threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+#  - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+
+
+# # Definition
+#  The first Chern number of the $n$th band $\nu_{n}$ is defined by
+# ```math
+# \nu_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}}\mathrm{Im}\left[\mathrm{Log}\left[U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,2}^{*}(\bm{k})\right]\right]
+# ```
+#  The range $\mathrm{BZ}$(Brillouin Zone) is $\bm{k}\in[0,2\pi]^{2}$. $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
+# ```math
+# U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
+# ```
+#  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
+# """
+# function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+#     Hs = size(Hamiltonian(zeros(2)), 1)
+#     p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
+
+#     TopologicalNumber = zeros(Hs)
+
+#     ChernPhase!(TopologicalNumber, p)
+
+#     if rounds == true
+#         TopologicalNumber = round.(Int, TopologicalNumber)
+#     end
+
+#     Total = sum(TopologicalNumber)
+
+#     (; TopologicalNumber, Total)
+# end
