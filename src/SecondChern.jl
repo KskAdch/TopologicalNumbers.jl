@@ -238,21 +238,21 @@ function warn_finiteImaginary(x)
 end
 
 # Main function to execute the simulation
-function SecondChern(p)
-    @unpack N, Hs = p
+function SecondChernPhase(p)
+    # @unpack N, Hs = p
 
     v = setParams(p) # Set parameters
 
     setBasis!(v, p) # Set the basis
 
-    SecondChern!(v) # Update the second Chern number
+    SecondChernPhase!(v) # Update the second Chern number
 
     v.sys.chern # Return the second Chern number
 
 end
 
 # Main function to execute the simulation
-function SecondChern!(v)
+function SecondChernPhase!(v)
     s = v.sys
 
     updateChern!(v) # Update the second Chern number
@@ -288,7 +288,7 @@ function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30
     end
     p = Params(; Hamiltonian, Nfill, N, gapless=0.0, rounds=returnRealValue, Hs, dim=4)
 
-    TopologicalNumber = SecondChern(p)
+    TopologicalNumber = SecondChernPhase(p)
     warn_finiteImaginary(TopologicalNumber)
 
     if returnRealValue == true
