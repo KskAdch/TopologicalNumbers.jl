@@ -14,7 +14,7 @@ include("./calcBerryFlux.jl")
 include("./calcWeylNode.jl")
 include("./calcChernSurface.jl")
 include("./findWeylPoint.jl")
-include("./secondChern.jl")
+include("./SecondChern.jl")
 
 # algorithms
 export SecondChern_FHS
