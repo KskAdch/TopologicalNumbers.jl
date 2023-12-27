@@ -163,7 +163,7 @@ end
 @doc raw"""
     calcPhaseDiagram(H::Function, param_range::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
 """
-function calcPhaseDiagram(H::Function, param_range::T1, alg::T2; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T1<:AbstractVector,T2<:Union{String,TopologicalNumbersAlgorithms}}
+function calcPhaseDiagram(H::Function, param_range::T1, alg::T2; N::T3=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T1<:AbstractVector,T2<:Union{String,TopologicalNumbersAlgorithms},T3<:Union{Int,Tuple,AbstractVector}}
 
     dim = Hs = 0
     Hamiltonian(k) = H(k, 0.0)
@@ -210,7 +210,7 @@ end
 @doc raw"""
     calcPhaseDiagram(H::Function, param_range1::T, param_range2::T, alg::String; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T<:AbstractVector}
 """
-function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::T3; N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T1<:AbstractVector,T2<:AbstractVector,T3<:Union{String,TopologicalNumbersAlgorithms}}
+function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::T3; N::T4=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false) where {T1<:AbstractVector,T2<:AbstractVector,T3<:Union{String,TopologicalNumbersAlgorithms},T4<:Union{Int,Tuple,AbstractVector}}
 
     dim = Hs = 0
     Hamiltonian(k) = H(k, (0.0, 0.0))
