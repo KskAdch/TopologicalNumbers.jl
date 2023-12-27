@@ -1,6 +1,7 @@
 module TopologicalNumbers
 
 include("./packages.jl")
+include("./algorithms.jl")
 include("./params.jl")
 include("./models.jl")
 include("./showBand.jl")
@@ -13,13 +14,18 @@ include("./calcBerryFlux.jl")
 include("./calcWeylNode.jl")
 include("./calcChernSurface.jl")
 include("./findWeylPoint.jl")
-include("secondChern.jl")
+include("./secondChern.jl")
 
+# algorithms
+export SecondChern_FHS
+
+# models
 export SSH, KitaevChain
 export Flux2d, Haldane, KitaevHoneycomb
 export ThoulessPump, KaneMele, BHZ
 export LatticeDirac
 
+# main functions
 export showBand, calcZ2, calcChern, calcSecondChern, calcBerryPhase
 export calcPhaseDiagram
 export plot1D, plot2D
