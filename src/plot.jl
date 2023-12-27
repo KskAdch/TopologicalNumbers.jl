@@ -22,7 +22,7 @@ function plot1D(::T1, nums::T2, param_range::T3; labels::Bool=true, disp::Bool=t
     ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
-        ax.scatter(param_range, nums, marker=marker(i), label="Band$(i)")
+        ax.scatter(param_range, nums, marker=marker(1), label="Band$(i)")
         ax.legend()
     end
 
