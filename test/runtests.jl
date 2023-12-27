@@ -432,6 +432,56 @@ using PythonPlot
         @test result.Nodes == [[1, -1], [-1, 1]]
     end
 
+    @testset "4D case" begin
+        @testset "SecondChern" begin
+            @testset "Lattice Dirac model" begin
+
+                function H₀(k, p) # landau
+                    k1, k2, k3, k4 = k
+                    m = p
+
+                    # Define Pauli matrices and Gamma matrices
+                    σ₀ = [1 0; 0 1]
+                    σ₁ = [0 1; 1 0]
+                    σ₂ = [0 -im; im 0]
+                    σ₃ = [1 0; 0 -1]
+                    g1 = kron(σ₁, σ₀)
+                    g2 = kron(σ₂, σ₀)
+                    g3 = kron(σ₃, σ₁)
+                    g4 = kron(σ₃, σ₂)
+                    g5 = kron(σ₃, σ₃)
+
+                    h1 = m + cos(k1) + cos(k2) + cos(k3) + cos(k4)
+                    h2 = sin(k1)
+                    h3 = sin(k2)
+                    h4 = sin(k3)
+                    h5 = sin(k4)
+
+                    # Update the Hamiltonian matrix in place
+                    h1 .* g1 .+ h2 .* g2 .+ h3 .* g3 .+ h4 .* g4 .+ h5 .* g5
+                end
+                @test H₀((0.0, 0.0, 0.0, 0.0), -3.0) == LatticeDirac((0.0, 0.0, 0.0, 0.0), -3.0)
+                H(k) = H₀(k, -3.0)
+
+                N = (10, 10, 10, 10)
+
+                @test calcSecondChern(H; N).TopologicalNumber ≈ 0.8309301430562057
+
+                param = range(-4.9, 4.9, length=4)
+                result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10)
+
+                nums = [0.0010237313095167225, -2.0667333080974735, 2.1572606447321454, -0.0009805850180973213]
+                @test result.nums ≈ nums
+
+
+                result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, rounds=false)
+                nums = ComplexF64[0.0010237313095167225+8.29577265997263e-17im, -2.0667333080974735-1.6878307095102013e-16im, 2.1572606447321454+3.05582947604634e-16im, -0.0009805850180973213+3.3561217905699694e-17im]
+                @test result.nums ≈ nums
+            end
+
+        end
+    end
+
     @testset "model" begin
         @testset "SSH" begin
             H(k) = SSH(k, (0.3, 0.5))
@@ -543,6 +593,25 @@ using PythonPlot
                 @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
             end
             # @test abs(sum(result.Ene)) < 1e-10
+        end
+
+        @testset "LatticeDirac" begin
+            H(k) = LatticeDirac(k, -3.0)
+
+            N = 11
+            k = range(-π, π, length=N)
+            bandsum = (-54020.051075291514, -54020.0510752915, 54020.0510752915, 54020.051075291514)
+            result = showBand(H; N=N)
+
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
+            @test result.k[:, 3] == k
+            @test result.k[:, 4] == k
+            for i in 1:size(result.Ene, 5)
+                @test sum(result.Ene[:, :, :, :, i]) ≈ bandsum[i]
+            end
+
+            @test abs(sum(result.Ene)) < 1e-10
         end
     end
 

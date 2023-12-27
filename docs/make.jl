@@ -39,6 +39,9 @@ makedocs(;
             "Three-dimensional case (Z)" => [
                 "Weyl semimetal" => "3D/Weyl.md",
             ],
+            "Four-dimensional case (Z)" => [
+                "Lattice Dirac model" => "4D/LatticeDirac.md",
+            ],
         ],
         "Library" => [
             "Public" => "lib/public.md",
