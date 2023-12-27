@@ -471,12 +471,12 @@ using PythonPlot
                 result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10)
 
                 nums = [0.0010237313095167225, -2.0667333080974735, 2.1572606447321454, -0.0009805850180973213]
-                @test result.nums ≈ num
+                @test result.nums ≈ nums
 
 
                 result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, rounds=false)
                 nums = ComplexF64[0.0010237313095167225+8.29577265997263e-17im, -2.0667333080974735-1.6878307095102013e-16im, 2.1572606447321454+3.05582947604634e-16im, -0.0009805850180973213+3.3561217905699694e-17im]
-                @test result.nums ≈ num
+                @test result.nums ≈ nums
             end
 
         end
