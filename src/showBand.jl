@@ -28,6 +28,32 @@ function Ene2D(p::Params) # 2D Energy
     k, Ene
 end
 
+function Ene4D(p::Params) # 4D Energy
+    @unpack Hamiltonian, N, Hs = p
+
+    k = range(-π, π, length=N)
+    k0 = zeros(4)
+    Ene = zeros(N, N, N, N, Hs)
+
+    for m in 1:N
+        k0[4] = k[m]
+        for l in 1:N
+            k0[3] = k[l]
+            for j in 1:N
+                k0[2] = k[j]
+                for i in 1:N
+                    k0[1] = k[i]
+                    Ene[i, j, l, m, :] .= eigvals!(Hamiltonian(k0))
+                end
+            end
+        end
+    end
+    k = hcat(k, k)
+    k = hcat(k, k)
+    k = hcat(k, k)
+    k, Ene
+end
+
 function diagram(p::Params, p_out)
     @unpack dim, N, Hs = p
     @unpack labels, disp, png, pdf, svg = p_out
@@ -83,6 +109,11 @@ function diagram(p::Params, p_out)
         else
             plotclose()
         end
+    elseif dim == 4
+
+        k, Ene = Ene4D(p)
+        plotclose()
+
     end
 
     return k, Ene, fig
@@ -132,11 +163,21 @@ function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bo
     dim = Hs = 0
 
     try
-        Hs = size(Hamiltonian(0))[1]
+        Hs = size(Hamiltonian(0.0), 1)
         dim = 1
     catch
-        Hs = size(Hamiltonian(zeros(2)))[1]
-        dim = 2
+        try
+            Hs = size(Hamiltonian(zeros(2)), 1)
+            dim = 2
+        catch
+            try
+                Hs = size(Hamiltonian(zeros(3)), 1)
+                dim = 3
+            catch
+                Hs = size(Hamiltonian(zeros(4)), 1)
+                dim = 4
+            end
+        end
     end
 
     p = Params(; Hamiltonian, dim, N, Hs, gapless=0.0, rounds=false)
