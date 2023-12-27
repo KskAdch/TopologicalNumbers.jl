@@ -9,6 +9,31 @@ end
 @doc raw"""
     plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
 """
+function plot1D(::T1, nums::T2, param_range::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:SecondChernAlgorithms,T2<:AbstractVector,T3<:AbstractVector}
+
+    fig = figure()
+    ax = fig.add_subplot(111)
+
+    if labels == true
+        ax.set_xlabel(L"p")
+        ax.set_ylabel(L"\nu")
+    end
+    ax.grid()
+    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
+
+    if disp == true || png == true || pdf == true || svg == true
+        ax.scatter(param_range, nums, marker=marker(i), label="Band$(i)")
+        ax.legend()
+    end
+
+    p = (; disp, png, pdf, svg, filename)
+    output(fig, p)
+    fig
+end
+
+@doc raw"""
+    plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
+"""
 function plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
 
     fig = figure()
