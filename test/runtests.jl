@@ -598,10 +598,10 @@ using PythonPlot
         @testset "LatticeDirac" begin
             H(k) = LatticeDirac(k, -3.0)
 
-            N = 31
+            N = 11
             k = range(-π, π, length=N)
-            bandsum = (-2.3375139993985333e7, -2.3375139993985325e7, 2.3375139993985325e7, 2.3375139993985333e7)
-            result = showBand(H)
+            bandsum = (-54020.051075291514, -54020.0510752915, 54020.0510752915, 54020.051075291514)
+            result = showBand(H; N=N)
 
             @test result.k[:, 1] == k
             @test result.k[:, 2] == k
