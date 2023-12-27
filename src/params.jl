@@ -1,11 +1,12 @@
-@with_kw mutable struct Params{T1,T2<:Int,T3<:Union{Int,Tuple,AbstractVector},T4<:AbstractFloat,T5<:Bool}
-    Hamiltonian::T1
-    dim::T2
-    Nfill::T2 = 0
-    Hs::T2
-    N::T3
-    gapless::T4
-    rounds::T5
+
+@with_kw mutable struct Params{T1<:Int,T2<:Union{Int,Tuple,AbstractVector},T3<:AbstractFloat,T4<:Bool}
+    Hamiltonian::Function
+    dim::T1
+    Nfill::T1 = 0
+    Hs::T1
+    N::T2
+    gapless::T3
+    rounds::T4
 end
 
 # Define a mutable struct named TemporalSecondChern with multiple type parameters
