@@ -154,9 +154,7 @@ function update1D!(::T, nums, num0, H, alg!, range1, mod::UseMPI, p::Params) whe
         update1Din!(T(), i, nums, num0, H, alg!, range1, p)
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
@@ -176,9 +174,7 @@ function update1D!(::T, nums, num0, H, alg!, range1, idxs::ProgressBar, mod::Use
         update1Din!(T(), i, nums, num0, H, alg!, range1, p)
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
@@ -197,9 +193,7 @@ function update2D!(::T, nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Par
         end
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
@@ -221,9 +215,7 @@ function update2D!(::T, nums, num0, H, alg!, range1, range2, idxs::ProgressBar, 
         end
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
@@ -240,9 +232,7 @@ function update1D!(nums, num0, H, alg!, range1, mod::UseMPI, p::Params)
         update1Din!(i, nums, num0, H, alg!, range1, p)
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
@@ -262,9 +252,7 @@ function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, 
         update1Din!(i, nums, num0, H, alg!, range1, p)
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
@@ -283,9 +271,7 @@ function update2D!(nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Params)
         end
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
@@ -307,9 +293,7 @@ function update2D!(nums, num0, H, alg!, range1, range2, idxs::ProgressBar, mod::
         end
     end
 
-    nums_temp = similar(nums)
-    mod.MPI.Allreduce!(nums, nums_temp, 4, mod.MPI.SUM, comm)
-    nums = nums_temp
+    nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
     mod.MPI.Barrier(comm)
 end
