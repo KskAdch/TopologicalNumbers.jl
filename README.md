@@ -20,7 +20,7 @@ This package mainly includes the following functions:
 
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
-It is confirmed to work on Julia 1.6 (LTS) and 1.9.
+It is confirmed to work on Julia 1.6 (LTS) and 1.10.
 
 
 ## Installation
