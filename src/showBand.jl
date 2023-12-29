@@ -131,7 +131,8 @@ function output(k, Ene, fig, p)
         savefig(filename * ".svg")
     end
     if disp == true
-        plotshow()
+        # plotshow()
+        display(fig)
     end
     if value == true
         return (; k, Ene)
