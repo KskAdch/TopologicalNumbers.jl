@@ -20,6 +20,9 @@ include("./SecondChern.jl")
 # algorithms
 export SecondChern_FHS
 
+# parallel environment
+export UseSingleThread, UseThreads, UseMPI
+
 # models
 export SSH, KitaevChain
 export Flux2d, Haldane, KitaevHoneycomb
