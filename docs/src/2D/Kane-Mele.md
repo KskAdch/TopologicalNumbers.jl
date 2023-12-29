@@ -35,7 +35,7 @@ julia> H(k) = H₀(k, (1, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/2e82e405-aaa3-4851-bd71-5ba12b1c6b3c)
+![Dispersion of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/2a1f8488-0e5b-4d79-be68-88bb2d744910)
 
 
 Next, we can compute the $\mathbb{Z}_2$ numbers using `calcZ2`:
@@ -65,7 +65,7 @@ julia> param = range(-1.0, 1.0, length=1001)
 julia> calcPhaseDiagram(H, param, "Z2"; plot=true)
 ```
 
-![One-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/a6b58620-9deb-4594-9c32-4a728a79c7d0)
+![One-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/90fadd80-b5a0-4b0a-8788-1d398ea8877b)
 
 
 Also, two-dimensional phase diagram is given by:
@@ -76,4 +76,4 @@ julia> calcPhaseDiagram(H₀, param, param, "Z2"; plot=true)
 ```
 
 
-![Two-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/a5a3e842-ec96-4da5-8e0c-f03a2b551ed3)
+![Two-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/4fe6d699-e3f9-45cd-b176-b4f1216d39d8)

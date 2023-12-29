@@ -19,7 +19,7 @@ julia> H(k) = H₀(k, (0.9, 1.0))
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/a586aa22-6c79-454e-a82f-6f5056d98f6c)
+![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/87c83aba-92db-4bad-832c-c2bcbbbae335)
 
 Next, we can calculate the winding numbers using `calcBerryPhase`:
 
@@ -49,7 +49,7 @@ julia> param = range(-2.0, 2.0, length=1001)
 julia> calcPhaseDiagram(H, param, "BerryPhase"; plot=true)
 ```
 
-![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/2b53e455-83ee-42d5-9824-84120c2be093)
+![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/446c926d-4ddb-49c4-9f48-702ff71906ce)
 
 Also, two-dimensional phase diagram is given by:
 
@@ -58,4 +58,4 @@ julia> param = range(-2.0, 2.0, length=101)
 julia> calcPhaseDiagram(H₀, param, param, "BerryPhase"; plot=true)
 ```
 
-![Two-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/0ceef1a3-01fd-4e8b-9f01-4a4932039d26)
+![Two-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/adac3cbf-64ce-4324-964f-f42a66948fd4)

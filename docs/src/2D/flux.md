@@ -35,7 +35,7 @@ julia> H(k) = H₀(k, 1)
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/8470121f-bdad-4960-9848-7ade1ae805d3)
+![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/630d8fc6-e1ee-4f0c-855e-80ee1b8c115f)
 
 
 Then we can compute the Chern numbers using `calcChern`:
@@ -62,6 +62,5 @@ One-dimensional phase diagram is given by:
 julia> param = 1:6
 julia> calcPhaseDiagram(H₀, param, "Chern"; plot=true)
 ```
-%%%dummy%%%
-![One-dimensional phase diagram](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/f9c179c3-1275-4640-ac21-0d10737fcaf7)
-%%%dummy%%%
+
+![One-dimensional phase diagram](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/42f0532e-03b5-4d4f-a8e1-4777a9777d13)

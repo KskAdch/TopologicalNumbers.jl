@@ -27,7 +27,7 @@ julia> showBand(H; value=false, disp=true)
 ```
 
 
-![Band structure of Kitaev honeycomb model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/0e3a79b5-896c-4fca-ba14-6af1ce827b11)
+![Band structure of Kitaev honeycomb model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/68e8a814-7f5d-4a9c-9abb-2dad90e808e9)
 
 
 Then we can compute the Chern numbers using `calcChern`:
@@ -58,7 +58,7 @@ julia> param = range(-1, 1, length=1000)
 julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
 ```
 
-![One-dimensional phase diagram of Kitaev honeycomb model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/1bb068c6-b6d1-4937-9067-b4bbaf97b6e1)
+![One-dimensional phase diagram of Kitaev honeycomb model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/1af15ce6-6274-4816-b0c6-50a8762c18a6)
 
 Also, two-dimensional phase diagram is given by:
 
@@ -68,4 +68,4 @@ julia> param2 = range(-1, 1, length=2)
 julia> calcPhaseDiagram(H₀, param1, param2, "Chern"; plot=true)
 ```
 
-![Two-dimensional phase diagram of Kitaev honeycomb model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/f6a36f4d-8da5-420e-a5af-ce2b05e6d596)
+![Two-dimensional phase diagram of Kitaev honeycomb model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/7801d67e-faf6-435b-aa2a-20fb721274b1)

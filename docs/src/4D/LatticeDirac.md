@@ -48,9 +48,8 @@ The argument `TopologicalNumber` in the named tuple stores the second Chern numb
 Phase diagram is given by:
 
 ```julia
-
 julia> param = range(-4.9, 4.9, length=10)
-julia> calcPhaseDiagram(H, param, SecondChern_FHS(); N=30, plot=true)
+julia> calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=30, plot=true)
 ```
 
 ![Phase diagram of lattice Dirac model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/4e967ed2-9011-4e88-85ab-3b64deaaf09a)

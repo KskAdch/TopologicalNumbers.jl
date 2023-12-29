@@ -38,19 +38,19 @@ The second argument `param` stores a range of fixed wavenumber vectors.
 Take $2\pi$ from $0$ by default.
 The third argument `nums` is a matrix that stores the Chern number of each band in each `kn`.
 
-![Chern surface of k1](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/47e4a36a-4c67-4158-ada1-31a957d19b87)
+![Chern surface of k1](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/02ba7790-4997-495a-9b74-48964271410d)
 
 ```julia
 julia> calcChernSurface(H, "k2"; plot = true)
 ```
 
-![Chern surface of k2](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/f44c1499-93dc-488e-b398-884d41ca1a6a)
+![Chern surface of k2](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/35aeb1af-41b0-4b91-9603-81a2d58772c1)
 
 ```julia
 julia> calcChernSurface(H, "k3"; plot = true)
 ```
 
-![Chern surface of k3](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/d4a98efe-8fa1-4960-9ccc-c6b71be62661)
+![Chern surface of k3](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/2827affe-0c57-42f9-828c-2740818ea425)
 
 Or, Weyl points can be found as follows:
 

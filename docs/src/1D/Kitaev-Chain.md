@@ -22,7 +22,7 @@ julia> H(k) = H₀(k, (-1.0, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Band structure of Kitaev chain model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/f3291b68-4326-4c12-b39c-73eeed924c66)
+![Band structure of Kitaev chain model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/7a11c4b0-1949-457d-8cee-9b57f43af2f1)
 
 Next, we can calculate the winding numbers using `calcBerryPhase`:
 
@@ -52,7 +52,7 @@ julia> param = range(-3.0, 0, length=601)
 julia> calcPhaseDiagram(H, param, "BerryPhase"; plot=true)
 ```
 
-![One-dimensional phase diagram of Kitaev chain model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/70d53e99-bc25-495e-a485-d267588296e3)
+![One-dimensional phase diagram of Kitaev chain model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/6b0798c3-ffa0-4bfb-b724-92aee1eda384)
 
 Also, two-dimensional phase diagram is given by:
 
@@ -62,4 +62,4 @@ julia> param2 = range(-1.0, 1.0, length=101)
 julia> calcPhaseDiagram(H₀, param1, param2, "BerryPhase"; plot=true)
 ```
 
-![Two-dimensional phase diagram of Kitaev chain model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/5c41f96b-b622-4304-b8a3-3873b25d0a6a)
+![Two-dimensional phase diagram of Kitaev chain model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/937f9c32-f63e-414e-bc12-92c0008d11d2)
