@@ -57,9 +57,8 @@ julia> calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=30, plot=true)
 A more dense diagram can also be obtained:
 
 ```julia
-
 julia> param = range(-4.9, 4.9, length=50)
-julia> calcPhaseDiagram(H, param, SecondChern_FHS(); N=30, plot=true)
+julia> calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=30, plot=true)
 ```
 
 ![Dense phase diagram of lattice Dirac model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/9449651c-46f4-4141-ac87-161e9e5fbf28)
