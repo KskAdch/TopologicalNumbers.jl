@@ -381,7 +381,7 @@ H(k)=\begin{pmatrix}
 where $t_{sp}$ is the amplitude of the mixed hopping between s- and p-orbitals in the tight binding model.
 $t_{ss}$ is the hopping between s-orbitals, $t_{pp}$ is the hopping between p-orbitals, and $t_{1}=t_{s}-t_{p}$, $t_{2}=t_{s}+t_{p}$.
 $\epsilon_{s}$ and $\epsilon_{p}$ are the site potential terms for the s- and p-orbitals, $\epsilon_{1}\epsilon_{s}s+\epsilon_{p}$, $\epsilon_{2}=\epsilon_{s}-\epsilon_{p}.
-Nondimensionalize with $t_{1}=\epsilon_{1}=1$ and $\epsilon_{2},t_{2}=$`p`.
+Nondimensionalize with $t_{sp}=t_{1}=\epsilon_{1}=1$ and $\epsilon_{2},t_{2}=$`p`.
 
 # Examples
 
