@@ -4,35 +4,35 @@ As an example of a two-dimensional topological insulator, the Kane-Mele model is
 
 ```julia
 julia> function H₀(k, p) # Kane-Mele
-    k1, k2 = k
-    t = 1
-    λₛₒ = p
+           k1, k2 = k
+           t = 1
+           λₛₒ = p
 
-    R1 = 0
-    R2 = 0
-    R3 = 2λₛₒ*(sin(k1) - sin(k2) - sin(k1-k2))
-    R4 = -t*(sin(k1) + sin(k2))
-    R0 = -t*(cos(k1) + cos(k2) + 1)
+           R1 = 0
+           R2 = 0
+           R3 = 2λₛₒ*(sin(k1) - sin(k2) - sin(k1-k2))
+           R4 = -t*(sin(k1) + sin(k2))
+           R0 = -t*(cos(k1) + cos(k2) + 1)
 
-    s0 = [1 0; 0 1]
-    sx = [0 1; 1 0]
-    sy = [0 -im; im 0]
-    sz = [1 0; 0 -1]
+           s0 = [1 0; 0 1]
+           sx = [0 1; 1 0]
+           sy = [0 -im; im 0]
+           sz = [1 0; 0 -1]
 
-    a1 = kron(sz, sx)
-    a2 = kron(sz, sy)
-    a3 = kron(sz, sz)
-    a4 = kron(sy, s0)
-    a0 = kron(sx, s0)
+           a1 = kron(sz, sx)
+           a2 = kron(sz, sy)
+           a3 = kron(sz, sz)
+           a4 = kron(sy, s0)
+           a0 = kron(sx, s0)
 
-    R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
-end
+           R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
+       end
 ```
 
 To calculate the dispersion, execute:
 
 ```julia
-julia> H(k) = H₀(k, (1, 0.5))
+julia> H(k) = H₀(k, 0.5)
 julia> showBand(H; value=false, disp=true)
 ```
 
@@ -60,16 +60,14 @@ The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for e
 One-dimensional phase diagram is given by:
 
 ```julia
-julia> H(k, p) = H₀(k, (p, 0.5))
-
 julia> param = range(-1.0, 1.0, length=1001)
-julia> calcPhaseDiagram(H, param, "Z2"; plot=true)
+julia> calcPhaseDiagram(H₀, param, "Z2"; plot=true)
 ```
 
-![One-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/90fadd80-b5a0-4b0a-8788-1d398ea8877b)
+![One-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/779bbbb4-78c8-4599-9aba-acfe22553036)
 
 
-Also, two-dimensional phase diagram is given by:
+<!-- Also, two-dimensional phase diagram is given by:
 
 ```julia
 julia> param = range(-1.0, 1.0, length=101)
@@ -77,4 +75,4 @@ julia> calcPhaseDiagram(H₀, param, param, "Z2"; plot=true)
 ```
 
 
-![Two-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/4fe6d699-e3f9-45cd-b176-b4f1216d39d8)
+![Two-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/4fe6d699-e3f9-45cd-b176-b4f1216d39d8) -->

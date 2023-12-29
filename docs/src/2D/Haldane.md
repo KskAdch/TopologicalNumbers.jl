@@ -25,7 +25,7 @@ julia> function H₀(k, p) # Haldane
 The band structure is computed as follows:
 
 ```julia
-julia> H(k) = H₀(k, (π/3, 0.5))
+julia> H(k) = H₀(k, (1, π/3, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
@@ -55,7 +55,7 @@ The second argument `Total` stores the total of the first Chern numbers for each
 One-dimensional phase diagram is given by:
 
 ```julia
-julia> H(k, p) = H₀(k, (p, 2.5))
+julia> H(k, p) = H₀(k, (1, p, 2.5))
 
 julia> param = range(-π, π, length=1000)
 julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
@@ -66,6 +66,7 @@ julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
 Also, two-dimensional phase diagram is given by:
 
 ```julia
+julia> H(k, p) = H₀(k, (1, p[1], p[2]))
 julia> param1 = range(-π, π, length=100)
 julia> param2 = range(-6.0, 6.0, length=100)
 julia> calcPhaseDiagram(H₀, param1, param2, "Chern"; plot=true)
