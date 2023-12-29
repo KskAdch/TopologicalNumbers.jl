@@ -1,5 +1,5 @@
 using Accessors
-using Distributions
+using Distributed
 using LaTeXStrings
 using LinearAlgebra
 using Parameters
