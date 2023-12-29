@@ -4,12 +4,15 @@ Here's a simple example of the SSH Hamiltonian:
 
 ```julia
 julia> using TopologicalNumbers
-julia> function H₀(k, p) # SSH
-            [
-                0 p[1]+p[2]*exp(-im * k)
-                p[1]+p[2]*exp(im * k) 0
-            ]
-        end
+julia> function H₀(k, p)
+    t₁ = 1
+    t₂ = p
+
+    [
+        0 t₁+t₂*exp(-im * k)
+        t₁+t₂*exp(im * k) 0
+    ]
+end
 ```
 
 The band structure is computed as follows:

@@ -5,7 +5,8 @@ As an example of a two-dimensional topological insulator, the Kane-Mele model is
 ```julia
 julia> function H₀(k, p) # Kane-Mele
     k1, k2 = k
-    t, λₛₒ = p
+    t = 1
+    λₛₒ = p
 
     R1 = 0
     R2 = 0

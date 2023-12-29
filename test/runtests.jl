@@ -16,7 +16,8 @@ using PythonPlot
                 p[1]+p[2]*exp(im * k) 0
             ]
         end
-        @test H₀(0.0, (1.0, 1.0)) == SSH(0.0, (1.0, 1.0))
+        # @test H₀(0.0, (1.0, 1.0)) == SSH(0.0, (1.0, 1.0))
+        @test H₀(0.0, (1.0, 1.0)) == SSH(0.0, 1.0)
         H(k) = H₀(k, (0.9, 1.0))
 
         N = 51
@@ -199,7 +200,8 @@ using PythonPlot
 
                     h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
                 end
-                @test H₀((0.0, 0.0), (0.5, 1.0)) == Haldane((0.0, 0.0), (0.5, 1.0))
+                # @test H₀((0.0, 0.0), (0.5, 1.0)) == Haldane((0.0, 0.0), (0.5, 1.0))
+                @test H₀((0.0, 0.0), (0.5, 1.0)) == Haldane((0.0, 0.0), (1, 0.5, 1.0))
                 H(k) = H₀(k, (π / 2, 1.0))
 
                 N = 51
@@ -307,7 +309,8 @@ using PythonPlot
 
                 R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
             end
-            @test H₀((0.0, 0.0), (0.5, 1.0)) == KaneMele((0.0, 0.0), (0.5, 1.0))
+            # @test H₀((0.0, 0.0), (0.5, 1.0)) == KaneMele((0.0, 0.0), (0.5, 1.0))
+            @test H₀((0.0, 0.0), (1, 1.0)) == KaneMele((0.0, 0.0), 1.0)
             H(k) = H₀(k, (1.0, 1.0))
 
             N = 51
@@ -484,11 +487,13 @@ using PythonPlot
 
     @testset "model" begin
         @testset "SSH" begin
-            H(k) = SSH(k, (0.3, 0.5))
+            # H(k) = SSH(k, (0.3, 0.5))
+            H(k) = SSH(k, 0.6)
 
             N = 51
             k = range(-π, π, length=N)
-            bandsum = (-27.505964588866973, 27.505964588866973)
+            # bandsum = (-27.505964588866973, 27.505964588866973)
+            bandsum = (-55.01192917773395, 55.01192917773395)
             result = showBand(H)
 
             @test result.k == k
@@ -532,7 +537,8 @@ using PythonPlot
         end
 
         @testset "Haldane" begin
-            H(k) = Haldane(k, (0.5, 0.5))
+            # H(k) = Haldane(k, (0.5, 0.5))
+            H(k) = Haldane(k, (1, 0.5, 0.5))
 
             N = 51
             k = range(-π, π, length=N)
@@ -548,7 +554,8 @@ using PythonPlot
         end
 
         @testset "KitaevHoneycomb" begin
-            H(k) = KitaevHoneycomb(k, (1.0, 0.2))
+            # H(k) = KitaevHoneycomb(k, (1.0, 0.2))
+            H(k) = KitaevHoneycomb(k, 0.2)
 
             N = 51
             k = range(-π, π, length=N)
@@ -564,7 +571,8 @@ using PythonPlot
         end
 
         @testset "KaneMele" begin
-            H(k) = KaneMele(k, (1.0, 0.3))
+            # H(k) = KaneMele(k, (1.0, 0.3))
+            H(k) = KaneMele(k, 0.3)
 
             N = 51
             k = range(-π, π, length=N)

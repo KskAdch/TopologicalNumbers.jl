@@ -3,14 +3,14 @@
 A two-dimensional example is presented here:
 
 ```julia
-julia> function H₀(k, p) # landau
+julia> function H₀(k, p)
     k1, k2 = k
+    Hsize, ν = p
     t = 1
 
-    Hsize = 6
     Hmat = zeros(ComplexF64, Hsize, Hsize)
 
-    ϕ = 2π * p / Hsize
+    ϕ = 2π * ν / Hsize
 
     for i in 1:Hsize
         Hmat[i, i] = -2t * cos(k2 - i * ϕ)

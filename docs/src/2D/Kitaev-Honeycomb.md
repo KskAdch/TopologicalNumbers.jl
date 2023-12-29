@@ -4,18 +4,19 @@ Hamiltonian of Kitaev honeycomb model is given by:
 
 ```julia
 julia> function H₀(k, p) # Kitaev
-           k1, k2 = k
-           K, κ = p
+            k1, k2 = k
+            K₁ = 1
+            K₂ = p
 
-           hx = -κ * (sin(k2) - sin(k1) + sin(k1 - k2))
-           hy = -K * (sin(k1) + sin(k2))
-           hz = K * (cos(k1) + cos(k2) + 1)
+            hx = -K₂ * (sin(k2) - sin(k1) + sin(k1 - k2))
+            hy = -K₁ * (sin(k1) + sin(k2))
+            hz = K₁ * (cos(k1) + cos(k2) + 1)
 
-           sx = [0 1; 1 0]
-           sy = [0 -im; im 0]
-           sz = [1 0; 0 -1]
+            sx = [0 1; 1 0]
+            sy = [0 -im; im 0]
+            sz = [1 0; 0 -1]
 
-           hx .* sx .+ hy .* sy .+ hz .* sz
+            hx .* sx .+ hy .* sy .+ hz .* sz
        end
 ```
 
