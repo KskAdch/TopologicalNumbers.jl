@@ -85,61 +85,61 @@ function update2D!(nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::Use
 end
 
 
-function update1D!(::T, nums, num0, H, alg!, range1, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
-    Base.Threads.@threads for i in eachindex(range1)
-        update1Din!(T(), i, nums, num0, H, alg!, range1, p)
-    end
-end
+# function update1D!(::T, nums, num0, H, alg!, range1, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
+#     Base.Threads.@threads for i in eachindex(range1)
+#         update1Din!(T(), i, nums, num0, H, alg!, range1, p)
+#     end
+# end
 
-function update1D!(::T, nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
-    Base.Threads.@threads for i in idxs
-        update1Din!(T(), i, nums, num0, H, alg!, range1, p)
-    end
-end
+# function update1D!(::T, nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
+#     Base.Threads.@threads for i in idxs
+#         update1Din!(T(), i, nums, num0, H, alg!, range1, p)
+#     end
+# end
 
-function update2D!(::T, nums, num0, H, alg!, range1, range2, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
-    Base.Threads.@threads for i in eachindex(range1)
-        for j in eachindex(range2)
-            update2Din!(T(), i, j, nums, num0, H, alg!, range1, range2, p)
-        end
-    end
-end
+# function update2D!(::T, nums, num0, H, alg!, range1, range2, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
+#     Base.Threads.@threads for i in eachindex(range1)
+#         for j in eachindex(range2)
+#             update2Din!(T(), i, j, nums, num0, H, alg!, range1, range2, p)
+#         end
+#     end
+# end
 
-function update2D!(::T, nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
-    Base.Threads.@threads for i in idxs
-        for j in eachindex(range2)
-            update2Din!(T(), i, j, nums, num0, H, alg!, range1, range2, p)
-        end
-    end
-end
+# function update2D!(::T, nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
+#     Base.Threads.@threads for i in idxs
+#         for j in eachindex(range2)
+#             update2Din!(T(), i, j, nums, num0, H, alg!, range1, range2, p)
+#         end
+#     end
+# end
 
-function update1D!(nums, num0, H, alg!, range1, ::UseThreads, p::Params)
-    Base.Threads.@threads for i in eachindex(range1)
-        update1Din!(i, nums, num0, H, alg!, range1, p)
-    end
-end
+# function update1D!(nums, num0, H, alg!, range1, ::UseThreads, p::Params)
+#     Base.Threads.@threads for i in eachindex(range1)
+#         update1Din!(i, nums, num0, H, alg!, range1, p)
+#     end
+# end
 
-function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseThreads, p::Params)
-    Base.Threads.@threads for i in idxs
-        update1Din!(i, nums, num0, H, alg!, range1, p)
-    end
-end
+# function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseThreads, p::Params)
+#     Base.Threads.@threads for i in idxs
+#         update1Din!(i, nums, num0, H, alg!, range1, p)
+#     end
+# end
 
-function update2D!(nums, num0, H, alg!, range1, range2, ::UseThreads, p::Params)
-    Base.Threads.@threads for i in eachindex(range1)
-        for j in eachindex(range2)
-            update2Din!(i, j, nums, num0, H, alg!, range1, range2, p)
-        end
-    end
-end
+# function update2D!(nums, num0, H, alg!, range1, range2, ::UseThreads, p::Params)
+#     Base.Threads.@threads for i in eachindex(range1)
+#         for j in eachindex(range2)
+#             update2Din!(i, j, nums, num0, H, alg!, range1, range2, p)
+#         end
+#     end
+# end
 
-function update2D!(nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseThreads, p::Params)
-    Base.Threads.@threads for i in idxs
-        for j in eachindex(range2)
-            update2Din!(i, j, nums, num0, H, alg!, range1, range2, p)
-        end
-    end
-end
+# function update2D!(nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseThreads, p::Params)
+#     Base.Threads.@threads for i in idxs
+#         for j in eachindex(range2)
+#             update2Din!(i, j, nums, num0, H, alg!, range1, range2, p)
+#         end
+#     end
+# end
 
 
 function update1D!(::T, nums, num0, H, alg!, range1, mod::UseMPI, p::Params) where {T<:SecondChernAlgorithms}
