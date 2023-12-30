@@ -66,8 +66,10 @@ julia> calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=30, plot=true)
 Since the system dimension is high,
 a computational cost is high comparing with other low dimensional cases.
 
-並列環境を使いたい場合は`MPI.jl`を利用することができます。
-`test.jl`という名前のファイルを以下の内容で作成しましょう。
+
+
+If you want to use a parallel environment, you can utilize MPI.jl.
+Let's create a file named test.jl with the following content:
 ```julia
 using TopologicalNumbers
 using MPI
@@ -79,8 +81,8 @@ param = range(-4.9, 4.9, length=10)
 result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=30, parallel=UseMPI(MPI), progress=true)
 plot1D(result; labels=true, disp=false, pdf=true)
 ```
-`mpirun`などを用いて（例えば`4`コアで）以下のように計算できます。
+You can perform calculations using `mpirun` (for example, with `4` cores) as follows:
 ```bash
 mpirun -np 4 julia --project test.jl
 ```
-より詳細には`MPI.jl`のdocument [https://juliaparallel.org/MPI.jl/stable/](https://juliaparallel.org/MPI.jl/stable/)を参照してください。
+For more details, refer to the `MPI.jl` document at [https://juliaparallel.org/MPI.jl/stable/](https://juliaparallel.org/MPI.jl/stable/).
