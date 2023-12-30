@@ -65,3 +65,24 @@ julia> calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=30, plot=true)
 
 Since the system dimension is high,
 a computational cost is high comparing with other low dimensional cases.
+
+
+
+If you want to use a parallel environment, you can utilize MPI.jl.
+Let's create a file named test.jl with the following content:
+```julia
+using TopologicalNumbers
+using MPI
+
+H₀(k, p) = LatticeDirac(k, p)
+H(k) = H₀(k, -3.0)
+
+param = range(-4.9, 4.9, length=10)
+result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=30, parallel=UseMPI(MPI), progress=true)
+plot1D(result; labels=true, disp=false, pdf=true)
+```
+You can perform calculations using `mpirun` (for example, with `4` cores) as follows:
+```bash
+mpirun -np 4 julia --project test.jl
+```
+For more details, refer to the `MPI.jl` document at [https://juliaparallel.org/MPI.jl/stable/](https://juliaparallel.org/MPI.jl/stable/).

@@ -2,6 +2,8 @@ using TopologicalNumbers
 using LinearAlgebra
 using Test
 
+using MPI
+
 using PythonPlot
 
 # using Aqua
@@ -40,6 +42,10 @@ using PythonPlot
 
         param = range(-2.0, 2.0, length=11)
         result = calcPhaseDiagram(H, param, "BerryPhase")
+        calcPhaseDiagram(H, param, "BerryPhase"; progress=true)
+        result_MPI = calcPhaseDiagram(H, param, "BerryPhase"; parallel=UseMPI(MPI))
+        calcPhaseDiagram(H, param, "BerryPhase"; parallel=UseMPI(MPI), progress=true)
+        @test result.nums == result_MPI.nums
 
         num = [0 0; 0 0; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 0 0; 0 0]
         @test result.nums == num
@@ -59,6 +65,11 @@ using PythonPlot
 
         param = range(-2.0, 2.0, length=3)
         result = calcPhaseDiagram(H₀, param, param, "BerryPhase")
+        calcPhaseDiagram(H₀, param, param, "BerryPhase"; progress=true)
+        result_MPI = calcPhaseDiagram(H₀, param, param, "BerryPhase"; parallel=UseMPI(MPI))
+        calcPhaseDiagram(H₀, param, param, "BerryPhase"; parallel=UseMPI(MPI), progress=true)
+        @test result.nums == result_MPI.nums
+
         num = zeros(2, 3, 3)
         num[:, :, 1] = [0 1 0; 0 1 0]
         num[:, :, 2] = [0 0 0; 0 0 0]
@@ -76,11 +87,7 @@ using PythonPlot
 
         param = range(-2.0, 2.0, length=4)
         result = calcPhaseDiagram(H₀, param, param, "BerryPhase"; rounds=false)
-        num = zeros(2, 4, 4) # ↓結果おかしい気がする
-        # num[:, :, 1] = [8.481479150569378e-16 0.9999999999999994 0.9999999999999994 0.4803921568627457; 2.760898160992636e-16 0.9999999999999999 0.9999999999999997 0.9999999999999994]
-        # num[:, :, 2] = [0.0 5.654319433712919e-16 0.4803921568627457 0.0; 2.2639364920139617e-17 2.7056801977727833e-16 0.9999999999999994 1.6565388965955818e-17]
-        # num[:, :, 3] = [0.0 0.4803921568627457 5.654319433712919e-16 0.0; 1.6565388965955818e-17 0.9999999999999994 2.7056801977727833e-16 2.2639364920139617e-17]
-        # num[:, :, 4] = [0.4803921568627457 0.9999999999999994 0.9999999999999994 8.481479150569378e-16; 0.9999999999999994 0.9999999999999997 0.9999999999999999 2.760898160992636e-16]
+        num = zeros(2, 4, 4)
         num[:, :, 1] = [3.3306690738754696e-16 0.9999999999999998 0.9999999999999997 6.661338147750939e-16; 3.3306690738754696e-16 0.9999999999999997 0.9999999999999998 6.661338147750939e-16]
         num[:, :, 2] = [0.0 0.0 8.881784197001252e-16 0.0; 0.0 0.0 8.881784197001252e-16 0.0]
         num[:, :, 3] = [0.0 8.881784197001252e-16 0.0 0.0; 0.0 8.881784197001252e-16 0.0 0.0]
@@ -153,10 +160,11 @@ using PythonPlot
 
                 param = 1:6 # range(1, 6, length=6)
                 result = calcPhaseDiagram(H, param, "Chern")
+                calcPhaseDiagram(H, param, "Chern"; progress=true)
+                result_MPI = calcPhaseDiagram(H, param, "Chern"; parallel=UseMPI(MPI))
+                calcPhaseDiagram(H, param, "Chern"; parallel=UseMPI(MPI), progress=true)
+                @test result.nums == result_MPI.nums
 
-                # #↓結果おかしい
-                # num = [6 6 -12 -12 6 6; 0 6 -6 -6 6 0; 0 4 -2 -1 1 0; 0 -6 6 6 -6 0; -6 -6 12 12 -6 -6; 0 2 -6 1 0 0]
-                # num = [1 1 -2 -2 1 1; 0 1 -1 -1 1 0; 0 3 -3 0 -1 0; 0 -1 1 1 -1 0; -1 -1 2 2 -1 -1; 0 -2 4 -1 2 0]
                 @test result.nums[1, :] == [1, 1, -2, -2, 1, 1]
                 @test result.nums[2, :] == [0, 1, -1, -1, 1, 0]
                 @test result.nums[3, :] == [0, 0, 0, 0, 0, 0]
@@ -173,10 +181,6 @@ using PythonPlot
                 @test typeof(fig) == Figure
                 plotclose()
 
-                #↓結果おかしい
-                # result = calcPhaseDiagram(H₀, param, "Chern"; rounds=false)
-                # num = [6.000000000000002 6.0 -12.0 -12.0 6.0000000000000036 5.9999999999999964; -1.0784726957737412e-16 6.0 -6.0 -6.000000000000002 5.999999999999998 4.440892098500626e-16; 2.1763752123554674e-15 4.0 -2.0000000000000018 -1.000000000000003 1.000000000000001 -1.2492169914176273e-16; 5.358542476396547e-16 -6.0 5.999999999999998 6.0 -6.000000000000002 -3.3306690738754696e-15; -6.0000000000000036 -6.0 12.0 11.999999999999996 -6.0 -6.0; 4.018335873674939e-19 2.0 -5.999999999999998 0.9999999999999992 1.1113212383547472e-15 2.5759430987039272e-15]
-                # @test result.nums ≈ num
             end
 
             @testset "Haldane model" begin
@@ -222,6 +226,10 @@ using PythonPlot
 
                 param = range(-π, π, length=10)
                 result = calcPhaseDiagram(H, param, "Chern")
+                calcPhaseDiagram(H, param, "Chern"; progress=true)
+                result_MPI = calcPhaseDiagram(H, param, "Chern"; parallel=UseMPI(MPI))
+                calcPhaseDiagram(H, param, "Chern"; parallel=UseMPI(MPI), progress=true)
+                @test result.nums == result_MPI.nums
 
                 num = [0 0; 1 -1; 1 -1; 1 -1; 0 0; 0 0; -1 1; -1 1; -1 1; 0 0]
                 @test result.nums == num
@@ -336,6 +344,10 @@ using PythonPlot
 
             param = range(-2.0, 2.0, length=11)
             result = calcPhaseDiagram(H, param, "Z2")
+            calcPhaseDiagram(H, param, "Z2"; progress=true)
+            result_MPI = calcPhaseDiagram(H, param, "Z2"; parallel=UseMPI(MPI))
+            calcPhaseDiagram(H, param, "Z2"; parallel=UseMPI(MPI), progress=true)
+            @test result.nums == result_MPI.nums
 
             num = [1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1]
             @test result.nums == num
@@ -466,9 +478,14 @@ using PythonPlot
                 N = (10, 10, 10, 10)
 
                 @test calcSecondChern(H; N).TopologicalNumber ≈ 0.8309301430562057
+                @test calcSecondChern(H; N, parallel=UseMPI(MPI)).TopologicalNumber ≈ 0.8309301430562057
 
                 param = range(-4.9, 4.9, length=4)
                 result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10)
+                calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, progress=true)
+                result_MPI = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, parallel=UseMPI(MPI))
+                calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, parallel=UseMPI(MPI), progress=true)
+                @test result.nums ≈ result_MPI.nums
 
                 nums = [0.0010237313095167225, -2.0667333080974735, 2.1572606447321454, -0.0009805850180973213]
                 @test result.nums ≈ nums

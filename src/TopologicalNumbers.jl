@@ -2,6 +2,7 @@ module TopologicalNumbers
 
 include("./packages.jl")
 include("./algorithms.jl")
+include("./parallelEnv.jl")
 include("./params.jl")
 include("./models.jl")
 include("./showBand.jl")
@@ -18,6 +19,9 @@ include("./SecondChern.jl")
 
 # algorithms
 export SecondChern_FHS
+
+# parallel environment
+export UseSingleThread, UseThreads, UseMPI
 
 # models
 export SSH, KitaevChain

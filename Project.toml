@@ -5,6 +5,7 @@ version = "1.5.0"
 
 [deps]
 Accessors = "7d9f7c33-5ae7-4f3b-8dc6-eff91059b697"
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
@@ -14,6 +15,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
 Accessors = "0.1"
+Distributed = "^1.6"
 LaTeXStrings = "1"
 LinearAlgebra = "^1.6"
 Parameters = "0.12"
