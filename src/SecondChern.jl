@@ -223,12 +223,34 @@ function setBasis!(v, p)
 end
 
 # Function to update the second Chern number
-function updateChern!(v)
+function updateChern!(v, ::UseSingleThread)
     r = v.r
     # Loop over the grid and calculate the Chern number
     for m in eachindex(r.Kwrange)[1:end-1], l in eachindex(r.Kzrange)[1:end-1], j in eachindex(r.Kyrange)[1:end-1], i in eachindex(r.Kxrange)[1:end-1]
         chernF!(i, j, l, m, v)
     end
+end
+
+# Function to update the second Chern number
+function updateChern!(v, mod::UseMPI)
+    r = v.r
+
+    mod.MPI.Init()
+    comm = mod.MPI.COMM_WORLD
+    myrank = mod.MPI.Comm_rank(comm)
+    nprocs = mod.MPI.Comm_size(comm)
+
+    idxs = Distributed.splitrange(1, length(r.Kwrange) - 1, nprocs)[myrank+1]
+
+    # Loop over the grid and calculate the Chern number
+    for m in idxs
+        for l in eachindex(r.Kzrange)[1:end-1], j in eachindex(r.Kyrange)[1:end-1], i in eachindex(r.Kxrange)[1:end-1]
+            chernF!(i, j, l, m, v)
+        end
+    end
+    v.sys.chern = mod.MPI.Allreduce(v.sys.chern, mod.MPI.SUM, comm)
+
+    mod.MPI.Barrier(comm)
 end
 
 function warn_finiteImaginary(x)
@@ -238,24 +260,24 @@ function warn_finiteImaginary(x)
 end
 
 # Main function to execute the simulation
-function SecondChernPhase(p)
+function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     # @unpack N, Hs = p
 
     v = setParams(p) # Set parameters
 
     setBasis!(v, p) # Set the basis
 
-    SecondChernPhase!(v) # Update the second Chern number
+    SecondChernPhase!(v; parallel) # Update the second Chern number
 
     v.sys.chern # Return the second Chern number
 
 end
 
 # Main function to execute the simulation
-function SecondChernPhase!(v)
+function SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     s = v.sys
 
-    updateChern!(v) # Update the second Chern number
+    updateChern!(v, parallel) # Update the second Chern number
 
     s.chern /= 4pi^2 # Normalize the second Chern number
 
@@ -280,7 +302,7 @@ end
 # Examples
 
 """
-function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple}}
+function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true, parallel::T3=UseSingleThread()) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
 
     Hs = size(Hamiltonian(zeros(4)), 1)
     if isnothing(Nfill)
@@ -288,7 +310,7 @@ function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30
     end
     p = Params(; Hamiltonian, Nfill, N, gapless=0.0, rounds=returnRealValue, Hs, dim=4)
 
-    TopologicalNumber = SecondChernPhase(p)
+    TopologicalNumber = SecondChernPhase(p; parallel)
     warn_finiteImaginary(TopologicalNumber)
 
     if returnRealValue == true
