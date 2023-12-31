@@ -52,3 +52,16 @@ This package includes the following functions:
 - `calcWeylNode` to calculate the Weyl node in the three-dimensional case,
 - `calcChernSurface` to calculate the Chern numbers in the three-dimensional case,
 - `findWeylPoint` to find the Weyl points in the three-dimensional case.
+
+Dimensions of the Hamiltonian and corresponding functions:
+
+|function        |0D            |1D          |2D              |3D          |4D          |
+|----------------|:------------:|:----------:|:--------------:|:----------:|:----------:|
+|calcBerryPhase  |              |$\mathbb{Z}$|                |            |            |
+|calcBerryFlux   |              |            |$\mathbb{Z}$    |            |            |
+|calcChern       |              |            |$\mathbb{Z}$    |            |            |
+|calcZ2          |              |            |$\mathbb{Z}_{2}$|            |            |
+|calcWeylNode    |($\mathbb{Z}$)|            |                |$\mathbb{Z}$|            |
+|calcChernSurface|              |            |                |$\mathbb{Z}$|            |
+|findWeylPoint   |              |            |                |$\mathbb{Z}$|            |
+|calcSecondChern |              |            |                |            |$\mathbb{Z}$|
