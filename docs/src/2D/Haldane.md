@@ -4,29 +4,28 @@ Hamiltonian of Haldane model is given by:
 
 ```julia
 julia> function H₀(k, p) # Haldane
-           k1, k2 = k
-           J = 1.0
-           K = 1.0
-           ϕ, M = p
+            k1, k2 = k
+            t₁ = 1
+            t₂, ϕ, m = p
 
-           h0 = 2K * cos(ϕ) * (cos(k1) + cos(k2) + cos(k1 + k2))
-           hx = J * (1 + cos(k1) + cos(k2))
-           hy = J * (-sin(k1) + sin(k2))
-           hz = M - 2K * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
+            h0 = 2t₂ * cos(ϕ) * (cos(k1) + cos(k2) + cos(k1 + k2))
+            hx = -t₁ * (1 + cos(k1) + cos(k2))
+            hy = -t₁ * (-sin(k1) + sin(k2))
+            hz = m + 2t₂ * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
 
-           s0 = [1 0; 0 1]
-           sx = [0 1; 1 0]
-           sy = [0 -im; im 0]
-           sz = [1 0; 0 -1]
+            s0 = [1 0; 0 1]
+            sx = [0 1; 1 0]
+            sy = [0 -im; im 0]
+            sz = [1 0; 0 -1]
 
-           h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+            h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
        end
 ```
 
 The band structure is computed as follows:
 
 ```julia
-julia> H(k) = H₀(k, (π/3, 0.5))
+julia> H(k) = H₀(k, (1, π/3, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
@@ -56,7 +55,7 @@ The second argument `Total` stores the total of the first Chern numbers for each
 One-dimensional phase diagram is given by:
 
 ```julia
-julia> H(k, p) = H₀(k, (p, 2.5))
+julia> H(k, p) = H₀(k, (1, p, 2.5))
 
 julia> param = range(-π, π, length=1000)
 julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
@@ -67,6 +66,7 @@ julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
 Also, two-dimensional phase diagram is given by:
 
 ```julia
+julia> H(k, p) = H₀(k, (1, p[1], p[2]))
 julia> param1 = range(-π, π, length=100)
 julia> param2 = range(-6.0, 6.0, length=100)
 julia> calcPhaseDiagram(H₀, param1, param2, "Chern"; plot=true)
