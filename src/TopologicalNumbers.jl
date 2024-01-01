@@ -18,7 +18,7 @@ include("./findWeylPoint.jl")
 include("./SecondChern.jl")
 
 # algorithms
-export SecondChern_FHS
+export FHS2
 
 # parallel environment
 export UseSingleThread, UseThreads, UseMPI

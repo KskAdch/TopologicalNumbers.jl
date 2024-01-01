@@ -304,7 +304,7 @@ function calc_data1D(H, param_range, alg::T1, parallel::T2, p::Params) where {T1
     nums = zeros(Float64, Hs, length(param_range))
     num0 = zeros(Float64, Hs)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         algorithm! = SecondChernPhase!
         type0 = ifelse(rounds, Float64, ComplexF64)
         nums = zeros(ComplexF64, length(param_range))
@@ -314,7 +314,7 @@ function calc_data1D(H, param_range, alg::T1, parallel::T2, p::Params) where {T1
     end
     update1D!(alg, nums, num0, H, algorithm!, param_range, parallel, p)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         if rounds == true
             real.(nums)
         elseif rounds == false
@@ -335,7 +335,7 @@ function calc_data1D(H, param_range, idxs::ProgressBar, alg::T1, parallel::T2, p
     nums = zeros(Float64, Hs, length(param_range))
     num0 = zeros(Float64, Hs)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         algorithm! = SecondChernPhase!
         type0 = ifelse(rounds, Float64, ComplexF64)
         nums = zeros(ComplexF64, length(param_range))
@@ -345,7 +345,7 @@ function calc_data1D(H, param_range, idxs::ProgressBar, alg::T1, parallel::T2, p
     end
     update1D!(alg, nums, num0, H, algorithm!, param_range, idxs, parallel, p)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         if rounds == true
             real.(nums)
         elseif rounds == false
@@ -366,7 +366,7 @@ function calc_data2D(H, param_range1, param_range2, alg::T1, parallel::T2, p::Pa
     nums = zeros(Float64, Hs, length(param_range1), length(param_range2))
     num0 = zeros(Float64, Hs)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         algorithm! = SecondChernPhase!
         type0 = ifelse(rounds, Float64, ComplexF64)
         nums = zeros(ComplexF64, length(param_range1), length(param_range2))
@@ -376,7 +376,7 @@ function calc_data2D(H, param_range1, param_range2, alg::T1, parallel::T2, p::Pa
     end
     update2D!(alg, nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         if rounds == true
             real.(nums)
         elseif rounds == false
@@ -397,7 +397,7 @@ function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::T1, 
     nums = zeros(Float64, Hs, length(param_range1), length(param_range2))
     num0 = zeros(Float64, Hs)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         algorithm! = SecondChernPhase!
         type0 = ifelse(rounds, Float64, ComplexF64)
         nums = zeros(ComplexF64, length(param_range1), length(param_range2))
@@ -407,7 +407,7 @@ function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::T1, 
     end
     update2D!(alg, nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         if rounds == true
             real.(nums)
         elseif rounds == false
@@ -557,7 +557,7 @@ function calcPhaseDiagram(H::Function, param_range::T1, alg::T2; N::T3=51, paral
     end
 
     p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         @reset p.N = (N, N, N, N)
         @reset p.Nfill = Hs ÷ 2
     end
@@ -569,7 +569,7 @@ function calcPhaseDiagram(H::Function, param_range::T1, alg::T2; N::T3=51, paral
     end
 
     if plot == true
-        if alg == SecondChern_FHS()
+        if alg == FHS2()
             plot1D(alg, nums, param_range)
         else
             plot1D(nums, param_range)
@@ -608,7 +608,7 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
     end
 
     p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         @reset p.N = (N, N, N, N)
         @reset p.Nfill = Hs ÷ 2
     end
@@ -619,7 +619,7 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
         calc_data2D(H, param_range1, param_range2, alg, parallel, p)
     end
 
-    if alg == SecondChern_FHS()
+    if alg == FHS2()
         if plot == true
             plot2D(transpose(nums_half), param_range1, param_range2)
         end
