@@ -1,5 +1,10 @@
 abstract type TopologicalNumbersAlgorithms end
 
+# Algorithms for calculating the Berry phase
+abstract type BerroPhaseAlgorithms <: TopologicalNumbersAlgorithms end
+# struct Int1DBP <: Z2Algorithms end
+struct BP <: BerryPhaseAlgorithms end
+
 # Algorithms for calculating the first Chern number
 abstract type FirstChernAlgorithms <: TopologicalNumbersAlgorithms end
 # struct IntFChern <: FirstChernAlgorithms end
