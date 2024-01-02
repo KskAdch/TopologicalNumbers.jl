@@ -18,10 +18,16 @@ include("./findWeylPoint.jl")
 include("./SecondChern.jl")
 
 # algorithms
-export FHS2
+export BP, FHS, FHS2, Shio
+
+# problems
+export BPProblem, FCProblem, SCProblem, Z2Problem
+
+# solutions
+export BPSolution, FCSolution, SCSolution, Z2Solution
 
 # parallel environment
-export UseSingleThread, UseThreads, UseMPI
+export UseSingleThread, UseMPI
 
 # models
 export SSH, KitaevChain
@@ -35,5 +41,6 @@ export calcPhaseDiagram
 export plot1D, plot2D
 export calcBerryFlux
 export calcWeylNode, calcChernSurface, findWeylPoint
+export solve
 
 end
