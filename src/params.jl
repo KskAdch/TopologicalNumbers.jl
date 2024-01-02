@@ -1,6 +1,6 @@
 
-@kwdef struct Params{F,T1<:Int,T2<:Union{Int,Tuple,AbstractVector},T3<:AbstractFloat,T4<:Bool}
-    Ham::F
+@kwdef struct Params{T1<:Int,T2<:Union{Int,Tuple,AbstractVector},T3<:AbstractFloat,T4<:Bool}
+    Ham::Function
     dim::T1
     Nfill::T1 = 1
     Hs::T1

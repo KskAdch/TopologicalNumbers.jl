@@ -1,6 +1,6 @@
 function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:SecondChernAlgorithms}
     Ham0(k) = H(k, range1[i])
-    p.Ham = Ham0
+    @reset p.Ham = Ham0
 
     v = setParams(p) # Set parameters
     setBasis!(v, p) # Set the basis
@@ -11,7 +11,7 @@ end
 
 function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms,Z2Algorithms}}
     Ham0(k) = H(k, range1[i])
-    p.Ham = Ham0
+    @reset p.Ham = Ham0
     alg!(num0, p)
     nums[:, i] .= num0
 end
@@ -19,7 +19,7 @@ end
 # Old method
 function update1Din!(i, nums, num0, H, alg!, range1, p::Params)
     Ham0(k) = H(k, range1[i])
-    p.Ham = Ham0
+    @reset p.Ham = Ham0
     alg!(num0, p)
     nums[:, i] .= num0
 end
@@ -27,7 +27,7 @@ end
 function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:SecondChernAlgorithms}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
-    p.Ham = Ham0
+    @reset p.Ham = Ham0
 
     v = setParams(p) # Set parameters
     setBasis!(v, p) # Set the basis
@@ -39,7 +39,7 @@ end
 function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms,Z2Algorithms}}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
-    p.Ham = Ham0
+    @reset p.Ham = Ham0
     alg!(num0, p)
     nums[:, i, j] .= num0
 end
@@ -48,7 +48,7 @@ end
 function update2Din!(i, j, nums, num0, H, alg!, range1, range2, p::Params)
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
-    p.Ham = Ham0
+    @reset p.Ham = Ham0
     alg!(num0, p)
     nums[:, i, j] .= num0
 end
