@@ -1,6 +1,7 @@
 module TopologicalNumbers
 
 include("./packages.jl")
+include("./problems.jl")
 include("./algorithms.jl")
 include("./parallelEnv.jl")
 include("./params.jl")
