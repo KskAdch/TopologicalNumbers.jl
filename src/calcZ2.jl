@@ -1,7 +1,7 @@
 function psi_j!(j, psi_1, p::Params) # wave function
     @unpack Hamiltonian, N = p
     for i in 1:N
-        k = [i-1, j-1] * 2pi / N
+        k = [i - 1, j - 1] * 2pi / N
         psi_1[i, :, :] .= eigen!(Hamiltonian(k)).vectors
     end
 end
@@ -212,7 +212,7 @@ end
     for l in 1:Hshalf
         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-        
+
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
             TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
         end
@@ -378,7 +378,7 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
 
     Hs = size(Hamiltonian(zeros(2)), 1)
     Hshalf = Hs ÷ 2
-    p = Params(; Hamiltonian, N, Hs, gapless=0.0, rounds, dim=2)
+    p = Params(; Ham=Hamiltonian, N, Hs, gapless=0.0, rounds, dim=2)
 
     TopologicalNumber = zeros(Hshalf)
     if TR == false
@@ -407,5 +407,77 @@ function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=fa
         end
 
         (; TopologicalNumber, TRTopologicalNumber, Total)
+    end
+end
+
+
+@doc raw"""
+
+ Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Shiozaki2023discrete](@cite).
+
+    calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
+
+ Arguments
+ - `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
+ - `N::Int` is the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - `rounds::Bool` is an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+
+# Definition
+ The $\mathbb{Z}_{2}$ number of the $2n$th (and $2n-1$th) band $\nu_{n}$ is defined by
+```math
+\nu_{n}=F_{n}-\left(P_{n}(0)-P_{n}(\pi)\right)
+```
+ $F_{n}$ is the Berry flux of the $n$th band in the $\mathrm{BZ}'$. The range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone).
+```math
+F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\mathrm{Im}\left[\mathrm{Log}\left[U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right]\right]
+```
+ $P_{n}(k_{2})$ is the time-reversal polarization at wavenumber $k_{2}$.
+```math
+P_{n}(k_{2})=\frac{1}{2\pi}\frac{\mathrm{Pf}[\omega(0,k_{2})]}{\mathrm{Pf}[\omega(\pi,k_{2})]}\sum_{k_{1}=0}^{\pi-e_{1}}U_{n,1}(\bm{k})
+```
+ $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
+```math
+U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
+```
+ $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band. $\omega(\bm{k})$ is the unitary matrix given by
+```math
+\omega(\bm{k})=\bra{\Psi(-\bm{k})}T\ket{\Psi(\bm{k})}
+```
+ $T$ is the time-reversal operator.
+"""
+function solve(prob::Z2Problem, alg::T1=Shio(); parallel::T2=UseSingleThread()) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
+    @unpack H, N, rounds, TR = prob
+
+    Hs = size(H(zeros(2)), 1)
+    Hshalf = Hs ÷ 2
+    p = Params(; Ham=H, N, Hs, rounds, dim=2)
+
+    TopologicalNumber = zeros(Hshalf)
+    if TR == false
+        Z2Phase!(TopologicalNumber, p)
+
+        if rounds == true
+            TopologicalNumber = round.(Int, TopologicalNumber)
+            Total = rem(sum(TopologicalNumber), 2)
+        else
+            Total = abs(sum(TopologicalNumber))
+            Total = abs(rem(Total, 2))
+        end
+
+        Z2Solution(; TopologicalNumber, Total)
+    else
+        TRTopologicalNumber = zeros(Hshalf)
+        Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
+
+        if rounds == true
+            TopologicalNumber = round.(Int, TopologicalNumber)
+            TRTopologicalNumber = round.(Int, TRTopologicalNumber)
+            Total = rem(sum(TopologicalNumber), 2)
+        else
+            Total = abs(sum(TopologicalNumber))
+            Total = rem(1 - abs(1 - Total), 2)
+        end
+
+        Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
     end
 end

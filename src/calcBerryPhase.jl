@@ -1,7 +1,7 @@
 function psi!(i, psi1, Evec1, p::Params) # wave function
     @unpack Hamiltonian, N = p
 
-    k = 2pi * (i-1) / N .+ 2pi * 1e-5
+    k = 2pi * (i - 1) / N .+ 2pi * 1e-5
     eigens = eigen!(Hamiltonian(k))
     psi1[:, :] .= eigens.vectors
     Evec1[:] .= eigens.values
@@ -69,7 +69,7 @@ end
 
 @views function L!(phi, Link, p::Params) # lattice field strength
     @unpack N, Hs = p
-    
+
     phi .= angle.(Link)
 end
 
@@ -140,4 +140,51 @@ function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rou
     end
 
     (; TopologicalNumber, Total)
+end
+
+
+@doc raw"""
+
+ Calculate the winding numbers in the one-dimensional case.
+
+    calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+
+ Arguments
+ - `Hamiltonian::Function`: the Hamiltonian matrix function with one-dimensional wavenumber `k` as an argument.
+ - `N::Int`: the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - `gapless::Real`: the threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+ - `rounds::Bool`: an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+
+
+# Definition
+
+ The Berry phase of the $n$th band $\nu_{n}$ is defined by
+```math
+\nu_{n}=\frac{1}{\pi}\sum_{k\in\mathrm{BZ}}U_{n}(k)
+```
+ The range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $U_{n,i}(k)$ is the link variable at wavenumber $k$. $e_{1}$ is the unit vector.
+```math
+U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
+```
+ $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
+"""
+function solve(prob::BPProblem, alg::T1=BP(); parallel::T2=UseSingleThread()) where {T1<:BerryPhaseAlgorithms,T2<:TopologicalNumbersParallel}
+    @unpack H, N, gapless, rounds = prob
+
+    Hs = size(H(0.0), 1)
+    p = Params(; Ham=H, N, gapless, rounds, Hs, dim=1)
+
+    TopologicalNumber = zeros(Hs)
+    BerryPhase!(TopologicalNumber, p)
+
+    if rounds == true
+        TopologicalNumber = round.(Int, TopologicalNumber)
+        Total = rem(sum(TopologicalNumber), 2)
+    else
+        Total = abs(sum(TopologicalNumber))
+        Total = rem(1 - abs(1 - Total), 2)
+    end
+
+    BPSolution(; TopologicalNumber, Total)
 end
