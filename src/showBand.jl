@@ -1,17 +1,17 @@
 function Ene1D(p::Params) # 1D Energy
-    @unpack Hamiltonian, N, Hs = p
+    @unpack Ham, N, Hs = p
 
     k = range(-π, π, length=N)
     Ene = zeros(N, Hs)
 
     for i in 1:N
-        Ene[i, :] = eigvals!(Hamiltonian(k[i]))
+        Ene[i, :] = eigvals!(Ham(k[i]))
     end
     k, Ene
 end
 
 function Ene2D(p::Params) # 2D Energy
-    @unpack Hamiltonian, N, Hs = p
+    @unpack Ham, N, Hs = p
 
     k = range(-π, π, length=N)
     k0 = zeros(2)
@@ -21,7 +21,7 @@ function Ene2D(p::Params) # 2D Energy
         k0[2] = k[j]
         for i in 1:N
             k0[1] = k[i]
-            Ene[i, j, :] .= eigvals!(Hamiltonian(k0))
+            Ene[i, j, :] .= eigvals!(Ham(k0))
         end
     end
     k = hcat(k, k)
@@ -29,7 +29,7 @@ function Ene2D(p::Params) # 2D Energy
 end
 
 function Ene4D(p::Params) # 4D Energy
-    @unpack Hamiltonian, N, Hs = p
+    @unpack Ham, N, Hs = p
 
     k = range(-π, π, length=N)
     k0 = zeros(4)
@@ -43,7 +43,7 @@ function Ene4D(p::Params) # 4D Energy
                 k0[2] = k[j]
                 for i in 1:N
                     k0[1] = k[i]
-                    Ene[i, j, l, m, :] .= eigvals!(Hamiltonian(k0))
+                    Ene[i, j, l, m, :] .= eigvals!(Ham(k0))
                 end
             end
         end
@@ -181,7 +181,7 @@ function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bo
         end
     end
 
-    p = Params(; Hamiltonian, dim, N, Hs, gapless=0.0, rounds=false)
+    p = Params(; Ham=Hamiltonian, dim, N, Hs, gapless=0.0, rounds=false)
     p_out = (; labels, value, disp, png, pdf, svg, filename)
 
     k, Ene, fig = diagram(p, p_out)

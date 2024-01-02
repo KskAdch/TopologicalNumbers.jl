@@ -1,5 +1,5 @@
 function psimat_square!(n, psimat, Evec, p::Params) # wave function □
-    @unpack Hamiltonian, N = p
+    @unpack Ham, N = p
 
     n10 = n .+ [1, 0]
     n11 = n .+ [1, 1]
@@ -14,13 +14,13 @@ function psimat_square!(n, psimat, Evec, p::Params) # wave function □
     k3 = 2pi * n11 / N
     k4 = 2pi * n01 / N
 
-    eigens = eigen!(Hamiltonian(k1))
+    eigens = eigen!(Ham(k1))
     psimat[1, :, :] .= eigens.vectors
     Evec[:] .= eigens.values
 
-    psimat[2, :, :] .= eigen!(Hamiltonian(k2)).vectors
-    psimat[3, :, :] .= eigen!(Hamiltonian(k3)).vectors
-    psimat[4, :, :] .= eigen!(Hamiltonian(k4)).vectors
+    psimat[2, :, :] .= eigen!(Ham(k2)).vectors
+    psimat[3, :, :] .= eigen!(Ham(k3)).vectors
+    psimat[4, :, :] .= eigen!(Ham(k4)).vectors
 end
 
 @views function Linkmat_square!(psimat, Evec, Linkmat, p::Params)
@@ -91,7 +91,7 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(n), 1)
-    p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=2)
+    p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
     psimat = zeros(ComplexF64, 4, Hs, Hs)
     Evec = zeros(Hs)
@@ -107,6 +107,6 @@ function calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gaple
     if rounds == true
         TopologicalNumber = round.(Int, TopologicalNumber)
     end
-    
+
     (; TopologicalNumber, n)
 end

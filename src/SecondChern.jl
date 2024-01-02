@@ -215,7 +215,7 @@ function setBasis!(v, p)
         s.k = @SVector [r.Kxrange[i], r.Kyrange[j], r.Kzrange[l], r.Kwrange[m]]
         # H!(p)
         # s.H = eigvecs(s.H)
-        s.H = eigvecs(p.Hamiltonian(s.k))
+        s.H = eigvecs(p.Ham(s.k))
         s.evec[i, j, l, m] = @view s.H[:, 1:r.Nfill]
     end
 
@@ -309,7 +309,7 @@ function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30
     if isnothing(Nfill)
         Nfill = Hs ÷ 2 # Half filling
     end
-    p = Params(; Hamiltonian, Nfill, N, gapless=0.0, rounds=returnRealValue, Hs, dim=4)
+    p = Params(; Ham=Hamiltonian, Nfill, N, gapless=0.0, rounds=returnRealValue, Hs, dim=4)
 
     TopologicalNumber = SecondChernPhase(p; parallel)
     warn_finiteImaginary(TopologicalNumber)

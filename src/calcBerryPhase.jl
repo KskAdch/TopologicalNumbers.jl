@@ -1,8 +1,8 @@
 function psi!(i, psi1, Evec1, p::Params) # wave function
-    @unpack Hamiltonian, N = p
+    @unpack Ham, N = p
 
     k = 2pi * (i - 1) / N .+ 2pi * 1e-5
-    eigens = eigen!(Hamiltonian(k))
+    eigens = eigen!(Ham(k))
     psi1[:, :] .= eigens.vectors
     Evec1[:] .= eigens.values
 end
@@ -126,7 +126,7 @@ U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
 function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
 
     Hs = size(Hamiltonian(0.0), 1)
-    p = Params(; Hamiltonian, N, gapless, rounds, Hs, dim=1)
+    p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=1)
 
     TopologicalNumber = zeros(Hs)
     BerryPhase!(TopologicalNumber, p)

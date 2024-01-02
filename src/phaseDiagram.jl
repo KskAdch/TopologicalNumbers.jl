@@ -1,6 +1,6 @@
 function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:SecondChernAlgorithms}
     Ham0(k) = H(k, range1[i])
-    p.Hamiltonian = Ham0
+    p.Ham = Ham0
 
     v = setParams(p) # Set parameters
     setBasis!(v, p) # Set the basis
@@ -11,7 +11,7 @@ end
 
 function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms,Z2Algorithms}}
     Ham0(k) = H(k, range1[i])
-    p.Hamiltonian = Ham0
+    p.Ham = Ham0
     alg!(num0, p)
     nums[:, i] .= num0
 end
@@ -19,7 +19,7 @@ end
 # Old method
 function update1Din!(i, nums, num0, H, alg!, range1, p::Params)
     Ham0(k) = H(k, range1[i])
-    p.Hamiltonian = Ham0
+    p.Ham = Ham0
     alg!(num0, p)
     nums[:, i] .= num0
 end
@@ -27,7 +27,7 @@ end
 function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:SecondChernAlgorithms}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
-    p.Hamiltonian = Ham0
+    p.Ham = Ham0
 
     v = setParams(p) # Set parameters
     setBasis!(v, p) # Set the basis
@@ -39,7 +39,7 @@ end
 function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms,Z2Algorithms}}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
-    p.Hamiltonian = Ham0
+    p.Ham = Ham0
     alg!(num0, p)
     nums[:, i, j] .= num0
 end
@@ -48,7 +48,7 @@ end
 function update2Din!(i, j, nums, num0, H, alg!, range1, range2, p::Params)
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
-    p.Hamiltonian = Ham0
+    p.Ham = Ham0
     alg!(num0, p)
     nums[:, i, j] .= num0
 end
@@ -614,7 +614,7 @@ function calcPhaseDiagram(H::Function, param_range::T1, alg::T2; N::T3=51, paral
         end
     end
 
-    p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
+    p = Params(; Ham=Hamiltonian, dim, N, gapless, rounds, Hs)
     if alg == FHS2()
         @reset p.N = (N, N, N, N)
         @reset p.Nfill = Hs ÷ 2
@@ -665,7 +665,7 @@ function calcPhaseDiagram(H::Function, param_range1::T1, param_range2::T2, alg::
         end
     end
 
-    p = Params(; Hamiltonian, dim, N, gapless, rounds, Hs)
+    p = Params(; Ham=Hamiltonian, dim, N, gapless, rounds, Hs)
     if alg == FHS2()
         @reset p.N = (N, N, N, N)
         @reset p.Nfill = Hs ÷ 2

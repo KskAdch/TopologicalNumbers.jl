@@ -481,17 +481,17 @@ using PythonPlot
                 @test calcSecondChern(H; N, parallel=UseMPI(MPI)).TopologicalNumber ≈ 0.8309301430562057
 
                 param = range(-4.9, 4.9, length=4)
-                result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10)
-                calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, progress=true)
-                result_MPI = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, parallel=UseMPI(MPI))
-                calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, parallel=UseMPI(MPI), progress=true)
+                result = calcPhaseDiagram(H₀, param, FHS2(); N=10)
+                calcPhaseDiagram(H₀, param, FHS2(); N=10, progress=true)
+                result_MPI = calcPhaseDiagram(H₀, param, FHS2(); N=10, parallel=UseMPI(MPI))
+                calcPhaseDiagram(H₀, param, FHS2(); N=10, parallel=UseMPI(MPI), progress=true)
                 @test result.nums ≈ result_MPI.nums
 
                 nums = [0.0010237313095167225, -2.0667333080974735, 2.1572606447321454, -0.0009805850180973213]
                 @test result.nums ≈ nums
 
 
-                result = calcPhaseDiagram(H₀, param, SecondChern_FHS(); N=10, rounds=false)
+                result = calcPhaseDiagram(H₀, param, FHS2(); N=10, rounds=false)
                 nums = ComplexF64[0.0010237313095167225+8.29577265997263e-17im, -2.0667333080974735-1.6878307095102013e-16im, 2.1572606447321454+3.05582947604634e-16im, -0.0009805850180973213+3.3561217905699694e-17im]
                 @test result.nums ≈ nums
             end
