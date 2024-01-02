@@ -1,7 +1,7 @@
 abstract type TopologicalNumbersAlgorithms end
 
 # Algorithms for calculating the Berry phase
-abstract type BerroPhaseAlgorithms <: TopologicalNumbersAlgorithms end
+abstract type BerryPhaseAlgorithms <: TopologicalNumbersAlgorithms end
 # struct Int1DBP <: Z2Algorithms end
 struct BP <: BerryPhaseAlgorithms end
 
