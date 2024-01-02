@@ -47,8 +47,12 @@ function plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, p
     ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
-        for i in axes(nums, 2)
-            ax.scatter(param_range, nums[:, i], marker=marker(i), label="Band$(i)")
+        if nums isa AbstractVector
+            ax.scatter(param_range, nums, marker=marker(1))
+        else
+            for i in axes(nums, 2)
+                ax.scatter(param_range, nums[:, i], marker=marker(i), label="Band$(i)")
+            end
         end
         ax.legend()
     end
