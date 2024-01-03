@@ -61,3 +61,26 @@ end
     psi01::PS2
     Enevec::EV2
 end
+
+
+@kwdef struct TemporalZ2{K,B,W,L1,L2,PS1,PS2,N}
+    k::K
+    T::B
+    w00::W
+    w0p::W
+    wp0::W
+    wpp::W
+    Link1::L1
+    Link2::L1
+    LinkN1::L1
+    link10::L2
+    link01::L2
+    psi_0::PS1
+    psi_1::PS1
+    psi_N::PS1
+    psi00::PS2
+    psi10::PS2
+    psi01::PS2
+    Nhalf::N
+    Hshalf::N
+end

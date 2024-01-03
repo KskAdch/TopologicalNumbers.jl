@@ -1,106 +1,121 @@
-function psi_j!(j, psi_1, p::Params) # wave function
+function psi_j!(j, v::TemporalZ2, p::Params) # wave function
     @unpack Ham, N = p
     for i in 1:N
-        k = [i - 1, j - 1] * 2pi / N
-        psi_1[i, :, :] .= eigen!(Ham(k)).vectors
+        v.k[1] = (i - 1) * 2pi / N
+        v.k[2] = (j - 1) * 2pi / N
+        v.psi_1[i, :, :] .= eigen!(Ham(v.k)).vectors
     end
 end
 
-@views function Link!(psi00, psi10, psi01, link10, link01, Hshalf)
-    for l in 1:Hshalf
-        link10[l] = det(psi00[:, 2l-1:2l]' * psi10[:, 2l-1:2l])
-        link01[l] = det(psi00[:, 2l-1:2l]' * psi01[:, 2l-1:2l])
+@views function Link!(v::TemporalZ2)
+    for l in 1:v.Hshalf
+        v.link10[l] = det(v.psi00[:, 2l-1:2l]' * v.psi10[:, 2l-1:2l])
+        v.link01[l] = det(v.psi00[:, 2l-1:2l]' * v.psi01[:, 2l-1:2l])
     end
 end
 
-@views function U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p::Params) # link variable
+@views function U!(j, v::TemporalZ2, p::Params) # link variable
     @unpack N = p
 
     if j != 1
-        Link1 .= Link2
+        v.Link1 .= v.Link2
     end
 
     if j != N
         if j == 1
 
-            psi_j!(1, psi_1, p)
-            psi_0 .= psi_1
-            psi_N .= psi_1
-            psi_j!(2, psi_1, p)
+            psi_j!(1, v, p)
+            v.psi_0 .= v.psi_1
+            v.psi_N .= v.psi_1
+            psi_j!(2, v, p)
 
             for i in 1:N
 
-                psi00[:, :] = psi_0[i, :, :]
+                v.psi00[:, :] = v.psi_0[i, :, :]
                 if i == N
-                    psi10[:, :] = psi_0[1, :, :]
-                    psi01[:, :] = psi_1[N, :, :]
+                    v.psi10[:, :] = v.psi_0[1, :, :]
+                    v.psi01[:, :] = v.psi_1[N, :, :]
                 else
-                    psi10[:, :] = psi_0[i+1, :, :]
-                    psi01[:, :] = psi_1[i, :, :]
+                    v.psi10[:, :] = v.psi_0[i+1, :, :]
+                    v.psi01[:, :] = v.psi_1[i, :, :]
                 end
 
-                Link!(psi00, psi10, psi01, link10, link01, Hshalf)
+                Link!(v)
 
-                Link1[:, :, i] .= [link10 link01]
-                LinkN1 .= Link1
+                v.Link1[:, 1, i] .= v.link10
+                v.Link1[:, 2, i] .= v.link01
+                v.LinkN1 .= v.Link1
             end
 
-            w00 .= psi_0[1, :, :]' * T * conj(psi_0[1, :, :])
-            wp0 .= psi_0[Nhalf, :, :]' * T * conj(psi_0[Nhalf, :, :])
+            v.w00 .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
+            v.wp0 .= v.psi_0[v.Nhalf, :, :]' * v.T * conj(v.psi_0[v.Nhalf, :, :])
         end
 
-        psi_0 .= psi_1
+        v.psi_0 .= v.psi_1
 
         if j != N - 1
-            psi_j!(j + 2, psi_1, p)
+            psi_j!(j + 2, v, p)
         end
 
-        if j == Nhalf - 1
-            w0p .= psi_0[1, :, :]' * T * conj(psi_0[1, :, :])
-            wpp .= psi_0[Nhalf, :, :]' * T * conj(psi_0[Nhalf, :, :])
+        if j == v.Nhalf - 1
+            v.w0p .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
+            v.wpp .= v.psi_0[v.Nhalf, :, :]' * v.T * conj(v.psi_0[v.Nhalf, :, :])
         end
 
         for i in 1:N
 
-            psi00[:, :] = psi_0[i, :, :]
+            v.psi00[:, :] = v.psi_0[i, :, :]
             if i == N && j == N - 1
-                psi10[:, :] = psi_0[1, :, :]
-                psi01[:, :] = psi_N[N, :, :]
+                v.psi10[:, :] = v.psi_0[1, :, :]
+                v.psi01[:, :] = v.psi_N[N, :, :]
             elseif i == N
-                psi10[:, :] = psi_0[1, :, :]
-                psi01[:, :] = psi_1[N, :, :]
+                v.psi10[:, :] = v.psi_0[1, :, :]
+                v.psi01[:, :] = v.psi_1[N, :, :]
             elseif j == N - 1
-                psi10[:, :] = psi_0[i+1, :, :]
-                psi01[:, :] = psi_N[i, :, :]
+                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi01[:, :] = v.psi_N[i, :, :]
             else
-                psi10[:, :] = psi_0[i+1, :, :]
-                psi01[:, :] = psi_1[i, :, :]
+                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi01[:, :] = v.psi_1[i, :, :]
             end
 
-            Link!(psi00, psi10, psi01, link10, link01, Hshalf)
+            Link!(v)
 
-            Link2[:, :, i] .= [link10 link01]
+            v.Link2[:, 1, i] .= v.link10
+            v.Link2[:, 2, i] .= v.link01
         end
     end
 end
 
-@views function F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p::Params) # lattice field strength
+@views function F!(phi, Px0, Pxp, i, j, v::TemporalZ2, p::Params) # lattice field strength
     @unpack N = p
 
-    if i == N && j == N
-        phi[:] = [angle(Link1[l, 1, N] * Link1[l, 2, 1] * conj(LinkN1[l, 1, N]) * conj(Link1[l, 2, N])) for l in 1:Hshalf]
-    elseif i == N
-        phi[:] = [angle(Link1[l, 1, N] * Link1[l, 2, 1] * conj(Link2[l, 1, N]) * conj(Link1[l, 2, N])) for l in 1:Hshalf]
-    elseif j == N
-        phi[:] = [angle(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(LinkN1[l, 1, i]) * conj(Link1[l, 2, i])) for l in 1:Hshalf]
-    else
-        phi[:] = [angle(Link1[l, 1, i] * Link1[l, 2, i+1] * conj(Link2[l, 1, i]) * conj(Link1[l, 2, i])) for l in 1:Hshalf]
+    if i != N && j != N
+        for l in 1:v.Hshalf
+            phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.Link2[l, 1, i]) * conj(v.Link1[l, 2, i]))
+        end
+    elseif i == N && j != N
+        for l in 1:v.Hshalf
+            phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.Link2[l, 1, N]) * conj(v.Link1[l, 2, N]))
+        end
+    elseif i != N && j == N
+        for l in 1:v.Hshalf
+            phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.LinkN1[l, 1, i]) * conj(v.Link1[l, 2, i]))
+        end
+    elseif i == N && j == N
+        for l in 1:v.Hshalf
+            phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.LinkN1[l, 1, N]) * conj(v.Link1[l, 2, N]))
+        end
     end
 
-    if j == 1 && i < Nhalf
-        Px0 .-= [angle(Link1[l, 1, i]) for l in 1:Hshalf]
-    elseif j == Nhalf && i < Nhalf
-        Pxp .-= [angle(Link1[l, 1, i]) for l in 1:Hshalf]
+    if j == 1 && i < v.Nhalf
+        for l in 1:v.Hshalf
+            Px0[l] -= angle(v.Link1[l, 1, i])
+        end
+    elseif j == v.Nhalf && i < v.Nhalf
+        for l in 1:v.Hshalf
+            Pxp[l] -= angle(v.Link1[l, 1, i])
+        end
     end
 end
 
@@ -170,6 +185,8 @@ end
     Nhalf = N ÷ 2 + 1
     Hshalf = Hs ÷ 2
 
+    k = zeros(2)
+
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)
     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
@@ -189,7 +206,7 @@ end
     Pxp = zeros(Hshalf)
 
     s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
-    sy = [0 -1; 1 0]
+    sy = [0 -1; 1 0] # imaginary???
     T = kron(s0, sy)
 
     w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
@@ -197,12 +214,14 @@ end
     wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
     wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
+    v = TemporalZ2(k, T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
+
     TN = zeros(Hshalf)
 
     for j in 1:Nhalf
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
+        U!(j, v, p)
         for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
+            F!(phi, Px0, Pxp, i, j, v, p)
             if j < Nhalf
                 TN[:] .+= phi[:]
             end
@@ -210,8 +229,8 @@ end
     end
 
     for l in 1:Hshalf
-        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
-        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
+        Px0[l] += angle((v.w00[2l-1, 2l]) / (v.wp0[2l-1, 2l]))
+        Pxp[l] += angle((v.w0p[2l-1, 2l]) / (v.wpp[2l-1, 2l]))
 
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
             TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
@@ -288,6 +307,8 @@ end
     Nhalf = N ÷ 2 + 1
     Hshalf = Hs ÷ 2
 
+    k = zeros(2)
+
     Link1 = zeros(ComplexF64, Hshalf, 2, N)
     Link2 = zeros(ComplexF64, Hshalf, 2, N)
     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
@@ -307,7 +328,7 @@ end
     Pxp = zeros(Hshalf)
 
     s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
-    sy = [0 -1; 1 0]
+    sy = [0 -1; 1 0] # imaginary???
     T = kron(s0, sy)
 
     w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
@@ -315,12 +336,14 @@ end
     wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
     wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
 
+    v = TemporalZ2(k, T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
+
     TN = zeros(Hshalf, 2)
 
     for j in 1:N
-        U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
+        U!(j, v, p)
         for i in 1:N
-            F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
+            F!(phi, Px0, Pxp, i, j, v, p)
             if j < Nhalf
                 TN[:, 1] .+= phi[:]
             else
@@ -330,8 +353,8 @@ end
     end
 
     for l in 1:Hshalf
-        Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
-        Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
+        Px0[l] += angle((v.w00[2l-1, 2l]) / (v.wp0[2l-1, 2l]))
+        Pxp[l] += angle((v.w0p[2l-1, 2l]) / (v.wpp[2l-1, 2l]))
 
         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
             TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
