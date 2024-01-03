@@ -37,6 +37,8 @@ using PythonPlot
 
         @test norm(calcBerryPhase(H).TopologicalNumber - calcBerryPhase(H, rounds=false).TopologicalNumber) < 1e-10
 
+        prob = BPProblem(H)
+        @test solve(prob) == BPSolution(TopologicalNumber=[1, 1], Total=0)
 
         H(k, p) = H₀(k, (p, 1.0))
 
@@ -49,6 +51,9 @@ using PythonPlot
 
         num = [0 0; 0 0; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 0 0; 0 0]
         @test result.nums == num
+
+        prob = BPProblem(H)
+        @test calcPhaseDiagram(prob, param).nums == num
 
         fig = plot1D(result.nums, result.param; disp=false)
         @test typeof(fig) == Figure
@@ -76,6 +81,9 @@ using PythonPlot
         num[:, :, 3] = [0 1 0; 0 1 0]
         # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
         @test result.nums == num
+
+        prob = BPProblem(H₀)
+        @test calcPhaseDiagram(prob, param).nums == num
 
         fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
         @test typeof(fig) == Figure
@@ -142,6 +150,9 @@ using PythonPlot
 
                 @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
+                prob = FCProblem(H)
+                @test solve(prob) == FCSolution(TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
+
                 C1 = zeros(6)
                 C2 = zeros(6)
                 N = 51
@@ -172,6 +183,15 @@ using PythonPlot
                 @test result.nums[5, :] == [-1, -1, 2, 2, -1, -1]
                 @test result.nums[6, :] == [0, 0, 0, 0, 0, 0]
                 # @test result.nums == num
+
+                prob = FCProblem(H)
+                result = calcPhaseDiagram(prob, param)
+                @test result.nums[1, :] == [1, 1, -2, -2, 1, 1]
+                @test result.nums[2, :] == [0, 1, -1, -1, 1, 0]
+                @test result.nums[3, :] == [0, 0, 0, 0, 0, 0]
+                @test result.nums[4, :] == [0, -1, 1, 1, -1, 0]
+                @test result.nums[5, :] == [-1, -1, 2, 2, -1, -1]
+                @test result.nums[6, :] == [0, 0, 0, 0, 0, 0]
 
                 fig = plot1D(result.nums, result.param; disp=false)
                 @test typeof(fig) == Figure
@@ -221,6 +241,9 @@ using PythonPlot
 
                 @test calcChern(H) == (TopologicalNumber=[-1, 1], Total=0)
 
+                prob = FCProblem(H)
+                @test solve(prob) == FCSolution(TopologicalNumber=[-1, 1], Total=0)
+
 
                 H(k, p) = H₀(k, (p, 2.5))
 
@@ -233,6 +256,9 @@ using PythonPlot
 
                 num = [0 0; 1 -1; 1 -1; 1 -1; 0 0; 0 0; -1 1; -1 1; -1 1; 0 0]
                 @test result.nums == num
+
+                prob = FCProblem(H)
+                @test calcPhaseDiagram(prob, param).nums == num
 
                 fig = plot1D(result.nums, result.param; disp=false)
                 @test typeof(fig) == Figure
@@ -267,6 +293,9 @@ using PythonPlot
                 num[:, :, 6] = [0 0 0 0 0 0 0; 0 0 0 0 0 0 0]
                 # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
                 @test result.nums == num
+
+                prob = FCProblem(H₀)
+                @test calcPhaseDiagram(prob, param1, param2).nums == num
 
                 fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
                 @test typeof(fig) == Figure
@@ -340,6 +369,10 @@ using PythonPlot
             @test norm(calcZ2(H, rounds=false, TR=true).TRTopologicalNumber - calcZ2(H, TR=true).TRTopologicalNumber) < 1e-10
 
 
+            prob = Z2Problem(H)
+            @test solve(prob) == Z2Solution(TopologicalNumber=[1, 1], Total=0)
+
+
             H(k, p) = H₀(k, (p, 1.0))
 
             param = range(-2.0, 2.0, length=11)
@@ -351,6 +384,9 @@ using PythonPlot
 
             num = [1 1; 1 1; 1 1; 1 1; 1 1; 0 0; 1 1; 1 1; 1 1; 1 1; 1 1]
             @test result.nums == num
+
+            prob = Z2Problem(H)
+            @test calcPhaseDiagram(prob, param).nums == num
 
             fig = plot1D(result.nums, result.param; disp=false)
             @test typeof(fig) == Figure
@@ -373,6 +409,9 @@ using PythonPlot
             num[:, :, 3] = [1 0 1; 1 0 1]
             # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
             @test result.nums == num
+
+            prob = Z2Problem(H₀)
+            @test calcPhaseDiagram(prob, param, param).nums == num
 
             fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
             @test typeof(fig) == Figure
@@ -480,6 +519,9 @@ using PythonPlot
                 @test calcSecondChern(H; N).TopologicalNumber ≈ 0.8309301430562057
                 @test calcSecondChern(H; N, parallel=UseMPI(MPI)).TopologicalNumber ≈ 0.8309301430562057
 
+                prob = SCProblem(H, N)
+                @test solve(prob).TopologicalNumber ≈ 0.8309301430562057
+
                 param = range(-4.9, 4.9, length=4)
                 result = calcPhaseDiagram(H₀, param, FHS2(); N=10)
                 calcPhaseDiagram(H₀, param, FHS2(); N=10, progress=true)
@@ -489,6 +531,9 @@ using PythonPlot
 
                 nums = [0.0010237313095167225, -2.0667333080974735, 2.1572606447321454, -0.0009805850180973213]
                 @test result.nums ≈ nums
+
+                prob = SCProblem(H₀, N)
+                @test calcPhaseDiagram(prob, param).nums ≈ nums
 
 
                 result = calcPhaseDiagram(H₀, param, FHS2(); N=10, rounds=false)
