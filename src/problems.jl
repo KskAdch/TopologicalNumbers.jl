@@ -1,6 +1,6 @@
 abstract type TopologicalNumbersProblems end
 
-# Problem for calculating the first Chern number
+# Problem for calculating the Berry phase
 @kwdef struct BPProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 51
