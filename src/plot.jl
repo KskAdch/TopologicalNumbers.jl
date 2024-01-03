@@ -78,8 +78,12 @@ function plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Boo
     ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
-        for i in axes(result.nums, 2)
-            ax.scatter(result.param, result.nums[:, i], marker=marker(i), label="Band$(i)")
+        if result.nums isa AbstractVector
+            ax.scatter(result.param, result.nums, marker=marker(1))
+        else
+            for i in axes(result.nums, 2)
+                ax.scatter(result.param, result.nums[:, i], marker=marker(i), label="Band$(i)")
+            end
         end
         ax.legend()
     end
@@ -88,6 +92,7 @@ function plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Boo
     output(fig, p)
     fig
 end
+
 
 @doc raw"""
     plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
@@ -125,7 +130,11 @@ function plot2D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Boo
         ax.set_ylabel(L"p_2")
     end
 
-    nums_half = transpose(sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :])
+    nums_half = if result.nums isa Array{Float64,2}
+        transpose(result.nums)
+    else
+        transpose(sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :])
+    end
 
     if disp == true || png == true || pdf == true || svg == true
         im = ax.imshow(nums_half, cmap="jet", interpolation="none", origin="lower", extent=(result.param1[1], result.param1[end], result.param2[1], result.param2[end]), aspect="auto")
