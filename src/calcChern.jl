@@ -1,112 +1,112 @@
-function psi_j!(j, psi_1, Evec1, p::Params) # wave function
+function psi_j!(j, v::TemporalFirstChern, p::Params) # wave function
     @unpack Ham, N = p
     for i in 1:N
         k = [i - 1, j - 1] * 2pi / N .+ 2pi * [1e-5, 1e-5]
         eigens = eigen!(Ham(k))
-        psi_1[i, :, :] .= eigens.vectors
-        Evec1[i, :] .= eigens.values
+        v.psi_1[i, :, :] .= eigens.vectors
+        v.Evec1[i, :] .= eigens.values
     end
 end
 
-@views function Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
+@views function Link!(v::TemporalFirstChern, gapless, Hs)
     l = 1
     while l <= Hs
-        l0 = Hs - count(Enevec .> (gapless + Enevec[l]))
+        l0 = Hs - count(v.Enevec .> (gapless + v.Enevec[l]))
 
         if l == l0
-            link10[l:l0] .= dot(psi00[:, l:l0], psi10[:, l:l0])
-            link01[l:l0] .= dot(psi00[:, l:l0], psi01[:, l:l0])
+            v.link10[l:l0] .= dot(v.psi00[:, l:l0], v.psi10[:, l:l0])
+            v.link01[l:l0] .= dot(v.psi00[:, l:l0], v.psi01[:, l:l0])
         else
-            link10[l:l0] .= det(psi00[:, l:l0]' * psi10[:, l:l0])
-            link01[l:l0] .= det(psi00[:, l:l0]' * psi01[:, l:l0])
+            v.link10[l:l0] .= det(v.psi00[:, l:l0]' * v.psi10[:, l:l0])
+            v.link01[l:l0] .= det(v.psi00[:, l:l0]' * v.psi01[:, l:l0])
         end
 
         l = 1 + l0
     end
 end
 
-@views function U!(Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p::Params) # link variable
+@views function U!(j, v::TemporalFirstChern, p::Params) # link variable
     @unpack N, gapless, Hs = p
 
     if j != 1
-        Link0 .= Link1
+        v.Link0 .= v.Link1
     end
 
     if j != N
         if j == 1
 
-            psi_j!(1, psi_1, Evec1, p)
-            psi_N .= psi_1
-            psi_0 .= psi_1
-            Evec0 .= Evec1
-            psi_j!(2, psi_1, Evec1, p)
+            psi_j!(1, v, p)
+            v.psi_N .= v.psi_1
+            v.psi_0 .= v.psi_1
+            v.Evec0 .= v.Evec1
+            psi_j!(2, v, p)
 
             for i in 1:N
 
-                psi00[:, :] = psi_0[i, :, :]
+                v.psi00[:, :] = v.psi_0[i, :, :]
                 if i == N
-                    psi10[:, :] = psi_0[1, :, :]
-                    psi01[:, :] = psi_1[N, :, :]
+                    v.psi10[:, :] = v.psi_0[1, :, :]
+                    v.psi01[:, :] = v.psi_1[N, :, :]
                 else
-                    psi10[:, :] = psi_0[i+1, :, :]
-                    psi01[:, :] = psi_1[i, :, :]
+                    v.psi10[:, :] = v.psi_0[i+1, :, :]
+                    v.psi01[:, :] = v.psi_1[i, :, :]
                 end
 
-                Enevec[:] = Evec1[i, :]
-                Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
+                v.Enevec[:] = v.Evec1[i, :]
+                Link!(v, gapless, Hs)
 
-                Link0[:, :, i] .= [link10 link01]
-                LinkN .= Link0
+                v.Link0[:, :, i] .= [v.link10 v.link01]
+                v.LinkN .= v.Link0
             end
         end
 
-        psi_0 .= psi_1
-        Evec0 .= Evec1
+        v.psi_0 .= v.psi_1
+        v.Evec0 .= v.Evec1
 
         if j != N - 1
-            psi_j!(j + 2, psi_1, Evec1, p)
+            psi_j!(j + 2, v, p)
         end
 
         for i in 1:N
 
-            psi00[:, :] = psi_0[i, :, :]
+            v.psi00[:, :] = v.psi_0[i, :, :]
             if i == N && j == N - 1
-                psi10[:, :] = psi_0[1, :, :]
-                psi01[:, :] = psi_N[N, :, :]
+                v.psi10[:, :] = v.psi_0[1, :, :]
+                v.psi01[:, :] = v.psi_N[N, :, :]
             elseif i == N
-                psi10[:, :] = psi_0[1, :, :]
-                psi01[:, :] = psi_1[N, :, :]
+                v.psi10[:, :] = v.psi_0[1, :, :]
+                v.psi01[:, :] = v.psi_1[N, :, :]
             elseif j == N - 1
-                psi10[:, :] = psi_0[i+1, :, :]
-                psi01[:, :] = psi_N[i, :, :]
+                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi01[:, :] = v.psi_N[i, :, :]
             else
-                psi10[:, :] = psi_0[i+1, :, :]
-                psi01[:, :] = psi_1[i, :, :]
+                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi01[:, :] = v.psi_1[i, :, :]
             end
 
-            Enevec[:] = Evec0[i, :]
-            Link!(psi00, psi01, psi10, Enevec, link10, link01, gapless, Hs)
+            v.Enevec[:] = v.Evec0[i, :]
+            Link!(v, gapless, Hs)
 
-            Link1[:, :, i] .= [link10 link01]
+            v.Link1[:, :, i] .= [v.link10 v.link01]
         end
     end
 end
 
-@views function F!(phi, dphi, i, j, Link0, Link1, LinkN, p::Params) # lattice field strength
+@views function F!(phi, dphi, i, j, v::TemporalFirstChern, p::Params) # lattice field strength
     @unpack N, rounds, Hs = p
 
     if i == N && j == N
-        phi[:] = [angle(Link0[l, 1, N] * Link0[l, 2, 1] * conj(LinkN[l, 1, N]) * conj(Link0[l, 2, N])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, N]) + angle(Link0[l, 2, 1]) - angle(LinkN[l, 1, N]) - angle(Link0[l, 2, N]) for l in 1:Hs]
+        phi[:] = [angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.LinkN[l, 1, N]) * conj(v.Link0[l, 2, N])) for l in 1:Hs]
+        dphi[:] = [angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.LinkN[l, 1, N]) - angle(v.Link0[l, 2, N]) for l in 1:Hs]
     elseif i == N
-        phi[:] = [angle(Link0[l, 1, N] * Link0[l, 2, 1] * conj(Link1[l, 1, N]) * conj(Link0[l, 2, N])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, N]) + angle(Link0[l, 2, 1]) - angle(Link1[l, 1, N]) - angle(Link0[l, 2, N]) for l in 1:Hs]
+        phi[:] = [angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.Link1[l, 1, N]) * conj(v.Link0[l, 2, N])) for l in 1:Hs]
+        dphi[:] = [angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.Link1[l, 1, N]) - angle(v.Link0[l, 2, N]) for l in 1:Hs]
     elseif j == N
-        phi[:] = [angle(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(LinkN[l, 1, i]) * conj(Link0[l, 2, i])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, i]) + angle(Link0[l, 2, i+1]) - angle(LinkN[l, 1, i]) - angle(Link0[l, 2, i]) for l in 1:Hs]
+        phi[:] = [angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.LinkN[l, 1, i]) * conj(v.Link0[l, 2, i])) for l in 1:Hs]
+        dphi[:] = [angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.LinkN[l, 1, i]) - angle(v.Link0[l, 2, i]) for l in 1:Hs]
     else
-        phi[:] = [angle(Link0[l, 1, i] * Link0[l, 2, i+1] * conj(Link1[l, 1, i]) * conj(Link0[l, 2, i])) for l in 1:Hs]
-        dphi[:] = [angle(Link0[l, 1, i]) + angle(Link0[l, 2, i+1]) - angle(Link1[l, 1, i]) - angle(Link0[l, 2, i]) for l in 1:Hs]
+        phi[:] = [angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.Link1[l, 1, i]) * conj(v.Link0[l, 2, i])) for l in 1:Hs]
+        dphi[:] = [angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.Link1[l, 1, i]) - angle(v.Link0[l, 2, i]) for l in 1:Hs]
     end
 
     phi .= (phi - dphi) ./ 2pi
@@ -118,8 +118,8 @@ end
     Link0 = zeros(ComplexF64, Hs, 2, N)
     Link1 = zeros(ComplexF64, Hs, 2, N)
     LinkN = zeros(ComplexF64, Hs, 2, N)
-    link1 = zeros(ComplexF64, Hs)
-    link2 = zeros(ComplexF64, Hs)
+    link10 = zeros(ComplexF64, Hs)
+    link01 = zeros(ComplexF64, Hs)
 
     psi_0 = zeros(ComplexF64, N, Hs, Hs)
     psi_1 = zeros(ComplexF64, N, Hs, Hs)
@@ -132,13 +132,15 @@ end
     psi01 = zeros(ComplexF64, Hs, Hs)
     Enevec = zeros(Hs)
 
+    v = TemporalFirstChern(Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec)
+
     phi = zeros(Hs)
     dphi = zeros(Hs)
 
     for j in 1:N
-        U!(Link0, Link1, LinkN, link1, link2, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec, j, p)
+        U!(j, v, p)
         for i in 1:N
-            F!(phi, dphi, i, j, Link0, Link1, LinkN, p)
+            F!(phi, dphi, i, j, v, p)
             TopologicalNumber[:] .+= phi[:]
         end
     end

@@ -43,3 +43,20 @@ end
     psiN1::PS
 end
 
+
+@kwdef struct TemporalFirstChern{L1,L2,EV1,EV2,PS1,PS2}
+    Link0::L1
+    Link1::L1
+    LinkN::L1
+    link10::L2
+    link01::L2
+    psi_0::PS1
+    psi_1::PS1
+    psi_N::PS1
+    Evec0::EV1
+    Evec1::EV1
+    psi00::PS2
+    psi10::PS2
+    psi01::PS2
+    Enevec::EV2
+end
