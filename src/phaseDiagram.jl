@@ -712,7 +712,7 @@ function calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel
         calc_data2D(H, param_range1, param_range2, alg, parallel, p)
     end
 
-    if alg == FHS2()
+    if alg isa FHS2
         if plot == true
             plot2D(transpose(nums_half), param_range1, param_range2)
         end
