@@ -96,7 +96,9 @@ end
         TN[:] .+= phi[:]
     end
 
-    TopologicalNumber .= [1 - abs(1 - rem(abs(TN[i]) / pi, 2)) for i in 1:Hs]
+    for i in 1:Hs
+        TopologicalNumber[i] = 1 - abs(1 - rem(abs(TN[i]) / pi, 2))
+    end
 end
 
 @doc raw"""
