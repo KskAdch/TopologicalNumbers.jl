@@ -1,41 +1,41 @@
-function psi!(i, psi1, Evec1, p::Params) # wave function
+function psi!(i, v::TemporalBerryPhase, p::Params) # wave function
     @unpack Ham, N = p
 
     k = 2pi * (i - 1) / N .+ 2pi * 1e-5
     eigens = eigen!(Ham(k))
-    psi1[:, :] .= eigens.vectors
-    Evec1[:] .= eigens.values
+    v.psi1[:, :] .= eigens.vectors
+    v.Evec1[:] .= eigens.values
 end
 
-@views function U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p::Params) # link variable
+@views function U!(i, v::TemporalBerryPhase, p::Params) # link variable
     @unpack N, gapless, Hs = p
 
     if i == 1
-        psi!(i, psi1, Evec1, p)
-        psiN1 .= psi1
+        psi!(i, v, p)
+        v.psiN1 .= v.psi1
     end
 
     if i != N
-        psi0 .= psi1
-        Evec0 .= Evec1
-        psi!(i + 1, psi1, Evec1, p)
+        v.psi0 .= v.psi1
+        v.Evec0 .= v.Evec1
+        psi!(i + 1, v, p)
     end
 
     l = 1
     while l <= Hs
-        l0 = Hs - count(Evec0 .> (gapless + Evec0[l]))
+        l0 = Hs - count(v.Evec0 .> (gapless + v.Evec0[l]))
 
         if i == N
             if l == l0
-                Link[l:l0] .= dot(psi1[:, l:l0], psiN1[:, l:l0])
+                v.Link[l:l0] .= dot(v.psi1[:, l:l0], v.psiN1[:, l:l0])
             else
-                Link[l:l0] .= det(psi1[:, l:l0]' * psiN1[:, l:l0])
+                v.Link[l:l0] .= det(v.psi1[:, l:l0]' * v.psiN1[:, l:l0])
             end
         else
             if l == l0
-                Link[l:l0] .= dot(psi0[:, l:l0], psi1[:, l:l0])
+                v.Link[l:l0] .= dot(v.psi0[:, l:l0], v.psi1[:, l:l0])
             else
-                Link[l:l0] .= det(psi0[:, l:l0]' * psi1[:, l:l0])
+                v.Link[l:l0] .= det(v.psi0[:, l:l0]' * v.psi1[:, l:l0])
             end
         end
 
@@ -67,10 +67,10 @@ end
 #     TopologicalNumber .= [abs(rem(round(Int, TN[i] / pi), 2)) for i in 1:Hs]
 # end
 
-@views function L!(phi, Link, p::Params) # lattice field strength
+@views function L!(phi, v::TemporalBerryPhase, p::Params) # lattice field strength
     @unpack N, Hs = p
 
-    phi .= angle.(Link)
+    phi .= angle.(v.Link)
 end
 
 @views function BerryPhase!(TopologicalNumber, p::Params) # berry phase
@@ -84,13 +84,15 @@ end
     psi1 = zeros(ComplexF64, Hs, Hs)
     psiN1 = zeros(ComplexF64, Hs, Hs)
 
+    v = TemporalBerryPhase(Link, Evec0, Evec1, psi0, psi1, psiN1)
+
     phi = zeros(Hs)
 
     TN = zeros(Hs)
 
     for i in 1:N
-        U!(Link, Evec0, Evec1, psi0, psi1, psiN1, i, p)
-        L!(phi, Link, p)
+        U!(i, v, p)
+        L!(phi, v, p)
         TN[:] .+= phi[:]
     end
 

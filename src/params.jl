@@ -32,3 +32,14 @@ end
     Fyw::T5
     Ftemp::T6      # Temporary variable for LinearAlgebra.log calculations
 end
+
+
+@kwdef struct TemporalBerryPhase{L,EV,PS}
+    Link::L
+    Evec0::EV
+    Evec1::EV
+    psi0::PS
+    psi1::PS
+    psiN1::PS
+end
+

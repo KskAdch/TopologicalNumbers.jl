@@ -1,36 +1,36 @@
 # Functions to calculate and update Link variables and their inverses
 # for the links in the x, y, z, and w directions
-function linkUx!(i, j, l, m, s)
+function linkUx!(i, j, l, m, s::TemporalSecondChern)
     s.Ux = s.evec[i, j, l, m]' * s.evec[i+1, j, l, m]
 end
-function linkUx_inv!(i, j, l, m, s)
+function linkUx_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Ux_inv = s.evec[i+1, j, l, m]' * s.evec[i, j, l, m]
 end
 
-function linkUy!(i, j, l, m, s)
+function linkUy!(i, j, l, m, s::TemporalSecondChern)
     s.Uy = s.evec[i, j, l, m]' * s.evec[i, j+1, l, m]
 end
-function linkUy_inv!(i, j, l, m, s)
+function linkUy_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Uy_inv = s.evec[i, j+1, l, m]' * s.evec[i, j, l, m]
 end
 
-function linkUz!(i, j, l, m, s)
+function linkUz!(i, j, l, m, s::TemporalSecondChern)
     s.Uz = s.evec[i, j, l, m]' * s.evec[i, j, l+1, m]
 end
-function linkUz_inv!(i, j, l, m, s)
+function linkUz_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Uz_inv = s.evec[i, j, l+1, m]' * s.evec[i, j, l, m]
 end
 
-function linkUw!(i, j, l, m, s)
+function linkUw!(i, j, l, m, s::TemporalSecondChern)
     s.Uw = s.evec[i, j, l, m]' * s.evec[i, j, l, m+1]
 end
-function linkUw_inv!(i, j, l, m, s)
+function linkUw_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Uw_inv = s.evec[i, j, l, m+1]' * s.evec[i, j, l, m]
 
 end
 
 # Functions to calculate field strength tensors Fxy, Fzw, Fwx, Fzy, Fzx, Fyw
-function Fxy!(i, j, l, m, s, Nfill)
+function Fxy!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUx!(i, j, l, m, s)
     linkUy!(i + 1, j, l, m, s)
     linkUx_inv!(i, j + 1, l, m, s)
@@ -41,7 +41,7 @@ function Fxy!(i, j, l, m, s, Nfill)
     s.Fxy = log(s.Ftemp)
 
 end
-function Fzw!(i, j, l, m, s, Nfill)
+function Fzw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
     linkUw!(i, j, l + 1, m, s)
     linkUz_inv!(i, j, l, m + 1, s)
@@ -51,7 +51,7 @@ function Fzw!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fzw * Nfill / tr(s.Fzw)
     s.Fzw = log(s.Ftemp)
 end
-function Fwx!(i, j, l, m, s, Nfill)
+function Fwx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUw!(i, j, l, m, s)
     linkUx!(i, j, l, m + 1, s)
     linkUw_inv!(i + 1, j, l, m, s)
@@ -61,7 +61,7 @@ function Fwx!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fwx * Nfill / tr(s.Fwx)
     s.Fwx = log(s.Ftemp)
 end
-function Fzy!(i, j, l, m, s, Nfill)
+function Fzy!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
     linkUy!(i, j, l + 1, m, s)
     linkUz_inv!(i, j + 1, l, m, s)
@@ -71,7 +71,7 @@ function Fzy!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fzy * Nfill / tr(s.Fzy)
     s.Fzy = log(s.Ftemp)
 end
-function Fzx!(i, j, l, m, s, Nfill)
+function Fzx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
     linkUx!(i, j, l + 1, m, s)
     linkUz_inv!(i + 1, j, l, m, s)
@@ -81,7 +81,7 @@ function Fzx!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fzx * Nfill / tr(s.Fzx)
     s.Fzx = log(s.Ftemp)
 end
-function Fyw!(i, j, l, m, s, Nfill)
+function Fyw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUy!(i, j, l, m, s)
     linkUw!(i, j + 1, l, m, s)
     linkUy_inv!(i, j, l, m + 1, s)
@@ -156,7 +156,7 @@ function setParams(p)
 end
 
 # Function to fix the gauge at the boundaries
-function boundaryGauge(r, s)
+function boundaryGauge(r, s::TemporalSecondChern)
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
         s.evec[l, j, i, r.Nz+1] = s.evec[l, j, i, 1]
     end
