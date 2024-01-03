@@ -38,7 +38,7 @@ using PythonPlot
         @test norm(calcBerryPhase(H).TopologicalNumber - calcBerryPhase(H, rounds=false).TopologicalNumber) < 1e-10
 
         prob = BPProblem(H)
-        @test solve(prob) == BPSolution(TopologicalNumber=[1, 1], Total=0)
+        @test solve(prob).TopologicalNumber == [1, 1]
 
         H(k, p) = H₀(k, (p, 1.0))
 
@@ -83,7 +83,7 @@ using PythonPlot
         @test result.nums == num
 
         prob = BPProblem(H₀)
-        @test calcPhaseDiagram(prob, param).nums == num
+        @test calcPhaseDiagram(prob, param, param).nums == num
 
         fig = plot2D(result.nums[1, :, :], result.param1, result.param2; disp=false)
         @test typeof(fig) == Figure
@@ -151,7 +151,7 @@ using PythonPlot
                 @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
                 prob = FCProblem(H)
-                @test solve(prob) == FCSolution(TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
+                @test solve(prob).TopologicalNumber == [1, 1, -2, -2, 1, 1]
 
                 C1 = zeros(6)
                 C2 = zeros(6)
@@ -242,7 +242,7 @@ using PythonPlot
                 @test calcChern(H) == (TopologicalNumber=[-1, 1], Total=0)
 
                 prob = FCProblem(H)
-                @test solve(prob) == FCSolution(TopologicalNumber=[-1, 1], Total=0)
+                @test solve(prob).TopologicalNumber == [-1, 1]
 
 
                 H(k, p) = H₀(k, (p, 2.5))
@@ -370,7 +370,7 @@ using PythonPlot
 
 
             prob = Z2Problem(H)
-            @test solve(prob) == Z2Solution(TopologicalNumber=[1, 1], Total=0)
+            @test solve(prob).TopologicalNumber == [1, 1]
 
 
             H(k, p) = H₀(k, (p, 1.0))
