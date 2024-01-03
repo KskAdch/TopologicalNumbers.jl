@@ -49,15 +49,15 @@ Z2Problem(H, N) = Z2Problem(; H=H, N=N)
 abstract type TopologicalNumbersSolutions end
 
 # Solution for calculating the first Chern number
-@kwdef struct BPSolution{T} <: TopologicalNumbersSolutions
-    TopologicalNumber::T = nothing
-    Total::T = nothing
+@kwdef struct BPSolution{T1,T2} <: TopologicalNumbersSolutions
+    TopologicalNumber::T1 = nothing
+    Total::T2 = nothing
 end
 
 # Solution for calculating the first Chern number
-@kwdef struct FCSolution{T} <: TopologicalNumbersSolutions
-    TopologicalNumber::T = nothing
-    Total::T = nothing
+@kwdef struct FCSolution{T1,T2} <: TopologicalNumbersSolutions
+    TopologicalNumber::T1 = nothing
+    Total::T2 = nothing
 end
 
 # Solution for calculating the second Chern number
@@ -66,8 +66,8 @@ end
 end
 
 # Solution for calculating the Z2 invariant
-@kwdef struct Z2Solution{T} <: TopologicalNumbersSolutions
-    TopologicalNumber::T = nothing
-    TRTopologicalNumber::T = nothing
-    Total::T = nothing
+@kwdef struct Z2Solution{T1,T2,T3} <: TopologicalNumbersSolutions
+    TopologicalNumber::T1 = nothing
+    TRTopologicalNumber::T2 = nothing
+    Total::T3 = nothing
 end

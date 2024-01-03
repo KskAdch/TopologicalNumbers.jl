@@ -354,7 +354,7 @@ function solve(prob::SCProblem, alg::T1=FHS2(); parallel::T2=UseSingleThread()) 
     TopologicalNumber = SecondChernPhase(p; parallel)
     warn_finiteImaginary(TopologicalNumber)
 
-    if returnRealValue == true
+    if p.returnRealValue == true
         TopologicalNumber = real(TopologicalNumber)
     end
 
