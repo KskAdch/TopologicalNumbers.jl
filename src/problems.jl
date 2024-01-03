@@ -7,6 +7,9 @@ abstract type TopologicalNumbersProblems end
     gapless::T3 = 0.0
     rounds::T4 = true
 end
+# default
+BPProblem(H) = BPProblem(; H=H)
+BPProblem(H, N) = BPProblem(; H=H, N=N)
 
 # Problem for calculating the first Chern number
 @kwdef struct FCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
@@ -15,6 +18,9 @@ end
     gapless::T3 = 0.0
     rounds::T4 = true
 end
+# default
+FCProblem(H) = FCProblem(; H=H)
+FCProblem(H, N) = FCProblem(; H=H, N=N)
 
 # Problem for calculating the second Chern number
 @kwdef struct SCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Union{Real,Nothing},T4<:Bool} <: TopologicalNumbersProblems
@@ -23,6 +29,9 @@ end
     Nfill::T3 = nothing
     RV::T4 = true
 end
+# default
+SCProblem(H) = SCProblem(; H=H)
+SCProblem(H, N) = SCProblem(; H=H, N=N)
 
 # Problem for calculating the Z2 invariant
 @kwdef struct Z2Problem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Bool} <: TopologicalNumbersProblems
@@ -31,6 +40,9 @@ end
     rounds::T3 = true
     TR::T3 = false
 end
+# default
+Z2Problem(H) = Z2Problem(; H=H)
+Z2Problem(H, N) = Z2Problem(; H=H, N=N)
 
 
 
