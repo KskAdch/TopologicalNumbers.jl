@@ -44,7 +44,8 @@ end
 end
 
 
-@kwdef struct TemporalFirstChern{L1,L2,EV1,EV2,PS1,PS2}
+@kwdef struct TemporalFirstChern{K,L1,L2,EV1,EV2,PS1,PS2}
+    k::K
     Link0::L1
     Link1::L1
     LinkN::L1

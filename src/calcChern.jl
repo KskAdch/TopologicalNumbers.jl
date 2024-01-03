@@ -1,8 +1,9 @@
 function psi_j!(j, v::TemporalFirstChern, p::Params) # wave function
     @unpack Ham, N = p
     for i in 1:N
-        k = [i - 1, j - 1] * 2pi / N .+ 2pi * [1e-5, 1e-5]
-        eigens = eigen!(Ham(k))
+        v.k[1] = (i - 1) * 2pi / N + 2pi * 1e-5
+        v.k[2] = (j - 1) * 2pi / N + 2pi * 1e-5
+        eigens = eigen!(Ham(v.k))
         v.psi_1[i, :, :] .= eigens.vectors
         v.Evec1[i, :] .= eigens.values
     end
@@ -87,7 +88,8 @@ end
             v.Enevec[:] = v.Evec0[i, :]
             Link!(v, gapless, Hs)
 
-            v.Link1[:, :, i] .= [v.link10 v.link01]
+            v.Link1[:, 1, i] .= v.link10
+            v.Link1[:, 2, i] .= v.link01
         end
     end
 end
@@ -95,26 +97,36 @@ end
 @views function F!(phi, dphi, i, j, v::TemporalFirstChern, p::Params) # lattice field strength
     @unpack N, rounds, Hs = p
 
-    if i == N && j == N
-        phi[:] = [angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.LinkN[l, 1, N]) * conj(v.Link0[l, 2, N])) for l in 1:Hs]
-        dphi[:] = [angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.LinkN[l, 1, N]) - angle(v.Link0[l, 2, N]) for l in 1:Hs]
-    elseif i == N
-        phi[:] = [angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.Link1[l, 1, N]) * conj(v.Link0[l, 2, N])) for l in 1:Hs]
-        dphi[:] = [angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.Link1[l, 1, N]) - angle(v.Link0[l, 2, N]) for l in 1:Hs]
-    elseif j == N
-        phi[:] = [angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.LinkN[l, 1, i]) * conj(v.Link0[l, 2, i])) for l in 1:Hs]
-        dphi[:] = [angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.LinkN[l, 1, i]) - angle(v.Link0[l, 2, i]) for l in 1:Hs]
-    else
-        phi[:] = [angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.Link1[l, 1, i]) * conj(v.Link0[l, 2, i])) for l in 1:Hs]
-        dphi[:] = [angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.Link1[l, 1, i]) - angle(v.Link0[l, 2, i]) for l in 1:Hs]
+    if i != N && j != N
+        for l in 1:Hs
+            phi[l] = angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.Link1[l, 1, i]) * conj(v.Link0[l, 2, i]))
+            dphi[l] = angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.Link1[l, 1, i]) - angle(v.Link0[l, 2, i])
+        end
+    elseif i == N && j != N
+        for l in 1:Hs
+            phi[l] = angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.Link1[l, 1, N]) * conj(v.Link0[l, 2, N]))
+            dphi[l] = angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.Link1[l, 1, N]) - angle(v.Link0[l, 2, N])
+        end
+    elseif i != N && j == N
+        for l in 1:Hs
+            phi[l] = angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.LinkN[l, 1, i]) * conj(v.Link0[l, 2, i]))
+            dphi[l] = angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.LinkN[l, 1, i]) - angle(v.Link0[l, 2, i])
+        end
+    elseif i == N && j == N
+        for l in 1:Hs
+            phi[l] = angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.LinkN[l, 1, N]) * conj(v.Link0[l, 2, N]))
+            dphi[l] = angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.LinkN[l, 1, N]) - angle(v.Link0[l, 2, N])
+        end
     end
 
-    phi .= (phi - dphi) ./ 2pi
+    phi .= (phi .- dphi) ./ 2pi
 end
 
 @views function ChernPhase!(TopologicalNumber, p::Params) # chern number # Bug
     @unpack N, Hs = p
     TopologicalNumber[:] .= zero(Float64)
+
+    k = zeros(2)
     Link0 = zeros(ComplexF64, Hs, 2, N)
     Link1 = zeros(ComplexF64, Hs, 2, N)
     LinkN = zeros(ComplexF64, Hs, 2, N)
@@ -132,7 +144,7 @@ end
     psi01 = zeros(ComplexF64, Hs, Hs)
     Enevec = zeros(Hs)
 
-    v = TemporalFirstChern(Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec)
+    v = TemporalFirstChern(k, Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec)
 
     phi = zeros(Hs)
     dphi = zeros(Hs)
