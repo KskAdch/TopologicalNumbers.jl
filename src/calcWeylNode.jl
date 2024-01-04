@@ -182,8 +182,8 @@ function solve(prob::WNProblem,
 ) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, n, N, gapless, rounds = prob
 
-    Hs = size(Hamiltonian(n), 1)
-    p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=3)
+    Hs = size(H(n), 1)
+    p = Params(; Ham=H, N, gapless, rounds, Hs, dim=3)
 
     n .= [mod(n[i], N) for i in 1:3]
 

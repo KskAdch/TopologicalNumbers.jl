@@ -128,9 +128,10 @@ end
 end
 
 # Solution for finding and calculating the Weyl points
-@kwdef struct WCSSolution{T1,T2} <: TopologicalNumbersSolutions
-    TopologicalNumber::T1 = nothing
-    n::T2 = nothing
+@kwdef struct WCSSolution{T1,T2,T3} <: TopologicalNumbersSolutions
+    kn::T1 = nothing
+    param::T2 = nothing
+    nums::T3 = nothing
 end
 
 # Solution for finding and calculating the Weyl points
