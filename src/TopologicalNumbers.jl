@@ -1,11 +1,33 @@
 module TopologicalNumbers
 
-include("./packages.jl")
-include("./problems.jl")
+# algorithms
 include("./algorithms.jl")
+export BP, FHS, FHS2, Shio
+export FHSlocal2, FHSsurface, FHSlocal3, Evar
+
+# problems
+include("./problems.jl")
+export BPProblem, FCProblem, SCProblem, Z2Problem
+export LBFProblem, WCSProblem, WNProblem, WPProblem
+
+# solutions
+export BPSolution, FCSolution, SCSolution, Z2Solution
+export LBFSolution, WCSSolution, WNSolution, WPSolution
+
+# parallel environment
 include("./parallelEnv.jl")
-include("./params.jl")
+export UseSingleThread, UseMPI
+
+# models
 include("./models.jl")
+export SSH, KitaevChain
+export Flux2d, Haldane, KitaevHoneycomb
+export ThoulessPump, KaneMele, BHZ
+export LatticeDirac
+
+
+include("./packages.jl")
+include("./params.jl")
 include("./showBand.jl")
 include("./calcZ2.jl")
 include("./calcChern.jl")
@@ -18,30 +40,15 @@ include("./calcChernSurface.jl")
 include("./findWeylPoint.jl")
 include("./SecondChern.jl")
 
-# algorithms
-export BP, FHS, FHS2, Shio
-
-# problems
-export BPProblem, FCProblem, SCProblem, Z2Problem
-
-# solutions
-export BPSolution, FCSolution, SCSolution, Z2Solution
-
-# parallel environment
-export UseSingleThread, UseMPI
-
-# models
-export SSH, KitaevChain
-export Flux2d, Haldane, KitaevHoneycomb
-export ThoulessPump, KaneMele, BHZ
-export LatticeDirac
-
 # main functions
-export showBand, calcZ2, calcChern, calcSecondChern, calcBerryPhase
+export solve
 export calcPhaseDiagram
+export showBand
 export plot1D, plot2D
+
+# Old methods
+export calcZ2, calcChern, calcSecondChern, calcBerryPhase
 export calcBerryFlux
 export calcWeylNode, calcChernSurface, findWeylPoint
-export solve
 
 end
