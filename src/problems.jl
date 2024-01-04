@@ -83,7 +83,7 @@ WNProblem(H, n) = WNProblem(; H=H, n=n)
 WNProblem(H, n, N) = WNProblem(; H=H, n=n, N=N)
 
 # Problem for finding and calculating the Weyl points
-@kwdef struct WPProblem{T1<:Function,T3<:Int,T4<:AbstractVector,T5<:Bool} <: TopologicalNumbersProblems
+@kwdef struct WPProblem{T1<:Function,T2<:Int,T3<:AbstractVector,T4<:Bool} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 10
     gapless::T3 = [1e-1, 1e-2, 1e-3, 1e-4]
