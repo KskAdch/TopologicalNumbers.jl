@@ -260,6 +260,8 @@ function warn_finiteImaginary(x)
 end
 
 # Main function to execute the simulation
+@doc raw"""
+"""
 function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     # @unpack N, Hs = p
 
@@ -274,6 +276,8 @@ function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:Topologica
 end
 
 # Main function to execute the simulation
+@doc raw"""
+"""
 function SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     s = v.sys
 
@@ -289,7 +293,7 @@ end
 
  Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-    calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true) where {T1<:Union{Int,nothing},T2<:Union{AbstractVector,Tuple}}
+    calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true, parallel::T3=UseSingleThread()) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
 
  Arguments
  - `Hamiltionian`: The Hamiltonian matrix with two-dimensional wavenumber `k` as an argument.
@@ -303,7 +307,13 @@ end
 # Examples
 
 """
-function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true, parallel::T3=UseSingleThread()) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
+function calcSecondChern(
+    Hamiltonian::Function;
+    Nfill::T1=nothing,
+    N::T2=(30, 30, 30, 30),
+    returnRealValue::Bool=true,
+    parallel::T3=UseSingleThread()
+) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
 
     Hs = size(Hamiltonian(zeros(4)), 1)
     if isnothing(Nfill)
@@ -325,7 +335,7 @@ end
 
  Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-    calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true) where {T1<:Union{Int,nothing},T2<:Union{AbstractVector,Tuple}}
+    solve(prob::SCProblem, alg::T1=FHS2(); parallel::T2=UseSingleThread()) where {T1<:SecondChernAlgorithms,T2<:TopologicalNumbersParallel}
 
  Arguments
  - `Hamiltionian`: The Hamiltonian matrix with two-dimensional wavenumber `k` as an argument.
@@ -339,7 +349,11 @@ end
 # Examples
 
 """
-function solve(prob::SCProblem, alg::T1=FHS2(); parallel::T2=UseSingleThread()) where {T1<:SecondChernAlgorithms,T2<:TopologicalNumbersParallel}
+function solve(
+    prob::SCProblem,
+    alg::T1=FHS2();
+    parallel::T2=UseSingleThread()
+) where {T1<:SecondChernAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, N, Nfill, RV = prob
 
     Hs = size(H(zeros(4)), 1)

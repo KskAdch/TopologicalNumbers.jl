@@ -337,7 +337,22 @@ function BHZ(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{Abst
 end
 
 
+@doc raw"""
 
+Hamiltonian of four-dimensional lattice Dirac model.
+
+     LatticeDirac(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Real}
+
+ Arguments
+ - `k::T1`: four-dimensional wavenumber `k`.
+ - `p::T2`: parameters defined as below.
+
+
+# Definition
+ Hamiltonian of the lattice Dirac model is defined as...
+
+where,,,
+"""
 function LatticeDirac(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Real}
     k1, k2, k3, k4 = k
     m = p

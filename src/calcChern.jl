@@ -122,6 +122,8 @@ end
     phi .= (phi .- dphi) ./ 2pi
 end
 
+@doc raw"""
+"""
 @views function ChernPhase!(TopologicalNumber, p::Params) # chern number # Bug
     @unpack N, Hs = p
     TopologicalNumber[:] .= zero(Float64)
@@ -205,7 +207,7 @@ end
 
  Calculate the first Chern numbers in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-    calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+    solve(prob::FCProblem, alg::T1=FHS(); parallel::T2=UseSingleThread()) where {T1<:FirstChernAlgorithms,T2<:TopologicalNumbersParallel}
 
  Arguments
  - Hamiltionian::Function: The Hamiltonian matrix with two-dimensional wavenumber `k` as an argument.
@@ -225,7 +227,11 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
-function solve(prob::FCProblem, alg::T1=FHS(); parallel::T2=UseSingleThread()) where {T1<:FirstChernAlgorithms,T2<:TopologicalNumbersParallel}
+function solve(
+    prob::FCProblem,
+    alg::T1=FHS();
+    parallel::T2=UseSingleThread()
+) where {T1<:FirstChernAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, N, gapless, rounds = prob
 
     Hs = size(H(zeros(2)), 1)

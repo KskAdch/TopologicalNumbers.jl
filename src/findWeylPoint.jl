@@ -74,6 +74,8 @@ function update_k0list!(E, k0list, N, Ni, Hs, gapless)
     end
 end
 
+@doc raw"""
+"""
 function weylpoint!(Hamiltonian, k0list, Nodes, Ni, Hs, rounds)
 
     H(k) = Hamiltonian([k[1] - pi / Ni, k[2] - pi / Ni, k[3] - pi / Ni])
@@ -143,7 +145,7 @@ end
 
 
 @doc raw"""
-    findWeylPoint(Hamiltonian::Function; N::Int=10, gapless::T=[1e-1, 1e-2, 1e-3, 1e-4], rounds::Bool=true) where {T<:AbstractVector{Float64}}
+    solve(prob::WPProblem, alg::T1=Evar(); parallel::T2=UseSingleThread()) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
 
  Arguments
  - Hamiltionian::Function: The Hamiltonian matrix with three-dimensional wavenumber `k` as an argument.

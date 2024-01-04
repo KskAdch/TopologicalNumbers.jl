@@ -123,7 +123,7 @@ end
 
  Calculate the Berry flux in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-    calcBerryFlux(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+    solve(prob::LBFProblem, alg::T1=FHSlocal2(); parallel::T2=UseSingleThread()) where {T1<:BerryFluxAlgorithms,T2<:TopologicalNumbersParallel}
 
  Arguments
  - Hamiltionian::Function: the Hamiltonian matrix with one-dimensional wavenumber `k` as an argument.

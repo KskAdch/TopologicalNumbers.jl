@@ -73,6 +73,8 @@ end
     phi .= angle.(v.Link)
 end
 
+@doc raw"""
+"""
 @views function BerryPhase!(TopologicalNumber, p::Params) # berry phase
     @unpack N, Hs = p
     Link = zeros(ComplexF64, Hs)
@@ -151,7 +153,7 @@ end
 
  Calculate the winding numbers in the one-dimensional case.
 
-    calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+    solve(prob::BPProblem, alg::T1=BP(); parallel::T2=UseSingleThread()) where {T1<:BerryPhaseAlgorithms,T2<:TopologicalNumbersParallel}
 
 
  Arguments
@@ -173,7 +175,11 @@ U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
 ```
  $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
 """
-function solve(prob::BPProblem, alg::T1=BP(); parallel::T2=UseSingleThread()) where {T1<:BerryPhaseAlgorithms,T2<:TopologicalNumbersParallel}
+function solve(
+    prob::BPProblem,
+    alg::T1=BP();
+    parallel::T2=UseSingleThread()
+) where {T1<:BerryPhaseAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, N, gapless, rounds = prob
 
     Hs = size(H(0.0), 1)

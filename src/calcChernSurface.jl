@@ -69,7 +69,7 @@ end
 
 
 @doc raw"""
-    calcChernSurface(H::Function, kn::String; kn_mesh::Int=51, N::Int=51, gapless::Real=0.0, rounds::Bool=true, plot::Bool=false)
+    solve(prob::WCSProblem, alg::T1=FHSsurface(); parallel::T2=UseSingleThread(), plot::Bool=false) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
 
  Arguments
  - Hamiltionian::Function: The Hamiltonian matrix with three-dimensional wavenumber `k` as an argument.

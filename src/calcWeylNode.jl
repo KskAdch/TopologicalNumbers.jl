@@ -166,7 +166,7 @@ end
 
  Calculate the Weyl node in the three-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-    calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+    solve(prob::WNProblem, alg::T1=FHSlocal3(); parallel::T2=UseSingleThread()) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
 
  Arguments
  - Hamiltionian::Function: the Hamiltonian matrix with three-dimensional wavenumber `k` as an argument.

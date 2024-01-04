@@ -180,6 +180,8 @@ end
 #     end
 # end
 
+@doc raw"""
+"""
 @views function Z2Phase!(TopologicalNumber, p::Params) # chern number
     @unpack N, Hs, rounds = p
     Nhalf = N ÷ 2 + 1
@@ -302,6 +304,8 @@ end
 #     end
 # end
 
+@doc raw"""
+"""
 @views function Z2Phase!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
     @unpack N, Hs, rounds = p
     Nhalf = N ÷ 2 + 1
@@ -438,7 +442,7 @@ end
 
  Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Shiozaki2023discrete](@cite).
 
-    calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
+    solve(prob::Z2Problem, alg::T1=Shio(); parallel::T2=UseSingleThread()) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
 
  Arguments
  - `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
@@ -468,7 +472,11 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $T$ is the time-reversal operator.
 """
-function solve(prob::Z2Problem, alg::T1=Shio(); parallel::T2=UseSingleThread()) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
+function solve(
+    prob::Z2Problem,
+    alg::T1=Shio();
+    parallel::T2=UseSingleThread()
+) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
     @unpack H, N, rounds, TR = prob
 
     Hs = size(H(zeros(2)), 1)

@@ -159,7 +159,17 @@ end
 ```math
 ```
 """
-function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
+function showBand(
+    Hamiltonian::Function;
+    N::Int=51,
+    labels::Bool=true,
+    value::Bool=true,
+    disp::Bool=false,
+    png::Bool=false,
+    pdf::Bool=false,
+    svg::Bool=false,
+    filename::String="Band"
+)
 
     dim = Hs = 0
 

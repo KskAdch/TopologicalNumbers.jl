@@ -7,9 +7,19 @@ function marker(i)
 end
 
 @doc raw"""
-    plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
+    plot1D(::T1, nums::T2, param_range::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:SecondChernAlgorithms,T2<:AbstractVector,T3<:AbstractVector}
 """
-function plot1D(::T1, nums::T2, param_range::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:SecondChernAlgorithms,T2<:AbstractVector,T3<:AbstractVector}
+function plot1D(
+    ::T1,
+    nums::T2,
+    param_range::T3;
+    labels::Bool=true,
+    disp::Bool=true,
+    png::Bool=false,
+    pdf::Bool=false,
+    svg::Bool=false,
+    filename::String="phaseDiagram"
+) where {T1<:SecondChernAlgorithms,T2<:AbstractVector,T3<:AbstractVector}
 
     fig = figure()
     ax = fig.add_subplot(111)
@@ -34,7 +44,16 @@ end
 @doc raw"""
     plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
 """
-function plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractMatrix,T2<:AbstractVector}
+function plot1D(
+    nums::T1,
+    param_range::T2;
+    labels::Bool=true,
+    disp::Bool=true,
+    png::Bool=false,
+    pdf::Bool=false,
+    svg::Bool=false,
+    filename::String="phaseDiagram"
+) where {T1<:AbstractMatrix,T2<:AbstractVector}
 
     fig = figure()
     ax = fig.add_subplot(111)
@@ -63,9 +82,17 @@ function plot1D(nums::T1, param_range::T2; labels::Bool=true, disp::Bool=true, p
 end
 
 @doc raw"""
-    plot1D(result::NamedTuple; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
+    plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
 """
-function plot1D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
+function plot1D(
+    result::NamedTuple;
+    labels::Bool=true,
+    disp::Bool=true,
+    png::Bool=false,
+    pdf::Bool=false,
+    svg::Bool=false,
+    filename::String="phaseDiagram"
+)
 
     fig = figure()
     ax = fig.add_subplot(111)
@@ -97,7 +124,17 @@ end
 @doc raw"""
     plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
 """
-function plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram") where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
+function plot2D(
+    nums::T1,
+    param_range1::T2,
+    param_range2::T3;
+    labels::Bool=true,
+    disp::Bool=true,
+    png::Bool=false,
+    pdf::Bool=false,
+    svg::Bool=false,
+    filename::String="phaseDiagram"
+) where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
 
     fig = figure()
     ax = fig.add_subplot(111)
@@ -118,9 +155,17 @@ function plot2D(nums::T1, param_range1::T2, param_range2::T3; labels::Bool=true,
 end
 
 @doc raw"""
-    plot2D(result::NamedTuple; labels::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
+    plot2D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
 """
-function plot2D(result::NamedTuple; labels::Bool=true, disp::Bool=true, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="phaseDiagram")
+function plot2D(
+    result::NamedTuple;
+    labels::Bool=true,
+    disp::Bool=true,
+    png::Bool=false,
+    pdf::Bool=false,
+    svg::Bool=false,
+    filename::String="phaseDiagram"
+)
 
     fig = figure()
     ax = fig.add_subplot(111)
