@@ -130,7 +130,13 @@ end
  - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 """
-function calcWeylNode(Hamiltonian::Function, n::T; N::Int=51, gapless::Real=0.0, rounds::Bool=true) where {T<:AbstractVector{Int64}}
+function calcWeylNode(
+    Hamiltonian::Function,
+    n::T;
+    N::Int=51,
+    gapless::Real=0.0,
+    rounds::Bool=true
+) where {T<:AbstractVector{Int64}}
 
     Hs = size(Hamiltonian(n), 1)
     p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=3)
@@ -152,4 +158,48 @@ function calcWeylNode(Hamiltonian::Function, n::T; N::Int=51, gapless::Real=0.0,
     end
 
     (; TopologicalNumber, n, N)
+end
+
+
+
+@doc raw"""
+
+ Calculate the Weyl node in the three-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
+
+    calcWeylNode(Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
+
+ Arguments
+ - Hamiltionian::Function: the Hamiltonian matrix with three-dimensional wavenumber `k` as an argument.
+ - n::Vector{Int64}: The wavenumber($2\pi\bm{n}/N$) when calculating Weyl node.
+ - N::Int=51: The number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - gapless::Real: The threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
+ - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+
+"""
+function solve(prob::WNProblem,
+    alg::T1=FHSlocal3();
+    parallel::T2=UseSingleThread()
+) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
+    @unpack H, n, N, gapless, rounds = prob
+
+    Hs = size(Hamiltonian(n), 1)
+    p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=3)
+
+    n .= [mod(n[i], N) for i in 1:3]
+
+    psimat = zeros(ComplexF64, 8, Hs, Hs)
+    Evec = zeros(Hs)
+    Linkmat = zeros(ComplexF64, 12, Hs)
+    phi = zeros(6, Hs)
+    TopologicalNumber = zeros(Hs)
+
+    psimat_cube!(n, psimat, Evec, p)
+    Linkmat_cube!(psimat, Evec, Linkmat, p)
+    F!(Linkmat, phi, TopologicalNumber, p)
+
+    if rounds == true
+        TopologicalNumber = round.(Int, TopologicalNumber)
+    end
+
+    WNSolution(; TopologicalNumber, n, N)
 end

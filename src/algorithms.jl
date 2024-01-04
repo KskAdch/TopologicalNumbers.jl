@@ -19,3 +19,13 @@ struct FHS2 <: SecondChernAlgorithms end
 abstract type Z2Algorithms <: TopologicalNumbersAlgorithms end
 # struct Int2DZ2 <: Z2Algorithms end
 struct Shio <: Z2Algorithms end
+
+# Algorithms for calculating the local Berry flux
+abstract type BerryFluxAlgorithms <: TopologicalNumbersAlgorithms end
+struct FHSlocal2 <: BerryFluxAlgorithms end
+
+# Algorithms for finding and calculating the Weyl points
+abstract type WeylPointsAlgorithms <: TopologicalNumbersAlgorithms end
+struct FHSsurface <: WeylPointsAlgorithms end
+struct FHSlocal3 <: WeylPointsAlgorithms end
+struct Evar <: WeylPointsAlgorithms end
