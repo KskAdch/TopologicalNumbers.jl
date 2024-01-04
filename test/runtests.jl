@@ -163,7 +163,23 @@ using PythonPlot
                     end
                 end
 
-                @test C1 == calcChern(H).TopologicalNumber
+                @test C1 == [1, 1, -2, -2, 1, 1]
+                @test C2 ≈ [1, 1, -2, -2, 1, 1]
+
+
+                C1 = zeros(6)
+                C2 = zeros(6)
+                N = 51
+                for j in 1:N
+                    for i in 1:N
+                        prob = LBFProblem(H, [i - 1, j - 1])
+                        C1 .+= solve(prob).TopologicalNumber
+                        prob = LBFProblem(; H, n=[i - 1, j - 1], rounds=false)
+                        C2 .+= solve(prob).TopologicalNumber
+                    end
+                end
+
+                @test C1 == [1, 1, -2, -2, 1, 1]
                 @test C2 ≈ [1, 1, -2, -2, 1, 1]
 
 
@@ -454,6 +470,12 @@ using PythonPlot
 
         @test calcWeylNode(H₀, [4, 10, 10]; N=11) == (TopologicalNumber=[1, -1], n=[4, 10, 10], N=11)
 
+        prob = WNProblem(H₀, [4, 10, 10], 11)
+        result = solve(prob)
+        @test result.TopologicalNumber == [1, -1]
+        @test result.n == [4, 10, 10]
+        @test result.N == 11
+
         N = 11
         nodes = zeros(N, N, N, 2)
         for i in 1:N, j in 1:N, k in 1:N
@@ -478,7 +500,31 @@ using PythonPlot
         @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         @test result.nums[:, 2] == -result.nums[:, 1]
 
+
+        prob = WCSProblem(H₀, "k1", 11)
+        result = solve(prob)
+        @test result.kn == "k1"
+        @test result.nums[:, 1] == [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]
+        @test result.nums[:, 2] == -result.nums[:, 1]
+
+        prob = WCSProblem(H₀, "k2", 11)
+        result = solve(prob)
+        @test result.kn == "k2"
+        @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        @test result.nums[:, 2] == -result.nums[:, 1]
+
+        prob = WCSProblem(H₀, "k3", 11)
+        result = solve(prob)
+        @test result.nums[:, 1] == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        @test result.nums[:, 2] == -result.nums[:, 1]
+
+
         result = findWeylPoint(H₀)
+        @test result.WeylPoint == [[[4000, 9990, 9990], [6000, 9990, 9990]], [[4000, 9990, 9990], [6000, 9990, 9990]]]
+        @test result.Nodes == [[1, -1], [-1, 1]]
+
+        prob = WPProblem(H₀)
+        result = solve(prob)
         @test result.WeylPoint == [[[4000, 9990, 9990], [6000, 9990, 9990]], [[4000, 9990, 9990], [6000, 9990, 9990]]]
         @test result.Nodes == [[1, -1], [-1, 1]]
     end
