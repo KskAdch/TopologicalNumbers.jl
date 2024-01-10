@@ -4,14 +4,14 @@
 
 ```julia
 julia> function H₀(k, p) # Thouless pump
-           k, t = k
-           m₀, Δ = p
+           k1, t = k
+           Δ, m₀ = p
 
-           R1 = -Δ*sin(k)
-           R2 = -Δ*(1-cos(k))
+           R1 = -Δ*sin(k1)
+           R2 = -Δ*(1-cos(k1))
            R3 = m₀*sin(t)
-           R4 = -(1+cos(t))*sin(k)
-           R0 = -(1-cos(t))-(1+cos(t))*cos(k)
+           R4 = -(1+cos(t))*sin(k1)
+           R0 = -(1-cos(t))-(1+cos(t))*cos(k1)
 
            s0 = [1 0; 0 1]
            sx = [0 1; 1 0]
