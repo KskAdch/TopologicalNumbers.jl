@@ -52,3 +52,26 @@ This package includes the following functions:
 - `calcWeylNode` to calculate the Weyl node in the three-dimensional case,
 - `calcChernSurface` to calculate the Chern numbers in the three-dimensional case,
 - `findWeylPoint` to find the Weyl points in the three-dimensional case.
+
+Dimensions of the Hamiltonian and corresponding functions:
+
+|Dimention|Function                                                                                            |
+|---------|----------------------------------------------------------------------------------------------------|
+|0D       |(calcWeylNode ($\mathbb{Z}$))<br>                                                                   |
+|1D       |calcBerryPhase ($\mathbb{Z}$)<br>                                                                   |
+|2D       |calcBerryFlux ($\mathbb{Z}$)<br> calcChern ($\mathbb{Z}$)<br> calcZ2 ($\mathbb{Z}_{2}$)<br>         |
+|3D       |calcWeylNode ($\mathbb{Z}$)<br> calcChernSurface ($\mathbb{Z}$)<br> findWeylPoint ($\mathbb{Z}$)<br>|
+|4D       |calcSecondChern ($\mathbb{Z}$)<br>                                                                  |
+
+
+<!-- 
+|function        |0D            |1D          |2D              |3D          |4D          |
+|----------------|:------------:|:----------:|:--------------:|:----------:|:----------:|
+|calcBerryPhase  |              |$\mathbb{Z}$|                |            |            |
+|calcBerryFlux   |              |            |$\mathbb{Z}$    |            |            |
+|calcChern       |              |            |$\mathbb{Z}$    |            |            |
+|calcZ2          |              |            |$\mathbb{Z}_{2}$|            |            |
+|calcWeylNode    |($\mathbb{Z}$)|            |                |$\mathbb{Z}$|            |
+|calcChernSurface|              |            |                |$\mathbb{Z}$|            |
+|findWeylPoint   |              |            |                |$\mathbb{Z}$|            |
+|calcSecondChern |              |            |                |            |$\mathbb{Z}$| -->
