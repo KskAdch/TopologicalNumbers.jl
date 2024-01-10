@@ -5,5 +5,5 @@
 
 ```@autodocs
 Modules = [TopologicalNumbers]
-Internal = false
+Private = false
 ```
