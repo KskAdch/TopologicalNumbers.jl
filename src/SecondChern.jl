@@ -1,36 +1,36 @@
 # Functions to calculate and update Link variables and their inverses
 # for the links in the x, y, z, and w directions
-function linkUx!(i, j, l, m, s)
+function linkUx!(i, j, l, m, s::TemporalSecondChern)
     s.Ux = s.evec[i, j, l, m]' * s.evec[i+1, j, l, m]
 end
-function linkUx_inv!(i, j, l, m, s)
+function linkUx_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Ux_inv = s.evec[i+1, j, l, m]' * s.evec[i, j, l, m]
 end
 
-function linkUy!(i, j, l, m, s)
+function linkUy!(i, j, l, m, s::TemporalSecondChern)
     s.Uy = s.evec[i, j, l, m]' * s.evec[i, j+1, l, m]
 end
-function linkUy_inv!(i, j, l, m, s)
+function linkUy_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Uy_inv = s.evec[i, j+1, l, m]' * s.evec[i, j, l, m]
 end
 
-function linkUz!(i, j, l, m, s)
+function linkUz!(i, j, l, m, s::TemporalSecondChern)
     s.Uz = s.evec[i, j, l, m]' * s.evec[i, j, l+1, m]
 end
-function linkUz_inv!(i, j, l, m, s)
+function linkUz_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Uz_inv = s.evec[i, j, l+1, m]' * s.evec[i, j, l, m]
 end
 
-function linkUw!(i, j, l, m, s)
+function linkUw!(i, j, l, m, s::TemporalSecondChern)
     s.Uw = s.evec[i, j, l, m]' * s.evec[i, j, l, m+1]
 end
-function linkUw_inv!(i, j, l, m, s)
+function linkUw_inv!(i, j, l, m, s::TemporalSecondChern)
     s.Uw_inv = s.evec[i, j, l, m+1]' * s.evec[i, j, l, m]
 
 end
 
 # Functions to calculate field strength tensors Fxy, Fzw, Fwx, Fzy, Fzx, Fyw
-function Fxy!(i, j, l, m, s, Nfill)
+function Fxy!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUx!(i, j, l, m, s)
     linkUy!(i + 1, j, l, m, s)
     linkUx_inv!(i, j + 1, l, m, s)
@@ -41,7 +41,7 @@ function Fxy!(i, j, l, m, s, Nfill)
     s.Fxy = log(s.Ftemp)
 
 end
-function Fzw!(i, j, l, m, s, Nfill)
+function Fzw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
     linkUw!(i, j, l + 1, m, s)
     linkUz_inv!(i, j, l, m + 1, s)
@@ -51,7 +51,7 @@ function Fzw!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fzw * Nfill / tr(s.Fzw)
     s.Fzw = log(s.Ftemp)
 end
-function Fwx!(i, j, l, m, s, Nfill)
+function Fwx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUw!(i, j, l, m, s)
     linkUx!(i, j, l, m + 1, s)
     linkUw_inv!(i + 1, j, l, m, s)
@@ -61,7 +61,7 @@ function Fwx!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fwx * Nfill / tr(s.Fwx)
     s.Fwx = log(s.Ftemp)
 end
-function Fzy!(i, j, l, m, s, Nfill)
+function Fzy!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
     linkUy!(i, j, l + 1, m, s)
     linkUz_inv!(i, j + 1, l, m, s)
@@ -71,7 +71,7 @@ function Fzy!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fzy * Nfill / tr(s.Fzy)
     s.Fzy = log(s.Ftemp)
 end
-function Fzx!(i, j, l, m, s, Nfill)
+function Fzx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
     linkUx!(i, j, l + 1, m, s)
     linkUz_inv!(i + 1, j, l, m, s)
@@ -81,7 +81,7 @@ function Fzx!(i, j, l, m, s, Nfill)
     s.Ftemp .= s.Fzx * Nfill / tr(s.Fzx)
     s.Fzx = log(s.Ftemp)
 end
-function Fyw!(i, j, l, m, s, Nfill)
+function Fyw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUy!(i, j, l, m, s)
     linkUw!(i, j + 1, l, m, s)
     linkUy_inv!(i, j, l, m + 1, s)
@@ -156,7 +156,7 @@ function setParams(p)
 end
 
 # Function to fix the gauge at the boundaries
-function boundaryGauge(r, s)
+function boundaryGauge(r, s::TemporalSecondChern)
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
         s.evec[l, j, i, r.Nz+1] = s.evec[l, j, i, 1]
     end
@@ -215,7 +215,7 @@ function setBasis!(v, p)
         s.k = @SVector [r.Kxrange[i], r.Kyrange[j], r.Kzrange[l], r.Kwrange[m]]
         # H!(p)
         # s.H = eigvecs(s.H)
-        s.H = eigvecs(p.Hamiltonian(s.k))
+        s.H = eigvecs(p.Ham(s.k))
         s.evec[i, j, l, m] = @view s.H[:, 1:r.Nfill]
     end
 
@@ -260,6 +260,19 @@ function warn_finiteImaginary(x)
 end
 
 # Main function to execute the simulation
+@doc raw"""
+    SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
+
+Main function to execute the simulation and calculate the second Chern number.
+
+## Arguments
+- `p`: Parameters for the simulation.
+- `parallel`: Parallelization strategy. Default is `UseSingleThread()`.
+
+## Returns
+- `chern`: The second Chern number.
+
+"""
 function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     # @unpack N, Hs = p
 
@@ -274,6 +287,18 @@ function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:Topologica
 end
 
 # Main function to execute the simulation
+@doc raw"""
+    SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
+
+This function updates the second Chern number for the given system `v`. The `parallel` argument specifies whether to use parallel computation or not.
+
+# Arguments
+- `v`: The system to compute the second Chern number for.
+- `parallel`: (optional) The parallel computation mode. Default is `UseSingleThread()`.
+
+# Example
+
+"""
 function SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     s = v.sys
 
@@ -284,11 +309,12 @@ function SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:Topologic
 end
 
 
+# Old method
 @doc raw"""
 
- Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
+ Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern,Mochol-Grzelak2018Efficient](@cite).
 
-    calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true) where {T1<:Union{Int,nothing},T2<:Union{AbstractVector,Tuple}}
+    calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true, parallel::T3=UseSingleThread()) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
 
  Arguments
  - `Hamiltionian`: The Hamiltonian matrix with two-dimensional wavenumber `k` as an argument.
@@ -297,18 +323,22 @@ end
  - `returnRealValue::Bool`: An option to return the value of the topological number by an real value. The topological number returns a value of type `Float64` when `true`, and a value of type `ComplexF64` when `false`.
 
 
-# Definition
-
 # Examples
 
 """
-function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true, parallel::T3=UseSingleThread()) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
+function calcSecondChern(
+    Hamiltonian::Function;
+    Nfill::T1=nothing,
+    N::T2=(30, 30, 30, 30),
+    returnRealValue::Bool=true,
+    parallel::T3=UseSingleThread()
+) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
 
     Hs = size(Hamiltonian(zeros(4)), 1)
     if isnothing(Nfill)
         Nfill = Hs ÷ 2 # Half filling
     end
-    p = Params(; Hamiltonian, Nfill, N, gapless=0.0, rounds=returnRealValue, Hs, dim=4)
+    p = Params(; Ham=Hamiltonian, Nfill, N, gapless=0.0, rounds=returnRealValue, Hs, dim=4)
 
     TopologicalNumber = SecondChernPhase(p; parallel)
     warn_finiteImaginary(TopologicalNumber)
@@ -318,4 +348,55 @@ function calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30
     end
 
     (; TopologicalNumber)
+end
+
+@doc raw"""
+Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern,Mochol-Grzelak2018Efficient](@cite).
+
+    solve(prob::SCProblem, alg::T1=FHS2(); parallel::T2=UseSingleThread()) where {T1<:SecondChernAlgorithms,T2<:TopologicalNumbersParallel}
+
+# Arguments
+- `prob::SCProblem`: The SCProblem struct that contains the Hamiltonian matrix function in the wave number space, filling number, mesh numbers, and other parameters.
+- `alg::T1=FHS2()`: The algorithm to use for calculating the second Chern numbers. Default is FHS2 algorithm.
+- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
+
+# Returns
+- `SCSolution`: A struct that contains the calculated second Chern numbers.
+
+# Examples
+
+```julia
+julia> H(k) = LatticeDirac(k, -3.0)
+julia> prob = SCProblem(H)
+julia> result = solve(prob)
+SCSolution{Float64}(0.9793607631927381)
+julia> result.TopologicalNumber
+0.9793607631927381
+```
+
+"""
+function solve(
+    prob::SCProblem,
+    alg::T1=FHS2();
+    parallel::T2=UseSingleThread()
+) where {T1<:SecondChernAlgorithms,T2<:TopologicalNumbersParallel}
+    @unpack H, N, Nfill, RV = prob
+
+    Hs = size(H(zeros(4)), 1)
+    if N isa Int
+        N = (N, N, N, N)
+    end
+    if isnothing(Nfill)
+        Nfill = Hs ÷ 2 # Half filling
+    end
+    p = Params(; Ham=H, Nfill, N, rounds=false, returnRealValue=RV, Hs, dim=4)
+
+    TopologicalNumber = SecondChernPhase(p; parallel)
+    warn_finiteImaginary(TopologicalNumber)
+
+    if p.returnRealValue == true
+        TopologicalNumber = real(TopologicalNumber)
+    end
+
+    SCSolution(; TopologicalNumber)
 end

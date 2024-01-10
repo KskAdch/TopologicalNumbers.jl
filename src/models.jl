@@ -183,7 +183,7 @@ julia> Haldane([0, π/3], [0.5, π/2, 0.3])
  -2.5-0.866025im  -0.3-0.0im
 ```
 """
-function Haldane(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple}, T2<:Union{AbstractVector,Tuple}}
+function Haldane(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     t₁ = 1
     t₂, ϕ, m = p
@@ -481,7 +481,7 @@ function LatticeDirac(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:R
     g4 = kron(σ₃, σ₂)
     g5 = kron(σ₃, σ₃)
 
-    h1 = m + c*(cos(k1) + cos(k2) + cos(k3) + cos(k4))
+    h1 = m + c * (cos(k1) + cos(k2) + cos(k3) + cos(k4))
     h2 = sin(k1)
     h3 = sin(k2)
     h4 = sin(k3)

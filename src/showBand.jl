@@ -1,17 +1,17 @@
 function Ene1D(p::Params) # 1D Energy
-    @unpack Hamiltonian, N, Hs = p
+    @unpack Ham, N, Hs = p
 
     k = range(-π, π, length=N)
     Ene = zeros(N, Hs)
 
     for i in 1:N
-        Ene[i, :] = eigvals!(Hamiltonian(k[i]))
+        Ene[i, :] = eigvals!(Ham(k[i]))
     end
     k, Ene
 end
 
 function Ene2D(p::Params) # 2D Energy
-    @unpack Hamiltonian, N, Hs = p
+    @unpack Ham, N, Hs = p
 
     k = range(-π, π, length=N)
     k0 = zeros(2)
@@ -21,7 +21,7 @@ function Ene2D(p::Params) # 2D Energy
         k0[2] = k[j]
         for i in 1:N
             k0[1] = k[i]
-            Ene[i, j, :] .= eigvals!(Hamiltonian(k0))
+            Ene[i, j, :] .= eigvals!(Ham(k0))
         end
     end
     k = hcat(k, k)
@@ -29,7 +29,7 @@ function Ene2D(p::Params) # 2D Energy
 end
 
 function Ene4D(p::Params) # 4D Energy
-    @unpack Hamiltonian, N, Hs = p
+    @unpack Ham, N, Hs = p
 
     k = range(-π, π, length=N)
     k0 = zeros(4)
@@ -43,7 +43,7 @@ function Ene4D(p::Params) # 4D Energy
                 k0[2] = k[j]
                 for i in 1:N
                     k0[1] = k[i]
-                    Ene[i, j, l, m, :] .= eigvals!(Hamiltonian(k0))
+                    Ene[i, j, l, m, :] .= eigvals!(Ham(k0))
                 end
             end
         end
@@ -139,27 +139,42 @@ function output(k, Ene, fig, p)
     end
 end
 
+
 @doc raw"""
-
- Drawing the band structure of the Hamiltonian.
-
     showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
 
- Arguments
- - `Hamiltonian::Function`: the Hamiltonian matrix function of wave number $\bm k$.
- - `N::Int`: the number of divisions in the wave number space.
- - `labels::Bool`: whether to display the labels of the figure.
- - `value::Bool`: whether to output the values of the wave number and the energy in the matrix form.
- - `disp::Bool`: whether to display the figure.
- - `png::Bool`: whether to save the figure as a PNG file.
- - `pdf::Bool`: whether to save the figure as a PDF file.
- - `svg::Bool`: whether to save the figure as a SVG file.
- - `filename::String`: the name of the output file.
+This function generates a band structure plot for a given Hamiltonian.
 
-```math
+# Arguments
+- `Hamiltonian::Function`: The Hamiltonian function that takes a wave number parameter `k` and returns the corresponding Hamiltonian matrix.
+- `N::Int`: The number of points in the Brillouin zone. Default is 51.
+- `labels::Bool`: Whether to display the labels of the figure. Default is `true`.
+- `value::Bool`: Whether to output the values of the wave number and the energy in the matrix form. Default is `true`.
+- `disp::Bool`: Whether to display the plot. Default is `false`.
+- `png::Bool`: Whether to save the plot as a PNG file. Default is `false`.
+- `pdf::Bool`: Whether to save the plot as a PDF file. Default is `false`.
+- `svg::Bool`: Whether to save the plot as an SVG file. Default is `false`.
+- `filename::String`: The filename for the saved plot. Default is "Band".
+
+# Examples
+
+```julia
+julia> H(k) = SSH(k, (0.9, 1.0)) # $N \times N$ Hamiltonian matrix with a wavenumber parameter k
+julia> showBand(H)
+(k = -3.141592653589793:0.12566370614359174:3.141592653589793, Ene = [-0.09999999999999998 0.09999999999999998; -0.15554271964299698 0.15554271964299698; … ; -0.15554271964299698 0.15554271964299698; -0.09999999999999998 0.09999999999999998])
 ```
 """
-function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
+function showBand(
+    Hamiltonian::Function;
+    N::Int=51,
+    labels::Bool=true,
+    value::Bool=true,
+    disp::Bool=false,
+    png::Bool=false,
+    pdf::Bool=false,
+    svg::Bool=false,
+    filename::String="Band"
+)
 
     dim = Hs = 0
 
@@ -181,7 +196,7 @@ function showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bo
         end
     end
 
-    p = Params(; Hamiltonian, dim, N, Hs, gapless=0.0, rounds=false)
+    p = Params(; Ham=Hamiltonian, dim, N, Hs, gapless=0.0, rounds=false)
     p_out = (; labels, value, disp, png, pdf, svg, filename)
 
     k, Ene, fig = diagram(p, p_out)
