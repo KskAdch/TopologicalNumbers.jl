@@ -1,5 +1,5 @@
 
-@kwdef struct Params{T1<:Int,T2<:Union{Int,Tuple,AbstractVector},T3<:AbstractFloat,T4<:Bool}
+Base.@kwdef struct Params{T1<:Int,T2<:Union{Int,Tuple,AbstractVector},T3<:AbstractFloat,T4<:Bool}
     Ham::Function
     dim::T1
     Nfill::T1 = 1
@@ -11,7 +11,7 @@
 end
 
 # Define a mutable struct named TemporalSecondChern with multiple type parameters
-@kwdef mutable struct TemporalSecondChern{T1,T2,T3,T4,T5,T6}
+Base.@kwdef mutable struct TemporalSecondChern{T1,T2,T3,T4,T5,T6}
     chern::T1      # Second Chern number
     k::T2          # Momentum vector
     evec::T3       # Eigenvectors
@@ -34,7 +34,7 @@ end
 end
 
 
-@kwdef struct TemporalBerryPhase{L,EV,PS}
+Base.@kwdef struct TemporalBerryPhase{L,EV,PS}
     Link::L
     Evec0::EV
     Evec1::EV
@@ -44,7 +44,7 @@ end
 end
 
 
-@kwdef struct TemporalFirstChern{K,L1,L2,EV1,EV2,PS1,PS2}
+Base.@kwdef struct TemporalFirstChern{K,L1,L2,EV1,EV2,PS1,PS2}
     k::K
     Link0::L1
     Link1::L1
@@ -63,7 +63,7 @@ end
 end
 
 
-@kwdef struct TemporalZ2{K,B,W,L1,L2,PS1,PS2,N}
+Base.@kwdef struct TemporalZ2{K,B,W,L1,L2,PS1,PS2,N}
     k::K
     T::B
     w00::W

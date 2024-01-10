@@ -12,6 +12,6 @@ abstract type TopologicalNumbersMultiProcess <: TopologicalNumbersParallel end
 
 @doc raw"""
 """
-@kwdef struct UseMPI{T} <: TopologicalNumbersMultiProcess
+Base.@kwdef struct UseMPI{T} <: TopologicalNumbersMultiProcess
     MPI::T
 end

@@ -17,7 +17,7 @@ The `BPProblem` struct represents a problem for calculating Berry phase.
 julia> 
 ```
 """
-@kwdef struct BPProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct BPProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 51
     gapless::T3 = 0.0
@@ -82,7 +82,7 @@ A struct representing a problem for calculating the first Chern number.
 julia> 
 ```
 """
-@kwdef struct FCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct FCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 51
     gapless::T3 = 0.0
@@ -145,7 +145,7 @@ A struct representing a problem for calculating the second Chern number.
 julia> 
 ```
 """
-@kwdef struct SCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Union{Real,Nothing},T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct SCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Union{Real,Nothing},T4<:Bool} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 30
     Nfill::T3 = nothing
@@ -209,7 +209,7 @@ A struct representing a problem for calculating the Z2 number.
 julia> 
 ```
 """
-@kwdef struct Z2Problem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct Z2Problem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Bool} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 50
     rounds::T3 = true
@@ -273,7 +273,7 @@ A struct representing a problem for calculating the $k$-local value of Berry flu
 julia> 
 ```
 """
-@kwdef struct LBFProblem{T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct LBFProblem{T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
     H::T1
     n::T2
     N::T3 = 51
@@ -341,7 +341,7 @@ A struct representing a problem for finding and calculating the Weyl points.
 julia> 
 ```
 """
-@kwdef struct WCSProblem{T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct WCSProblem{T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool} <: TopologicalNumbersProblems
     H::T1
     kn::T2
     kn_mesh::T3 = 51
@@ -430,7 +430,7 @@ A struct representing a problem for calculating the Weyl nodes.
 julia> 
 ```
 """
-@kwdef struct WNProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct WNProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
     H::T1
     n::T2
     N::T3 = 51
@@ -496,7 +496,7 @@ A struct representing a problem for calculating the Weyl points.
 julia> 
 ```
 """
-@kwdef struct WPProblem{T1<:Function,T2<:Int,T3<:AbstractVector,T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct WPProblem{T1<:Function,T2<:Int,T3<:AbstractVector,T4<:Bool} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 10
     gapless::T3 = [1e-1, 1e-2, 1e-3, 1e-4]
@@ -555,7 +555,7 @@ The `BPSolution` struct represents a solution for calculating Berry phase.
 - `TopologicalNumber::T1`: The Berry phase for each energy bands.
 - `Total::T2`: The total Berry phase.
 """
-@kwdef struct BPSolution{T1,T2} <: TopologicalNumbersSolutions
+Base.@kwdef struct BPSolution{T1,T2} <: TopologicalNumbersSolutions
     TopologicalNumber::T1 = nothing
     Total::T2 = nothing
 end
@@ -570,7 +570,7 @@ The `FCSolution` struct represents a solution for calculating the first Chern nu
 - `TopologicalNumber::T1`: The first Chern number for each energy bands.
 - `Total::T2`: The total of the first Chern number.
 """
-@kwdef struct FCSolution{T1,T2} <: TopologicalNumbersSolutions
+Base.@kwdef struct FCSolution{T1,T2} <: TopologicalNumbersSolutions
     TopologicalNumber::T1 = nothing
     Total::T2 = nothing
 end
@@ -584,7 +584,7 @@ The `SCSolution` struct represents a solution for calculating the second Chern n
 # Fields
 - `TopologicalNumber::T`: The second Chern number.
 """
-@kwdef struct SCSolution{T} <: TopologicalNumbersSolutions
+Base.@kwdef struct SCSolution{T} <: TopologicalNumbersSolutions
     TopologicalNumber::T = nothing
 end
 
@@ -599,7 +599,7 @@ The `Z2Solution` struct represents a solution for calculating Z2 number.
 - `TRTopologicalNumber::T2`: The Z2 number for the remaining part of the Brillouin zone. This field is only returned when `TR` is `true` in `Z2Problem`.
 - `Total::T3`: The total Z2 number.
 """
-@kwdef struct Z2Solution{T1,T2,T3} <: TopologicalNumbersSolutions
+Base.@kwdef struct Z2Solution{T1,T2,T3} <: TopologicalNumbersSolutions
     TopologicalNumber::T1 = nothing
     TRTopologicalNumber::T2 = nothing
     Total::T3 = nothing
@@ -615,7 +615,7 @@ The `LBFSolution` struct represents a solution for calculating the $k$-local val
 - `TopologicalNumber::T1`: The local Berry flux for each energy bands.
 - `n::T2`: An `AbstractVector` (or a `Tuple`) including two elements of `Int`, which represents wavenumber ($2\pi n/N$) when calculating Berry flux.
 """
-@kwdef struct LBFSolution{T1,T2} <: TopologicalNumbersSolutions
+Base.@kwdef struct LBFSolution{T1,T2} <: TopologicalNumbersSolutions
     TopologicalNumber::T1 = nothing
     n::T2 = nothing
 end
@@ -631,7 +631,7 @@ The `WCSSolution` struct represents a solution for finding and calculating the W
 - `param::T2`: Wavenumber parameters in `"kn"` direction.
 - `nums::T3`: The Chern number for each energy bands and each wavenumber parameters.
 """
-@kwdef struct WCSSolution{T1,T2,T3} <: TopologicalNumbersSolutions
+Base.@kwdef struct WCSSolution{T1,T2,T3} <: TopologicalNumbersSolutions
     kn::T1 = nothing
     param::T2 = nothing
     nums::T3 = nothing
@@ -648,7 +648,7 @@ The `WNSolution` struct represents a solution for calculating the Weyl nodes.
 - `n::T2`: 
 - `N::T3`: 
 """
-@kwdef struct WNSolution{T1,T2,T3} <: TopologicalNumbersSolutions
+Base.@kwdef struct WNSolution{T1,T2,T3} <: TopologicalNumbersSolutions
     TopologicalNumber::T1 = nothing
     n::T2 = nothing
     N::T3 = nothing
@@ -665,7 +665,7 @@ The `WPSolution` struct represents a solution for calculating the Weyl points.
 - `N::T2`: 
 - `Nodes::T3`:
 """
-@kwdef struct WPSolution{T1,T2,T3} <: TopologicalNumbersSolutions
+Base.@kwdef struct WPSolution{T1,T2,T3} <: TopologicalNumbersSolutions
     WeylPoint::T1 = nothing
     N::T2 = nothing
     Nodes::T3 = nothing
