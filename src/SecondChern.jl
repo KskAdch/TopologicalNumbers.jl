@@ -261,6 +261,17 @@ end
 
 # Main function to execute the simulation
 @doc raw"""
+    SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
+
+Main function to execute the simulation and calculate the second Chern number.
+
+## Arguments
+- `p`: Parameters for the simulation.
+- `parallel`: Parallelization strategy. Default is `UseSingleThread()`.
+
+## Returns
+- `chern`: The second Chern number.
+
 """
 function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     # @unpack N, Hs = p
@@ -277,6 +288,16 @@ end
 
 # Main function to execute the simulation
 @doc raw"""
+    SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
+
+This function updates the second Chern number for the given system `v`. The `parallel` argument specifies whether to use parallel computation or not.
+
+# Arguments
+- `v`: The system to compute the second Chern number for.
+- `parallel`: (optional) The parallel computation mode. Default is `UseSingleThread()`.
+
+# Example
+
 """
 function SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
     s = v.sys
@@ -291,7 +312,7 @@ end
 # Old method
 @doc raw"""
 
- Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
+ Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern,Mochol-Grzelak2018Efficient](@cite).
 
     calcSecondChern(Hamiltonian::Function; Nfill::T1=nothing, N::T2=(30, 30, 30, 30), returnRealValue::Bool=true, parallel::T3=UseSingleThread()) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
 
@@ -301,8 +322,6 @@ end
  - `N::T2`: The numbers of meshes when discretizing the Brillouin Zone. Each element of `N` is the number of meshes in the x, y, z, and w directions, respectively.
  - `returnRealValue::Bool`: An option to return the value of the topological number by an real value. The topological number returns a value of type `Float64` when `true`, and a value of type `ComplexF64` when `false`.
 
-
-# Definition
 
 # Examples
 
@@ -332,21 +351,28 @@ function calcSecondChern(
 end
 
 @doc raw"""
-
- Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
+Calculate the second Chern numbers in the four-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern,Mochol-Grzelak2018Efficient](@cite).
 
     solve(prob::SCProblem, alg::T1=FHS2(); parallel::T2=UseSingleThread()) where {T1<:SecondChernAlgorithms,T2<:TopologicalNumbersParallel}
 
- Arguments
- - `Hamiltionian`: The Hamiltonian matrix with two-dimensional wavenumber `k` as an argument.
- - `Nfill::T1`: The filling number. The default value is `Hs ÷ 2`, where `Hs` is the size of the Hamiltonian matrix.
- - `N::T2`: The numbers of meshes when discretizing the Brillouin Zone. Each element of `N` is the number of meshes in the x, y, z, and w directions, respectively.
- - `returnRealValue::Bool`: An option to return the value of the topological number by an real value. The topological number returns a value of type `Float64` when `true`, and a value of type `ComplexF64` when `false`.
+# Arguments
+- `prob::SCProblem`: The SCProblem struct that contains the Hamiltonian matrix function in the wave number space, filling number, mesh numbers, and other parameters.
+- `alg::T1=FHS2()`: The algorithm to use for calculating the second Chern numbers. Default is FHS2 algorithm.
+- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
-
-# Definition
+# Returns
+- `SCSolution`: A struct that contains the calculated second Chern numbers.
 
 # Examples
+
+```julia
+julia> H(k) = LatticeDirac(k, -3.0)
+julia> prob = SCProblem(H)
+julia> result = solve(prob)
+SCSolution{Float64}(0.9793607631927381)
+julia> result.TopologicalNumber
+0.9793607631927381
+```
 
 """
 function solve(
