@@ -260,7 +260,7 @@ function Z2sol(TR, p::Params)
             Total = mod(Total, 2*sign(Total-2+1e-15))
         end
 
-        (; TopologicalNumber, Total)
+        Z2Solution(; TopologicalNumber, Total)
     elseif TR == true
         
         v = setTemporalZ2TR(p)
@@ -278,7 +278,7 @@ function Z2sol(TR, p::Params)
             Total = mod(Total, 2*sign(Total-2+1e-15))
         end
 
-        (; TopologicalNumber, TRTopologicalNumber, Total)
+        Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
     end
 end
 
@@ -380,32 +380,34 @@ function solve(
     Hshalf = Hs ÷ 2
     p = Params(; Ham=H, N, Hs, rounds, dim=2)
 
-    TopologicalNumber = zeros(Hshalf)
-    if TR == false
-        Z2Phase!(TopologicalNumber, p)
+    # TopologicalNumber = zeros(Hshalf)
+    # if TR == false
+    #     Z2Phase!(TopologicalNumber, p)
 
-        if rounds == true
-            TopologicalNumber = round.(Int, TopologicalNumber)
-            Total = rem(sum(TopologicalNumber), 2)
-        else
-            Total = abs(sum(TopologicalNumber))
-            Total = abs(rem(Total, 2))
-        end
+    #     if rounds == true
+    #         TopologicalNumber = round.(Int, TopologicalNumber)
+    #         Total = rem(sum(TopologicalNumber), 2)
+    #     else
+    #         Total = abs(sum(TopologicalNumber))
+    #         Total = abs(rem(Total, 2))
+    #     end
 
-        Z2Solution(; TopologicalNumber, Total)
-    else
-        TRTopologicalNumber = zeros(Hshalf)
-        Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
+    #     Z2Solution(; TopologicalNumber, Total)
+    # else
+    #     TRTopologicalNumber = zeros(Hshalf)
+    #     Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
 
-        if rounds == true
-            TopologicalNumber = round.(Int, TopologicalNumber)
-            TRTopologicalNumber = round.(Int, TRTopologicalNumber)
-            Total = rem(sum(TopologicalNumber), 2)
-        else
-            Total = abs(sum(TopologicalNumber))
-            Total = rem(1 - abs(1 - Total), 2)
-        end
+    #     if rounds == true
+    #         TopologicalNumber = round.(Int, TopologicalNumber)
+    #         TRTopologicalNumber = round.(Int, TRTopologicalNumber)
+    #         Total = rem(sum(TopologicalNumber), 2)
+    #     else
+    #         Total = abs(sum(TopologicalNumber))
+    #         Total = rem(1 - abs(1 - Total), 2)
+    #     end
 
-        Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
-    end
+    #     Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
+    # end
+    
+    Z2sol(TR, p)
 end
