@@ -380,12 +380,16 @@ using PythonPlot
             @test abs(sum(result.Ene)) < 1e-10
 
             @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
+            # @test calcZ2(H) == (TopologicalNumber=1,)
 
             @test norm(calcZ2(H, rounds=false).TopologicalNumber - calcZ2(H).TopologicalNumber) < 1e-10
+            # @test calcZ2(H, rounds=false).TopologicalNumber - calcZ2(H).TopologicalNumber < 1e-10
 
             @test calcZ2(H, TR=true) == (TopologicalNumber=[1, 1], TRTopologicalNumber=[1, 1], Total=0)
+            # @test calcZ2(H, TR=true) == (TopologicalNumber=1, TRTopologicalNumber=1)
 
             @test norm(calcZ2(H, rounds=false, TR=true).TRTopologicalNumber - calcZ2(H, TR=true).TRTopologicalNumber) < 1e-10
+            # @test calcZ2(H, rounds=false, TR=true).TRTopologicalNumber - calcZ2(H, TR=true).TRTopologicalNumber < 1e-10
 
 
             prob = Z2Problem(H)

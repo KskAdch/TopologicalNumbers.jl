@@ -63,18 +63,43 @@ Base.@kwdef struct TemporalFirstChern{K,L1,L2,EV1,EV2,PS1,PS2}
 end
 
 
-Base.@kwdef struct TemporalZ2{K,B,W,L1,L2,PS1,PS2,N}
+# Base.@kwdef struct TemporalZ2{K,B,W,L1,L2,PS1,PS2,N}
+#     k::K
+#     T::B
+#     w00::W
+#     w0p::W
+#     wp0::W
+#     wpp::W
+#     Link1::L1
+#     Link2::L1
+#     LinkN1::L1
+#     link10::L2
+#     link01::L2
+#     psi_0::PS1
+#     psi_1::PS1
+#     psi_N::PS1
+#     psi00::PS2
+#     psi10::PS2
+#     psi01::PS2
+#     Nhalf::N
+#     Hshalf::N
+# end
+Base.@kwdef struct TemporalZ2{TN,K,Pau,IM,B,W,P,L1,PS1,PS2,N}
+    num::TN
     k::K
+    sy::Pau
+    s0::IM
     T::B
     w00::W
     w0p::W
     wp0::W
     wpp::W
+    Px0::P
+    Pxp::P
+    phi::P
     Link1::L1
     Link2::L1
     LinkN1::L1
-    link10::L2
-    link01::L2
     psi_0::PS1
     psi_1::PS1
     psi_N::PS1
