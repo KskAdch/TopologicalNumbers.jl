@@ -19,7 +19,7 @@ TopologicalNumbers.jl is a Julia package designed to calculate topological numbe
 using a numerical approach based on the Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite), the Shiozaki method [Shiozaki2023discrete](@cite) or method of calculating the Weyl node [Hirayama2017,Yang2011,Hirayama2015,Du2017](@cite).
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
-It is confirmed to work on Julia 1.6 (LTS) and 1.9.
+It is confirmed to work on Julia 1.6 (LTS) and 1.10.
 
 
 ## Installation
@@ -62,16 +62,3 @@ Dimensions of the Hamiltonian and corresponding functions:
 |2D       |calcBerryFlux ($\mathbb{Z}$)<br> calcChern ($\mathbb{Z}$)<br> calcZ2 ($\mathbb{Z}_{2}$)<br>         |
 |3D       |calcWeylNode ($\mathbb{Z}$)<br> calcChernSurface ($\mathbb{Z}$)<br> findWeylPoint ($\mathbb{Z}$)<br>|
 |4D       |calcSecondChern ($\mathbb{Z}$)<br>                                                                  |
-
-
-<!-- 
-|function        |0D            |1D          |2D              |3D          |4D          |
-|----------------|:------------:|:----------:|:--------------:|:----------:|:----------:|
-|calcBerryPhase  |              |$\mathbb{Z}$|                |            |            |
-|calcBerryFlux   |              |            |$\mathbb{Z}$    |            |            |
-|calcChern       |              |            |$\mathbb{Z}$    |            |            |
-|calcZ2          |              |            |$\mathbb{Z}_{2}$|            |            |
-|calcWeylNode    |($\mathbb{Z}$)|            |                |$\mathbb{Z}$|            |
-|calcChernSurface|              |            |                |$\mathbb{Z}$|            |
-|findWeylPoint   |              |            |                |$\mathbb{Z}$|            |
-|calcSecondChern |              |            |                |            |$\mathbb{Z}$| -->
