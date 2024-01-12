@@ -1,5 +1,5 @@
 # From PFAPACK source https://github.com/basnijholt/pfapack
-# Make Julia package:
+# Migration to Julia by: 
 
 """A package for computing Pfaffians"""
 
