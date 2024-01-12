@@ -416,7 +416,7 @@ function calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Boo
         elseif rounds == false
             TopologicalNumber = v.num
             Total = sum(TopologicalNumber)
-            Total = mod(Total, 2*sign(Total-2))
+            Total = mod(Total, 2*sign(Total-2+1e-15))
         end
 
         (; TopologicalNumber, Total)
@@ -434,44 +434,12 @@ function calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Boo
             TopologicalNumber = v.num[:, 1]
             TRTopologicalNumber = v.num[:, 2]
             Total = sum(TopologicalNumber)
-            Total = mod(Total, 2*sign(Total-2))
+            Total = mod(Total, 2*sign(Total-2+1e-15))
         end
 
         (; TopologicalNumber, TRTopologicalNumber, Total)
     end
 
-    # TopologicalNumber = zeros(Hshalf)
-    # if TR == false
-    #     # Z2Phase!(TopologicalNumber, p)
-    #     TopologicalNumber = Z2Phase(p)
-
-    #     if rounds == true
-    #         TopologicalNumber = round.(Int, TopologicalNumber)
-    #         # Total = rem(sum(TopologicalNumber), 2)
-    #     else
-    #         # Total = abs(sum(TopologicalNumber))
-    #         # Total = abs(rem(Total, 2))
-    #     end
-
-    #     # (; TopologicalNumber, Total)
-    #     (; TopologicalNumber)
-    # else
-    #     # TRTopologicalNumber = zeros(Hshalf)
-    #     # Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
-    #     TopologicalNumber, TRTopologicalNumber = TRZ2Phase(p)
-
-    #     if rounds == true
-    #         TopologicalNumber = round.(Int, TopologicalNumber)
-    #         TRTopologicalNumber = round.(Int, TRTopologicalNumber)
-    #         # Total = rem(sum(TopologicalNumber), 2)
-    #     else
-    #         # Total = abs(sum(TopologicalNumber))
-    #         # Total = rem(1 - abs(1 - Total), 2)
-    #     end
-
-    #     # (; TopologicalNumber, TRTopologicalNumber, Total)
-    #     (; TopologicalNumber, TRTopologicalNumber)
-    # end
 end
 
 
