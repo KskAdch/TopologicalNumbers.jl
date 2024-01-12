@@ -24,16 +24,17 @@ julia> showBand(H; value=false, disp=true)
 
 ![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/1a499692-681c-4166-b99c-0fd5cdcd506f)
 
-Next, we can calculate the winding numbers using `calcBerryPhase`:
+Next, we can calculate the winding numbers using `BPProblem`:
 
 ```julia
-julia> calcBerryPhase(H)
+julia> prob = BPProblem(H);
+julia> sol = solve(prob)
 ```
 
 The output is:
 
 ```julia
-(TopologicalNumber = [1, 1], Total = 0)
+BPSolution{Vector{Int64}, Int64}([1, 1], 0)
 ```
 
 The first argument `TopologicalNumber` in the named tuple is an vector that stores the winding number for each band. 
@@ -41,22 +42,28 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
 
+You can access these values as follows:
+
+```julia
+julia> sol.TopologicalNumber
+2-element Vector{Int64}:
+ 1
+ 1
+
+julia> sol.Total
+0
+```
+
 
 
 One-dimensional phase diagram is given by:
 
 ```julia
 julia> param = range(-2.0, 2.0, length=1001)
-julia> calcPhaseDiagram(H₀, param, "BerryPhase"; plot=true)
+
+julia> prob = BPProblem(H₀);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+(param = -2.0:0.004:2.0, nums = [1 1; 1 1; … ; 1 1; 1 1])
 ```
 
 ![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/7a6bec77-9140-4257-ba66-8280eef4fe1d)
-
-<!-- Also, two-dimensional phase diagram is given by:
-
-```julia
-julia> param = range(-2.0, 2.0, length=101)
-julia> calcPhaseDiagram(H₀, param, param, "BerryPhase"; plot=true)
-```
-
-![Two-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/adac3cbf-64ce-4324-964f-f42a66948fd4) -->

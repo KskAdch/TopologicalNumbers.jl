@@ -24,7 +24,6 @@ makedocs(;
             "One-dimensional case" => [
                 "SSH model" => "1D/SSH.md",
                 "Kitaev Chain" => "1D/Kitaev-Chain.md",
-                "Toda Lattice" => "1D/Toda-Lattice.md",
             ],
             "Two-dimensional case (Chern)" => [
                 "Square Lattice w/ Flux" => "2D/flux.md",
