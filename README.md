@@ -7,16 +7,29 @@
 
 ## Overview
 
-TopologicalNumbers.jl is a Julia package designed to calculate topological numbers, such as the Chern numbers and $\mathbb{Z}_2$ numbers, 
-using a numerical approach based on the Fukui-Hatsugai-Suzuki method or the Shiozaki method.  
-This package mainly includes the following functions:
+TopologicalNumbers.jl is a Julia package designed to calculate topological numbers, 
+such as the Chern numbers and $\mathbb{Z}_2$ numbers, 
+using a numerical approach based on the Fukui-Hatsugai-Suzuki method or the Shiozaki method, 
+or method of calculating the Weyl nodes.  
+This package includes the following functions:
 
-- `showBand` to calculate the dispersion relation,
-- `calcBerryPhase` to calculate the winding numbers in the one-dimensional case,
-- `calcChern` to calculate the first Chern numbers in the two-dimensional case,
-- `calcZ2` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case,
-- `calcPhaseDiagram` to calculate the phase diagram using the several methods,
-- `calcBerryFlux` to calculate the Berry flux in the two-dimensional case.
+- Calculation of the dispersion relation.
+- Provides numerical calculation methods for various types of topological numbers.
+- Calculation of the phase diagram.
+- Utility functions for plotting.
+- Support parallel computing using `MPI`.
+
+
+The correspondence between the spatial dimension of the system and the supported topological numbers is as follows.
+
+|Dimention|Function                                                                                            |
+|---------|----------------------------------------------------------------------------------------------------|
+|0D       |Calculation of Weyl nodes ($\mathbb{Z}$)                                                                   |
+|1D       |Calculation of Berry Phases ($\mathbb{Z}$)<br>                                                                   |
+|2D       |Calculation of local Berry Fluxes ($\mathbb{Z}$)<br>Calculation of first Chern numbers ($\mathbb{Z}$)<br>Calculation of $\mathbb{Z}_{2}$ numbers ($\mathbb{Z}_{2}$)<br>         |
+|3D       |Calculation of Weyl nodes ($\mathbb{Z}$)<br> Calculation of first Chern numbers in sliced Surface ($\mathbb{Z}$)<br>Finding Weyl points ($\mathbb{Z}$)<br>|
+|4D       |Calculation of second Chern numbers ($\mathbb{Z}$)<br>                                                                  |
+
 
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
@@ -63,47 +76,50 @@ julia> H(k) = H₀(k, (0.9, 1.0))
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/a586aa22-6c79-454e-a82f-6f5056d98f6c)
+![Band structure of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/1a499692-681c-4166-b99c-0fd5cdcd506f)
 
-Next, we can calculate the winding numbers using `calcBerryPhase`:
+Next, we can calculate the winding numbers using `BPProblem`:
 
 ```julia
-julia> calcBerryPhase(H)
+julia> prob = BPProblem(H);
+julia> sol = solve(prob)
 ```
 
 The output is:
 
 ```julia
-(TopologicalNumber = [1, 1], Total = 0)
+BPSolution{Vector{Int64}, Int64}([1, 1], 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the winding number for each band. 
+The first argument `TopologicalNumber` in the named tuple is a vector that stores the winding number for each band. 
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
 
-
-
-One-dimensional phase diagram is given by:
+You can access these values as follows:
 
 ```julia
-julia> H(k, p) = H₀(k, (p, 1.0))
+julia> sol.TopologicalNumber
+2-element Vector{Int64}:
+ 1
+ 1
 
+julia> sol.Total
+0
+```
+
+
+A one-dimensional phase diagram is given by:
+
+```julia
 julia> param = range(-2.0, 2.0, length=1001)
-julia> calcPhaseDiagram(H, param, "BerryPhase"; plot=true)
+
+julia> prob = BPProblem(H₀);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+(param = -2.0:0.004:2.0, nums = [1 1; 1 1; … ; 1 1; 1 1])
 ```
 
-![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/2b53e455-83ee-42d5-9824-84120c2be093)
-
-Also, two-dimensional phase diagram is given by:
-
-```julia
-julia> param = range(-2.0, 2.0, length=101)
-julia> calcPhaseDiagram(H₀, param, param, "BerryPhase"; plot=true)
-```
-
-![Two-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/0ceef1a3-01fd-4e8b-9f01-4a4932039d26)
-
+![One-dimensional phase diagram of SSH model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/7a6bec77-9140-4257-ba66-8280eef4fe1d)
 
 
 ### Haldane model
@@ -139,48 +155,57 @@ julia> showBand(H; value=false, disp=true)
 ```
 
 
-![Band structure of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/b05dd8a2-8047-43d6-a835-d4c18348ec97)
+
+![Band structure of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/5f1da3f6-c0d8-4bd7-84cf-a591bf59a137)
 
 
-Then we can compute the Chern numbers using `calcChern`:
+Then we can compute the Chern numbers using `FCProblem`:
 
 ```julia
-julia> calcChern(H)
+julia> prob = FCProblem(H);
+julia> sol = solve(prob)
 ```
 
 The output is:
 
 ```julia
-(TopologicalNumber = [1, -1], Total = 0)
+FCSolution{Vector{Int64}, Int64}([1, -1], 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the first Chern number for each band. 
+The first argument `TopologicalNumber` in the named tuple is a vector that stores the first Chern number for each band. 
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the first Chern numbers for each band.
 `Total` is a quantity that should always return zero.
 
 
 
-One-dimensional phase diagram is given by:
+A one-dimensional phase diagram is given by:
 
 ```julia
-julia> H(k, p) = H₀(k, (p, 2.5))
+julia> H(k, p) = H₀(k, (1, p, 2.5));
+julia> param = range(-π, π, length=1000);
 
-julia> param = range(-π, π, length=1000)
-julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
+julia> prob = FCProblem(H);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+(param = -3.141592653589793:0.006289474781961547:3.141592653589793, nums = [0 0; 0 0; … ; 0 0; 0 0])
 ```
 
-![One-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/8af528e5-20df-4b9e-ad1b-cc11de0b902a)
+![One-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/bb9682bc-55a2-41c8-ba1f-b90763e9233f)
+
 
 Also, two-dimensional phase diagram is given by:
 
 ```julia
-julia> param1 = range(-π, π, length=100)
-julia> param2 = range(-6.0, 6.0, length=100)
-julia> calcPhaseDiagram(H₀, param1, param2, "Chern"; plot=true)
+julia> H(k, p) = H₀(k, (1, p[1], p[2]));
+julia> param1 = range(-π, π, length=100);
+julia> param2 = range(-6.0, 6.0, length=100);
+
+julia> prob = FCProblem(H);
+julia> sol = calcPhaseDiagram(prob, param1, param2; plot=true)
+(param1 = -3.141592653589793:0.06346651825433926:3.141592653589793, param2 = -6.0:0.12121212121212122:6.0, nums = [0 0 … 0 0; 0 0 … 0 0;;; 0 0 … 0 0; 0 0 … 0 0;;; 0 0 … 0 0; 0 0 … 0 0;;; … ;;; 0 0 … 0 0; 0 0 … 0 0;;; 0 0 … 0 0; 0 0 … 0 0;;; 0 0 … 0 0; 0 0 … 0 0])
 ```
 
-![Two-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/bafd50e9-2752-4f81-9b9d-e271a8d8061f)
+![Two-dimensional phase diagram of Haldane model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/a61ca3b0-28b9-44a8-b50f-67547a453ebe)
 
 
 ### The Bernevig-Hughes-Zhang (BHZ) model
@@ -222,19 +247,22 @@ julia> H(k) = H₀(k, (2, 2))
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/a9cf9768-6920-45e6-89bd-ed7ec434152c)
+![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/de14907c-777f-4667-810b-54c10888dfa1)
 
 
-Next, we can compute the $\mathbb{Z}_2$ numbers using `calcZ2`:
+
+Next, we can compute the $\mathbb{Z}_2$ numbers using `Z2Problem`:
 
 ```julia
-julia> calcZ2(H)
+julia> prob = Z2Problem(H);
+julia> sol = solve(prob)
 ```
+
 
 The output is:
 
 ```julia
-(TopologicalNumber = [1, 1], Total = 0)
+Z2Solution{Vector{Int64}, Nothing, Int64}([1, 1], nothing, 0)
 ```
 
 The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each pair of two energy bands. 
@@ -243,28 +271,123 @@ The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for e
 `Total` is a quantity that should always return zero.
 
 
-One-dimensional phase diagram is given by:
+
+A one-dimensional phase diagram is given by:
 
 ```julia
-julia> H(k, p) = H₀(k, (p, 0.25))
+julia> H(k, p) = H₀(k, (p, 0.25));
+julia> param = range(-2, 2, length=1000);
 
-julia> param = range(-2, 2, length=1000)
-julia> calcPhaseDiagram(H, param, "Z2"; plot=true)
+julia> prob = Z2Problem(H);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+(param = -2.0:0.004004004004004004:2.0, nums = [0 0; 0 0; … ; 0 0; 0 0])
 ```
 
-![One-dimensional phase diagram of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/8e27a9d9-f52a-4f24-9d9e-c1254edabdcc)
+![One-dimensional phase diagram of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/5d6d5364-68d0-4423-8ecf-49bf0538af63)
 
 
 Also, two-dimensional phase diagram is given by:
 
 ```julia
-julia> param1 = range(-2, 2, length=100)
-julia> param2 = range(-0.5, 0.5, length=100)
-julia> calcPhaseDiagram(H₀, param1, param2, "Z2"; plot=true)
+julia> param1 = range(-2, 2, length=100);
+julia> param2 = range(-0.5, 0.5, length=100);
+
+julia> prob = Z2Problem(H₀);
+julia> calcPhaseDiagram(prob, param1, param2; plot=true)
 ```
 
 
-![Two-dimensional phase diagram of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/f8a36504-372b-4e23-b7e9-02ada709bdc4)
+![Two-dimensional phase diagram of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/802eedbe-c893-44b4-8267-d80e1745415a)
+
+
+
+### The four-dimensional lattice Dirac model
+
+As an example of a four-dimensional topological insulator, the lattice Dirac model is presented here:
+
+```julia
+julia> function H₀(k, p) # lattice Dirac
+            k1, k2, k3, k4 = k
+            m = p
+
+            # Define Pauli matrices and Gamma matrices
+            σ₀ = [1 0; 0 1]
+            σ₁ = [0 1; 1 0]
+            σ₂ = [0 -im; im 0]
+            σ₃ = [1 0; 0 -1]
+            g1 = kron(σ₁, σ₀)
+            g2 = kron(σ₂, σ₀)
+            g3 = kron(σ₃, σ₁)
+            g4 = kron(σ₃, σ₂)
+            g5 = kron(σ₃, σ₃)
+
+            h1 = m + cos(k1) + cos(k2) + cos(k3) + cos(k4)
+            h2 = sin(k1)
+            h3 = sin(k2)
+            h4 = sin(k3)
+            h5 = sin(k4)
+
+            # Return the Hamiltonian matrix
+            h1 .* g1 .+ h2 .* g2 .+ h3 .* g3 .+ h4 .* g4 .+ h5 .* g5
+        end
+```
+You can also use our preset Hamiltonian function `LatticeDirac` to define the same Hamiltonian matrix as follows:
+
+```julia
+julia> H₀(k, p) = LatticeDirac(k, p)
+```
+
+Then we can compute the second Chern numbers using `SCProblem`:
+
+```julia
+julia> H(k) = H₀(k, -3.0)
+
+julia> prob = SCProblem(H);
+julia> sol = solve(prob)
+```
+
+The output is:
+
+```julia
+SCSolution{Float64}(0.9793607631927376)
+```
+
+The argument `TopologicalNumber` in the named tuple stores the second Chern number with some filling condition that you selected in the options (the default is the half-filling). 
+
+
+A phase diagram is given by:
+
+```julia
+julia> param = range(-4.9, 4.9, length=50);
+julia> prob = SCProblem(H₀);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+```
+
+![Dense phase diagram of lattice Dirac model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139110206/9449651c-46f4-4141-ac87-161e9e5fbf28)
+
+
+If you want to use a parallel environment, you can utilize `MPI.jl`.
+Let's create a file named `test.jl` with the following content:
+```julia
+using TopologicalNumbers
+using MPI
+
+H₀(k, p) = LatticeDirac(k, p)
+H(k) = H₀(k, -3.0)
+
+param = range(-4.9, 4.9, length=10)
+
+prob = SCProblem(H₀)
+result = calcPhaseDiagram(prob, param; parallel=UseMPI(MPI), progress=true)
+
+plot1D(result; labels=true, disp=false, pdf=true)
+```
+You can perform calculations using `mpirun` (for example, with `4` cores) as follows:
+```bash
+mpirun -np 4 julia --project test.jl
+```
+
+
 
 
 

@@ -16,7 +16,9 @@ Documentation for [TopologicalNumbers](https://github.com/KskAdch/TopologicalNum
 ## Overview
 
 TopologicalNumbers.jl is a Julia package designed to calculate topological numbers, such as the Chern numbers and $\mathbb{Z}_2$ numbers, 
-using a numerical approach based on the Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite), the Shiozaki method [Shiozaki2023discrete](@cite) or method of calculating the Weyl node [Hirayama2017,Yang2011,Hirayama2015,Du2017](@cite).
+using a numerical approach based on the Fukui-Hatsugai-Suzuki method [Fukui2005Chern,Mochol-Grzelak2018Efficient](@cite), 
+the Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite), 
+or method of calculating the Weyl nodes [Hirayama2017,Yang2011,Hirayama2015,Du2017](@cite).
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
 It is confirmed to work on Julia 1.6 (LTS) and 1.10.
@@ -43,22 +45,40 @@ julia> Pkg.add("TopologicalNumbers")
 
 This package includes the following functions:
 
-- `showBand` to calculate the dispersion relation,
-- `calcBerryPhase` to calculate the winding numbers in the one-dimensional case,
-- `calcChern` to calculate the first Chern numbers in the two-dimensional case,
-- `calcZ2` to calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case,
-- `calcPhaseDiagram` to calculate the phase diagram using the several methods,
-- `calcBerryFlux` to calculate the Berry flux in the two-dimensional case,
-- `calcWeylNode` to calculate the Weyl node in the three-dimensional case,
-- `calcChernSurface` to calculate the Chern numbers in the three-dimensional case,
-- `findWeylPoint` to find the Weyl points in the three-dimensional case.
+- Calculation of the dispersion relation.
+- Provides numerical calculation methods for various types of topological numbers.
+- Calculation of the phase diagram.
+- Utility functions for plotting.
+- Support parallel computing using `MPI`.
 
-Dimensions of the Hamiltonian and corresponding functions:
 
-|Dimention|Function                                                                                            |
-|---------|----------------------------------------------------------------------------------------------------|
-|0D       |(calcWeylNode ($\mathbb{Z}$))<br>                                                                   |
-|1D       |calcBerryPhase ($\mathbb{Z}$)<br>                                                                   |
-|2D       |calcBerryFlux ($\mathbb{Z}$)<br> calcChern ($\mathbb{Z}$)<br> calcZ2 ($\mathbb{Z}_{2}$)<br>         |
-|3D       |calcWeylNode ($\mathbb{Z}$)<br> calcChernSurface ($\mathbb{Z}$)<br> findWeylPoint ($\mathbb{Z}$)<br>|
-|4D       |calcSecondChern ($\mathbb{Z}$)<br>                                                                  |
+The correspondence between the spatial dimension of the system and the supported topological numbers is as follows.
+
+```@raw html
+<table>
+    <tr>
+        <th>Dimension</th>
+        <th>Function</th>
+    </tr>
+    <tr>
+        <td>0D</td>
+        <td>Calculation of Weyl nodes ($\mathbb{Z}$)<br></td>
+    </tr>
+    <tr>
+        <td>1D</td>
+        <td>Calculation of Berry Phases ($\mathbb{Z}$)<br></td>
+    </tr>
+    <tr>
+        <td>2D</td>
+        <td>Calculation of local Berry Fluxes ($\mathbb{Z}$)<br>Calculation of first Chern numbers ($\mathbb{Z}$)<br>Calculation of $\mathbb{Z}_{2}$ numbers ($\mathbb{Z}_{2}$)<br></td>
+    </tr>
+    <tr>
+        <td>3D</td>
+        <td>Calculation of Weyl nodes ($\mathbb{Z}$)<br> Calculation of first Chern numbers in sliced Surface ($\mathbb{Z}$)<br>Finding Weyl points ($\mathbb{Z}$)<br></td>
+    </tr>
+    <tr>
+        <td>4D</td>
+        <td>Calculation of second Chern numbers ($\mathbb{Z}$)<br></td>
+    </tr>
+</table>
+```

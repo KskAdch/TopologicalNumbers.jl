@@ -37,7 +37,7 @@ The output is:
 BPSolution{Vector{Int64}, Int64}([1, 1], 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the winding number for each band. 
+The first argument `TopologicalNumber` in the named tuple is a vector that stores the winding number for each band. 
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
@@ -56,7 +56,7 @@ julia> sol.Total
 
 
 
-One-dimensional phase diagram is given by:
+A one-dimensional phase diagram is given by:
 
 ```julia
 julia> param = range(-2.0, 2.0, length=1001)

@@ -64,7 +64,7 @@ julia> sol.Total
 ```
 
 
-One-dimensional phase diagram is given by:
+A one-dimensional phase diagram is given by:
 
 ```julia
 julia> H(k, p) = H₀(k, (1, p, 2.5));

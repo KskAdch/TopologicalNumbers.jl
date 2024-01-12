@@ -24,7 +24,7 @@ julia> function H₀(k, p) # lattice Dirac
             h4 = sin(k3)
             h5 = sin(k4)
 
-            # Update the Hamiltonian matrix in place
+            # Return the Hamiltonian matrix
             h1 .* g1 .+ h2 .* g2 .+ h3 .* g3 .+ h4 .* g4 .+ h5 .* g5
         end
 ```
@@ -49,7 +49,7 @@ The output is:
 SCSolution{Float64}(0.9793607631927376)
 ```
 
-The argument `TopologicalNumber` in the named tuple stores the second Chern number with some filling condition that you selected in options (the default is the half-filling). 
+The argument `TopologicalNumber` in the named tuple stores the second Chern number with some filling condition that you selected in the options (the default is the half-filling). 
 
 You can access this value as follows:
 
@@ -59,7 +59,7 @@ julia> sol.TopologicalNumber
 ```
 
 
-Phase diagram is given by:
+A phase diagram is given by:
 
 ```julia
 julia> param = range(-4.9, 4.9, length=10);
