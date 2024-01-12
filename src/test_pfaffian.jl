@@ -8,8 +8,6 @@ using Random
 using Test
 include("pfaffian.jl")
 
-EPS = 1e-12
-
 
 const EPS = 1e-12
 
