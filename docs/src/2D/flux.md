@@ -38,16 +38,17 @@ julia> showBand(H; value=false, disp=true)
 ![Dispersion of 2D square lattice with flux model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/630d8fc6-e1ee-4f0c-855e-80ee1b8c115f)
 
 
-Then we can compute the Chern numbers using `calcChern`:
+Then we can compute the Chern numbers using `FCProblem`:
 
 ```julia
-julia> calcChern(H)
+julia> prob = FCProblem(H);
+julia> sol = solve(prob)
 ```
 
 The output is:
 
 ```julia
-(TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
+FCSolution{Vector{Int64}, Int64}([1, 1, -2, -2, 1, 1], 0)
 ```
 
 The first argument `TopologicalNumber` in the named tuple is an vector that stores the first Chern number for each band. 
@@ -55,13 +56,32 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the first Chern numbers for each band.
 `Total` is a quantity that should always return zero.
 
+You can access these values as follows:
+
+```julia
+julia> sol.TopologicalNumber
+6-element Vector{Int64}:
+  1
+  1
+ -2
+ -2
+  1
+  1
+
+julia> sol.Total
+0
+```
+
 
 One-dimensional phase diagram is given by:
 
 ```julia
-julia> H(k, p) = H₀(k, (6, p))
-julia> param = 0:6
-julia> calcPhaseDiagram(H, param, "Chern"; plot=true)
+julia> H(k, p) = H₀(k, (6, p));
+julia> param = 0:6;
+
+julia> prob = FCProblem(H);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+(param = 0:6, nums = [0 0 … 0 0; 1 1 … 1 1; … ; -1 -1 … -1 -1; 0 0 … 0 0])
 ```
 
 ![One-dimensional phase diagram](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/42f0532e-03b5-4d4f-a8e1-4777a9777d13)
