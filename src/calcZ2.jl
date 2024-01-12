@@ -488,7 +488,15 @@ function solve(
         Z2Phase!(TopologicalNumber, p)
 
         if rounds == true
-            TopologicalNumber = round.(Int, TopologicalNumber)
+            if all(!isnan, TopologicalNumber)
+                TopologicalNumber = round.(Int, TopologicalNumber)
+            else
+                for i in eachindex(TopologicalNumber)
+                    if TopologicalNumber[i] !== NaN
+                        TopologicalNumber[i] = round(Int, TopologicalNumber[i])
+                    end
+                end
+            end
             Total = rem(sum(TopologicalNumber), 2)
         else
             Total = abs(sum(TopologicalNumber))
@@ -501,8 +509,24 @@ function solve(
         Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
 
         if rounds == true
-            TopologicalNumber = round.(Int, TopologicalNumber)
-            TRTopologicalNumber = round.(Int, TRTopologicalNumber)
+            if all(!isnan, TopologicalNumber)
+                TopologicalNumber = round.(Int, TopologicalNumber)
+            else
+                for i in eachindex(TopologicalNumber)
+                    if TopologicalNumber[i] !== NaN
+                        TopologicalNumber[i] = round(Int, TopologicalNumber[i])
+                    end
+                end
+            end
+            if all(!isnan, TRTopologicalNumber)
+                TRTopologicalNumber = round.(Int, TRTopologicalNumber)
+            else
+                for i in eachindex(TRTopologicalNumber)
+                    if TRTopologicalNumber[i] !== NaN
+                        TRTopologicalNumber[i] = round(Int, TRTopologicalNumber[i])
+                    end
+                end
+            end
             Total = rem(sum(TopologicalNumber), 2)
         else
             Total = abs(sum(TopologicalNumber))
