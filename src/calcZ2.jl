@@ -439,38 +439,31 @@ end
 
 
 @doc raw"""
-
- Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite).
+Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite).
 
     solve(prob::Z2Problem, alg::T1=Shio(); parallel::T2=UseSingleThread()) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
 
- Arguments
- - `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
- - `N::Int` is the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
- - `rounds::Bool` is an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+# Arguments
+- `prob::Z2Problem`: The Z2Problem struct that contains the Hamiltonian matrix function in the wave number space and other parameters.
+- `alg::T1=Shio()`: The algorithm to use for calculating the Z2 numbers. Default is `Shio` algorithm.
+- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
-# Definition
- The $\mathbb{Z}_{2}$ number of the $2n$th (and $2n-1$th) band $\nu_{n}$ is defined by
-```math
-\nu_{n}=F_{n}-\left(P_{n}(0)-P_{n}(\pi)\right)
+# Returns
+- `Z2Solution`: A struct that contains the calculated Z2 numbers.
+
+# Examples
+
+```julia
+julia> H(k) = KaneMele(k, 1.0)
+julia> prob = Z2Problem(H)
+julia> result = solve(prob)
+Z2Solution{Vector{Int64}, Nothing, Int64}([1, 1], nothing, 0)
+julia> result.TopologicalNumber
+2-element Vector{Int64}:
+ 1
+ 1
 ```
- $F_{n}$ is the Berry flux of the $n$th band in the $\mathrm{BZ}'$. The range $\mathrm{BZ}'$ is $\bm{k}\in[0,2\pi]\times[0,\pi]$ half of BZ(Brillouin Zone).
-```math
-F_{n}=\frac{1}{2\pi}\sum_{\bm{k}\in\mathrm{BZ}'}\mathrm{Im}\left[\mathrm{Log}\left[U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right]\right]
-```
- $P_{n}(k_{2})$ is the time-reversal polarization at wavenumber $k_{2}$.
-```math
-P_{n}(k_{2})=\frac{1}{2\pi}\frac{\mathrm{Pf}[\omega(0,k_{2})]}{\mathrm{Pf}[\omega(\pi,k_{2})]}\sum_{k_{1}=0}^{\pi-e_{1}}U_{n,1}(\bm{k})
-```
- $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
-```math
-U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
-```
- $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $2n$th (and $2n-1$th) band. $\omega(\bm{k})$ is the unitary matrix given by
-```math
-\omega(\bm{k})=\bra{\Psi(-\bm{k})}T\ket{\Psi(\bm{k})}
-```
- $T$ is the time-reversal operator.
+
 """
 function solve(
     prob::Z2Problem,

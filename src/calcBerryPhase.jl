@@ -150,30 +150,31 @@ end
 
 
 @doc raw"""
-
- Calculate the winding numbers in the one-dimensional case.
+Calculate the winding numbers in the one-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
     solve(prob::BPProblem, alg::T1=BP(); parallel::T2=UseSingleThread()) where {T1<:BerryPhaseAlgorithms,T2<:TopologicalNumbersParallel}
 
+# Arguments
+- `prob::BPProblem`: The BPProblem struct that contains the Hamiltonian matrix function in the wave number space and other parameters.
+- `alg::T1=BP()`: The algorithm to use for calculating the Berry phases. Default is `BP` algorithm.
+- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
- Arguments
- - `Hamiltonian::Function`: the Hamiltonian matrix function with one-dimensional wavenumber `k` as an argument.
- - `N::Int`: the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
- - `gapless::Real`: the threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
- - `rounds::Bool`: an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+# Returns
+- `BPSolution`: A struct that contains the calculated Berry phases.
 
+# Examples
 
-# Definition
-
- The Berry phase of the $n$th band $\nu_{n}$ is defined by
-```math
-\nu_{n}=\frac{1}{\pi}\sum_{k\in\mathrm{BZ}}U_{n}(k)
+```julia
+julia> H(k) = SSH(k, 1.1)
+julia> prob = BPProblem(H)
+julia> result = solve(prob)
+BPSolution{Vector{Int64}, Int64}([1, 1], 0)
+julia> result.TopologicalNumber
+2-element Vector{Int64}:
+ 1
+ 1
 ```
- The range $\mathrm{BZ}$(Brillouin Zone) is $k\in[0,2\pi]$. $U_{n,i}(k)$ is the link variable at wavenumber $k$. $e_{1}$ is the unit vector.
-```math
-U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
-```
- $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
+
 """
 function solve(
     prob::BPProblem,
