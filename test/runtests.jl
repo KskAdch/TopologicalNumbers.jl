@@ -579,7 +579,7 @@ const np = pyimport("numpy")
                 @test calcSecondChern(H; N).TopologicalNumber ≈ 0.8309301430562057
                 @test calcSecondChern(H; N, parallel=UseMPI(MPI)).TopologicalNumber ≈ 0.8309301430562057
 
-                prob = SCProblem(H, N)
+                prob = SCProblem(; H, N)
                 @test solve(prob).TopologicalNumber ≈ 0.8309301430562057
 
                 param = range(-4.9, 4.9, length=4)
@@ -592,7 +592,7 @@ const np = pyimport("numpy")
                 nums = [0.0010237313095167225, -2.0667333080974735, 2.1572606447321454, -0.0009805850180973213]
                 @test result.nums ≈ nums
 
-                prob = SCProblem(H₀, N)
+                prob = SCProblem(; H=H₀, N)
                 @test calcPhaseDiagram(prob, param).nums ≈ nums
 
 
