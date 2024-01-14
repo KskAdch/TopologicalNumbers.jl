@@ -120,35 +120,36 @@ end
 
 
 @doc raw"""
-
- Calculate the Berry flux in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
+Calculate the Berry flux in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
     solve(prob::LBFProblem, alg::T1=FHSlocal2(); parallel::T2=UseSingleThread()) where {T1<:BerryFluxAlgorithms,T2<:TopologicalNumbersParallel}
 
- Arguments
- - Hamiltionian::Function: the Hamiltonian matrix with one-dimensional wavenumber `k` as an argument.
- - n::Vector{Int64}: The wavenumber($2\pi n/N$) when calculating Berry flux.
- - N::Int=51: The number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
- - gapless::Real: The threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
- - rounds::Bool=true: An option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
+# Arguments
+- `prob::LBFProblem`: The LBFProblem struct that contains the Hamiltonian matrix function in the wave number space and other parameters.
+- `alg::T1=FHSlocal2()`: The algorithm to use for calculating the second Chern numbers. Default is `FHSlocal2` algorithm.
+- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
+# Returns
+- `LBFSolution`: A struct that contains the calculated Berry flux.
 
-# Definition
- The Berry flux at the wavenumber $\bm{k}$ of the $n$th band $F_{n}(\bm{k})$ is defined by
-```math
-F_{n}(\bm{k})=f_{n}(\bm{k})-df_{n}(\bm{k})
+# Examples
+
+```julia
+julia> H(k) = Flux2d(k, (6, 1))
+julia> n = [0, 0]
+julia> prob = LBFProblem(H, n)
+julia> result = solve(prob)
+LBFSolution{Vector{Int64}, Vector{Int64}}([0, 0, 0, 0, -1, 0], [0, 0])
+julia> result.TopologicalNumber
+6-element Vector{Int64}:
+  0
+  0
+  0
+  0
+ -1
+  0
 ```
-```math
-f_{n}(\bm{k})=\frac{1}{2\pi}\mathrm{Im}\left[\mathrm{Log}\left[U_{n,1}(\bm{k})U_{n,2}(\bm{k}+\bm{e}_{1})U_{n,1}^{*}(\bm{k}+\bm{e}_{2})U_{n,1}^{*}(\bm{k})\right]\right]
-```
-```math
-df_{n}(\bm{k})=\frac{1}{2\pi}\mathrm{Im}\left[\mathrm{Log}[U_{n,1}(\bm{k})]+\mathrm{Log}[U_{n,2}(\bm{k}+\bm{e}_{1})]-\mathrm{Log}[U_{n,1}(\bm{k}+\bm{e}_{2})]-\mathrm{Log}[U_{n,1}(\bm{k})]\right]
-```
- $U_{n,i}(\bm{k})$ is the link variable at wavenumber $\bm{k}$. $\bm{e}_{i}$ is the unit vector.
-```math
-U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
-```
- $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
+
 """
 function solve(
     prob::LBFProblem,

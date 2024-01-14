@@ -357,7 +357,7 @@ Calculate the second Chern numbers in the four-dimensional case with reference t
 
 # Arguments
 - `prob::SCProblem`: The SCProblem struct that contains the Hamiltonian matrix function in the wave number space, filling number, mesh numbers, and other parameters.
-- `alg::T1=FHS2()`: The algorithm to use for calculating the second Chern numbers. Default is FHS2 algorithm.
+- `alg::T1=FHS2()`: The algorithm to use for calculating the second Chern numbers. Default is `FHS2` algorithm.
 - `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
 # Returns

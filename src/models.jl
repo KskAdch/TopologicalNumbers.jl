@@ -189,9 +189,9 @@ function Haldane(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{
     t₂, ϕ, m = p
 
     h0 = 2t₂ * cos(ϕ) * (cos(k1) + cos(k2) + cos(k1 + k2))
-    hx = -t₁ * (1 + cos(k1) + cos(k2))
-    hy = -t₁ * (-sin(k1) + sin(k2))
-    hz = m + 2t₂ * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
+    hx = t₁ * (1 + cos(k1) + cos(k2))
+    hy = t₁ * (-sin(k1) + sin(k2))
+    hz = m - 2t₂ * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
 
     s0 = [1 0; 0 1]
     sx = [0 1; 1 0]

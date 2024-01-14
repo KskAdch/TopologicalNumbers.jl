@@ -43,16 +43,18 @@ julia> showBand(H; value=false, disp=true)
 ![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/de14907c-777f-4667-810b-54c10888dfa1)
 
 
-Next, we can compute the $\mathbb{Z}_2$ numbers using `calcZ2`:
+Next, we can compute the $\mathbb{Z}_2$ numbers using `Z2Problem`:
 
 ```julia
-julia> calcZ2(H)
+julia> prob = Z2Problem(H);
+julia> sol = solve(prob)
 ```
+
 
 The output is:
 
 ```julia
-(TopologicalNumber = [1, 1], Total = 0)
+Z2Solution{Vector{Int64}, Nothing, Int64}([1, 1], nothing, 0)
 ```
 
 The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each pair of two energy bands. 
@@ -60,14 +62,28 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
 `Total` is a quantity that should always return zero.
 
+You can access these values as follows:
+
+```julia
+julia> sol.TopologicalNumber
+2-element Vector{Int64}:
+ 1
+ 1
+
+julia> sol.Total
+0
+```
+
 
 One-dimensional phase diagram is given by:
 
 ```julia
-julia> H(k, p) = H₀(k, (p, 0.25))
+julia> H(k, p) = H₀(k, (p, 0.25));
+julia> param = range(-2, 2, length=1000);
 
-julia> param = range(-2, 2, length=1000)
-julia> calcPhaseDiagram(H, param, "Z2"; plot=true)
+julia> prob = Z2Problem(H);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+(param = -2.0:0.004004004004004004:2.0, nums = [0 0; 0 0; … ; 0 0; 0 0])
 ```
 
 ![One-dimensional phase diagram of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/5d6d5364-68d0-4423-8ecf-49bf0538af63)
@@ -76,9 +92,11 @@ julia> calcPhaseDiagram(H, param, "Z2"; plot=true)
 Also, two-dimensional phase diagram is given by:
 
 ```julia
-julia> param1 = range(-2, 2, length=100)
-julia> param2 = range(-0.5, 0.5, length=100)
-julia> calcPhaseDiagram(H₀, param1, param2, "Z2"; plot=true)
+julia> param1 = range(-2, 2, length=100);
+julia> param2 = range(-0.5, 0.5, length=100);
+
+julia> prob = Z2Problem(H₀);
+julia> calcPhaseDiagram(prob, param1, param2; plot=true)
 ```
 
 

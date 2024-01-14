@@ -96,7 +96,7 @@ function plot1D(
     pdf::Bool=false,
     svg::Bool=false,
     filename::String="phaseDiagram"
-) where {T1<:AbstractMatrix,T2<:AbstractVector}
+) where {T1<:Union{AbstractVector,AbstractMatrix},T2<:AbstractVector}
 
     fig = figure()
     ax = fig.add_subplot(111)

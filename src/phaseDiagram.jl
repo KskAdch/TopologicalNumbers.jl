@@ -433,7 +433,16 @@ function calc_data2D(H, param_range1, param_range2, alg::T1, parallel::T2, p::Pa
         end
     else
         if rounds == true
-            round.(Int, nums)
+            if all(!isnan, nums)
+                nums = round.(Int, nums)
+            else
+                for i in eachindex(nums)
+                    if nums[i] !== NaN
+                        nums[i] = round(Int, nums[i])
+                    end
+                end
+            end
+            nums
         elseif rounds == false
             nums
         end
@@ -737,7 +746,7 @@ function calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel
             plot2D(transpose(nums_half), param_range1, param_range2)
         end
     else
-        if plot == true && Hs % 2 == 0
+        if plot == true && p.Hs % 2 == 0
             nums_half = sum(@view(nums[1:end÷2, :, :]), dims=1)[1, :, :]
             plot2D(transpose(nums_half), param_range1, param_range2) # half-filling case
         end
