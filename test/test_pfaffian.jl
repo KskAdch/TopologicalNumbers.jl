@@ -90,7 +90,7 @@
         A = Ac
 
         B1 = pf.skew_LTL(np.array(A))
-        B1 = [[pyconvert(T[i], B1[i-1]) for i in eachindex(T)[1:end-1]]..., pyconvert(T[end], B1[end-1].toarray())]
+        B1 = [[pyconvert(T[i], B1[i-1]) for i in eachindex(T)[1:end-1]]..., pyconvert(T[end], B1[2].toarray())]
         B2 = skew_LTL(A)
         B2[3] = Matrix(B2[3])
 
@@ -103,7 +103,7 @@
         A = Ar
 
         B1 = pf.skew_LTL(np.array(A))
-        B1 = [[pyconvert(T[i], B1[i-1]) for i in eachindex(T)[1:end-1]]..., pyconvert(T[end], B1[end-1].toarray())]
+        B1 = [[pyconvert(T[i], B1[i-1]) for i in eachindex(T)[1:end-1]]..., pyconvert(T[end], B1[2].toarray())]
         B2 = skew_LTL(A)
         B2[3] = Matrix(B2[3])
 

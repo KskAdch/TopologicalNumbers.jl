@@ -131,11 +131,11 @@ function householder_complex!(v, x)
 end
 
 @doc raw"""
-    T, Q = skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=true) where {T<:Number}
+    T, Q = skew_tridiagonalize(A::AbstractMatrix{T}; overwrite_a=false, calc_q=true) where {T<:Number}
 
 or
 
-    T = skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=false) where {T<:Number}
+    T = skew_tridiagonalize(A::AbstractMatrix{T}; overwrite_a=false, calc_q=false) where {T<:Number}
 
 Bring a real or complex skew-symmetric matrix (A=-A^T) into
 tridiagonal form T (with zero diagonal) with a orthogonal
@@ -146,7 +146,7 @@ A = Q T Q^T
 A is overwritten if overwrite_a=true (default: false), and
 Q only calculated if calc_q=true (default: true)
 """
-function skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=true) where {T<:Number}
+function skew_tridiagonalize(A::AbstractMatrix{T}; overwrite_a=false, calc_q=true) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -196,7 +196,7 @@ function skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=true) where
 end
 
 @doc raw"""
-    T, L, P = skew_LTL(A::Matrix{T}; overwrite_a=false, calc_L=true, calc_P=true) where {T<:Number}
+    T, L, P = skew_LTL(A::AbstractMatrix{T}; overwrite_a=false, calc_L=true, calc_P=true) where {T<:Number}
 
 Bring a real or complex skew-symmetric matrix (A=-A^T) into
 tridiagonal form T (with zero diagonal) with a lower unit
@@ -207,7 +207,7 @@ A is overwritten if overwrite_a=true (default: false),
 L and P only calculated if calc_L=true or calc_P=true,
 respectively (default: true).
 """
-function skew_LTL(A::Matrix{T}; overwrite_a=false, calc_L=true, calc_P=true) where {T<:Number}
+function skew_LTL(A::AbstractMatrix{T}; overwrite_a=false, calc_L=true, calc_P=true) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -297,7 +297,7 @@ function skew_LTL(A::Matrix{T}; overwrite_a=false, calc_L=true, calc_P=true) whe
 end
 
 @doc raw"""
-    pfaffian(A::Matrix{T}, overwrite_a=false, method='P') where {T<:Number}
+    pfaffian(A::AbstractMatrix{T}, overwrite_a=false, method='P') where {T<:Number}
 
 Compute the Pfaffian of a real or complex skew-symmetric
 matrix A (A=-A^T). If overwrite_a=true, the matrix A
@@ -305,7 +305,7 @@ is overwritten in the process. This function uses
 either the Parlett-Reid algorithm (method='P', default),
 or the Householder tridiagonalization (method='H')
 """
-function pfaffian(A::Matrix{T}; overwrite_a=false, method="P") where {T<:Number}
+function pfaffian(A::AbstractMatrix{T}; overwrite_a=false, method="P") where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -322,14 +322,14 @@ end
 
 
 @doc raw"""
-    pfaffian_LTL(A::Matrix{T}; overwrite_a=false) where {T<:Number}
+    pfaffian_LTL(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Number}
 
 Compute the Pfaffian of a real or complex skew-symmetric
 matrix A (A=-A^T). If overwrite_a=true, the matrix A
 is overwritten in the process. This function uses
 the Parlett-Reid algorithm.
 """
-function pfaffian_LTL(A::Matrix{T}; overwrite_a=false) where {T<:Number}
+function pfaffian_LTL(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -403,7 +403,7 @@ function pfaffian_LTL(A::Matrix{T}; overwrite_a=false) where {T<:Number}
 end
 
 @doc raw"""
-    pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Complex}
+    pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Complex}
 
 Compute the Pfaffian of a real or complex skew-symmetric
 matrix A (A=-A^T). If overwrite_a=true, the matrix A
@@ -414,7 +414,7 @@ Note that the function pfaffian_schur() can also be used in the
 real case. That function does not make use of the skew-symmetry
 and is only slightly slower than pfaffian_householder().
 """
-function pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Complex}
+function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Complex}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -492,7 +492,7 @@ function pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Complex
 end
 
 @doc raw"""
-    pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Real}
+    pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Real}
 
 Compute the Pfaffian of a real or complex skew-symmetric
 matrix A (A=-A^T). If overwrite_a=true, the matrix A
@@ -503,7 +503,7 @@ Note that the function pfaffian_schur() can also be used in the
 real case. That function does not make use of the skew-symmetry
 and is only slightly slower than pfaffian_householder().
 """
-function pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Real}
+function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Real}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -581,7 +581,7 @@ function pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Real}
 end
 
 @doc raw"""
-    pfaffian_schur(A::Matrix{T}; overwrite_a=false) where {T<:Real}
+    pfaffian_schur(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Real}
 
 Calculate Pfaffian of a real antisymmetric matrix using
 the Schur decomposition. (Hessenberg would in principle be faster,
@@ -592,7 +592,7 @@ but uses a LAPACK routine that is coded in FORTRAN and hence faster
 than python. As a consequence, pfaffian_schur is only slightly slower
 than pfaffian().
 """
-function pfaffian_schur(A::Matrix{TY}; overwrite_a=false) where {TY<:Real}
+function pfaffian_schur(A::AbstractMatrix{TY}; overwrite_a=false) where {TY<:Real}
     # @assert eltype(A) <: Real
     @assert size(A, 1) == size(A, 2) > 0
     @assert maximum(abs.(A .+ transpose(A))) < 1e-14
