@@ -252,7 +252,16 @@ function Z2sol(TR, p::Params)
         Z2Phase!(v, p)
 
         if rounds == true
-            TopologicalNumber = round.(Int, v.num)
+            TopologicalNumber = v.num
+            if all(!isnan, v.num[:, 1])
+                TopologicalNumber = round.(Int, v.num)
+            else
+                for i in eachindex(v.num[:, 1])
+                    if TopologicalNumber[i] !== NaN
+                        TopologicalNumber[i] = round(Int, v.num)
+                    end
+                end
+            end
             Total = mod(sum(TopologicalNumber), 2)
         elseif rounds == false
             TopologicalNumber = v.num
@@ -267,8 +276,26 @@ function Z2sol(TR, p::Params)
         Z2Phase!(v, p)
 
         if rounds == true
-            TopologicalNumber = round.(Int, v.num[:, 1])
-            TRTopologicalNumber = round.(Int, v.num[:, 2])
+            TopologicalNumber = v.num[:, 1]
+            if all(!isnan, v.num[:, 1])
+                TopologicalNumber = round.(Int, v.num[:, 1])
+            else
+                for i in eachindex(v.num[:, 1])
+                    if TopologicalNumber[i] !== NaN
+                        TopologicalNumber[i] = round(Int, v.num[i, 1])
+                    end
+                end
+            end
+            TRTopologicalNumber = v.num[:, 2]
+            if all(!isnan, v.num[:, 2])
+                TRTopologicalNumber = round.(Int, v.num[:, 2])
+            else
+                for i in eachindex(TRTopologicalNumber)
+                    if TRTopologicalNumber[i] !== NaN
+                        TRTopologicalNumber[i] = round(Int, v.num[i, 2])
+                    end
+                end
+            end
 
             Total = mod(sum(v.num[:, 1]), 2)
         elseif rounds == false
