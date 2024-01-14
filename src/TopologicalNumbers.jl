@@ -1,7 +1,8 @@
 module TopologicalNumbers
 
 include("./pfaffian.jl")
-export pfaffian
+export pfaffian, pfaffian_LTL, pfaffian_householder, pfaffian_schur
+export skew_LTL, skew_tridiagonalize
 
 # algorithms
 include("./algorithms.jl")

@@ -4,12 +4,23 @@ using Test
 
 using MPI
 
+using CondaPkg
+CondaPkg.add("pfapack")
+
+using PythonCall
 using PythonPlot
+
+const pf = pyimport("pfapack.pfaffian")
+# const cpf = pyimport("pfapack.ctypes").pfaffian
+const np = pyimport("numpy")
 
 # using Aqua
 # Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
 @testset "TopologicalNumbers.jl" begin
+
+    # test pfaffian
+    include("test_pfaffian.jl")
     @testset "1D case" begin
         function H₀(k, p)
 
