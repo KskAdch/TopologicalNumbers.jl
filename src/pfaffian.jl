@@ -16,7 +16,7 @@ alpha a real number (e_1 is the first unit vector)
 """
 function householder_real(x)
 
-    assert(length(x) > 0)
+    @assert length(x) > 0
 
     sigma = dot(x[2:end], x[2:end])
 
@@ -26,6 +26,8 @@ function householder_real(x)
         norm_x = sqrt(x[1]^2 + sigma)
         v = copy(x)
 
+        # depending on whether x[0] is positive or negatvie
+        # choose the sign
         if x[1] <= 0
             v[1] -= norm_x
             alpha = norm_x
@@ -41,7 +43,7 @@ end
 
 
 """
-    (v, tau, alpha) = householder_real(x)
+    (v, tau, alpha) = householder_complex(x)
 
 Compute a Householder transformation such that
 (1-tau v v^T) x = alpha e_1
@@ -49,9 +51,9 @@ where x and v a complex vectors, tau is 0 or 2, and
 alpha a complex number (e_1 is the first unit vector)
 """
 function householder_complex(x)
-    assert(length(x) > 0)
+    @assert length(x) > 0
 
-    sigma = dot(conj.(x[2:end]), x[2:end])
+    sigma = dot(x[2:end], x[2:end])
 
     if sigma == 0
         return zeros(eltype(x), length(x)), 0, x[1]
@@ -59,7 +61,7 @@ function householder_complex(x)
         norm_x = sqrt(conj(x[1]) * x[1] + sigma)
         v = copy(x)
 
-        phase = exp(im * atan2(imag(x[1]), real(x[1])))
+        phase = exp(im * atan(imag(x[1]), real(x[1])))
 
         v[1] += phase * norm_x
         v /= norm(v)
@@ -69,11 +71,11 @@ function householder_complex(x)
 end
 
 """
-    T, Q = skew_tridiagonalize(A, overwrite_a, calc_q=True)
+    T, Q = skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
 
 or
 
-    T = skew_tridiagonalize(A, overwrite_a, calc_q=False)
+    T = skew_tridiagonalize(A; overwrite_a=false, calc_q=false)
 
 Bring a real or complex skew-symmetric matrix (A=-A^T) into
 tridiagonal form T (with zero diagonal) with a orthogonal
@@ -81,20 +83,20 @@ tridiagonal form T (with zero diagonal) with a orthogonal
 A = Q T Q^T
 (Note that Q^T and *not* Q^dagger also in the complex case)
 
-A is overwritten if overwrite_a=True (default: False), and
-Q only calculated if calc_q=True (default: True)
+A is overwritten if overwrite_a=true (default: false), and
+Q only calculated if calc_q=true (default: true)
 """
 function skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + A')) < 1e-14
+    @assert maximum(abs.(A + transpose(A))) < 1e-14
 
     # Check if we have a complex data type
     if eltype(A) <: Complex
         householder = householder_complex
     elseif !(eltype(A) <: Number)
-        throw(TypeError(skew_tridiagonalize, "skew_tridiagonalize can only work on numeric input", Number))
+        throw(TypeError(skew_tridiagonalize, "pfaffian() can only work on numeric input", Number))
     else
         householder = householder_real
     end
@@ -104,7 +106,7 @@ function skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
     end
 
     if calc_q
-        Q = I(size(A, 1))
+        Q = Matrix{eltype(A)}(I, size(A, 1), size(A, 2))
     end
 
     for i in 1:size(A, 1)-2
@@ -112,17 +114,19 @@ function skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
         v, tau, alpha = householder(A[i+1:end, i])
         A[i+1, i] = alpha
         A[i, i+1] = -alpha
-        A[i+2:end, i] = zeros(eltype(A), size(A, 1) - i - 1)
-        A[i, i+2:end] = zeros(eltype(A), size(A, 1) - i - 1)
+        A[i+2:end, i] .= zero(eltype(A))
+        A[i, i+2:end] .= zero(eltype(A))
 
         # Update the matrix block A(i+1:N,i+1:N)
-        w = tau * (A[i+1:end, i+1:end] * conj(v))
-        A[i+1:end, i+1:end] += v * w' - w * v'
+        w = tau .* (A[i+1:end, i+1:end] * conj(v))
+        A[i+1:end, i+1:end] .+= v * transpose(w) .- w * transpose(v)
 
         if calc_q
             # Accumulate the individual Householder reflections
-            y = tau * (Q[:, i+1:end] * v)
-            Q[:, i+1:end] -= y * v'
+            # Accumulate them in the form P_1*P_2*..., which is
+            # (..*P_2*P_1)^dagger
+            y = tau .* (Q[:, i+1:end] * v)
+            Q[:, i+1:end] .-= y * v'
         end
     end
 
@@ -134,22 +138,22 @@ function skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
 end
 
 """
-    T, L, P = skew_LTL(A, overwrite_a, calc_q=True)
+    T, L, P = skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
 
 Bring a real or complex skew-symmetric matrix (A=-A^T) into
 tridiagonal form T (with zero diagonal) with a lower unit
 triangular matrix L such that
 P A P^T= L T L^T
 
-A is overwritten if overwrite_a=True (default: False),
-L and P only calculated if calc_L=True or calc_P=True,
-respectively (default: True).
+A is overwritten if overwrite_a=true (default: false),
+L and P only calculated if calc_L=true or calc_P=true,
+respectively (default: true).
 """
 function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + A')) < 1e-14
+    @assert maximum(abs.(A + transpose(A))) < 1e-14
 
     n = size(A, 1)
     if !overwrite_a
@@ -157,7 +161,7 @@ function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
     end
 
     if calc_L
-        L = I(n)
+        L = Matrix{eltype(A)}(I, n, n)
     end
 
     if calc_P
@@ -166,19 +170,25 @@ function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
 
     for k in 1:n-2
         # First, find the largest entry in A[k+1:end,k] and permute it to A[k+1,k]
-        kp = k + 1 + argmax(abs.(A[k+1:end, k]))
+        kp = k + findmax(abs.(A[k+1:end, k]))[2]
 
         # Check if we need to pivot
         if kp != k + 1
             # Interchange rows k+1 and kp
-            A[[k + 1, kp], k:end] = A[[kp, k + 1], k:end]
+            temp = copy(A[k+1, k:end])
+            A[k+1, k:end] .= A[kp, k:end]
+            A[kp, k:end] .= temp
 
             # Then interchange columns k+1 and kp
-            A[k:end, [k + 1, kp]] = A[k:end, [kp, k + 1]]
+            temp = copy(A[k:end, k+1])
+            A[k:end, k+1] .= A[k:end, kp]
+            A[k:end, kp] .= temp
 
             if calc_L
                 # Permute L accordingly
-                L[[k + 1, kp], 1:k+1] = L[[kp, k + 1], 1:k+1]
+                temp = copy(L[k+1, 1:k])
+                L[k+1, 1:k] = L[kp, 1:k]
+                L[kp, 1:k] = temp
             end
 
             if calc_P
@@ -189,18 +199,18 @@ function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
 
         # Now form the Gauss vector
         if A[k+1, k] != 0.0
-            tau = A[k+2:end, k] / A[k+1, k]
+            tau = A[k+2:end, k] ./ A[k+1, k]
 
             # Clear eliminated row and column
             A[k+2:end, k] .= 0.0
             A[k, k+2:end] .= 0.0
 
             # Update the matrix block A[k+2:end,k+2:end]
-            A[k+2:end, k+2:end] .+= tau * A[k+2:end, k+1]'
-            A[k+2:end, k+2:end] .-= A[k+2:end, k+1] * tau'
+            A[k+2:end, k+2:end] .+= tau * transpose(A[k+2:end, k+1])
+            A[k+2:end, k+2:end] .-= A[k+2:end, k+1] * transpose(tau)
 
             if calc_L
-                L[k+2:end, k+1] = tau
+                L[k+2:end, k+1] .= tau
             end
         end
     end
@@ -229,10 +239,10 @@ function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
 end
 
 """
-    pfaffian(A, overwrite_a=False, method='P')
+    pfaffian(A, overwrite_a=false, method='P')
 
 Compute the Pfaffian of a real or complex skew-symmetric
-matrix A (A=-A^T). If overwrite_a=True, the matrix A
+matrix A (A=-A^T). If overwrite_a=true, the matrix A
 is overwritten in the process. This function uses
 either the Parlett-Reid algorithm (method='P', default),
 or the Householder tridiagonalization (method='H')
@@ -241,7 +251,7 @@ function pfaffian(A; overwrite_a=false, method="P")
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + A')) < 1e-14
+    @assert maximum(abs.(A + transpose(A))) < 1e-14
     # Check that the method variable is appropriately set
     @assert method in ["P", "H"]
 
@@ -254,10 +264,10 @@ end
 
 
 """
-    pfaffian_LTL(A, overwrite_a=False)
+    pfaffian_LTL(A, overwrite_a=false)
 
 Compute the Pfaffian of a real or complex skew-symmetric
-matrix A (A=-A^T). If overwrite_a=True, the matrix A
+matrix A (A=-A^T). If overwrite_a=true, the matrix A
 is overwritten in the process. This function uses
 the Parlett-Reid algorithm.
 """
@@ -265,10 +275,10 @@ function pfaffian_LTL(A; overwrite_a=false)
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + A')) < 1e-14
+    @assert maximum(abs.(A + transpose(A))) < 1e-14
 
     n, m = size(A)
-    if eltype(A) != Complex{Float64}
+    if !(eltype(A) <: Complex)
         A = convert(Array{Float64,2}, A)
     end
 
@@ -285,7 +295,7 @@ function pfaffian_LTL(A; overwrite_a=false)
 
     for k in 1:2:n-1
         # First, find the largest entry in A[k+1:end, k] and permute it to A[k+1, k]
-        kp = k + 1 + argmax(abs.(A[k+1:end, k]))
+        kp = k + findmax(abs.(A[k+1:end, k]))[2]
 
         # Check if we need to pivot
         if kp != k + 1
@@ -301,14 +311,14 @@ function pfaffian_LTL(A; overwrite_a=false)
 
         # Now form the Gauss vector
         if A[k+1, k] != 0.0
-            tau = A[k, k+2:end] / A[k, k+1]
+            tau = A[k, k+2:end] ./ A[k, k+1]
 
             pfaffian_val *= A[k, k+1]
 
             if k + 2 <= n
                 # Update the matrix block A[k+2:end, k+2:end]
-                A[k+2:end, k+2:end] .+= tau * A[k+2:end, k+1]'
-                A[k+2:end, k+2:end] .-= A[k+2:end, k+1] * tau'
+                A[k+2:end, k+2:end] .+= tau * transpose(A[k+2:end, k+1])
+                A[k+2:end, k+2:end] .-= A[k+2:end, k+1] * transpose(tau)
             end
         else
             # If we encounter a zero on the super/subdiagonal, the Pfaffian is 0
@@ -320,10 +330,10 @@ function pfaffian_LTL(A; overwrite_a=false)
 end
 
 """
-    pfaffian(A, overwrite_a=False)
+    pfaffian(A, overwrite_a=false)
 
 Compute the Pfaffian of a real or complex skew-symmetric
-matrix A (A=-A^T). If overwrite_a=True, the matrix A
+matrix A (A=-A^T). If overwrite_a=true, the matrix A
 is overwritten in the process. This function uses the
 Householder tridiagonalization.
 
@@ -335,11 +345,11 @@ function pfaffian_householder(A; overwrite_a=false)
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + A')) < 1e-14
+    @assert maximum(abs.(A + transpose(A))) < 1e-14
 
     n = size(A, 1)
 
-    if eltype(A) != Complex{Float64}
+    if !(eltype(A) <: Complex)
         A = convert(Array{Float64,2}, A)
     end
 
@@ -351,6 +361,8 @@ function pfaffian_householder(A; overwrite_a=false)
     # Determine the appropriate Householder transformation function
     if eltype(A) <: Complex
         householder = householder_complex
+    elseif !(eltype(A) <: Number)
+        throw(TypeError(pfaffian_householder, "pfaffian() can only work on numeric input", Number))
     else
         householder = householder_real
     end
@@ -361,7 +373,7 @@ function pfaffian_householder(A; overwrite_a=false)
 
     pfaffian_val = 1.0
 
-    for i in 1:n-2
+    for i in 1:(n-2)
         # Find a Householder vector to eliminate the i-th column
         v, tau, alpha = householder(A[i+1:end, i])
         A[i+1, i] = alpha
@@ -370,18 +382,18 @@ function pfaffian_householder(A; overwrite_a=false)
         A[i, i+2:end] .= 0
 
         # Update the matrix block A[i+1:end, i+1:end]
-        w = tau * (A[i+1:end, i+1:end] * conj(v))
-        A[i+1:end, i+1:end] .+= v * w' - w * v'
+        w = tau .* (A[i+1:end, i+1:end] * conj(v))
+        A[i+1:end, i+1:end] .+= v * transpose(w) .- w * transpose(v)
 
         if tau != 0
             pfaffian_val *= 1 - tau
         end
-        if i % 2 == 0
+        if (i - 1) % 2 == 0
             pfaffian_val *= -alpha
         end
     end
 
-    pfaffian_val *= A[n-2, n-1]
+    pfaffian_val *= A[n-1, n]
 
     return pfaffian_val
 end
@@ -399,7 +411,7 @@ than pfaffian().
 function pfaffian_schur(A; overwrite_a=false)
     @assert eltype(A) <: Real
     @assert size(A, 1) == size(A, 2) > 0
-    @assert maximum(abs.(A + A')) < 1e-14
+    @assert maximum(abs.(A + transpose(A))) < 1e-14
 
     # Quick return if possible
     if size(A, 1) % 2 == 1
