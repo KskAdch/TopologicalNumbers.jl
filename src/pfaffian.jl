@@ -3,15 +3,15 @@
 
 """A package for computing Pfaffians"""
 
-"""
-    (v, tau, alpha) = householder_real(x)
+@doc raw"""
+    (v, tau, alpha) = householder_real(x::Vector{T}) where {T<:Real}
 
 Compute a Householder transformation such that
 (1-tau v v^T) x = alpha e_1
 where x and v a real vectors, tau is 0 or 2, and
 alpha a real number (e_1 is the first unit vector)
 """
-function householder_real(x)
+function householder_real(x::Vector{T}) where {T<:Real}
 
     @assert length(x) > 0
 
@@ -37,7 +37,15 @@ function householder_real(x)
     end
 end
 
-function householder_real!(v, x)
+@doc raw"""
+    (tau, alpha) = householder_real!(v::Vector{T}, x::Vector{T}) where {T<:Real}
+
+Compute a Householder transformation such that
+(1-tau v v^T) x = alpha e_1
+where x and v a real vectors, tau is 0 or 2, and
+alpha a real number (e_1 is the first unit vector)
+"""
+function householder_real!(v::Vector{T}, x::Vector{T}) where {T<:Real}
 
     @assert length(x) > 0
 
@@ -65,15 +73,15 @@ function householder_real!(v, x)
 end
 
 
-"""
-    (v, tau, alpha) = householder_complex(x)
+@doc raw"""
+    (v, tau, alpha) = householder_complex(x::Vector{T}) where {T<:Complex}
 
 Compute a Householder transformation such that
 (1-tau v v^T) x = alpha e_1
 where x and v a complex vectors, tau is 0 or 2, and
 alpha a complex number (e_1 is the first unit vector)
 """
-function householder_complex(x)
+function householder_complex(x::Vector{T}) where {T<:Complex}
     @assert length(x) > 0
 
     sigma = sum(abs2, @view(x[2:end]))
@@ -93,7 +101,15 @@ function householder_complex(x)
     return v, 2, -phase * norm_x
 end
 
-function householder_complex!(v, x)
+@doc raw"""
+    (tau, alpha) = householder_complex!(v::Vector{T}, x::Vector{T}) where {T<:Complex}
+
+Compute a Householder transformation such that
+(1-tau v v^T) x = alpha e_1
+where x and v a complex vectors, tau is 0 or 2, and
+alpha a complex number (e_1 is the first unit vector)
+"""
+function householder_complex!(v::Vector{T}, x::Vector{T}) where {T<:Complex}
     @assert length(x) > 0
 
     sigma = sum(abs2, @view(x[2:end]))
@@ -114,12 +130,12 @@ function householder_complex!(v, x)
     return 2, -phase * norm_x
 end
 
-"""
-    T, Q = skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
+@doc raw"""
+    T, Q = skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=true) where {T<:Number}
 
 or
 
-    T = skew_tridiagonalize(A; overwrite_a=false, calc_q=false)
+    T = skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=false) where {T<:Number}
 
 Bring a real or complex skew-symmetric matrix (A=-A^T) into
 tridiagonal form T (with zero diagonal) with a orthogonal
@@ -179,8 +195,8 @@ function skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=true) where
     end
 end
 
-"""
-    T, L, P = skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
+@doc raw"""
+    T, L, P = skew_LTL(A::Matrix{T}; overwrite_a=false, calc_L=true, calc_P=true) where {T<:Number}
 
 Bring a real or complex skew-symmetric matrix (A=-A^T) into
 tridiagonal form T (with zero diagonal) with a lower unit
@@ -191,7 +207,7 @@ A is overwritten if overwrite_a=true (default: false),
 L and P only calculated if calc_L=true or calc_P=true,
 respectively (default: true).
 """
-function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
+function skew_LTL(A::Matrix{T}; overwrite_a=false, calc_L=true, calc_P=true) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -280,8 +296,8 @@ function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
     end
 end
 
-"""
-    pfaffian(A, overwrite_a=false, method='P')
+@doc raw"""
+    pfaffian(A::Matrix{T}, overwrite_a=false, method='P') where {T<:Number}
 
 Compute the Pfaffian of a real or complex skew-symmetric
 matrix A (A=-A^T). If overwrite_a=true, the matrix A
@@ -289,7 +305,7 @@ is overwritten in the process. This function uses
 either the Parlett-Reid algorithm (method='P', default),
 or the Householder tridiagonalization (method='H')
 """
-function pfaffian(A; overwrite_a=false, method="P")
+function pfaffian(A::Matrix{T}; overwrite_a=false, method="P") where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -305,8 +321,8 @@ function pfaffian(A; overwrite_a=false, method="P")
 end
 
 
-"""
-    pfaffian_LTL(A, overwrite_a=false)
+@doc raw"""
+    pfaffian_LTL(A::Matrix{T}; overwrite_a=false) where {T<:Number}
 
 Compute the Pfaffian of a real or complex skew-symmetric
 matrix A (A=-A^T). If overwrite_a=true, the matrix A
@@ -565,7 +581,7 @@ function pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Real}
 end
 
 @doc raw"""
-    pfaffian_schur(A, overwrite_a=false)
+    pfaffian_schur(A::Matrix{T}; overwrite_a=false) where {T<:Real}
 
 Calculate Pfaffian of a real antisymmetric matrix using
 the Schur decomposition. (Hessenberg would in principle be faster,
@@ -576,8 +592,8 @@ but uses a LAPACK routine that is coded in FORTRAN and hence faster
 than python. As a consequence, pfaffian_schur is only slightly slower
 than pfaffian().
 """
-function pfaffian_schur(A; overwrite_a=false)
-    @assert eltype(A) <: Real
+function pfaffian_schur(A::Matrix{TY}; overwrite_a=false) where {TY<:Real}
+    # @assert eltype(A) <: Real
     @assert size(A, 1) == size(A, 2) > 0
     @assert maximum(abs.(A .+ transpose(A))) < 1e-14
 
@@ -594,17 +610,3 @@ function pfaffian_schur(A; overwrite_a=false)
     l = diag(T, 1)  # Get the superdiagonal of T
     return prod(@view(l[1:2:end])) * det(Z)
 end
-
-function main()
-    N = 100
-    A = rand(ComplexF64, N, N)
-    A = A .- transpose(A)
-    # @btime pfaffian_householder($A)
-    pfaffian_LTL(A)
-    nothing
-end
-
-using Profile
-main()
-Profile.clear_malloc_data()
-main()
