@@ -15,7 +15,7 @@
 
         B1 = pf.householder_real(np.array(A0))
         B1 = [pyconvert(T[i], B1[i-1]) for i in eachindex(T)]
-        B2 = householder_real(A0)
+        B2 = TopologicalNumbers.householder_real(A0)
 
         for i in eachindex(T)
             @test B1[i] ≈ B2[i]
@@ -23,7 +23,7 @@
 
         t = zeros(eltype(A0), size(A0))
 
-        B2 = householder_real!(t, A0)
+        B2 = TopologicalNumbers.householder_real!(t, A0)
         @test B1 ≈ t
 
         for i in eachindex(T)[2:3]
@@ -40,7 +40,7 @@
 
         B1 = pf.householder_complex(np.array(A0))
         B1 = [pyconvert(T[i], B1[i-1]) for i in eachindex(T)]
-        B2 = householder_complex(A0)
+        B2 = TopologicalNumbers.householder_complex(A0)
 
         for i in eachindex(T)
             @test B1[i] ≈ B2[i]
@@ -48,7 +48,7 @@
 
         t = zeros(eltype(A0), size(A0))
 
-        B2 = householder_complex!(t, A0)
+        B2 = TopologicalNumbers.householder_complex!(t, A0)
         @test B1 ≈ t
 
         for i in eachindex(T)[2:3]
