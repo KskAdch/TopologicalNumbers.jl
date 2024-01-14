@@ -1,5 +1,8 @@
 module TopologicalNumbers
 
+include("./pfaffian.jl")
+export pfaffian
+
 # algorithms
 include("./algorithms.jl")
 export BP, FHS, FHS2, Shio

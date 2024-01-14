@@ -46,7 +46,7 @@ end
             end
 
             v.w00 .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
-            if isapprox(round.(v.w00[1:Nfill, Nfill+1:end], digits = 5), zero(v.w00[1:Nfill, Nfill+1:end])) == false
+            if isapprox(round.(v.w00[1:Nfill, Nfill+1:end], digits=5), zero(v.w00[1:Nfill, Nfill+1:end])) == false
                 v.T .= kron(v.sy, v.s0)
             end
             v.w00 .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
@@ -148,20 +148,20 @@ end
         end
     end
 
-    pfw00 = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.w00[1:Nfill, 1:Nfill])))
-    pfwp0 = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.wp0[1:Nfill, 1:Nfill])))
+    pfw00 = pfaffian(v.w00[1:Nfill, 1:Nfill])
+    pfwp0 = pfaffian(v.wp0[1:Nfill, 1:Nfill])
     v.Px0[1] += angle(pfw00 / pfwp0)
 
-    pfw0p = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.w0p[1:Nfill, 1:Nfill])))
-    pfwpp = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.wpp[1:Nfill, 1:Nfill])))
+    pfw0p = pfaffian(v.w0p[1:Nfill, 1:Nfill])
+    pfwpp = pfaffian(v.wpp[1:Nfill, 1:Nfill])
     v.Pxp[1] += angle(pfw0p / pfwpp)
-    
-    pfw00 = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.w00[Nfill+1:end, Nfill+1:end])))
-    pfwp0 = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.wp0[Nfill+1:end, Nfill+1:end])))
+
+    pfw00 = pfaffian(v.w00[Nfill+1:end, Nfill+1:end])
+    pfwp0 = pfaffian(v.wp0[Nfill+1:end, Nfill+1:end])
     v.Px0[2] += angle(pfw00 / pfwp0)
 
-    pfw0p = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.w0p[Nfill+1:end, Nfill+1:end])))
-    pfwpp = pyconvert(ComplexF64, pf.pfaffian(np.matrix(v.wpp[Nfill+1:end, Nfill+1:end])))
+    pfw0p = pfaffian(v.w0p[Nfill+1:end, Nfill+1:end])
+    pfwpp = pfaffian(v.wpp[Nfill+1:end, Nfill+1:end])
     v.Pxp[2] += angle(pfw0p / pfwpp)
 
     for l in 1:2
@@ -192,17 +192,17 @@ function setTemporalZ2(p::Params)
     Link1 = zeros(ComplexF64, 2, 2, N)
     Link2 = zeros(ComplexF64, 2, 2, N)
     LinkN1 = zeros(ComplexF64, 2, 2, N)
-    
+
     psi_0 = zeros(ComplexF64, N, Hs, Hs)
     psi_1 = zeros(ComplexF64, N, Hs, Hs)
     psi_N = zeros(ComplexF64, N, Hs, Hs)
-    
+
     psi00 = zeros(ComplexF64, Hs, Hs)
     psi10 = zeros(ComplexF64, Hs, Hs)
     psi01 = zeros(ComplexF64, Hs, Hs)
 
     num = zeros(2)
-    
+
     TemporalZ2(num, k, sy, s0, T, w00, w0p, wp0, wpp, Px0, Pxp, phi, Link1, Link2, LinkN1, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
 end
 
@@ -229,17 +229,17 @@ function setTemporalZ2TR(p::Params)
     Link1 = zeros(ComplexF64, 2, 2, N)
     Link2 = zeros(ComplexF64, 2, 2, N)
     LinkN1 = zeros(ComplexF64, 2, 2, N)
-    
+
     psi_0 = zeros(ComplexF64, N, Hs, Hs)
     psi_1 = zeros(ComplexF64, N, Hs, Hs)
     psi_N = zeros(ComplexF64, N, Hs, Hs)
-    
+
     psi00 = zeros(ComplexF64, Hs, Hs)
     psi10 = zeros(ComplexF64, Hs, Hs)
     psi01 = zeros(ComplexF64, Hs, Hs)
 
     num = zeros(2, 2)
-    
+
     TemporalZ2(num, k, sy, s0, T, w00, w0p, wp0, wpp, Px0, Pxp, phi, Link1, Link2, LinkN1, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
 end
 
@@ -257,12 +257,12 @@ function Z2sol(TR, p::Params)
         elseif rounds == false
             TopologicalNumber = v.num
             Total = sum(TopologicalNumber)
-            Total = mod(Total, 2*sign(Total-2+1e-15))
+            Total = mod(Total, 2 * sign(Total - 2 + 1e-15))
         end
 
         Z2Solution(; TopologicalNumber, Total)
     elseif TR == true
-        
+
         v = setTemporalZ2TR(p)
         Z2Phase!(v, p)
 
@@ -275,7 +275,7 @@ function Z2sol(TR, p::Params)
             TopologicalNumber = v.num[:, 1]
             TRTopologicalNumber = v.num[:, 2]
             Total = sum(TopologicalNumber)
-            Total = mod(Total, 2*sign(Total-2+1e-15))
+            Total = mod(Total, 2 * sign(Total - 2 + 1e-15))
         end
 
         Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
@@ -408,6 +408,6 @@ function solve(
 
     #     Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
     # end
-    
+
     Z2sol(TR, p)
 end

@@ -1,10 +1,7 @@
 # From PFAPACK source https://github.com/basnijholt/pfapack
-# Migration to Julia by: 
+# Migration from PFAPACK(Python)
 
 """A package for computing Pfaffians"""
-
-using LinearAlgebra
-using SparseArrays
 
 """
     (v, tau, alpha) = householder_real(x)
@@ -18,14 +15,13 @@ function householder_real(x)
 
     @assert length(x) > 0
 
-    sigma = dot(x[2:end], x[2:end])
+    sigma = sum(abs2, @view(x[2:end]))
 
     if sigma == 0
         return zeros(length(x)), 0, x[1]
     else
-        norm_x = sqrt(x[1]^2 + sigma)
+        norm_x = sqrt(abs2(x[1]) + sigma)
         v = copy(x)
-
         # depending on whether x[0] is positive or negatvie
         # choose the sign
         if x[1] <= 0
@@ -36,8 +32,35 @@ function householder_real(x)
             alpha = -norm_x
         end
 
-        v /= norm(v)
+        v ./= norm(v)
         return v, 2, alpha
+    end
+end
+
+function householder_real!(v, x)
+
+    @assert length(x) > 0
+
+    sigma = sum(abs2, @view(x[2:end]))
+
+    if sigma == 0
+        v .= zero(eltype(x))
+        return 0, x[1]
+    else
+        v .= x
+        norm_x = sqrt(abs2(x[1]) + sigma)
+        # depending on whether x[0] is positive or negatvie
+        # choose the sign
+        if x[1] <= 0
+            v[1] -= norm_x
+            alpha = norm_x
+        else
+            v[1] += norm_x
+            alpha = -norm_x
+        end
+
+        v ./= norm(v)
+        return 2, alpha
     end
 end
 
@@ -53,21 +76,42 @@ alpha a complex number (e_1 is the first unit vector)
 function householder_complex(x)
     @assert length(x) > 0
 
-    sigma = dot(x[2:end], x[2:end])
+    sigma = sum(abs2, @view(x[2:end]))
 
     if sigma == 0
         return zeros(eltype(x), length(x)), 0, x[1]
     else
-        norm_x = sqrt(conj(x[1]) * x[1] + sigma)
+        norm_x = sqrt(abs2(x[1]) + sigma)
         v = copy(x)
 
         phase = exp(im * atan(imag(x[1]), real(x[1])))
 
         v[1] += phase * norm_x
-        v /= norm(v)
+        v ./= norm(v)
     end
 
-    return (v, 2, -phase * norm_x)
+    return v, 2, -phase * norm_x
+end
+
+function householder_complex!(v, x)
+    @assert length(x) > 0
+
+    sigma = sum(abs2, @view(x[2:end]))
+
+    if sigma == 0
+        v .= zero(eltype(x))
+        return 0, x[1]
+    else
+        v .= x
+        norm_x = sqrt(abs2(x[1]) + sigma)
+
+        phase = exp(im * atan(imag(x[1]), real(x[1])))
+
+        v[1] += phase * norm_x
+        v ./= norm(v)
+    end
+
+    return 2, -phase * norm_x
 end
 
 """
@@ -86,17 +130,15 @@ A = Q T Q^T
 A is overwritten if overwrite_a=true (default: false), and
 Q only calculated if calc_q=true (default: true)
 """
-function skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
+function skew_tridiagonalize(A::Matrix{T}; overwrite_a=false, calc_q=true) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
     @assert maximum(abs.(A + transpose(A))) < 1e-14
 
     # Check if we have a complex data type
-    if eltype(A) <: Complex
+    if T <: Complex
         householder = householder_complex
-    elseif !(eltype(A) <: Number)
-        throw(TypeError(skew_tridiagonalize, "pfaffian() can only work on numeric input", Number))
     else
         householder = householder_real
     end
@@ -106,26 +148,26 @@ function skew_tridiagonalize(A; overwrite_a=false, calc_q=true)
     end
 
     if calc_q
-        Q = Matrix{eltype(A)}(I, size(A, 1), size(A, 2))
+        Q = Matrix{T}(I, size(A))
     end
 
-    for i in 1:size(A, 1)-2
+    @inbounds for i in 1:size(A, 1)-2
         # Find a Householder vector to eliminate the i-th column
-        v, tau, alpha = householder(A[i+1:end, i])
+        v, tau, alpha = householder(@view(A[i+1:end, i]))
         A[i+1, i] = alpha
         A[i, i+1] = -alpha
-        A[i+2:end, i] .= zero(eltype(A))
-        A[i, i+2:end] .= zero(eltype(A))
+        A[i+2:end, i] .= zero(T)
+        A[i, i+2:end] .= zero(T)
 
         # Update the matrix block A(i+1:N,i+1:N)
-        w = tau .* (A[i+1:end, i+1:end] * conj(v))
+        w = tau .* (@view(A[i+1:end, i+1:end]) * conj(v))
         A[i+1:end, i+1:end] .+= v * transpose(w) .- w * transpose(v)
 
         if calc_q
             # Accumulate the individual Householder reflections
             # Accumulate them in the form P_1*P_2*..., which is
             # (..*P_2*P_1)^dagger
-            y = tau .* (Q[:, i+1:end] * v)
+            y = tau .* (@view(Q[:, i+1:end]) * v)
             Q[:, i+1:end] .-= y * v'
         end
     end
@@ -170,13 +212,13 @@ function skew_LTL(A; overwrite_a=false, calc_L=true, calc_P=true)
 
     for k in 1:n-2
         # First, find the largest entry in A[k+1:end,k] and permute it to A[k+1,k]
-        kp = k + findmax(abs.(A[k+1:end, k]))[2]
+        kp = k + findmax(abs.(@view(A[k+1:end, k])))[2]
 
         # Check if we need to pivot
         if kp != k + 1
             # Interchange rows k+1 and kp
-            temp = copy(A[k+1, k:end])
-            A[k+1, k:end] .= A[kp, k:end]
+            temp = copy(@view(A[k+1, k:end]))
+            A[k+1, k:end] .= @view(A[kp, k:end])
             A[kp, k:end] .= temp
 
             # Then interchange columns k+1 and kp
@@ -251,9 +293,9 @@ function pfaffian(A; overwrite_a=false, method="P")
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + transpose(A))) < 1e-14
+    @assert maximum(abs.(A .+ transpose(A))) < 1e-14
     # Check that the method variable is appropriately set
-    @assert method in ["P", "H"]
+    @assert method in ("P", "H")
 
     if method == "P"
         return pfaffian_LTL(A, overwrite_a=overwrite_a)
@@ -271,66 +313,81 @@ matrix A (A=-A^T). If overwrite_a=true, the matrix A
 is overwritten in the process. This function uses
 the Parlett-Reid algorithm.
 """
-function pfaffian_LTL(A; overwrite_a=false)
+function pfaffian_LTL(A::Matrix{T}; overwrite_a=false) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + transpose(A))) < 1e-14
+    @assert maximum(abs.(A .+ transpose(A))) < 1e-14
 
     n, m = size(A)
-    if !(eltype(A) <: Complex)
-        A = convert(Array{Float64,2}, A)
-    end
+    # if !(eltype(A) <: Complex)
+    #     A = convert(Array{Float64,2}, A)
+    # end
 
     # Quick return if possible
     if n % 2 == 1
-        return 0.0
+        return zero(T)
     end
 
     if !overwrite_a
         A = copy(A)
     end
 
-    pfaffian_val = 1.0
+    tau = Array{T}(undef, n - 2)
 
-    for k in 1:2:n-1
+    pfaffian_val = one(T)
+
+    @inbounds for k in 1:2:n-1
+        tau0 = @view tau[k:end]
+
         # First, find the largest entry in A[k+1:end, k] and permute it to A[k+1, k]
-        kp = k + findmax(abs.(A[k+1:end, k]))[2]
+        @views kp = k + findmax(abs.(A[k+1:end, k]))[2]
 
         # Check if we need to pivot
         if kp != k + 1
             # Interchange rows k+1 and kp
-            A[[k + 1, kp], k:end] = A[[kp, k + 1], k:end]
+            @inbounds @simd for l in k:n
+                t = A[k+1, l]
+                A[k+1, l] = A[kp, l]
+                A[kp, l] = t
+            end
 
             # Then interchange columns k+1 and kp
-            A[k:end, [k + 1, kp]] = A[k:end, [kp, k + 1]]
+            @inbounds @simd for l in k:n
+                t = A[l, k+1]
+                A[l, k+1] = A[l, kp]
+                A[l, kp] = t
+            end
 
             # Every interchange corresponds to a "-" in det(P)
             pfaffian_val *= -1
         end
 
         # Now form the Gauss vector
-        if A[k+1, k] != 0.0
-            tau = A[k, k+2:end] ./ A[k, k+1]
+        @inbounds if A[k+1, k] != zero(T)
+            @inbounds @views tau0 .= A[k, k+2:end] ./ A[k, k+1]
 
-            pfaffian_val *= A[k, k+1]
+            pfaffian_val *= @inbounds A[k, k+1]
 
             if k + 2 <= n
                 # Update the matrix block A[k+2:end, k+2:end]
-                A[k+2:end, k+2:end] .+= tau * transpose(A[k+2:end, k+1])
-                A[k+2:end, k+2:end] .-= A[k+2:end, k+1] * transpose(tau)
+                @inbounds for l1 in eachindex(tau0)
+                    @simd for l2 in eachindex(tau0)
+                        @fastmath A[k+1+l2, k+1+l1] += tau0[l2] * A[k+1+l1, k+1] - tau0[l1] * A[k+1+l2, k+1]
+                    end
+                end
             end
         else
             # If we encounter a zero on the super/subdiagonal, the Pfaffian is 0
-            return 0.0
+            return zero(T)
         end
     end
 
     return pfaffian_val
 end
 
-"""
-    pfaffian(A, overwrite_a=false)
+@doc raw"""
+    pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Complex}
 
 Compute the Pfaffian of a real or complex skew-symmetric
 matrix A (A=-A^T). If overwrite_a=true, the matrix A
@@ -341,49 +398,69 @@ Note that the function pfaffian_schur() can also be used in the
 real case. That function does not make use of the skew-symmetry
 and is only slightly slower than pfaffian_householder().
 """
-function pfaffian_householder(A; overwrite_a=false)
+function pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Complex}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
-    @assert maximum(abs.(A + transpose(A))) < 1e-14
+    @assert maximum(abs.(A .+ transpose(A))) < 1e-14
 
-    n = size(A, 1)
+    n, m = size(A)
 
-    if !(eltype(A) <: Complex)
-        A = convert(Array{Float64,2}, A)
-    end
+    # if !(T <: Complex)
+    #     A = convert(Array{Float64,2}, A)
+    # end
 
     # Quick return if possible
     if n % 2 == 1
-        return 0.0
+        return zero(T)
     end
 
     # Determine the appropriate Householder transformation function
-    if eltype(A) <: Complex
-        householder = householder_complex
-    elseif !(eltype(A) <: Number)
-        throw(TypeError(pfaffian_householder, "pfaffian() can only work on numeric input", Number))
-    else
-        householder = householder_real
-    end
+    householder! = householder_complex!
 
     if !overwrite_a
         A = copy(A)
     end
 
-    pfaffian_val = 1.0
+    # Z = Array{T}(undef, n - 1, m - 1)
+    v = Array{T}(undef, n - 1)
+    w = copy(v)
 
-    for i in 1:(n-2)
+    pfaffian_val = one(T)
+
+    @inbounds for i in 1:(n-2)
+        # Z0 = @view Z[i:end, i:end]
+        v0 = @view v[i:end]
+        w0 = @view w[i:end]
+
         # Find a Householder vector to eliminate the i-th column
-        v, tau, alpha = householder(A[i+1:end, i])
+        @views tau, alpha = householder!(v0, A[i+1:end, i])
         A[i+1, i] = alpha
         A[i, i+1] = -alpha
-        A[i+2:end, i] .= 0
-        A[i, i+2:end] .= 0
+        @views A[i+2:end, i] .= zero(T)
+        @views A[i, i+2:end] .= zero(T)
 
         # Update the matrix block A[i+1:end, i+1:end]
-        w = tau .* (A[i+1:end, i+1:end] * conj(v))
-        A[i+1:end, i+1:end] .+= v * transpose(w) .- w * transpose(v)
+        # A0 = @view A[i+1:end, i+1:end]
+        # @views mul!(w0, A0, conj.(v0))
+        @views mul!(w0, A[i+1:end, i+1:end], conj.(v0))
+        w0 .*= tau
+        # mul!(Z0, v0, transpose(w0))
+        # @views A0 .+= Z0
+        # @inbounds @simd for j in eachindex(A0)
+        #     A0[j] = A0[j] + Z0[j]
+        # end
+        # mul!(Z0, w0, transpose(v0))
+        # @views A0 .-= Z0
+        # @inbounds @simd for j in eachindex(A0)
+        #     A0[j] = A0[j] - Z0[j]
+        # end
+        @inbounds for j in eachindex(w0)
+            @simd for k in eachindex(v0)
+                # A0[k, j] += v0[k] * w0[j] - v0[j] * w0[k]
+                @fastmath A[i+k, i+j] += v0[k] * w0[j] - v0[j] * w0[k]
+            end
+        end
 
         if tau != 0
             pfaffian_val *= 1 - tau
@@ -393,12 +470,103 @@ function pfaffian_householder(A; overwrite_a=false)
         end
     end
 
-    pfaffian_val *= A[n-1, n]
+    pfaffian_val *= @inbounds A[n-1, n]
 
     return pfaffian_val
 end
 
+@doc raw"""
+    pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Real}
+
+Compute the Pfaffian of a real or complex skew-symmetric
+matrix A (A=-A^T). If overwrite_a=true, the matrix A
+is overwritten in the process. This function uses the
+Householder tridiagonalization.
+
+Note that the function pfaffian_schur() can also be used in the
+real case. That function does not make use of the skew-symmetry
+and is only slightly slower than pfaffian_householder().
 """
+function pfaffian_householder(A::Matrix{T}; overwrite_a=false) where {T<:Real}
+    # Check if matrix is square
+    @assert size(A, 1) == size(A, 2) > 0
+    # Check if it's skew-symmetric
+    @assert maximum(abs.(A .+ transpose(A))) < 1e-14
+
+    n, m = size(A)
+
+    # if !(T <: Complex)
+    #     A = convert(Array{Float64,2}, A)
+    # end
+
+    # Quick return if possible
+    if n % 2 == 1
+        return zero(T)
+    end
+
+    # Determine the appropriate Householder transformation function
+    householder! = householder_real!
+
+    if !overwrite_a
+        A = copy(A)
+    end
+
+    # Z = Array{T}(undef, n - 1, m - 1)
+    v = Array{T}(undef, n - 1)
+    w = copy(v)
+
+    pfaffian_val = one(T)
+
+    @inbounds for i in 1:(n-2)
+        # Z0 = @view Z[i:end, i:end]
+        v0 = @view v[i:end]
+        w0 = @view w[i:end]
+
+        # Find a Householder vector to eliminate the i-th column
+        @views tau, alpha = householder!(v0, A[i+1:end, i])
+        A[i+1, i] = alpha
+        A[i, i+1] = -alpha
+        @views A[i+2:end, i] .= zero(T)
+        @views A[i, i+2:end] .= zero(T)
+
+        # Update the matrix block A[i+1:end, i+1:end]
+        # A0 = @view A[i+1:end, i+1:end]
+        # @views mul!(w0, A0, conj.(v0))
+        @views mul!(w0, A[i+1:end, i+1:end], v0)
+        w0 .*= tau
+        # mul!(Z0, v0, transpose(w0))
+        # @views A0 .+= Z0
+        # @inbounds @simd for j in eachindex(A0)
+        #     A0[j] = A0[j] + Z0[j]
+        # end
+        # mul!(Z0, w0, transpose(v0))
+        # @views A0 .-= Z0
+        # @inbounds @simd for j in eachindex(A0)
+        #     A0[j] = A0[j] - Z0[j]
+        # end
+        @inbounds for j in eachindex(w0)
+            @simd for k in eachindex(v0)
+                # A0[k, j] += v0[k] * w0[j] - v0[j] * w0[k]
+                @fastmath A[i+k, i+j] += v0[k] * w0[j] - v0[j] * w0[k]
+            end
+        end
+
+        if tau != 0
+            pfaffian_val *= 1 - tau
+        end
+        if (i - 1) % 2 == 0
+            pfaffian_val *= -alpha
+        end
+    end
+
+    pfaffian_val *= @inbounds A[n-1, n]
+
+    return pfaffian_val
+end
+
+@doc raw"""
+    pfaffian_schur(A, overwrite_a=false)
+
 Calculate Pfaffian of a real antisymmetric matrix using
 the Schur decomposition. (Hessenberg would in principle be faster,
 but scipy-0.8 messed up the performance for scipy.linalg.hessenberg()).
@@ -411,7 +579,7 @@ than pfaffian().
 function pfaffian_schur(A; overwrite_a=false)
     @assert eltype(A) <: Real
     @assert size(A, 1) == size(A, 2) > 0
-    @assert maximum(abs.(A + transpose(A))) < 1e-14
+    @assert maximum(abs.(A .+ transpose(A))) < 1e-14
 
     # Quick return if possible
     if size(A, 1) % 2 == 1
@@ -424,5 +592,19 @@ function pfaffian_schur(A; overwrite_a=false)
 
     T, Z = schur(A)
     l = diag(T, 1)  # Get the superdiagonal of T
-    return prod(l[1:2:end]) * det(Z)
+    return prod(@view(l[1:2:end])) * det(Z)
 end
+
+function main()
+    N = 100
+    A = rand(ComplexF64, N, N)
+    A = A .- transpose(A)
+    # @btime pfaffian_householder($A)
+    pfaffian_LTL(A)
+    nothing
+end
+
+using Profile
+main()
+Profile.clear_malloc_data()
+main()
