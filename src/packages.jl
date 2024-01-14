@@ -5,4 +5,5 @@ using LinearAlgebra
 using Parameters: @unpack
 using ProgressBars
 using PythonPlot
+using SparseArrays
 using StaticArrays
