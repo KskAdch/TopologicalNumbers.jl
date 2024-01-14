@@ -130,14 +130,14 @@ FCProblem(H, N) = FCProblem(; H=H, N=N)
 
 # Problem for calculating the second Chern number
 @doc raw"""
-    SCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Union{Real,Nothing},T4<:Bool} <: TopologicalNumbersProblems
+    SCProblem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
 
 A struct representing a problem for calculating the second Chern number.
 
 # Fields
 - `H::T1`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 4.
-- `N::T2`: The number of points in the Brillouin zone. Type of `Int` means the uniform mesh. You can also specify the mesh by giving a tuple or a vector. Default is 30.
-- `Nfill::T3`: The number of filled bands. `nothing` means the half-filling. Default is `nothing`.
+- `Nfill::T2`: The number of filled bands. `nothing` means the half-filling. Default is `nothing`.
+- `N::T3`: The number of points in the Brillouin zone. Type of `Int` means the uniform mesh. You can also specify the mesh by giving a tuple or a vector. Default is 30.
 - `RV::T4`: A boolean indicating whether to return a `real` value. Default is true.
 
 # Example
@@ -145,10 +145,10 @@ A struct representing a problem for calculating the second Chern number.
 julia> 
 ```
 """
-Base.@kwdef struct SCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Union{Real,Nothing},T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct SCProblem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
     H::T1
-    N::T2 = 30
-    Nfill::T3 = nothing
+    Nfill::T2 = nothing
+    N::T3 = 30
     RV::T4 = true
 end
 
@@ -173,12 +173,32 @@ julia>
 SCProblem(H) = SCProblem(; H=H)
 
 @doc raw"""
-    SCProblem(H, N)
+    SCProblem(H, Nf)
 
 Constructs a second Chern number problem with the default parameters.
 
 # Arguments
 - `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 4.
+- `Nf`: The number of filled bands. `nothing` means the half-filling.
+
+# Returns
+A `SCProblem` object.
+
+# Example
+```julia
+julia> 
+```
+"""
+SCProblem(H, Nf) = SCProblem(; H=H, Nfill=Nf)
+
+@doc raw"""
+    SCProblem(H, Nf, N)
+
+Constructs a second Chern number problem with the default parameters.
+
+# Arguments
+- `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 4.
+- `Nf`: The number of filled bands. `nothing` means the half-filling.
 - `N`: The number of points in the Brillouin zone. Type of `Int` means the uniform mesh. You can also specify the mesh by giving a tuple or a vector.
 
 # Returns
@@ -189,31 +209,33 @@ A `SCProblem` object.
 julia> 
 ```
 """
-SCProblem(H, N) = SCProblem(; H=H, N=N)
+SCProblem(H, Nf, N) = SCProblem(; H=H, Nfill=Nf, N=N)
 
 
 # Problem for calculating the Z2 invariant
 @doc raw"""
-    Z2Problem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Bool} <: TopologicalNumbersProblems
+    Z2Problem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
 
 A struct representing a problem for calculating the Z2 number.
 
 # Fields
 - `H::T1`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 2.
-- `N::T2`: The number of points for one direction in the Brillouin zone. Default is 50.
-- `rounds::T3`: A boolean indicating whether to round a returned variable. Default is true.
-- `TR::T3`: A boolean indicating whether to calculate the remaining part of the Brillouin zone. If `true`, `solve` returns an additional result `TRTopologicalNumber`. If the calculation is done nomally, `TRTopologicalNumber` is equal to `TopologicalNumber`. Default is false.
+- `Nfill::T2`: The number of filled bands. `nothing` means the half-filling. Default is `nothing`.
+- `N::T3`: The number of points for one direction in the Brillouin zone. Default is 50.
+- `rounds::T4`: A boolean indicating whether to round a returned variable. Default is true.
+- `TR::T4`: A boolean indicating whether to calculate the remaining part of the Brillouin zone. If `true`, `solve` returns an additional result `TRTopologicalNumber`. If the calculation is done nomally, `TRTopologicalNumber` is equal to `TopologicalNumber`. Default is false.
 
 # Example
 ```julia
 julia> 
 ```
 """
-Base.@kwdef struct Z2Problem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct Z2Problem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
     H::T1
-    N::T2 = 50
-    rounds::T3 = true
-    TR::T3 = false
+    Nfill::T2 = nothing
+    N::T3 = 50
+    rounds::T4 = true
+    TR::T4 = false
 end
 # default
 
@@ -236,12 +258,32 @@ julia>
 Z2Problem(H) = Z2Problem(; H=H)
 
 @doc raw"""
-    Z2Problem(H, N)
+    Z2Problem(H, Nf)
 
 Constructs a Z2 number problem with the default parameters.
 
 # Arguments
 - `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 2.
+- `Nf`: The number of filled bands. `nothing` means the half-filling.
+
+# Returns
+A `Z2Problem` object.
+
+# Example
+```julia
+julia> 
+```
+"""
+Z2Problem(H, Nf) = Z2Problem(; H=H, Nfill=Nf)
+
+@doc raw"""
+    Z2Problem(H, Nf, N)
+
+Constructs a Z2 number problem with the default parameters.
+
+# Arguments
+- `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 2.
+- `Nf`: The number of filled bands. `nothing` means the half-filling.
 - `N`: The number of points for one direction in the Brillouin zone.
 
 # Returns
@@ -252,7 +294,7 @@ A `Z2Problem` object.
 julia> 
 ```
 """
-Z2Problem(H, N) = Z2Problem(; H=H, N=N)
+Z2Problem(H, Nf, N) = Z2Problem(; H=H, Nfill=Nf, N=N)
 
 
 # Problem for calculating the local Berry flux

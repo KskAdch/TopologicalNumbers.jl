@@ -313,10 +313,11 @@ end
 
  Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite).
 
-    calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
+    calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Bool=true, TR::Bool=false) where {T1<:Union{Int,Nothing}}
 
  Arguments
  - `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
+ - `Nfill::T1`: The filling number. The default value is `Hs ÷ 2`, where `Hs` is the size of the Hamiltonian matrix.
  - `N::Int` is the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
  - `rounds::Bool` is an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
@@ -399,7 +400,17 @@ function solve(
 
     Hs = size(H(zeros(2)), 1)
     Hshalf = Hs ÷ 2
-    p = Params(; Ham=H, N, Hs, rounds, dim=2)
+    if isodd(N)
+        throw(ArgumentError("N should be an even number"))
+    else
+        if isnothing(Nfill)
+            Nfill = Hshalf
+        elseif isodd(Nfill)
+            throw(ArgumentError("Nfill should be an even number"))
+        end
+    end
+
+    p = Params(; Ham=H, Nfill, N, Hs, rounds, dim=2)
 
     # TopologicalNumber = zeros(Hshalf)
     # if TR == false
