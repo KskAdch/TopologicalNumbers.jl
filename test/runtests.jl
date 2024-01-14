@@ -390,7 +390,7 @@ const np = pyimport("numpy")
 
             @test abs(sum(result.Ene)) < 1e-10
 
-            @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
+            @test calcZ2(H) == (TopologicalNumber=[1, 1], TRTopologicalNumber=nothing, Total=0)
 
             @test norm(calcZ2(H, rounds=false).TopologicalNumber - calcZ2(H).TopologicalNumber) < 1e-10
 
