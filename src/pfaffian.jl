@@ -4,14 +4,14 @@
 """A package for computing Pfaffians"""
 
 @doc raw"""
-    (v, tau, alpha) = householder_real(x::Vector{T}) where {T<:Real}
+    (v, tau, alpha) = householder_real(x)
 
 Compute a Householder transformation such that
 (1-tau v v^T) x = alpha e_1
 where x and v a real vectors, tau is 0 or 2, and
 alpha a real number (e_1 is the first unit vector)
 """
-function householder_real(x::Vector{T}) where {T<:Real}
+function householder_real(x)
 
     @assert length(x) > 0
 
@@ -38,14 +38,14 @@ function householder_real(x::Vector{T}) where {T<:Real}
 end
 
 @doc raw"""
-    (tau, alpha) = householder_real!(v::Vector{T}, x::Vector{T}) where {T<:Real}
+    (tau, alpha) = householder_real!(v, x)
 
 Compute a Householder transformation such that
 (1-tau v v^T) x = alpha e_1
 where x and v a real vectors, tau is 0 or 2, and
 alpha a real number (e_1 is the first unit vector)
 """
-function householder_real!(v::Vector{T}, x::Vector{T}) where {T<:Real}
+function householder_real!(v, x)
 
     @assert length(x) > 0
 
@@ -74,14 +74,14 @@ end
 
 
 @doc raw"""
-    (v, tau, alpha) = householder_complex(x::Vector{T}) where {T<:Complex}
+    (v, tau, alpha) = householder_complex(x)
 
 Compute a Householder transformation such that
 (1-tau v v^T) x = alpha e_1
 where x and v a complex vectors, tau is 0 or 2, and
 alpha a complex number (e_1 is the first unit vector)
 """
-function householder_complex(x::Vector{T}) where {T<:Complex}
+function householder_complex(x)
     @assert length(x) > 0
 
     sigma = sum(abs2, @view(x[2:end]))
@@ -102,14 +102,14 @@ function householder_complex(x::Vector{T}) where {T<:Complex}
 end
 
 @doc raw"""
-    (tau, alpha) = householder_complex!(v::Vector{T}, x::Vector{T}) where {T<:Complex}
+    (tau, alpha) = householder_complex!(v, x)
 
 Compute a Householder transformation such that
 (1-tau v v^T) x = alpha e_1
 where x and v a complex vectors, tau is 0 or 2, and
 alpha a complex number (e_1 is the first unit vector)
 """
-function householder_complex!(v::Vector{T}, x::Vector{T}) where {T<:Complex}
+function householder_complex!(v, x)
     @assert length(x) > 0
 
     sigma = sum(abs2, @view(x[2:end]))
