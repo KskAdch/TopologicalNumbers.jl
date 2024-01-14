@@ -396,7 +396,7 @@ function solve(
     alg::T1=Shio();
     parallel::T2=UseSingleThread()
 ) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
-    @unpack H, N, rounds, TR = prob
+    @unpack H, Nfill, N, rounds, TR = prob
 
     Hs = size(H(zeros(2)), 1)
     Hshalf = Hs ÷ 2
