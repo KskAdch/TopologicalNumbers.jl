@@ -24,7 +24,7 @@
         t = zeros(eltype(A0), size(A0))
 
         B2 = TopologicalNumbers.householder_real!(t, A0)
-        @test B1 ≈ t
+        @test B1[1] ≈ t
 
         for i in eachindex(T)[2:3]
             @test B1[i] ≈ B2[i-1]
@@ -49,7 +49,7 @@
         t = zeros(eltype(A0), size(A0))
 
         B2 = TopologicalNumbers.householder_complex!(t, A0)
-        @test B1 ≈ t
+        @test B1[1] ≈ t
 
         for i in eachindex(T)[2:3]
             @test B1[i] ≈ B2[i-1]
@@ -92,7 +92,7 @@
         B1 = pf.skew_LTL(np.array(A))
         B1 = [[pyconvert(T[i], B1[i-1]) for i in eachindex(T)[1:end-1]]..., pyconvert(T[end], B1[2].toarray())]
         B2 = skew_LTL(A)
-        B2[3] = Matrix(B2[3])
+        B2 = (B2[1], B2[2], Matrix(B2[3]))
 
         for i in eachindex(T)
             @test B1[i] ≈ B2[i]

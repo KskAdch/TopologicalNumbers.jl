@@ -331,7 +331,8 @@ function calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Boo
     end
     p = Params(; Ham=Hamiltonian, Nfill, N, Hs, gapless=0.0, rounds, dim=2)
 
-    Z2sol(TR, p)
+    r = Z2sol(TR, p)
+    (; TopologicalNumber=r.TopologicalNumber, TRTopologicalNumber=r.TRTopologicalNumber, Total=r.Total)
 end
 
 
