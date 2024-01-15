@@ -297,7 +297,7 @@ function Z2sol(TR, p::Params)
                 end
             end
 
-            Total = mod(sum(v.num[:, 1]), 2)
+            Total = mod(sum(TopologicalNumber), 2)
         elseif rounds == false
             TopologicalNumber = v.num[:, 1]
             TRTopologicalNumber = v.num[:, 2]
@@ -355,6 +355,8 @@ function calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Boo
             Nfill = Hshalf
         elseif isodd(Nfill)
             throw(ArgumentError("Nfill should be an even number"))
+        elseif Nfill > Hs
+            throw(ArgumentError("Nfill should be smaller than the Hamiltonian size"))
         end
     end
     p = Params(; Ham=Hamiltonian, Nfill, N, Hs, gapless=0.0, rounds, dim=2)
