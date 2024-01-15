@@ -9,10 +9,19 @@ function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:S
     nums[i] = v.sys.chern
 end
 
-function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms,Z2Algorithms}}
+function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms}}
     Ham0(k) = H(k, range1[i])
     @reset p.Ham = Ham0
     alg!(num0, p)
+    nums[:, i] .= num0
+end
+
+function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:Union{Z2Algorithms}}
+    Ham0(k) = H(k, range1[i])
+    @reset p.Ham = Ham0
+
+    v = setTemporalZ2(p)
+    alg!(v, p)
     nums[:, i] .= num0
 end
 
@@ -36,11 +45,21 @@ function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) 
     nums[i, j] = v.sys.chern
 end
 
-function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms,Z2Algorithms}}
+function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms}}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
     @reset p.Ham = Ham0
     alg!(num0, p)
+    nums[:, i, j] .= num0
+end
+
+function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:Union{Z2Algorithms}}
+    param = (range1[i], range2[j])
+    Ham0(k) = H(k, param)
+    @reset p.Ham = Ham0
+
+    v = setTemporalZ2(p)
+    alg!(v, p)
     nums[:, i, j] .= num0
 end
 
@@ -338,8 +357,10 @@ function calc_data1D(H, param_range, alg::T1, parallel::T2, p::Params) where {T1
         algorithm! = BerryPhase!
     elseif alg isa Shio
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range))
+        num0 = zeros(Float64, 2)
     elseif alg isa FHS
         algorithm! = ChernPhase!
     else
@@ -377,8 +398,10 @@ function calc_data1D(H, param_range, idxs::ProgressBar, alg::T1, parallel::T2, p
         algorithm! = BerryPhase!
     elseif alg isa Shio
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range))
+        num0 = zeros(Float64, 2)
     elseif alg isa FHS
         algorithm! = ChernPhase!
     else
@@ -416,8 +439,10 @@ function calc_data2D(H, param_range1, param_range2, alg::T1, parallel::T2, p::Pa
         algorithm! = BerryPhase!
     elseif alg isa Shio
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range1), length(param_range2))
+        num0 = zeros(Float64, 2)
     elseif alg isa FHS
         algorithm! = ChernPhase!
     else
@@ -464,8 +489,10 @@ function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::T1, 
         algorithm! = BerryPhase!
     elseif alg isa Shio
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range1), length(param_range2))
+        num0 = zeros(Float64, 2)
     elseif alg isa FHS
         algorithm! = ChernPhase!
     else
@@ -497,16 +524,21 @@ function calc_data1D(H, param_range, alg::String, parallel::T, p::Params) where 
 
     if alg == "BerryPhase"
         algorithm! = BerryPhase!
+        update1D!(nums, num0, H, algorithm!, param_range, parallel, p)
     elseif alg == "Z2"
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range))
+        num0 = zeros(Float64, 2)
+        update1D!(Shio(), nums, num0, H, algorithm!, param_range, parallel, p)
     elseif alg == "Chern"
         algorithm! = ChernPhase!
+        update1D!(nums, num0, H, algorithm!, param_range, parallel, p)
     else
         throw(ArgumentError("Unknown algorithm $alg"))
     end
-    update1D!(nums, num0, H, algorithm!, param_range, parallel, p)
+    # update1D!(nums, num0, H, algorithm!, param_range, parallel, p)
 
     if rounds == true
         round.(Int, transpose(nums))
@@ -524,16 +556,21 @@ function calc_data1D(H, param_range, idxs::ProgressBar, alg::String, parallel::T
 
     if alg == "BerryPhase"
         algorithm! = BerryPhase!
+        update1D!(nums, num0, H, algorithm!, param_range, idxs, parallel, p)
     elseif alg == "Z2"
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range))
+        num0 = zeros(Float64, 2)
+        update1D!(Shio(), nums, num0, H, algorithm!, param_range, idxs, parallel, p)
     elseif alg == "Chern"
         algorithm! = ChernPhase!
+        update1D!(nums, num0, H, algorithm!, param_range, idxs, parallel, p)
     else
         throw(ArgumentError("Unknown algorithm $alg"))
     end
-    update1D!(nums, num0, H, algorithm!, param_range, idxs, parallel, p)
+    # update1D!(nums, num0, H, algorithm!, param_range, idxs, parallel, p)
 
     if rounds == true
         round.(Int, transpose(nums))
@@ -551,16 +588,21 @@ function calc_data2D(H, param_range1, param_range2, alg::String, parallel::T, p:
 
     if alg == "BerryPhase"
         algorithm! = BerryPhase!
+        update2D!(nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
     elseif alg == "Z2"
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range1), length(param_range2))
+        num0 = zeros(Float64, 2)
+        update2D!(Shio(), nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
     elseif alg == "Chern"
         algorithm! = ChernPhase!
+        update2D!(nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
     else
         throw(ArgumentError("Unknown algorithm $alg"))
     end
-    update2D!(nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
+    # update2D!(nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
 
     if rounds == true
         round.(Int, nums)
@@ -578,16 +620,21 @@ function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::Stri
 
     if alg == "BerryPhase"
         algorithm! = BerryPhase!
+        update2D!(nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
     elseif alg == "Z2"
         algorithm! = Z2Phase!
-        nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
-        num0 = zeros(Float64, Hs ÷ 2)
+        # nums = zeros(Float64, Hs ÷ 2, length(param_range1), length(param_range2))
+        # num0 = zeros(Float64, Hs ÷ 2)
+        nums = zeros(Float64, 2, length(param_range1), length(param_range2))
+        num0 = zeros(Float64, 2)
+        update2D!(Shio(), nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
     elseif alg == "Chern"
         algorithm! = ChernPhase!
+        update2D!(nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
     else
         throw(ArgumentError("Unknown algorithm $alg"))
     end
-    update2D!(nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
+    # update2D!(nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
 
     if rounds == true
         round.(Int, nums)
@@ -870,13 +917,13 @@ function calcPhaseDiagram(
     plot::Bool=false,
     progress::Bool=false
 ) where {T1<:AbstractVector,T2<:Z2Algorithms,T3<:TopologicalNumbersParallel}
-    @unpack H, N, rounds = prob
+    @unpack H, Nfill, N, rounds = prob
 
     dim = 2
     Ham(k) = H(k, 0.0)
     Hs = size(Ham(zeros(2)), 1)
 
-    p = Params(; Ham, dim, N, rounds, Hs)
+    p = Params(; Ham, dim, Nfill, N, rounds, Hs)
 
     nums = calcPhaseDiagram1D_core(H, param_range, alg, p; parallel, plot, progress)
 
@@ -896,13 +943,13 @@ function calcPhaseDiagram(
     plot::Bool=false,
     progress::Bool=false
 ) where {T1<:AbstractVector,T2<:AbstractVector,T3<:Z2Algorithms,T4<:TopologicalNumbersParallel}
-    @unpack H, N, rounds = prob
+    @unpack H, Nfill, N, rounds = prob
 
     dim = 2
     Ham(k) = H(k, (0.0, 0.0))
     Hs = size(Ham(zeros(2)), 1)
 
-    p = Params(; Ham, dim, N, rounds, Hs)
+    p = Params(; Ham, dim, Nfill, N, rounds, Hs)
 
     nums = calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel, plot, progress)
 
