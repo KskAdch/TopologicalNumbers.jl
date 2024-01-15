@@ -414,34 +414,5 @@ function solve(
 
     p = Params(; Ham=H, Nfill, N, Hs, rounds, dim=2)
 
-    # TopologicalNumber = zeros(Hshalf)
-    # if TR == false
-    #     Z2Phase!(TopologicalNumber, p)
-
-    #     if rounds == true
-    #         TopologicalNumber = round.(Int, TopologicalNumber)
-    #         Total = rem(sum(TopologicalNumber), 2)
-    #     else
-    #         Total = abs(sum(TopologicalNumber))
-    #         Total = abs(rem(Total, 2))
-    #     end
-
-    #     Z2Solution(; TopologicalNumber, Total)
-    # else
-    #     TRTopologicalNumber = zeros(Hshalf)
-    #     Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
-
-    #     if rounds == true
-    #         TopologicalNumber = round.(Int, TopologicalNumber)
-    #         TRTopologicalNumber = round.(Int, TRTopologicalNumber)
-    #         Total = rem(sum(TopologicalNumber), 2)
-    #     else
-    #         Total = abs(sum(TopologicalNumber))
-    #         Total = rem(1 - abs(1 - Total), 2)
-    #     end
-
-    #     Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
-    # end
-
     Z2sol(TR, p)
 end
