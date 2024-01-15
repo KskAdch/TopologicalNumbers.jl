@@ -1,0 +1,4 @@
+[deps]
+scipy = ""
+numpy = ""
+pfapack = ""

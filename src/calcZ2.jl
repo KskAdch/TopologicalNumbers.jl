@@ -7,15 +7,16 @@ function psi_j!(j, v::TemporalZ2, p::Params) # wave function
     end
 end
 
-@views function Link!(v::TemporalZ2)
-    for l in 1:v.Hshalf
-        v.link10[l] = det(v.psi00[:, 2l-1:2l]' * v.psi10[:, 2l-1:2l])
-        v.link01[l] = det(v.psi00[:, 2l-1:2l]' * v.psi01[:, 2l-1:2l])
-    end
+@views function Link(v::TemporalZ2, p::Params)
+    @unpack Nfill = p
+    [
+        det(v.psi00[:, 1:Nfill]' * v.psi10[:, 1:Nfill]) det(v.psi00[:, 1:Nfill]' * v.psi01[:, 1:Nfill])
+        det(v.psi00[:, Nfill+1:end]' * v.psi10[:, Nfill+1:end]) det(v.psi00[:, Nfill+1:end]' * v.psi01[:, Nfill+1:end])
+    ]
 end
 
 @views function U!(j, v::TemporalZ2, p::Params) # link variable
-    @unpack N = p
+    @unpack Nfill, N = p
 
     if j != 1
         v.Link1 .= v.Link2
@@ -40,13 +41,14 @@ end
                     v.psi01[:, :] = v.psi_1[i, :, :]
                 end
 
-                Link!(v)
-
-                v.Link1[:, 1, i] .= v.link10
-                v.Link1[:, 2, i] .= v.link01
+                v.Link1[:, :, i] .= Link(v, p)
                 v.LinkN1 .= v.Link1
             end
 
+            v.w00 .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
+            if isapprox(round.(v.w00[1:Nfill, Nfill+1:end], digits=5), zero(v.w00[1:Nfill, Nfill+1:end])) == false
+                v.T .= kron(v.sy, v.s0)
+            end
             v.w00 .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
             v.wp0 .= v.psi_0[v.Nhalf, :, :]' * v.T * conj(v.psi_0[v.Nhalf, :, :])
         end
@@ -79,291 +81,231 @@ end
                 v.psi01[:, :] = v.psi_1[i, :, :]
             end
 
-            Link!(v)
-
-            v.Link2[:, 1, i] .= v.link10
-            v.Link2[:, 2, i] .= v.link01
+            v.Link2[:, :, i] .= Link(v, p)
         end
     end
 end
 
-@views function F!(phi, Px0, Pxp, i, j, v::TemporalZ2, p::Params) # lattice field strength
+@views function F!(i, j, v::TemporalZ2, p::Params) # lattice field strength
     @unpack N = p
 
-    if i != N && j != N
-        for l in 1:v.Hshalf
-            phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.Link2[l, 1, i]) * conj(v.Link1[l, 2, i]))
-        end
-    elseif i == N && j != N
-        for l in 1:v.Hshalf
-            phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.Link2[l, 1, N]) * conj(v.Link1[l, 2, N]))
-        end
-    elseif i != N && j == N
-        for l in 1:v.Hshalf
-            phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.LinkN1[l, 1, i]) * conj(v.Link1[l, 2, i]))
-        end
-    elseif i == N && j == N
-        for l in 1:v.Hshalf
-            phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.LinkN1[l, 1, N]) * conj(v.Link1[l, 2, N]))
-        end
-    end
-
     if j == 1 && i < v.Nhalf
-        for l in 1:v.Hshalf
-            Px0[l] -= angle(v.Link1[l, 1, i])
+        for l in 1:2
+            v.Px0[l] -= angle(v.Link1[l, 1, i])
         end
     elseif j == v.Nhalf && i < v.Nhalf
-        for l in 1:v.Hshalf
-            Pxp[l] -= angle(v.Link1[l, 1, i])
+        for l in 1:2
+            v.Pxp[l] -= angle(v.Link1[l, 1, i])
+        end
+    end
+
+    if i != N && j != N
+        for l in 1:2
+            v.phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.Link2[l, 1, i]) * conj(v.Link1[l, 2, i]))
+        end
+    elseif i == N && j != N
+        for l in 1:2
+            v.phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.Link2[l, 1, N]) * conj(v.Link1[l, 2, N]))
+        end
+    elseif i != N && j == N
+        for l in 1:2
+            v.phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.LinkN1[l, 1, i]) * conj(v.Link1[l, 2, i]))
+        end
+    elseif i == N && j == N
+        for l in 1:2
+            v.phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.LinkN1[l, 1, N]) * conj(v.Link1[l, 2, N]))
         end
     end
 end
 
-# @views function Z2Phase_round!(TopologicalNumber, p::Params) # chern number
-#     @unpack N, Hs, rounds = p
-#     Nhalf = N ÷ 2 + 1
-#     Hshalf = Hs ÷ 2
-
-#     Link1 = zeros(ComplexF64, Hshalf, 2, N)
-#     Link2 = zeros(ComplexF64, Hshalf, 2, N)
-#     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
-#     link10 = zeros(ComplexF64, Hshalf)
-#     link01 = zeros(ComplexF64, Hshalf)
-
-#     psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-#     psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-#     psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-
-#     psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-
-#     phi = zeros(Hshalf)
-#     Px0 = zeros(Hshalf)
-#     Pxp = zeros(Hshalf)
-
-#     s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
-#     sy = [0 -1; 1 0]
-#     T = kron(s0, sy)
-
-#     w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-
-#     TN = zeros(Hshalf)
-
-#     for j in 1:Nhalf
-#         U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
-#         for i in 1:N
-#             F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
-#             if j < Nhalf
-#                 TN[:] .+= phi[:]
-#             end
-#         end
-#     end
-
-#     for l in 1:Hshalf
-#         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
-#         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-#     end
-
-#     # for l in 1:Hshalf
-#     #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-#     #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
-#     # end
-
-#     for l in 1:Hshalf
-#         if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-#             TopologicalNumber[l] = abs(rem(round(Int, (TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-#         end
-#     end
-# end
-
 @doc raw"""
 """
-@views function Z2Phase!(TopologicalNumber, p::Params) # chern number
-    @unpack N, Hs, rounds = p
+@views function Z2Phase!(v::TemporalZ2, p::Params) # chern number
+    @unpack Nfill, N, Hs, rounds = p
     Nhalf = N ÷ 2 + 1
-    Hshalf = Hs ÷ 2
 
-    k = zeros(2)
-
-    Link1 = zeros(ComplexF64, Hshalf, 2, N)
-    Link2 = zeros(ComplexF64, Hshalf, 2, N)
-    LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
-    link10 = zeros(ComplexF64, Hshalf)
-    link01 = zeros(ComplexF64, Hshalf)
-
-    psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-
-    psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-
-    phi = zeros(Hshalf)
-    Px0 = zeros(Hshalf)
-    Pxp = zeros(Hshalf)
-
-    s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
-    sy = [0 -1; 1 0] # imaginary???
-    T = kron(s0, sy)
-
-    w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-
-    v = TemporalZ2(k, T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
-
-    TN = zeros(Hshalf)
-
-    for j in 1:Nhalf
-        U!(j, v, p)
-        for i in 1:N
-            F!(phi, Px0, Pxp, i, j, v, p)
-            if j < Nhalf
-                TN[:] .+= phi[:]
+    if size(v.num) == (2,)
+        for j in 1:Nhalf
+            U!(j, v, p)
+            for i in 1:N
+                F!(i, j, v, p)
+                if j < Nhalf
+                    v.num[:] .+= v.phi[:]
+                end
+            end
+        end
+    elseif size(v.num) == (2, 2)
+        for j in 1:N
+            U!(j, v, p)
+            for i in 1:N
+                F!(i, j, v, p)
+                if j < Nhalf
+                    v.num[:, 1] .+= v.phi[:]
+                else
+                    v.num[:, 2] .+= v.phi[:]
+                end
             end
         end
     end
 
-    for l in 1:Hshalf
-        Px0[l] += angle((v.w00[2l-1, 2l]) / (v.wp0[2l-1, 2l]))
-        Pxp[l] += angle((v.w0p[2l-1, 2l]) / (v.wpp[2l-1, 2l]))
+    pfw00 = pfaffian(v.w00[1:Nfill, 1:Nfill])
+    pfwp0 = pfaffian(v.wp0[1:Nfill, 1:Nfill])
+    v.Px0[1] += angle(pfw00 / pfwp0)
 
-        if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-        end
+    pfw0p = pfaffian(v.w0p[1:Nfill, 1:Nfill])
+    pfwpp = pfaffian(v.wpp[1:Nfill, 1:Nfill])
+    v.Pxp[1] += angle(pfw0p / pfwpp)
+
+    pfw00 = pfaffian(v.w00[Nfill+1:end, Nfill+1:end])
+    pfwp0 = pfaffian(v.wp0[Nfill+1:end, Nfill+1:end])
+    v.Px0[2] += angle(pfw00 / pfwp0)
+
+    pfw0p = pfaffian(v.w0p[Nfill+1:end, Nfill+1:end])
+    pfwpp = pfaffian(v.wpp[Nfill+1:end, Nfill+1:end])
+    v.Pxp[2] += angle(pfw0p / pfwpp)
+
+    for l in 1:2
+        v.num[l, :] = 1 .- abs.(1 .- rem.(abs.(v.num[l, :] .- 2v.Px0[l] .+ 2v.Pxp[l]) ./ 2pi, 2))
     end
 end
 
-# @views function Z2Phase_round!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
-#     @unpack N, Hs, rounds = p
-#     Nhalf = N ÷ 2 + 1
-#     Hshalf = Hs ÷ 2
-
-#     Link1 = zeros(ComplexF64, Hshalf, 2, N)
-#     Link2 = zeros(ComplexF64, Hshalf, 2, N)
-#     LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
-#     link10 = zeros(ComplexF64, Hshalf)
-#     link01 = zeros(ComplexF64, Hshalf)
-
-#     psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-#     psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-#     psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-
-#     psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-
-#     phi = zeros(Hshalf)
-#     Px0 = zeros(Hshalf)
-#     Pxp = zeros(Hshalf)
-
-#     s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
-#     sy = [0 -1; 1 0]
-#     T = kron(s0, sy)
-
-#     w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-#     wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-
-#     TN = zeros(Hshalf, 2)
-
-#     for j in 1:N
-#         U!(T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, j, Hshalf, Nhalf, p)
-#         for i in 1:N
-#             F!(phi, Px0, Pxp, i, j, Link1, Link2, LinkN1, Hshalf, Nhalf, p)
-#             if j < Nhalf
-#                 TN[:, 1] .+= phi[:]
-#             else
-#                 TN[:, 2] .+= phi[:]
-#             end
-#         end
-#     end
-
-#     for l in 1:Hshalf
-#         Px0[l] += angle((w00[2l-1, 2l]) / (wp0[2l-1, 2l]))
-#         Pxp[l] += angle((w0p[2l-1, 2l]) / (wpp[2l-1, 2l]))
-#     end
-
-#     # for l in 1:Hshalf
-#     #     Px0[l] += imag(log((w00[2l-1, 2l]) / (wp0[2l-1, 2l])))
-#     #     Pxp[l] += imag(log((w0p[2l-1, 2l]) / (wpp[2l-1, 2l])))
-#     # end
-
-#     for l in 1:Hshalf
-#         if TN[l, 1] - 2Px0[l] + 2Pxp[l] !== NaN
-#             TopologicalNumber[l] = abs(rem(round(Int, (TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-#             TRTopologicalNumber[l] = abs(rem(round(Int, (TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi), 2))
-#         end
-#     end
-# end
-
-@doc raw"""
-"""
-@views function Z2Phase!(TopologicalNumber, TRTopologicalNumber, p::Params) # chern number
-    @unpack N, Hs, rounds = p
+function setTemporalZ2(p::Params)
+    @unpack Nfill, N, Hs = p
     Nhalf = N ÷ 2 + 1
     Hshalf = Hs ÷ 2
 
     k = zeros(2)
 
-    Link1 = zeros(ComplexF64, Hshalf, 2, N)
-    Link2 = zeros(ComplexF64, Hshalf, 2, N)
-    LinkN1 = zeros(ComplexF64, Hshalf, 2, N)
-    link10 = zeros(ComplexF64, Hshalf)
-    link01 = zeros(ComplexF64, Hshalf)
+    s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
+    sy = [0 -1; 1 0] # imaginary???
+    T = kron(s0, sy)
 
-    psi_0 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_1 = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
-    psi_N = zeros(ComplexF64, N, 2Hshalf, 2Hshalf)
+    w00 = zeros(ComplexF64, Hs, Hs)
+    w0p = zeros(ComplexF64, Hs, Hs)
+    wp0 = zeros(ComplexF64, Hs, Hs)
+    wpp = zeros(ComplexF64, Hs, Hs)
 
-    psi00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi10 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    psi01 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+    Px0 = zeros(2)
+    Pxp = zeros(2)
+    phi = zeros(2)
 
-    phi = zeros(Hshalf)
-    Px0 = zeros(Hshalf)
-    Pxp = zeros(Hshalf)
+    Link1 = zeros(ComplexF64, 2, 2, N)
+    Link2 = zeros(ComplexF64, 2, 2, N)
+    LinkN1 = zeros(ComplexF64, 2, 2, N)
+
+    psi_0 = zeros(ComplexF64, N, Hs, Hs)
+    psi_1 = zeros(ComplexF64, N, Hs, Hs)
+    psi_N = zeros(ComplexF64, N, Hs, Hs)
+
+    psi00 = zeros(ComplexF64, Hs, Hs)
+    psi10 = zeros(ComplexF64, Hs, Hs)
+    psi01 = zeros(ComplexF64, Hs, Hs)
+
+    num = zeros(2)
+
+    TemporalZ2(num, k, sy, s0, T, w00, w0p, wp0, wpp, Px0, Pxp, phi, Link1, Link2, LinkN1, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
+end
+
+function setTemporalZ2TR(p::Params)
+    @unpack Nfill, N, Hs = p
+    Nhalf = N ÷ 2 + 1
+    Hshalf = Hs ÷ 2
+
+    k = zeros(2)
 
     s0 = Matrix{ComplexF64}(I, Hshalf, Hshalf)
     sy = [0 -1; 1 0] # imaginary???
     T = kron(s0, sy)
 
-    w00 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    w0p = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wp0 = zeros(ComplexF64, 2Hshalf, 2Hshalf)
-    wpp = zeros(ComplexF64, 2Hshalf, 2Hshalf)
+    w00 = zeros(ComplexF64, Hs, Hs)
+    w0p = zeros(ComplexF64, Hs, Hs)
+    wp0 = zeros(ComplexF64, Hs, Hs)
+    wpp = zeros(ComplexF64, Hs, Hs)
 
-    v = TemporalZ2(k, T, w00, w0p, wp0, wpp, Link1, Link2, LinkN1, link10, link01, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
+    Px0 = zeros(2)
+    Pxp = zeros(2)
+    phi = zeros(2)
 
-    TN = zeros(Hshalf, 2)
+    Link1 = zeros(ComplexF64, 2, 2, N)
+    Link2 = zeros(ComplexF64, 2, 2, N)
+    LinkN1 = zeros(ComplexF64, 2, 2, N)
 
-    for j in 1:N
-        U!(j, v, p)
-        for i in 1:N
-            F!(phi, Px0, Pxp, i, j, v, p)
-            if j < Nhalf
-                TN[:, 1] .+= phi[:]
+    psi_0 = zeros(ComplexF64, N, Hs, Hs)
+    psi_1 = zeros(ComplexF64, N, Hs, Hs)
+    psi_N = zeros(ComplexF64, N, Hs, Hs)
+
+    psi00 = zeros(ComplexF64, Hs, Hs)
+    psi10 = zeros(ComplexF64, Hs, Hs)
+    psi01 = zeros(ComplexF64, Hs, Hs)
+
+    num = zeros(2, 2)
+
+    TemporalZ2(num, k, sy, s0, T, w00, w0p, wp0, wpp, Px0, Pxp, phi, Link1, Link2, LinkN1, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
+end
+
+function Z2sol(TR, p::Params)
+    @unpack rounds = p
+
+    if TR == false
+
+        v = setTemporalZ2(p)
+        Z2Phase!(v, p)
+
+        if rounds == true
+            TopologicalNumber = v.num
+            if all(!isnan, v.num[:, 1])
+                TopologicalNumber = round.(Int, v.num)
             else
-                TN[:, 2] .+= phi[:]
+                for i in eachindex(v.num[:, 1])
+                    if TopologicalNumber[i] !== NaN
+                        TopologicalNumber[i] = round(Int, v.num)
+                    end
+                end
             end
+            Total = mod(sum(TopologicalNumber), 2)
+        elseif rounds == false
+            TopologicalNumber = v.num
+            Total = sum(TopologicalNumber)
+            Total = mod(Total, 2 * sign(Total - 2 + 1e-15))
         end
-    end
 
-    for l in 1:Hshalf
-        Px0[l] += angle((v.w00[2l-1, 2l]) / (v.wp0[2l-1, 2l]))
-        Pxp[l] += angle((v.w0p[2l-1, 2l]) / (v.wpp[2l-1, 2l]))
+        Z2Solution(; TopologicalNumber, Total)
+    elseif TR == true
 
-        if TN[l] - 2Px0[l] + 2Pxp[l] !== NaN
-            TopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 1] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
-            TRTopologicalNumber[l] = 1 - abs(1 - rem(abs(TN[l, 2] - 2Px0[l] + 2Pxp[l]) / 2pi, 2))
+        v = setTemporalZ2TR(p)
+        Z2Phase!(v, p)
+
+        if rounds == true
+            TopologicalNumber = v.num[:, 1]
+            if all(!isnan, v.num[:, 1])
+                TopologicalNumber = round.(Int, v.num[:, 1])
+            else
+                for i in eachindex(v.num[:, 1])
+                    if TopologicalNumber[i] !== NaN
+                        TopologicalNumber[i] = round(Int, v.num[i, 1])
+                    end
+                end
+            end
+            TRTopologicalNumber = v.num[:, 2]
+            if all(!isnan, v.num[:, 2])
+                TRTopologicalNumber = round.(Int, v.num[:, 2])
+            else
+                for i in eachindex(TRTopologicalNumber)
+                    if TRTopologicalNumber[i] !== NaN
+                        TRTopologicalNumber[i] = round(Int, v.num[i, 2])
+                    end
+                end
+            end
+
+            Total = mod(sum(TopologicalNumber), 2)
+        elseif rounds == false
+            TopologicalNumber = v.num[:, 1]
+            TRTopologicalNumber = v.num[:, 2]
+            Total = sum(TopologicalNumber)
+            Total = mod(Total, 2 * sign(Total - 2 + 1e-15))
         end
+
+        Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
     end
 end
 
@@ -371,10 +313,11 @@ end
 
  Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite).
 
-    calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
+    calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Bool=true, TR::Bool=false) where {T1<:Union{Int,Nothing}}
 
  Arguments
  - `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
+ - `Nfill::T1`: The filling number. The default value is `Hs ÷ 2`, where `Hs` is the size of the Hamiltonian matrix.
  - `N::Int` is the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
  - `rounds::Bool` is an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
@@ -401,40 +344,25 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $T$ is the time-reversal operator.
 """
-function calcZ2(Hamiltonian::Function; N::Int=50, rounds::Bool=true, TR::Bool=false)
+function calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Bool=true, TR::Bool=false) where {T1<:Union{Int,Nothing}}
 
     Hs = size(Hamiltonian(zeros(2)), 1)
     Hshalf = Hs ÷ 2
-    p = Params(; Ham=Hamiltonian, N, Hs, gapless=0.0, rounds, dim=2)
-
-    TopologicalNumber = zeros(Hshalf)
-    if TR == false
-        Z2Phase!(TopologicalNumber, p)
-
-        if rounds == true
-            TopologicalNumber = round.(Int, TopologicalNumber)
-            Total = rem(sum(TopologicalNumber), 2)
-        else
-            Total = abs(sum(TopologicalNumber))
-            Total = abs(rem(Total, 2))
-        end
-
-        (; TopologicalNumber, Total)
+    if isodd(N)
+        throw(ArgumentError("N should be an even number"))
     else
-        TRTopologicalNumber = zeros(Hshalf)
-        Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
-
-        if rounds == true
-            TopologicalNumber = round.(Int, TopologicalNumber)
-            TRTopologicalNumber = round.(Int, TRTopologicalNumber)
-            Total = rem(sum(TopologicalNumber), 2)
-        else
-            Total = abs(sum(TopologicalNumber))
-            Total = rem(1 - abs(1 - Total), 2)
+        if isnothing(Nfill)
+            Nfill = Hshalf
+        elseif isodd(Nfill)
+            throw(ArgumentError("Nfill should be an even number"))
+        elseif Nfill > Hs
+            throw(ArgumentError("Nfill should be smaller than the Hamiltonian size"))
         end
-
-        (; TopologicalNumber, TRTopologicalNumber, Total)
     end
+    p = Params(; Ham=Hamiltonian, Nfill, N, Hs, gapless=0.0, rounds, dim=2)
+
+    r = Z2sol(TR, p)
+    (; TopologicalNumber=r.TopologicalNumber, TRTopologicalNumber=r.TRTopologicalNumber, Total=r.Total)
 end
 
 
@@ -470,62 +398,21 @@ function solve(
     alg::T1=Shio();
     parallel::T2=UseSingleThread()
 ) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
-    @unpack H, N, rounds, TR = prob
+    @unpack H, Nfill, N, rounds, TR = prob
 
     Hs = size(H(zeros(2)), 1)
     Hshalf = Hs ÷ 2
-    p = Params(; Ham=H, N, Hs, rounds, dim=2)
-
-    TopologicalNumber = zeros(Hshalf)
-    if TR == false
-        Z2Phase!(TopologicalNumber, p)
-
-        if rounds == true
-            if all(!isnan, TopologicalNumber)
-                TopologicalNumber = round.(Int, TopologicalNumber)
-            else
-                for i in eachindex(TopologicalNumber)
-                    if TopologicalNumber[i] !== NaN
-                        TopologicalNumber[i] = round(Int, TopologicalNumber[i])
-                    end
-                end
-            end
-            Total = rem(sum(TopologicalNumber), 2)
-        else
-            Total = abs(sum(TopologicalNumber))
-            Total = abs(rem(Total, 2))
-        end
-
-        Z2Solution(; TopologicalNumber, Total)
+    if isodd(N)
+        throw(ArgumentError("N should be an even number"))
     else
-        TRTopologicalNumber = zeros(Hshalf)
-        Z2Phase!(TopologicalNumber, TRTopologicalNumber, p)
-
-        if rounds == true
-            if all(!isnan, TopologicalNumber)
-                TopologicalNumber = round.(Int, TopologicalNumber)
-            else
-                for i in eachindex(TopologicalNumber)
-                    if TopologicalNumber[i] !== NaN
-                        TopologicalNumber[i] = round(Int, TopologicalNumber[i])
-                    end
-                end
-            end
-            if all(!isnan, TRTopologicalNumber)
-                TRTopologicalNumber = round.(Int, TRTopologicalNumber)
-            else
-                for i in eachindex(TRTopologicalNumber)
-                    if TRTopologicalNumber[i] !== NaN
-                        TRTopologicalNumber[i] = round(Int, TRTopologicalNumber[i])
-                    end
-                end
-            end
-            Total = rem(sum(TopologicalNumber), 2)
-        else
-            Total = abs(sum(TopologicalNumber))
-            Total = rem(1 - abs(1 - Total), 2)
+        if isnothing(Nfill)
+            Nfill = Hshalf
+        elseif isodd(Nfill)
+            throw(ArgumentError("Nfill should be an even number"))
         end
-
-        Z2Solution(; TopologicalNumber, TRTopologicalNumber, Total)
     end
+
+    p = Params(; Ham=H, Nfill, N, Hs, rounds, dim=2)
+
+    Z2sol(TR, p)
 end

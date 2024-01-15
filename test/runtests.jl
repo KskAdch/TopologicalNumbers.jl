@@ -4,12 +4,29 @@ using Test
 
 using MPI
 
+using CondaPkg
+# CondaPkg.add("numpy")
+CondaPkg.add("pfapack")
+# CondaPkg.add("scipy")
+
+
+using PythonCall
 using PythonPlot
+
+# pyimport("sys").path.append(@__DIR__)
+# const pf = pyimport("pfaffian")
+
+const pf = pyimport("pfapack.pfaffian")
+# const cpf = pyimport("pfapack.ctypes").pfaffian
+const np = pyimport("numpy")
 
 # using Aqua
 # Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
 @testset "TopologicalNumbers.jl" begin
+
+    # test pfaffian
+    include("test_pfaffian.jl")
     @testset "1D case" begin
         function H₀(k, p)
 
@@ -379,7 +396,7 @@ using PythonPlot
 
             @test abs(sum(result.Ene)) < 1e-10
 
-            @test calcZ2(H) == (TopologicalNumber=[1, 1], Total=0)
+            @test calcZ2(H) == (TopologicalNumber=[1, 1], TRTopologicalNumber=nothing, Total=0)
 
             @test norm(calcZ2(H, rounds=false).TopologicalNumber - calcZ2(H).TopologicalNumber) < 1e-10
 
@@ -568,7 +585,7 @@ using PythonPlot
                 @test calcSecondChern(H; N).TopologicalNumber ≈ 0.8309301430562057
                 @test calcSecondChern(H; N, parallel=UseMPI(MPI)).TopologicalNumber ≈ 0.8309301430562057
 
-                prob = SCProblem(H, N)
+                prob = SCProblem(; H, N)
                 @test solve(prob).TopologicalNumber ≈ 0.8309301430562057
 
                 param = range(-4.9, 4.9, length=4)
@@ -581,7 +598,7 @@ using PythonPlot
                 nums = [0.0010237313095167225, -2.0667333080974735, 2.1572606447321454, -0.0009805850180973213]
                 @test result.nums ≈ nums
 
-                prob = SCProblem(H₀, N)
+                prob = SCProblem(; H=H₀, N)
                 @test calcPhaseDiagram(prob, param).nums ≈ nums
 
 

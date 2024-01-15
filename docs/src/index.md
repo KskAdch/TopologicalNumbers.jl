@@ -48,6 +48,7 @@ This package includes the following functions:
 - Calculation of the dispersion relation.
 - Provides numerical calculation methods for various types of topological numbers.
 - Calculation of the phase diagram.
+- Compute Pfaffian and tridiagonarize skew-symmetric matrix (migration to Julia from [PFAPACK](https://pypi.org/project/pfapack/) [Wimmer2012Algorithm](@cite)).
 - Utility functions for plotting.
 - Support parallel computing using `MPI`.
 
