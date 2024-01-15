@@ -5,16 +5,18 @@ using Test
 using MPI
 
 using CondaPkg
-CondaPkg.add("scipy")
-# CondaPkg.add("pfapack")
+# CondaPkg.add("numpy")
+CondaPkg.add("pfapack")
+# CondaPkg.add("scipy")
+
 
 using PythonCall
 using PythonPlot
 
-pyimport("sys").path.append(@__DIR__)
-const pf = pyimport("pfaffian")
+# pyimport("sys").path.append(@__DIR__)
+# const pf = pyimport("pfaffian")
 
-# const pf = pyimport("pfapack.pfaffian")
+const pf = pyimport("pfapack.pfaffian")
 # const cpf = pyimport("pfapack.ctypes").pfaffian
 const np = pyimport("numpy")
 
