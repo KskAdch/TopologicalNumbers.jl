@@ -1,11 +1,11 @@
 # The Thouless pump model
 
-<!-- As an example of a two-dimensional topological insulator, the Kane-Mele model is presented here: -->
+As an example of a two-dimensional topological insulator, the Thouless pump model is presented here:
 
 ```julia
 julia> function H₀(k, p) # Thouless pump
            k1, t = k
-           Δ, m₀ = p
+           m₀, Δ = p
 
            R1 = -Δ*sin(k1)
            R2 = -Δ*(1-cos(k1))
@@ -28,26 +28,27 @@ julia> function H₀(k, p) # Thouless pump
        end
 ```
 
-<!-- To calculate the dispersion, execute:
+To calculate the dispersion, execute:
 
 ```julia
-julia> H(k) = H₀(k, 0.5)
+julia> H(k) = H₀(k, (-1.0, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/2a1f8488-0e5b-4d79-be68-88bb2d744910)
+![Dispersion of Thouless pump model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/f159045f-4437-455f-8e78-ba989c95a28e)
 
 
-Next, we can compute the $\mathbb{Z}_2$ numbers using `calcZ2`:
+Next, we can compute the $\mathbb{Z}_2$ numbers using `Z2Problem`:
 
 ```julia
-julia> calcZ2(H)
+julia> prob = Z2Problem(H);
+julia> sol = solve(prob)
 ```
 
 The output is:
 
 ```julia
-(TopologicalNumber = [1, 1], Total = 0)
+Z2Solution{Vector{Int64}, Nothing, Int64}([1, 1], nothing, 0)
 ```
 
 The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each pair of two energy bands. 
@@ -55,23 +56,42 @@ The vector is arranged in order of bands, starting from the one with the lowest 
 The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
 `Total` is a quantity that should always return zero.
 
+You can access these values as follows:
+
+```julia
+julia> sol.TopologicalNumber
+2-element Vector{Int64}:
+ 1
+ 1
+
+julia> sol.Total
+0
+```
+
 
 One-dimensional phase diagram is given by:
 
 ```julia
-julia> param = range(-1.0, 1.0, length=1001)
-julia> calcPhaseDiagram(H₀, param, "Z2"; plot=true)
+julia> H(k, p) = H₀(k, (p, 0.25));
+julia> param = range(-1.0, 0.0, length=1001)
+
+julia> prob = Z2Problem(H);
+julia> sol = calcPhaseDiagram(prob, param; plot=true)
+(param = -1.0:0.001:0.0, nums = [1 1; 1 1; … ; 0 0; 0 0])
 ```
 
-![One-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/779bbbb4-78c8-4599-9aba-acfe22553036) -->
+![One-dimensional phase diagram of Thouless pump model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/f4524c76-f252-45d8-bc41-655cca5112a3)
 
 
-<!-- Also, two-dimensional phase diagram is given by:
+Also, two-dimensional phase diagram is given by:
 
 ```julia
-julia> param = range(-1.0, 1.0, length=101)
-julia> calcPhaseDiagram(H₀, param, param, "Z2"; plot=true)
+julia> param1 = range(-1.0, -0.1, length=91);
+julia> param2 = range(-0.5, 0.5, length=101);
+
+julia> prob = Z2Problem(H₀);
+julia> calcPhaseDiagram(prob, param1, param2; plot=true)
 ```
 
 
-![Two-dimensional phase diagram of Kane-Mele model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/4fe6d699-e3f9-45cd-b176-b4f1216d39d8) -->
+![Two-dimensional phase diagram of Thouless pump model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/3c9327b0-3761-46b5-b4b0-62390a0aa40c)
