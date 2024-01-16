@@ -630,6 +630,10 @@ const np = pyimport("numpy")
                 result = calcPhaseDiagram(H₀, param, FHS2(); N=10, rounds=false)
                 nums = ComplexF64[0.0010237313095167225+8.29577265997263e-17im, -2.0667333080974735-1.6878307095102013e-16im, 2.1572606447321454+3.05582947604634e-16im, -0.0009805850180973213+3.3561217905699694e-17im]
                 @test result.nums ≈ nums
+
+                fig = plot1D(FHS2(), result.nums, result.param; disp=false)
+                @test typeof(fig) == Figure
+                plotclose()
             end
 
         end
