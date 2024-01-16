@@ -8,7 +8,7 @@ tags:
   - 
 authors:
   - name: Keisuke Adachi
-    # orcid: 0000-0000-0000-0000
+    orcid: 0009-0004-0195-7952
     equal-contrib: true
     corresponding: true
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
