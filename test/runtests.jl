@@ -208,9 +208,9 @@ const np = pyimport("numpy")
 
                 param = 1:6 # range(1, 6, length=6)
                 result = calcPhaseDiagram(H, param, "Chern")
-                calcPhaseDiagram(H, param, "Chern"; progress=true)
+                calcPhaseDiagram(H, param, "Chern"; progress=true, rounds = false)
                 result_MPI = calcPhaseDiagram(H, param, "Chern"; parallel=UseMPI(MPI))
-                calcPhaseDiagram(H, param, "Chern"; parallel=UseMPI(MPI), progress=true)
+                calcPhaseDiagram(H, param, "Chern"; parallel=UseMPI(MPI), progress=true, rounds = false)
                 @test result.nums == result_MPI.nums
 
                 @test result.nums[1, :] == [1, 1, -2, -2, 1, 1]
@@ -469,6 +469,10 @@ const np = pyimport("numpy")
             num[:, :, 3] = [1.0 0.0 1.0; 1.0 0.0 1.0]
             @test result.nums ≈ num
 
+            param1 = range(-1.0, 1.0, length = 2)
+            param2 = range(-0.5, 0.5, length = 2)
+            res = calcPhaseDiagram(BHZ, param1, param2, "Z2"; parallel=UseMPI(MPI))
+            res.nums ≈ [0.9999999999999989 1.0; 0.9999999999999987 0.9999999999999993;;; 1.0 0.9999999999999989; 0.9999999999999991 0.9999999999999987]
         end
     end
 
@@ -596,9 +600,15 @@ const np = pyimport("numpy")
 
                 SCProblem(H)
                 SCProblem(H, 1)
-                SCProblem(H, 1, 41)
                 prob = SCProblem(; H, N)
                 @test solve(prob).TopologicalNumber ≈ 0.8309301430562057
+
+                H(k, p) = LatticeDirac(k, p[1]) + p[2]*Matrix{Float64}(I, 4, 4)
+                prob = SCProblem(H, 1, 31)
+                param1 = [-1.0, 1.0]
+                param2 = [-0.5, 0.5]
+                res = calcPhaseDiagram(prob, param1, param2)
+                @test round.(res.nums, digits = 20) ≈ round.([2.3975776848447665e-29 2.57553745875129e-29; 2.3675737006667523e-29 2.5844675711354074e-29], digits = 20)
 
                 param = range(-4.9, 4.9, length=4)
                 result = calcPhaseDiagram(H₀, param, FHS2(); N=10)
