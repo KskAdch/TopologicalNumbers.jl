@@ -695,6 +695,22 @@ const np = pyimport("numpy")
             @test abs(sum(result.Ene)) < 1e-10
         end
 
+        @testset "ThoulessPump" begin
+            H(k) = ThoulessPump(k, (-1.0, 0.5))
+        
+            N = 51
+            k = range(-π, π, length=N)
+            bandsum = (-6140.668216638056, -3853.1610208575285, 3853.1610208575285, 6140.668216638056)
+            result = showBand(H)
+        
+            @test result.k[:, 1] == k
+            @test result.k[:, 2] == k
+            for i in 1:size(result.Ene, 3)
+                @test sum(result.Ene[:, :, i]) ≈ bandsum[i]
+            end
+            @test abs(sum(result.Ene)) < 1e-10
+        end
+
         @testset "KaneMele" begin
             # H(k) = KaneMele(k, (1.0, 0.3))
             H(k) = KaneMele(k, 0.3)
