@@ -332,6 +332,11 @@ const np = pyimport("numpy")
                 # num = [0 1 0; 0 1 1;;; 0 0 0; 0 0 0;;; 0 1 0; 1 1 0]
                 @test result.nums == num
 
+                param1 = [0.0, π]
+                param2 = [0.0, 1.0]
+                H(k, p) = Haldane(k, (1, p[1], p[2]))
+                calcPhaseDiagram(H, param1, param2, "Chern"; parallel=UseMPI(MPI), progress=true)
+
                 prob = FCProblem(H₀)
                 @test calcPhaseDiagram(prob, param1, param2).nums == num
 
@@ -471,8 +476,8 @@ const np = pyimport("numpy")
 
             param1 = range(-1.0, 1.0, length = 2)
             param2 = range(-0.5, 0.5, length = 2)
-            res = calcPhaseDiagram(BHZ, param1, param2, "Z2"; progress=true)
-            res.nums .≈ [0.9999999999999989 1.0; 0.9999999999999987 0.9999999999999993;;; 1.0 0.9999999999999989; 0.9999999999999991 0.9999999999999987]
+            res = calcPhaseDiagram(BHZ, param1, param2, "Z2"; parallel=UseMPI(MPI), progress=true)
+            # res.nums .≈ [0.9999999999999989 1.0; 0.9999999999999987 0.9999999999999993;;; 1.0 0.9999999999999989; 0.9999999999999991 0.9999999999999987]
         end
     end
 
