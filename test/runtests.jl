@@ -55,6 +55,7 @@ const np = pyimport("numpy")
 
         @test norm(calcBerryPhase(H).TopologicalNumber - calcBerryPhase(H, rounds=false).TopologicalNumber) < 1e-10
 
+        BPProblem(H, 41)
         prob = BPProblem(H)
         @test solve(prob).TopologicalNumber == [1, 1]
 
@@ -168,6 +169,7 @@ const np = pyimport("numpy")
 
                 @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
+                FCProblem(H, 41)
                 prob = FCProblem(H)
                 @test solve(prob).TopologicalNumber == [1, 1, -2, -2, 1, 1]
 
@@ -185,6 +187,7 @@ const np = pyimport("numpy")
                 @test C2 ≈ [1, 1, -2, -2, 1, 1]
 
 
+                LBFProblem(H, zeros(3), 41)
                 C1 = zeros(6)
                 C2 = zeros(6)
                 N = 51
@@ -405,6 +408,8 @@ const np = pyimport("numpy")
             @test norm(calcZ2(H, rounds=false, TR=true).TRTopologicalNumber - calcZ2(H, TR=true).TRTopologicalNumber) < 1e-10
 
 
+            Z2Problem(H, 2)
+            Z2Problem(H, 2, 40)
             prob = Z2Problem(H)
             @test solve(prob).TopologicalNumber == [1, 1]
 
@@ -490,6 +495,7 @@ const np = pyimport("numpy")
 
         @test calcWeylNode(H₀, [4, 10, 10]; N=11) == (TopologicalNumber=[1, -1], n=[4, 10, 10], N=11)
 
+        WNProblem(H₀, [4, 10, 10])
         prob = WNProblem(H₀, [4, 10, 10], 11)
         result = solve(prob)
         @test result.TopologicalNumber == [1, -1]
@@ -521,6 +527,8 @@ const np = pyimport("numpy")
         @test result.nums[:, 2] == -result.nums[:, 1]
 
 
+        WCSProblem(H₀, "k1")
+        WCSProblem(H₀, "k1", 11, 41)
         prob = WCSProblem(H₀, "k1", 11)
         result = solve(prob)
         @test result.kn == "k1"
@@ -543,6 +551,7 @@ const np = pyimport("numpy")
         @test result.WeylPoint == [[[4000, 9990, 9990], [6000, 9990, 9990]], [[4000, 9990, 9990], [6000, 9990, 9990]]]
         @test result.Nodes == [[1, -1], [-1, 1]]
 
+        WPProblem(H₀, 41)
         prob = WPProblem(H₀)
         result = solve(prob)
         @test result.WeylPoint == [[[4000, 9990, 9990], [6000, 9990, 9990]], [[4000, 9990, 9990], [6000, 9990, 9990]]]
@@ -585,6 +594,9 @@ const np = pyimport("numpy")
                 @test calcSecondChern(H; N).TopologicalNumber ≈ 0.8309301430562057
                 @test calcSecondChern(H; N, parallel=UseMPI(MPI)).TopologicalNumber ≈ 0.8309301430562057
 
+                SCProblem(H)
+                SCProblem(H, 1)
+                SCProblem(H, 1, 41)
                 prob = SCProblem(; H, N)
                 @test solve(prob).TopologicalNumber ≈ 0.8309301430562057
 
