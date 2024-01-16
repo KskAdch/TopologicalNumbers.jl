@@ -471,8 +471,8 @@ const np = pyimport("numpy")
 
             param1 = range(-1.0, 1.0, length = 2)
             param2 = range(-0.5, 0.5, length = 2)
-            res = calcPhaseDiagram(BHZ, param1, param2, "Z2"; parallel=UseMPI(MPI))
-            res.nums ≈ [0.9999999999999989 1.0; 0.9999999999999987 0.9999999999999993;;; 1.0 0.9999999999999989; 0.9999999999999991 0.9999999999999987]
+            res = calcPhaseDiagram(BHZ, param1, param2, "Z2"; progress=true)
+            res.nums .≈ [0.9999999999999989 1.0; 0.9999999999999987 0.9999999999999993;;; 1.0 0.9999999999999989; 0.9999999999999991 0.9999999999999987]
         end
     end
 
