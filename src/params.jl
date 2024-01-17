@@ -1,5 +1,7 @@
 
-Base.@kwdef struct Params{T1<:Int,T2<:Union{Int,Tuple,AbstractVector},T3<:AbstractFloat,T4<:Bool}
+Base.@kwdef struct Params{
+    T1<:Int,T2<:Union{Int,Tuple,AbstractVector},T3<:AbstractFloat,T4<:Bool
+}
     Ham::Function
     dim::T1
     Nfill::T1 = 1
@@ -33,7 +35,6 @@ Base.@kwdef mutable struct TemporalSecondChern{T1,T2,T3,T4,T5,T6}
     Ftemp::T6      # Temporary variable for LinearAlgebra.log calculations
 end
 
-
 Base.@kwdef struct TemporalBerryPhase{L,EV,PS}
     Link::L
     Evec0::EV
@@ -42,7 +43,6 @@ Base.@kwdef struct TemporalBerryPhase{L,EV,PS}
     psi1::PS
     psiN1::PS
 end
-
 
 Base.@kwdef struct TemporalFirstChern{K,L1,L2,EV1,EV2,PS1,PS2}
     k::K

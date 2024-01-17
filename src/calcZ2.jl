@@ -9,9 +9,9 @@ end
 
 @views function Link(v::TemporalZ2, p::Params)
     @unpack Nfill = p
-    [
+    return [
         det(v.psi00[:, 1:Nfill]' * v.psi10[:, 1:Nfill]) det(v.psi00[:, 1:Nfill]' * v.psi01[:, 1:Nfill])
-        det(v.psi00[:, Nfill+1:end]' * v.psi10[:, Nfill+1:end]) det(v.psi00[:, Nfill+1:end]' * v.psi01[:, Nfill+1:end])
+        det(v.psi00[:, (Nfill + 1):end]' * v.psi10[:, (Nfill + 1):end]) det(v.psi00[:, (Nfill + 1):end]' * v.psi01[:, (Nfill + 1):end])
     ]
 end
 
@@ -24,20 +24,18 @@ end
 
     if j != N
         if j == 1
-
             psi_j!(1, v, p)
             v.psi_0 .= v.psi_1
             v.psi_N .= v.psi_1
             psi_j!(2, v, p)
 
             for i in 1:N
-
                 v.psi00[:, :] = v.psi_0[i, :, :]
                 if i == N
                     v.psi10[:, :] = v.psi_0[1, :, :]
                     v.psi01[:, :] = v.psi_1[N, :, :]
                 else
-                    v.psi10[:, :] = v.psi_0[i+1, :, :]
+                    v.psi10[:, :] = v.psi_0[i + 1, :, :]
                     v.psi01[:, :] = v.psi_1[i, :, :]
                 end
 
@@ -46,7 +44,10 @@ end
             end
 
             v.w00 .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
-            if isapprox(round.(v.w00[1:Nfill, Nfill+1:end], digits=5), zero(v.w00[1:Nfill, Nfill+1:end])) == false
+            if isapprox(
+                round.(v.w00[1:Nfill, (Nfill + 1):end], digits=5),
+                zero(v.w00[1:Nfill, (Nfill + 1):end]),
+            ) == false
                 v.T .= kron(v.sy, v.s0)
             end
             v.w00 .= v.psi_0[1, :, :]' * v.T * conj(v.psi_0[1, :, :])
@@ -65,7 +66,6 @@ end
         end
 
         for i in 1:N
-
             v.psi00[:, :] = v.psi_0[i, :, :]
             if i == N && j == N - 1
                 v.psi10[:, :] = v.psi_0[1, :, :]
@@ -74,10 +74,10 @@ end
                 v.psi10[:, :] = v.psi_0[1, :, :]
                 v.psi01[:, :] = v.psi_1[N, :, :]
             elseif j == N - 1
-                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi10[:, :] = v.psi_0[i + 1, :, :]
                 v.psi01[:, :] = v.psi_N[i, :, :]
             else
-                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi10[:, :] = v.psi_0[i + 1, :, :]
                 v.psi01[:, :] = v.psi_1[i, :, :]
             end
 
@@ -101,19 +101,39 @@ end
 
     if i != N && j != N
         for l in 1:2
-            v.phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.Link2[l, 1, i]) * conj(v.Link1[l, 2, i]))
+            v.phi[l] = angle(
+                v.Link1[l, 1, i] *
+                v.Link1[l, 2, i + 1] *
+                conj(v.Link2[l, 1, i]) *
+                conj(v.Link1[l, 2, i]),
+            )
         end
     elseif i == N && j != N
         for l in 1:2
-            v.phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.Link2[l, 1, N]) * conj(v.Link1[l, 2, N]))
+            v.phi[l] = angle(
+                v.Link1[l, 1, N] *
+                v.Link1[l, 2, 1] *
+                conj(v.Link2[l, 1, N]) *
+                conj(v.Link1[l, 2, N]),
+            )
         end
     elseif i != N && j == N
         for l in 1:2
-            v.phi[l] = angle(v.Link1[l, 1, i] * v.Link1[l, 2, i+1] * conj(v.LinkN1[l, 1, i]) * conj(v.Link1[l, 2, i]))
+            v.phi[l] = angle(
+                v.Link1[l, 1, i] *
+                v.Link1[l, 2, i + 1] *
+                conj(v.LinkN1[l, 1, i]) *
+                conj(v.Link1[l, 2, i]),
+            )
         end
     elseif i == N && j == N
         for l in 1:2
-            v.phi[l] = angle(v.Link1[l, 1, N] * v.Link1[l, 2, 1] * conj(v.LinkN1[l, 1, N]) * conj(v.Link1[l, 2, N]))
+            v.phi[l] = angle(
+                v.Link1[l, 1, N] *
+                v.Link1[l, 2, 1] *
+                conj(v.LinkN1[l, 1, N]) *
+                conj(v.Link1[l, 2, N]),
+            )
         end
     end
 end
@@ -156,16 +176,17 @@ end
     pfwpp = pfaffian(v.wpp[1:Nfill, 1:Nfill])
     v.Pxp[1] += angle(pfw0p / pfwpp)
 
-    pfw00 = pfaffian(v.w00[Nfill+1:end, Nfill+1:end])
-    pfwp0 = pfaffian(v.wp0[Nfill+1:end, Nfill+1:end])
+    pfw00 = pfaffian(v.w00[(Nfill + 1):end, (Nfill + 1):end])
+    pfwp0 = pfaffian(v.wp0[(Nfill + 1):end, (Nfill + 1):end])
     v.Px0[2] += angle(pfw00 / pfwp0)
 
-    pfw0p = pfaffian(v.w0p[Nfill+1:end, Nfill+1:end])
-    pfwpp = pfaffian(v.wpp[Nfill+1:end, Nfill+1:end])
+    pfw0p = pfaffian(v.w0p[(Nfill + 1):end, (Nfill + 1):end])
+    pfwpp = pfaffian(v.wpp[(Nfill + 1):end, (Nfill + 1):end])
     v.Pxp[2] += angle(pfw0p / pfwpp)
 
     for l in 1:2
-        v.num[l, :] = 1 .- abs.(1 .- rem.(abs.(v.num[l, :] .- 2v.Px0[l] .+ 2v.Pxp[l]) ./ 2pi, 2))
+        v.num[l, :] =
+            1 .- abs.(1 .- rem.(abs.(v.num[l, :] .- 2v.Px0[l] .+ 2v.Pxp[l]) ./ 2pi, 2))
     end
 end
 
@@ -203,7 +224,31 @@ function setTemporalZ2(p::Params)
 
     num = zeros(2)
 
-    TemporalZ2(num, k, sy, s0, T, w00, w0p, wp0, wpp, Px0, Pxp, phi, Link1, Link2, LinkN1, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
+    return TemporalZ2(
+        num,
+        k,
+        sy,
+        s0,
+        T,
+        w00,
+        w0p,
+        wp0,
+        wpp,
+        Px0,
+        Pxp,
+        phi,
+        Link1,
+        Link2,
+        LinkN1,
+        psi_0,
+        psi_1,
+        psi_N,
+        psi00,
+        psi10,
+        psi01,
+        Nhalf,
+        Hshalf,
+    )
 end
 
 function setTemporalZ2TR(p::Params)
@@ -240,14 +285,37 @@ function setTemporalZ2TR(p::Params)
 
     num = zeros(2, 2)
 
-    TemporalZ2(num, k, sy, s0, T, w00, w0p, wp0, wpp, Px0, Pxp, phi, Link1, Link2, LinkN1, psi_0, psi_1, psi_N, psi00, psi10, psi01, Nhalf, Hshalf)
+    return TemporalZ2(
+        num,
+        k,
+        sy,
+        s0,
+        T,
+        w00,
+        w0p,
+        wp0,
+        wpp,
+        Px0,
+        Pxp,
+        phi,
+        Link1,
+        Link2,
+        LinkN1,
+        psi_0,
+        psi_1,
+        psi_N,
+        psi00,
+        psi10,
+        psi01,
+        Nhalf,
+        Hshalf,
+    )
 end
 
 function Z2sol(TR, p::Params)
     @unpack rounds = p
 
     if TR == false
-
         v = setTemporalZ2(p)
         Z2Phase!(v, p)
 
@@ -271,7 +339,6 @@ function Z2sol(TR, p::Params)
 
         Z2Solution(; TopologicalNumber, Total)
     elseif TR == true
-
         v = setTemporalZ2TR(p)
         Z2Phase!(v, p)
 
@@ -344,8 +411,9 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 ```
  $T$ is the time-reversal operator.
 """
-function calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Bool=true, TR::Bool=false) where {T1<:Union{Int,Nothing}}
-
+function calcZ2(
+    Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Bool=true, TR::Bool=false
+) where {T1<:Union{Int,Nothing}}
     Hs = size(Hamiltonian(zeros(2)), 1)
     Hshalf = Hs ÷ 2
     if isodd(N)
@@ -362,9 +430,12 @@ function calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Boo
     p = Params(; Ham=Hamiltonian, Nfill, N, Hs, gapless=0.0, rounds, dim=2)
 
     r = Z2sol(TR, p)
-    (; TopologicalNumber=r.TopologicalNumber, TRTopologicalNumber=r.TRTopologicalNumber, Total=r.Total)
+    return (;
+        TopologicalNumber=r.TopologicalNumber,
+        TRTopologicalNumber=r.TRTopologicalNumber,
+        Total=r.Total,
+    )
 end
-
 
 @doc raw"""
 Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite).
@@ -394,9 +465,7 @@ julia> result.TopologicalNumber
 
 """
 function solve(
-    prob::Z2Problem,
-    alg::T1=Shio();
-    parallel::T2=UseSingleThread()
+    prob::Z2Problem, alg::T1=Shio(); parallel::T2=UseSingleThread()
 ) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
     @unpack H, Nfill, N, rounds, TR = prob
 
@@ -414,5 +483,5 @@ function solve(
 
     p = Params(; Ham=H, Nfill, N, Hs, rounds, dim=2)
 
-    Z2sol(TR, p)
+    return Z2sol(TR, p)
 end

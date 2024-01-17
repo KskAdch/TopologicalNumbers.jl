@@ -4,7 +4,7 @@ function psi!(i, v::TemporalBerryPhase, p::Params) # wave function
     k = 2pi * (i - 1) / N .+ 2pi * 1e-5
     eigens = eigen!(Ham(k))
     v.psi1[:, :] .= eigens.vectors
-    v.Evec1[:] .= eigens.values
+    return v.Evec1[:] .= eigens.values
 end
 
 @views function U!(i, v::TemporalBerryPhase, p::Params) # link variable
@@ -70,7 +70,7 @@ end
 @views function L!(phi, v::TemporalBerryPhase, p::Params) # lattice field strength
     @unpack N, Hs = p
 
-    phi .= angle.(v.Link)
+    return phi .= angle.(v.Link)
 end
 
 @doc raw"""
@@ -129,8 +129,9 @@ U_{n}(k)=\braket{\Psi_{n}(k)|\Psi_{n}(k+e_{1})}
 ```
  $\ket{\Psi_{n}(k)}$ is the wave function of the $n$th band.
 """
-function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
-
+function calcBerryPhase(
+    Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true
+)
     Hs = size(Hamiltonian(0.0), 1)
     p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=1)
 
@@ -145,9 +146,8 @@ function calcBerryPhase(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rou
         Total = rem(1 - abs(1 - Total), 2)
     end
 
-    (; TopologicalNumber, Total)
+    return (; TopologicalNumber, Total)
 end
-
 
 @doc raw"""
 Calculate the winding numbers in the one-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
@@ -177,9 +177,7 @@ julia> result.TopologicalNumber
 
 """
 function solve(
-    prob::BPProblem,
-    alg::T1=BP();
-    parallel::T2=UseSingleThread()
+    prob::BPProblem, alg::T1=BP(); parallel::T2=UseSingleThread()
 ) where {T1<:BerryPhaseAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, N, gapless, rounds = prob
 
@@ -197,5 +195,5 @@ function solve(
         Total = rem(1 - abs(1 - Total), 2)
     end
 
-    BPSolution(; TopologicalNumber, Total)
+    return BPSolution(; TopologicalNumber, Total)
 end

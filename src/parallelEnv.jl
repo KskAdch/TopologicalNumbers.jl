@@ -9,7 +9,6 @@ A struct representing the use of a single thread for parallel processing in the 
 """
 struct UseSingleThread <: TopologicalNumbersSingleProcess end
 
-
 abstract type TopologicalNumbersMultiProcess <: TopologicalNumbersParallel end
 
 # struct UseThreads <: TopologicalNumbersMultiProcess end

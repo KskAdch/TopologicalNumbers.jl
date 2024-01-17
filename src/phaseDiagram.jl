@@ -1,4 +1,6 @@
-function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:SecondChernAlgorithms}
+function update1Din!(
+    ::T, i, nums, num0, H, alg!, range1, p::Params
+) where {T<:SecondChernAlgorithms}
     Ham0(k) = H(k, range1[i])
     @reset p.Ham = Ham0
 
@@ -6,23 +8,27 @@ function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:S
     setBasis!(v, p) # Set the basis
 
     alg!(v)
-    nums[i] = v.sys.chern
+    return nums[i] = v.sys.chern
 end
 
-function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms}}
+function update1Din!(
+    ::T, i, nums, num0, H, alg!, range1, p::Params
+) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms}}
     Ham0(k) = H(k, range1[i])
     @reset p.Ham = Ham0
     alg!(num0, p)
-    nums[:, i] .= num0
+    return nums[:, i] .= num0
 end
 
-function update1Din!(::T, i, nums, num0, H, alg!, range1, p::Params) where {T<:Union{Z2Algorithms}}
+function update1Din!(
+    ::T, i, nums, num0, H, alg!, range1, p::Params
+) where {T<:Union{Z2Algorithms}}
     Ham0(k) = H(k, range1[i])
     @reset p.Ham = Ham0
 
     v = setTemporalZ2(p)
     alg!(v, p)
-    nums[:, i] .= v.num
+    return nums[:, i] .= v.num
 end
 
 # Old method
@@ -30,10 +36,12 @@ function update1Din!(i, nums, num0, H, alg!, range1, p::Params)
     Ham0(k) = H(k, range1[i])
     @reset p.Ham = Ham0
     alg!(num0, p)
-    nums[:, i] .= num0
+    return nums[:, i] .= num0
 end
 
-function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:SecondChernAlgorithms}
+function update2Din!(
+    ::T, i, j, nums, num0, H, alg!, range1, range2, p::Params
+) where {T<:SecondChernAlgorithms}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
     @reset p.Ham = Ham0
@@ -42,25 +50,29 @@ function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) 
     setBasis!(v, p) # Set the basis
 
     alg!(v)
-    nums[i, j] = v.sys.chern
+    return nums[i, j] = v.sys.chern
 end
 
-function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms}}
+function update2Din!(
+    ::T, i, j, nums, num0, H, alg!, range1, range2, p::Params
+) where {T<:Union{BerryPhaseAlgorithms,FirstChernAlgorithms}}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
     @reset p.Ham = Ham0
     alg!(num0, p)
-    nums[:, i, j] .= num0
+    return nums[:, i, j] .= num0
 end
 
-function update2Din!(::T, i, j, nums, num0, H, alg!, range1, range2, p::Params) where {T<:Union{Z2Algorithms}}
+function update2Din!(
+    ::T, i, j, nums, num0, H, alg!, range1, range2, p::Params
+) where {T<:Union{Z2Algorithms}}
     param = (range1[i], range2[j])
     Ham0(k) = H(k, param)
     @reset p.Ham = Ham0
 
     v = setTemporalZ2(p)
     alg!(v, p)
-    nums[:, i, j] .= v.num
+    return nums[:, i, j] .= v.num
 end
 
 # Old method
@@ -69,28 +81,45 @@ function update2Din!(i, j, nums, num0, H, alg!, range1, range2, p::Params)
     Ham0(k) = H(k, param)
     @reset p.Ham = Ham0
     alg!(num0, p)
-    nums[:, i, j] .= num0
+    return nums[:, i, j] .= num0
 end
 
-function update1D!(::T, nums, num0, H, alg!, range1, ::UseSingleThread, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update1D!(
+    ::T, nums, num0, H, alg!, range1, ::UseSingleThread, p::Params
+) where {T<:TopologicalNumbersAlgorithms}
     for i in eachindex(range1)
         update1Din!(T(), i, nums, num0, H, alg!, range1, p)
     end
 end
 
-function update1D!(::T, nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseSingleThread, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update1D!(
+    ::T, nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseSingleThread, p::Params
+) where {T<:TopologicalNumbersAlgorithms}
     for i in idxs
         update1Din!(T(), i, nums, num0, H, alg!, range1, p)
     end
 end
 
-function update2D!(::T, nums, num0, H, alg!, range1, range2, ::UseSingleThread, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update2D!(
+    ::T, nums, num0, H, alg!, range1, range2, ::UseSingleThread, p::Params
+) where {T<:TopologicalNumbersAlgorithms}
     for i in eachindex(range1), j in eachindex(range2)
         update2Din!(T(), i, j, nums, num0, H, alg!, range1, range2, p)
     end
 end
 
-function update2D!(::T, nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseSingleThread, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update2D!(
+    ::T,
+    nums,
+    num0,
+    H,
+    alg!,
+    range1,
+    range2,
+    idxs::ProgressBar,
+    ::UseSingleThread,
+    p::Params,
+) where {T<:TopologicalNumbersAlgorithms}
     for i in idxs, j in eachindex(range2)
         update2Din!(T(), i, j, nums, num0, H, alg!, range1, range2, p)
     end
@@ -104,7 +133,9 @@ function update1D!(nums, num0, H, alg!, range1, ::UseSingleThread, p::Params)
 end
 
 # Old method
-function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseSingleThread, p::Params)
+function update1D!(
+    nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseSingleThread, p::Params
+)
     for i in idxs
         update1Din!(i, nums, num0, H, alg!, range1, p)
     end
@@ -118,12 +149,13 @@ function update2D!(nums, num0, H, alg!, range1, range2, ::UseSingleThread, p::Pa
 end
 
 # Old method
-function update2D!(nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseSingleThread, p::Params)
+function update2D!(
+    nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseSingleThread, p::Params
+)
     for i in idxs, j in eachindex(range2)
         update2Din!(i, j, nums, num0, H, alg!, range1, range2, p)
     end
 end
-
 
 # function update1D!(::T, nums, num0, H, alg!, range1, ::UseThreads, p::Params) where {T<:SecondChernAlgorithms}
 #     Base.Threads.@threads for i in eachindex(range1)
@@ -181,14 +213,15 @@ end
 #     end
 # end
 
-
-function update1D!(::T, nums, num0, H, alg!, range1, mod::UseMPI, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update1D!(
+    ::T, nums, num0, H, alg!, range1, mod::UseMPI, p::Params
+) where {T<:TopologicalNumbersAlgorithms}
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
 
     for i in idxs
         update1Din!(T(), i, nums, num0, H, alg!, range1, p)
@@ -196,16 +229,18 @@ function update1D!(::T, nums, num0, H, alg!, range1, mod::UseMPI, p::Params) whe
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
-function update1D!(::T, nums, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update1D!(
+    ::T, nums, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, p::Params
+) where {T<:TopologicalNumbersAlgorithms}
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
     if myrank == 0
         idxs = ProgressBar(idxs)
     end
@@ -216,16 +251,18 @@ function update1D!(::T, nums, num0, H, alg!, range1, idxs::ProgressBar, mod::Use
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
-function update2D!(::T, nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update2D!(
+    ::T, nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Params
+) where {T<:TopologicalNumbersAlgorithms}
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
 
     for i in idxs
         for j in eachindex(range2)
@@ -235,16 +272,18 @@ function update2D!(::T, nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Par
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
-function update2D!(::T, nums, num0, H, alg!, range1, range2, idxs::ProgressBar, mod::UseMPI, p::Params) where {T<:TopologicalNumbersAlgorithms}
+function update2D!(
+    ::T, nums, num0, H, alg!, range1, range2, idxs::ProgressBar, mod::UseMPI, p::Params
+) where {T<:TopologicalNumbersAlgorithms}
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
     if myrank == 0
         idxs = ProgressBar(idxs)
     end
@@ -257,7 +296,7 @@ function update2D!(::T, nums, num0, H, alg!, range1, range2, idxs::ProgressBar, 
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
 # Old method
@@ -267,7 +306,7 @@ function update1D!(nums, num0, H, alg!, range1, mod::UseMPI, p::Params)
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
 
     for i in idxs
         update1Din!(i, nums, num0, H, alg!, range1, p)
@@ -275,7 +314,7 @@ function update1D!(nums, num0, H, alg!, range1, mod::UseMPI, p::Params)
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
 # Old method
@@ -285,7 +324,7 @@ function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, 
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
     if myrank == 0
         idxs = ProgressBar(idxs)
     end
@@ -296,7 +335,7 @@ function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, 
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
 # Old method
@@ -306,7 +345,7 @@ function update2D!(nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Params)
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
 
     for i in idxs
         for j in eachindex(range2)
@@ -316,17 +355,19 @@ function update2D!(nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Params)
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
 # Old method
-function update2D!(nums, num0, H, alg!, range1, range2, idxs::ProgressBar, mod::UseMPI, p::Params)
+function update2D!(
+    nums, num0, H, alg!, range1, range2, idxs::ProgressBar, mod::UseMPI, p::Params
+)
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(range1), nprocs)[myrank + 1]
     if myrank == 0
         idxs = ProgressBar(idxs)
     end
@@ -339,10 +380,12 @@ function update2D!(nums, num0, H, alg!, range1, range2, idxs::ProgressBar, mod::
 
     nums .= mod.MPI.Allreduce!(nums, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
-function calc_data1D(H, param_range, alg::T1, parallel::T2, p::Params) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
+function calc_data1D(
+    H, param_range, alg::T1, parallel::T2, p::Params
+) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack rounds, Hs, returnRealValue = p
 
     nums = zeros(Float64, Hs, length(param_range))
@@ -381,7 +424,9 @@ function calc_data1D(H, param_range, alg::T1, parallel::T2, p::Params) where {T1
     end
 end
 
-function calc_data1D(H, param_range, idxs::ProgressBar, alg::T1, parallel::T2, p::Params) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
+function calc_data1D(
+    H, param_range, idxs::ProgressBar, alg::T1, parallel::T2, p::Params
+) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack rounds, Hs, returnRealValue = p
 
     nums = zeros(Float64, Hs, length(param_range))
@@ -420,7 +465,9 @@ function calc_data1D(H, param_range, idxs::ProgressBar, alg::T1, parallel::T2, p
     end
 end
 
-function calc_data2D(H, param_range1, param_range2, alg::T1, parallel::T2, p::Params) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
+function calc_data2D(
+    H, param_range1, param_range2, alg::T1, parallel::T2, p::Params
+) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack rounds, Hs, returnRealValue = p
 
     nums = zeros(Float64, Hs, length(param_range1), length(param_range2))
@@ -468,7 +515,9 @@ function calc_data2D(H, param_range1, param_range2, alg::T1, parallel::T2, p::Pa
     end
 end
 
-function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::T1, parallel::T2, p::Params) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
+function calc_data2D(
+    H, param_range1, param_range2, idxs::ProgressBar, alg::T1, parallel::T2, p::Params
+) where {T1<:TopologicalNumbersAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack rounds, Hs, returnRealValue = p
 
     nums = zeros(Float64, Hs, length(param_range1), length(param_range2))
@@ -508,7 +557,9 @@ function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::T1, 
 end
 
 # Old method
-function calc_data1D(H, param_range, alg::String, parallel::T, p::Params) where {T<:TopologicalNumbersParallel}
+function calc_data1D(
+    H, param_range, alg::String, parallel::T, p::Params
+) where {T<:TopologicalNumbersParallel}
     @unpack rounds, Hs = p
 
     nums = zeros(Float64, Hs, length(param_range))
@@ -538,7 +589,9 @@ function calc_data1D(H, param_range, alg::String, parallel::T, p::Params) where 
 end
 
 # Old method
-function calc_data1D(H, param_range, idxs::ProgressBar, alg::String, parallel::T, p::Params) where {T<:TopologicalNumbersParallel}
+function calc_data1D(
+    H, param_range, idxs::ProgressBar, alg::String, parallel::T, p::Params
+) where {T<:TopologicalNumbersParallel}
     @unpack rounds, Hs = p
 
     nums = zeros(Float64, Hs, length(param_range))
@@ -568,7 +621,9 @@ function calc_data1D(H, param_range, idxs::ProgressBar, alg::String, parallel::T
 end
 
 # Old method
-function calc_data2D(H, param_range1, param_range2, alg::String, parallel::T, p::Params) where {T<:TopologicalNumbersParallel}
+function calc_data2D(
+    H, param_range1, param_range2, alg::String, parallel::T, p::Params
+) where {T<:TopologicalNumbersParallel}
     @unpack rounds, Hs = p
 
     nums = zeros(Float64, Hs, length(param_range1), length(param_range2))
@@ -582,7 +637,9 @@ function calc_data2D(H, param_range1, param_range2, alg::String, parallel::T, p:
         nums = zeros(Float64, 2, length(param_range1), length(param_range2))
         num0 = zeros(Float64, 2)
         @reset p.Nfill = Hs ÷ 2
-        update2D!(Shio(), nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
+        update2D!(
+            Shio(), nums, num0, H, algorithm!, param_range1, param_range2, parallel, p
+        )
     elseif alg == "Chern"
         algorithm! = ChernPhase!
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, parallel, p)
@@ -598,7 +655,9 @@ function calc_data2D(H, param_range1, param_range2, alg::String, parallel::T, p:
 end
 
 # Old method
-function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::String, parallel::T, p::Params) where {T<:TopologicalNumbersParallel}
+function calc_data2D(
+    H, param_range1, param_range2, idxs::ProgressBar, alg::String, parallel::T, p::Params
+) where {T<:TopologicalNumbersParallel}
     @unpack rounds, Hs = p
 
     nums = zeros(Float64, Hs, length(param_range1), length(param_range2))
@@ -612,7 +671,9 @@ function calc_data2D(H, param_range1, param_range2, idxs::ProgressBar, alg::Stri
         nums = zeros(Float64, 2, length(param_range1), length(param_range2))
         num0 = zeros(Float64, 2)
         @reset p.Nfill = Hs ÷ 2
-        update2D!(Shio(), nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
+        update2D!(
+            Shio(), nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p
+        )
     elseif alg == "Chern"
         algorithm! = ChernPhase!
         update2D!(nums, num0, H, algorithm!, param_range1, param_range2, idxs, parallel, p)
@@ -639,9 +700,13 @@ function calcPhaseDiagram(
     gapless::Real=0.0,
     rounds::Bool=true,
     plot::Bool=false,
-    progress::Bool=false
-) where {T1<:AbstractVector,T2<:Union{String,TopologicalNumbersAlgorithms},T3<:Union{Int,Tuple,AbstractVector},T4<:TopologicalNumbersParallel}
-
+    progress::Bool=false,
+) where {
+    T1<:AbstractVector,
+    T2<:Union{String,TopologicalNumbersAlgorithms},
+    T3<:Union{Int,Tuple,AbstractVector},
+    T4<:TopologicalNumbersParallel,
+}
     dim = Hs = 0
     Hamiltonian(k) = H(k, 0.0)
 
@@ -683,9 +748,8 @@ function calcPhaseDiagram(
         end
     end
 
-    (; param=param_range, nums)
+    return (; param=param_range, nums)
 end
-
 
 # Old method
 @doc raw"""
@@ -701,9 +765,14 @@ function calcPhaseDiagram(
     gapless::Real=0.0,
     rounds::Bool=true,
     plot::Bool=false,
-    progress::Bool=false
-) where {T1<:AbstractVector,T2<:AbstractVector,T3<:Union{String,TopologicalNumbersAlgorithms},T4<:Union{Int,Tuple,AbstractVector},T5<:TopologicalNumbersParallel}
-
+    progress::Bool=false,
+) where {
+    T1<:AbstractVector,
+    T2<:AbstractVector,
+    T3<:Union{String,TopologicalNumbersAlgorithms},
+    T4<:Union{Int,Tuple,AbstractVector},
+    T5<:TopologicalNumbersParallel,
+}
     dim = Hs = 0
     Hamiltonian(k) = H(k, (0.0, 0.0))
 
@@ -732,7 +801,15 @@ function calcPhaseDiagram(
     end
 
     nums = if progress == true
-        calc_data2D(H, param_range1, param_range2, ProgressBar(eachindex(param_range1)), alg, parallel, p)
+        calc_data2D(
+            H,
+            param_range1,
+            param_range2,
+            ProgressBar(eachindex(param_range1)),
+            alg,
+            parallel,
+            p,
+        )
     else
         calc_data2D(H, param_range1, param_range2, alg, parallel, p)
     end
@@ -743,14 +820,13 @@ function calcPhaseDiagram(
         end
     else
         if plot == true && Hs % 2 == 0
-            nums_half = sum(@view(nums[1:end÷2, :, :]), dims=1)[1, :, :]
+            nums_half = sum(@view(nums[1:(end ÷ 2), :, :]); dims=1)[1, :, :]
             plot2D(transpose(nums_half), param_range1, param_range2) # half-filling case
         end
     end
 
-    (; param1=param_range1, param2=param_range2, nums)
+    return (; param1=param_range1, param2=param_range2, nums)
 end
-
 
 function calcPhaseDiagram1D_core(H, param_range, alg, p; parallel, plot, progress)
     nums = if progress == true
@@ -762,12 +838,22 @@ function calcPhaseDiagram1D_core(H, param_range, alg, p; parallel, plot, progres
     if plot == true
         plot1D(nums, param_range)
     end
-    nums
+    return nums
 end
 
-function calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel, plot, progress)
+function calcPhaseDiagram2D_core(
+    H, param_range1, param_range2, alg, p; parallel, plot, progress
+)
     nums = if progress == true
-        calc_data2D(H, param_range1, param_range2, ProgressBar(eachindex(param_range1)), alg, parallel, p)
+        calc_data2D(
+            H,
+            param_range1,
+            param_range2,
+            ProgressBar(eachindex(param_range1)),
+            alg,
+            parallel,
+            p,
+        )
     else
         calc_data2D(H, param_range1, param_range2, alg, parallel, p)
     end
@@ -778,13 +864,12 @@ function calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel
         end
     else
         if plot == true && p.Hs % 2 == 0
-            nums_half = sum(@view(nums[1:end÷2, :, :]), dims=1)[1, :, :]
+            nums_half = sum(@view(nums[1:(end ÷ 2), :, :]); dims=1)[1, :, :]
             plot2D(transpose(nums_half), param_range1, param_range2) # half-filling case
         end
     end
-    nums
+    return nums
 end
-
 
 # Berry phase
 @doc raw"""
@@ -796,7 +881,7 @@ function calcPhaseDiagram(
     alg::T2=BP();
     parallel::T3=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
+    progress::Bool=false,
 ) where {T1<:AbstractVector,T2<:BerryPhaseAlgorithms,T3<:TopologicalNumbersParallel}
     @unpack H, N, gapless, rounds = prob
 
@@ -808,9 +893,8 @@ function calcPhaseDiagram(
 
     nums = calcPhaseDiagram1D_core(H, param_range, alg, p; parallel, plot, progress)
 
-    (; param=param_range, nums)
+    return (; param=param_range, nums)
 end
-
 
 @doc raw"""
     calcPhaseDiagram(prob::BPProblem, param_range1::T1, param_range2::T2, alg::T3=BP(); parallel::T4=UseSingleThread(), plot::Bool=false, progress::Bool=false) where {T1<:AbstractVector,T2<:AbstractVector,T3<:BerryPhaseAlgorithms,T4<:TopologicalNumbersParallel}
@@ -822,8 +906,13 @@ function calcPhaseDiagram(
     alg::T3=BP();
     parallel::T4=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
-) where {T1<:AbstractVector,T2<:AbstractVector,T3<:BerryPhaseAlgorithms,T4<:TopologicalNumbersParallel}
+    progress::Bool=false,
+) where {
+    T1<:AbstractVector,
+    T2<:AbstractVector,
+    T3<:BerryPhaseAlgorithms,
+    T4<:TopologicalNumbersParallel,
+}
     @unpack H, N, gapless, rounds = prob
 
     dim = 1
@@ -832,9 +921,11 @@ function calcPhaseDiagram(
 
     p = Params(; Ham, dim, N, gapless, rounds, Hs)
 
-    nums = calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel, plot, progress)
+    nums = calcPhaseDiagram2D_core(
+        H, param_range1, param_range2, alg, p; parallel, plot, progress
+    )
 
-    (; param1=param_range1, param2=param_range2, nums)
+    return (; param1=param_range1, param2=param_range2, nums)
 end
 
 # First Chern number
@@ -847,7 +938,7 @@ function calcPhaseDiagram(
     alg::T2=FHS();
     parallel::T3=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
+    progress::Bool=false,
 ) where {T1<:AbstractVector,T2<:FirstChernAlgorithms,T3<:TopologicalNumbersParallel}
     @unpack H, N, gapless, rounds = prob
 
@@ -859,9 +950,8 @@ function calcPhaseDiagram(
 
     nums = calcPhaseDiagram1D_core(H, param_range, alg, p; parallel, plot, progress)
 
-    (; param=param_range, nums)
+    return (; param=param_range, nums)
 end
-
 
 @doc raw"""
     calcPhaseDiagram(prob::FCProblem, param_range1::T1, param_range2::T2, alg::T3=FHS(); parallel::T4=UseSingleThread(), plot::Bool=false, progress::Bool=false) where {T1<:AbstractVector,T2<:AbstractVector,T3<:FirstChernAlgorithms,T4<:TopologicalNumbersParallel}
@@ -873,8 +963,13 @@ function calcPhaseDiagram(
     alg::T3=FHS();
     parallel::T4=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
-) where {T1<:AbstractVector,T2<:AbstractVector,T3<:FirstChernAlgorithms,T4<:TopologicalNumbersParallel}
+    progress::Bool=false,
+) where {
+    T1<:AbstractVector,
+    T2<:AbstractVector,
+    T3<:FirstChernAlgorithms,
+    T4<:TopologicalNumbersParallel,
+}
     @unpack H, N, gapless, rounds = prob
 
     dim = 2
@@ -883,11 +978,12 @@ function calcPhaseDiagram(
 
     p = Params(; Ham, dim, N, gapless, rounds, Hs)
 
-    nums = calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel, plot, progress)
+    nums = calcPhaseDiagram2D_core(
+        H, param_range1, param_range2, alg, p; parallel, plot, progress
+    )
 
-    (; param1=param_range1, param2=param_range2, nums)
+    return (; param1=param_range1, param2=param_range2, nums)
 end
-
 
 # Z2
 @doc raw"""
@@ -899,14 +995,14 @@ function calcPhaseDiagram(
     alg::T2=Shio();
     parallel::T3=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
+    progress::Bool=false,
 ) where {T1<:AbstractVector,T2<:Z2Algorithms,T3<:TopologicalNumbersParallel}
     @unpack H, Nfill, N, rounds = prob
 
     dim = 2
     Ham(k) = H(k, 0.0)
     Hs = size(Ham(zeros(2)), 1)
-    
+
     if isnothing(Nfill)
         Nfill = Hs ÷ 2
     end
@@ -915,9 +1011,8 @@ function calcPhaseDiagram(
 
     nums = calcPhaseDiagram1D_core(H, param_range, alg, p; parallel, plot, progress)
 
-    (; param=param_range, nums)
+    return (; param=param_range, nums)
 end
-
 
 @doc raw"""
     calcPhaseDiagram(prob::Z2Problem, param_range1::T1, param_range2::T2, alg::T3=Shio(); parallel::T4=UseSingleThread(), plot::Bool=false, progress::Bool=false) where {T1<:AbstractVector,T2<:AbstractVector,T3<:Z2Algorithms,T4<:TopologicalNumbersParallel}
@@ -929,8 +1024,10 @@ function calcPhaseDiagram(
     alg::T3=Shio();
     parallel::T4=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
-) where {T1<:AbstractVector,T2<:AbstractVector,T3<:Z2Algorithms,T4<:TopologicalNumbersParallel}
+    progress::Bool=false,
+) where {
+    T1<:AbstractVector,T2<:AbstractVector,T3<:Z2Algorithms,T4<:TopologicalNumbersParallel
+}
     @unpack H, Nfill, N, rounds = prob
 
     dim = 2
@@ -943,11 +1040,12 @@ function calcPhaseDiagram(
 
     p = Params(; Ham, dim, Nfill, N, rounds, Hs)
 
-    nums = calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel, plot, progress)
+    nums = calcPhaseDiagram2D_core(
+        H, param_range1, param_range2, alg, p; parallel, plot, progress
+    )
 
-    (; param1=param_range1, param2=param_range2, nums)
+    return (; param1=param_range1, param2=param_range2, nums)
 end
-
 
 # Second Chern number
 @doc raw"""
@@ -959,7 +1057,7 @@ function calcPhaseDiagram(
     alg::T2=FHS2();
     parallel::T3=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
+    progress::Bool=false,
 ) where {T1<:AbstractVector,T2<:SecondChernAlgorithms,T3<:TopologicalNumbersParallel}
     @unpack H, N, Nfill, RV = prob
 
@@ -978,9 +1076,8 @@ function calcPhaseDiagram(
 
     nums = calcPhaseDiagram1D_core(H, param_range, alg, p; parallel, plot, progress)
 
-    (; param=param_range, nums)
+    return (; param=param_range, nums)
 end
-
 
 @doc raw"""
     calcPhaseDiagram(prob::SCProblem, param_range1::T1, param_range2::T2, alg::T3=FHS2(); parallel::T4=UseSingleThread(), plot::Bool=false, progress::Bool=false) where {T1<:AbstractVector,T2<:AbstractVector,T3<:SecondChernAlgorithms,T4<:TopologicalNumbersParallel}
@@ -992,8 +1089,13 @@ function calcPhaseDiagram(
     alg::T3=FHS2();
     parallel::T4=UseSingleThread(),
     plot::Bool=false,
-    progress::Bool=false
-) where {T1<:AbstractVector,T2<:AbstractVector,T3<:SecondChernAlgorithms,T4<:TopologicalNumbersParallel}
+    progress::Bool=false,
+) where {
+    T1<:AbstractVector,
+    T2<:AbstractVector,
+    T3<:SecondChernAlgorithms,
+    T4<:TopologicalNumbersParallel,
+}
     @unpack H, N, Nfill, RV = prob
 
     dim = 4
@@ -1009,7 +1111,9 @@ function calcPhaseDiagram(
 
     p = Params(; Ham, dim, N, Nfill, rounds=false, returnRealValue=RV, Hs)
 
-    nums = calcPhaseDiagram2D_core(H, param_range1, param_range2, alg, p; parallel, plot, progress)
+    nums = calcPhaseDiagram2D_core(
+        H, param_range1, param_range2, alg, p; parallel, plot, progress
+    )
 
-    (; param1=param_range1, param2=param_range2, nums)
+    return (; param1=param_range1, param2=param_range2, nums)
 end

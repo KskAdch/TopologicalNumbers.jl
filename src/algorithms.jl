@@ -47,7 +47,6 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 """
 struct FHS <: FirstChernAlgorithms end
 
-
 # Algorithms for calculating the second Chern number
 @doc raw"""
 """
@@ -93,7 +92,6 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 """
 struct Shio <: Z2Algorithms end
 
-
 # Algorithms for calculating the local Berry flux
 @doc raw"""
 """
@@ -120,7 +118,6 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
 struct FHSlocal2 <: BerryFluxAlgorithms end
-
 
 # Algorithms for finding and calculating the Weyl points
 @doc raw"""

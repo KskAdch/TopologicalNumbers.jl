@@ -29,7 +29,6 @@ export Flux2d, Haldane, KitaevHoneycomb
 export ThoulessPump, KaneMele, BHZ
 export LatticeDirac
 
-
 include("./packages.jl")
 include("./params.jl")
 include("./showBand.jl")

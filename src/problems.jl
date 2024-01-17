@@ -17,7 +17,9 @@ The `BPProblem` struct represents a problem for calculating Berry phase.
 julia> 
 ```
 """
-Base.@kwdef struct BPProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct BPProblem{
+    T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool
+} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 51
     gapless::T3 = 0.0
@@ -64,7 +66,6 @@ julia>
 """
 BPProblem(H, N) = BPProblem(; H=H, N=N)
 
-
 # Problem for calculating the first Chern number
 @doc raw"""
     FCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
@@ -82,7 +83,9 @@ A struct representing a problem for calculating the first Chern number.
 julia> 
 ```
 """
-Base.@kwdef struct FCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct FCProblem{
+    T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool
+} <: TopologicalNumbersProblems
     H::T1
     N::T2 = 51
     gapless::T3 = 0.0
@@ -127,7 +130,6 @@ julia>
 """
 FCProblem(H, N) = FCProblem(; H=H, N=N)
 
-
 # Problem for calculating the second Chern number
 @doc raw"""
     SCProblem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
@@ -145,7 +147,9 @@ A struct representing a problem for calculating the second Chern number.
 julia> 
 ```
 """
-Base.@kwdef struct SCProblem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct SCProblem{
+    T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool
+} <: TopologicalNumbersProblems
     H::T1
     Nfill::T2 = nothing
     N::T3 = 30
@@ -211,7 +215,6 @@ julia>
 """
 SCProblem(H, Nf, N) = SCProblem(; H=H, Nfill=Nf, N=N)
 
-
 # Problem for calculating the Z2 invariant
 @doc raw"""
     Z2Problem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
@@ -230,7 +233,9 @@ A struct representing a problem for calculating the Z2 number.
 julia> 
 ```
 """
-Base.@kwdef struct Z2Problem{T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct Z2Problem{
+    T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool
+} <: TopologicalNumbersProblems
     H::T1
     Nfill::T2 = nothing
     N::T3 = 50
@@ -296,7 +301,6 @@ julia>
 """
 Z2Problem(H, Nf, N) = Z2Problem(; H=H, Nfill=Nf, N=N)
 
-
 # Problem for calculating the local Berry flux
 @doc raw"""
     LBFProblem{T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
@@ -315,7 +319,9 @@ A struct representing a problem for calculating the $k$-local value of Berry flu
 julia> 
 ```
 """
-Base.@kwdef struct LBFProblem{T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct LBFProblem{
+    T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool
+} <: TopologicalNumbersProblems
     H::T1
     n::T2
     N::T3 = 51
@@ -363,7 +369,6 @@ julia>
 """
 LBFProblem(H, n, N) = LBFProblem(; H=H, n=n, N=N)
 
-
 # Problem for finding and calculating the Weyl points
 @doc raw"""
     WCSProblem{T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool} <: TopologicalNumbersProblems
@@ -383,7 +388,9 @@ A struct representing a problem for finding and calculating the Weyl points.
 julia> 
 ```
 """
-Base.@kwdef struct WCSProblem{T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct WCSProblem{
+    T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool
+} <: TopologicalNumbersProblems
     H::T1
     kn::T2
     kn_mesh::T3 = 51
@@ -453,7 +460,6 @@ julia>
 """
 WCSProblem(H, kn, N1, N2) = WCSProblem(; H=H, kn=kn, kn_mesh=N1, N=N2)
 
-
 # Problem for finding and calculating the Weyl points
 @doc raw"""
     WNProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
@@ -472,7 +478,8 @@ A struct representing a problem for calculating the Weyl nodes.
 julia> 
 ```
 """
-Base.@kwdef struct WNProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct WNProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <:
+                   TopologicalNumbersProblems
     H::T1
     n::T2
     N::T3 = 51
@@ -520,7 +527,6 @@ julia>
 """
 WNProblem(H, n, N) = WNProblem(; H=H, n=n, N=N)
 
-
 # Problem for finding and calculating the Weyl points
 @doc raw"""
     WPProblem{T1<:Function,T2<:Int,T3<:AbstractVector,T4<:Bool} <: TopologicalNumbersProblems
@@ -538,7 +544,8 @@ A struct representing a problem for calculating the Weyl points.
 julia> 
 ```
 """
-Base.@kwdef struct WPProblem{T1<:Function,T2<:Int,T3<:AbstractVector,T4<:Bool} <: TopologicalNumbersProblems
+Base.@kwdef struct WPProblem{T1<:Function,T2<:Int,T3<:AbstractVector,T4<:Bool} <:
+                   TopologicalNumbersProblems
     H::T1
     N::T2 = 10
     gapless::T3 = [1e-1, 1e-2, 1e-3, 1e-4]
@@ -582,8 +589,6 @@ julia>
 ```
 """
 WPProblem(H, N) = WPProblem(; H=H, N=N)
-
-
 
 abstract type TopologicalNumbersSolutions end
 

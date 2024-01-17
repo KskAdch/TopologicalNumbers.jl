@@ -33,9 +33,9 @@ function SSH(k::T1, p::T2) where {T1<:Real,T2<:Real}
     t₁ = 1
     t₂ = p
 
-    [
-        0 t₁+t₂*exp(-im * k)
-        t₁+t₂*exp(im * k) 0
+    return [
+        0 t₁+t₂ * exp(-im * k)
+        t₁+t₂ * exp(im * k) 0
     ]
 end
 
@@ -75,9 +75,9 @@ function KitaevChain(k::T1, p::T2) where {T1<:Real,T2<:Union{AbstractVector,Tupl
     μ, Δ = p
     t = 1
 
-    [
-        -μ-2t*cos(k) 2im*Δ*sin(k)
-        -2im*Δ*sin(k) μ+2t*cos(k)
+    return [
+        -μ-2t * cos(k) 2im*Δ*sin(k)
+        -2im*Δ*sin(k) μ+2t * cos(k)
     ]
 end
 
@@ -118,7 +118,9 @@ julia> Flux2d([0, π/3], [4, 1])
      -1.0-0.0im   0.0+0.0im     -1.0+0.0im  -1.0+0.0im
 ```
 """
-function Flux2d(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
+function Flux2d(
+    k::T1, p::T2
+) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     Hsize, ν = p
     t = 1
@@ -131,15 +133,15 @@ function Flux2d(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{A
         Hmat[i, i] = -2t * cos(k2 - i * ϕ)
     end
 
-    for i in 1:Hsize-1
-        Hmat[i, i+1] = -t
-        Hmat[i+1, i] = -t
+    for i in 1:(Hsize - 1)
+        Hmat[i, i + 1] = -t
+        Hmat[i + 1, i] = -t
     end
 
     Hmat[1, Hsize] = -t * exp(-im * k1)
     Hmat[Hsize, 1] = -t * exp(im * k1)
 
-    Hmat
+    return Hmat
 end
 
 @doc raw"""
@@ -183,7 +185,9 @@ julia> Haldane([0, π/3], [0.5, π/2, 0.3])
  -2.5-0.866025im  -0.3-0.0im
 ```
 """
-function Haldane(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
+function Haldane(
+    k::T1, p::T2
+) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     t₁ = 1
     t₂, ϕ, m = p
@@ -198,7 +202,7 @@ function Haldane(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{
     sy = [0 -im; im 0]
     sz = [1 0; 0 -1]
 
-    h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+    return h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
 end
 
 @doc raw"""
@@ -254,7 +258,7 @@ function KitaevHoneycomb(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2
     sy = [0 -im; im 0]
     sz = [1 0; 0 -1]
 
-    hx .* sx .+ hy .* sy .+ hz .* sz
+    return hx .* sx .+ hy .* sy .+ hz .* sz
 end
 
 @doc raw"""
@@ -304,16 +308,18 @@ julia> ThoulessPump([0, π/3], (-1.0, 0.5))
        0.0-0.0im      -0.0-0.0im      -2.0-0.0im  -0.866025-0.0im
 ```
 """
-function ThoulessPump(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
+function ThoulessPump(
+    k::T1, p::T2
+) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
     k1, t = k
     t₀ = 1
     m₀, Δ = p
 
-    R1 = -Δ*sin(k1)
-    R2 = -Δ*(1-cos(k1))
-    R3 = m₀*sin(t)
-    R4 = -t₀*(1+cos(t))*sin(k1)
-    R0 = -t₀*(1-cos(t))-t₀*(1+cos(t))*cos(k1)
+    R1 = -Δ * sin(k1)
+    R2 = -Δ * (1 - cos(k1))
+    R3 = m₀ * sin(t)
+    R4 = -t₀ * (1 + cos(t)) * sin(k1)
+    R0 = -t₀ * (1 - cos(t)) - t₀ * (1 + cos(t)) * cos(k1)
 
     s0 = [1 0; 0 1]
     sx = [0 1; 1 0]
@@ -326,7 +332,7 @@ function ThoulessPump(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:U
     a4 = kron(s0, sy)
     a0 = kron(s0, sx)
 
-    R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
+    return R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
 end
 
 @doc raw"""
@@ -395,9 +401,8 @@ function KaneMele(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Real}
     a4 = kron(sy, s0)
     a0 = kron(sx, s0)
 
-    R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
+    return R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
 end
-
 
 @doc raw"""
 
@@ -444,7 +449,9 @@ julia> BHZ([0, π/3], [0.5, 0.5])
      -0.5+0.0im       0.0+0.0im  -2.73205+0.0im       0.0+0.0im
       0.0+0.0im      -0.5+0.0im       0.0+0.0im  0.732051+0.0im
 """
-function BHZ(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
+function BHZ(
+    k::T1, p::T2
+) where {T1<:Union{AbstractVector,Tuple},T2<:Union{AbstractVector,Tuple}}
     k1, k2 = k
     tₛₚ = 1
     t₁ = ϵ₁ = 1
@@ -469,9 +476,8 @@ function BHZ(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:Union{Abst
     a4 = kron(sy, s0)
     a0 = kron(sx, s0)
 
-    ϵ .* I0 .+ R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
+    return ϵ .* I0 .+ R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
 end
-
 
 @doc raw"""
 
@@ -539,5 +545,5 @@ function LatticeDirac(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:R
     h5 = sin(k4)
 
     # Update the Hamiltonian matrix in place
-    h1 .* g1 .+ h2 .* g2 .+ h3 .* g3 .+ h4 .* g4 .+ h5 .* g5
+    return h1 .* g1 .+ h2 .* g2 .+ h3 .* g3 .+ h4 .* g4 .+ h5 .* g5
 end

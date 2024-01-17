@@ -35,7 +35,6 @@ end
 
     if j != N
         if j == 1
-
             psi_j!(1, v, p)
             v.psi_N .= v.psi_1
             v.psi_0 .= v.psi_1
@@ -43,13 +42,12 @@ end
             psi_j!(2, v, p)
 
             for i in 1:N
-
                 v.psi00[:, :] = v.psi_0[i, :, :]
                 if i == N
                     v.psi10[:, :] = v.psi_0[1, :, :]
                     v.psi01[:, :] = v.psi_1[N, :, :]
                 else
-                    v.psi10[:, :] = v.psi_0[i+1, :, :]
+                    v.psi10[:, :] = v.psi_0[i + 1, :, :]
                     v.psi01[:, :] = v.psi_1[i, :, :]
                 end
 
@@ -69,7 +67,6 @@ end
         end
 
         for i in 1:N
-
             v.psi00[:, :] = v.psi_0[i, :, :]
             if i == N && j == N - 1
                 v.psi10[:, :] = v.psi_0[1, :, :]
@@ -78,10 +75,10 @@ end
                 v.psi10[:, :] = v.psi_0[1, :, :]
                 v.psi01[:, :] = v.psi_1[N, :, :]
             elseif j == N - 1
-                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi10[:, :] = v.psi_0[i + 1, :, :]
                 v.psi01[:, :] = v.psi_N[i, :, :]
             else
-                v.psi10[:, :] = v.psi_0[i+1, :, :]
+                v.psi10[:, :] = v.psi_0[i + 1, :, :]
                 v.psi01[:, :] = v.psi_1[i, :, :]
             end
 
@@ -99,27 +96,55 @@ end
 
     if i != N && j != N
         for l in 1:Hs
-            phi[l] = angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.Link1[l, 1, i]) * conj(v.Link0[l, 2, i]))
-            dphi[l] = angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.Link1[l, 1, i]) - angle(v.Link0[l, 2, i])
+            phi[l] = angle(
+                v.Link0[l, 1, i] *
+                v.Link0[l, 2, i + 1] *
+                conj(v.Link1[l, 1, i]) *
+                conj(v.Link0[l, 2, i]),
+            )
+            dphi[l] =
+                angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i + 1]) -
+                angle(v.Link1[l, 1, i]) - angle(v.Link0[l, 2, i])
         end
     elseif i == N && j != N
         for l in 1:Hs
-            phi[l] = angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.Link1[l, 1, N]) * conj(v.Link0[l, 2, N]))
-            dphi[l] = angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.Link1[l, 1, N]) - angle(v.Link0[l, 2, N])
+            phi[l] = angle(
+                v.Link0[l, 1, N] *
+                v.Link0[l, 2, 1] *
+                conj(v.Link1[l, 1, N]) *
+                conj(v.Link0[l, 2, N]),
+            )
+            dphi[l] =
+                angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) -
+                angle(v.Link1[l, 1, N]) - angle(v.Link0[l, 2, N])
         end
     elseif i != N && j == N
         for l in 1:Hs
-            phi[l] = angle(v.Link0[l, 1, i] * v.Link0[l, 2, i+1] * conj(v.LinkN[l, 1, i]) * conj(v.Link0[l, 2, i]))
-            dphi[l] = angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i+1]) - angle(v.LinkN[l, 1, i]) - angle(v.Link0[l, 2, i])
+            phi[l] = angle(
+                v.Link0[l, 1, i] *
+                v.Link0[l, 2, i + 1] *
+                conj(v.LinkN[l, 1, i]) *
+                conj(v.Link0[l, 2, i]),
+            )
+            dphi[l] =
+                angle(v.Link0[l, 1, i]) + angle(v.Link0[l, 2, i + 1]) -
+                angle(v.LinkN[l, 1, i]) - angle(v.Link0[l, 2, i])
         end
     elseif i == N && j == N
         for l in 1:Hs
-            phi[l] = angle(v.Link0[l, 1, N] * v.Link0[l, 2, 1] * conj(v.LinkN[l, 1, N]) * conj(v.Link0[l, 2, N]))
-            dphi[l] = angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) - angle(v.LinkN[l, 1, N]) - angle(v.Link0[l, 2, N])
+            phi[l] = angle(
+                v.Link0[l, 1, N] *
+                v.Link0[l, 2, 1] *
+                conj(v.LinkN[l, 1, N]) *
+                conj(v.Link0[l, 2, N]),
+            )
+            dphi[l] =
+                angle(v.Link0[l, 1, N]) + angle(v.Link0[l, 2, 1]) -
+                angle(v.LinkN[l, 1, N]) - angle(v.Link0[l, 2, N])
         end
     end
 
-    phi .= (phi .- dphi) ./ 2pi
+    return phi .= (phi .- dphi) ./ 2pi
 end
 
 @doc raw"""
@@ -146,7 +171,23 @@ end
     psi01 = zeros(ComplexF64, Hs, Hs)
     Enevec = zeros(Hs)
 
-    v = TemporalFirstChern(k, Link0, Link1, LinkN, link10, link01, psi_0, psi_1, psi_N, Evec0, Evec1, psi00, psi10, psi01, Enevec)
+    v = TemporalFirstChern(
+        k,
+        Link0,
+        Link1,
+        LinkN,
+        link10,
+        link01,
+        psi_0,
+        psi_1,
+        psi_N,
+        Evec0,
+        Evec1,
+        psi00,
+        psi10,
+        psi01,
+        Enevec,
+    )
 
     phi = zeros(Hs)
     dphi = zeros(Hs)
@@ -185,7 +226,6 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
 function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::Bool=true)
-
     Hs = size(Hamiltonian(zeros(2)), 1)
     p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
@@ -199,9 +239,8 @@ function calcChern(Hamiltonian::Function; N::Int=51, gapless::Real=0.0, rounds::
 
     Total = sum(TopologicalNumber)
 
-    (; TopologicalNumber, Total)
+    return (; TopologicalNumber, Total)
 end
-
 
 @doc raw"""
 Calculate the first Chern numbers in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
@@ -231,9 +270,7 @@ julia> result.TopologicalNumber
 
 """
 function solve(
-    prob::FCProblem,
-    alg::T1=FHS();
-    parallel::T2=UseSingleThread()
+    prob::FCProblem, alg::T1=FHS(); parallel::T2=UseSingleThread()
 ) where {T1<:FirstChernAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, N, gapless, rounds = prob
 
@@ -250,5 +287,5 @@ function solve(
 
     Total = sum(TopologicalNumber)
 
-    FCSolution(; TopologicalNumber, Total)
+    return FCSolution(; TopologicalNumber, Total)
 end

@@ -20,7 +20,7 @@ function psimat_square!(n, psimat, Evec, p::Params) # wave function □
 
     psimat[2, :, :] .= eigen!(Ham(k2)).vectors
     psimat[3, :, :] .= eigen!(Ham(k3)).vectors
-    psimat[4, :, :] .= eigen!(Ham(k4)).vectors
+    return psimat[4, :, :] .= eigen!(Ham(k4)).vectors
 end
 
 @views function Linkmat_square!(psimat, Evec, Linkmat, p::Params)
@@ -51,10 +51,16 @@ end
 
     dphi = zeros(Hs)
 
-    TopologicalNumber[:] = [angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for l in 1:Hs]
-    dphi[:] = [angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) - angle(Linkmat[4, l]) for l in 1:Hs]
+    TopologicalNumber[:] = [
+        angle(Linkmat[1, l] * Linkmat[2, l] * conj(Linkmat[3, l]) * conj(Linkmat[4, l])) for
+        l in 1:Hs
+    ]
+    dphi[:] = [
+        angle(Linkmat[1, l]) + angle(Linkmat[2, l]) - angle(Linkmat[3, l]) -
+        angle(Linkmat[4, l]) for l in 1:Hs
+    ]
 
-    TopologicalNumber .= (TopologicalNumber - dphi) ./ 2pi
+    return TopologicalNumber .= (TopologicalNumber - dphi) ./ 2pi
 end
 
 @doc raw"""
@@ -89,13 +95,8 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
  $\ket{\Psi_{n}(\bm{k})}$ is the wave function of the $n$th band.
 """
 function calcBerryFlux(
-    Hamiltonian::Function,
-    n::Vector{Int64};
-    N::Int=51,
-    gapless::Real=0.0,
-    rounds::Bool=true
+    Hamiltonian::Function, n::Vector{Int64}; N::Int=51, gapless::Real=0.0, rounds::Bool=true
 )
-
     Hs = size(Hamiltonian(n), 1)
     p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=2)
 
@@ -114,10 +115,8 @@ function calcBerryFlux(
         TopologicalNumber = round.(Int, TopologicalNumber)
     end
 
-    (; TopologicalNumber, n)
+    return (; TopologicalNumber, n)
 end
-
-
 
 @doc raw"""
 Calculate the Berry flux in the two-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
@@ -152,9 +151,7 @@ julia> result.TopologicalNumber
 
 """
 function solve(
-    prob::LBFProblem,
-    alg::T1=FHSlocal2();
-    parallel::T2=UseSingleThread()
+    prob::LBFProblem, alg::T1=FHSlocal2(); parallel::T2=UseSingleThread()
 ) where {T1<:BerryFluxAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, n, N, gapless, rounds = prob
 
@@ -176,5 +173,5 @@ function solve(
         TopologicalNumber = round.(Int, TopologicalNumber)
     end
 
-    LBFSolution(; TopologicalNumber, n)
+    return LBFSolution(; TopologicalNumber, n)
 end

@@ -1,32 +1,31 @@
 # Functions to calculate and update Link variables and their inverses
 # for the links in the x, y, z, and w directions
 function linkUx!(i, j, l, m, s::TemporalSecondChern)
-    s.Ux = s.evec[i, j, l, m]' * s.evec[i+1, j, l, m]
+    return s.Ux = s.evec[i, j, l, m]' * s.evec[i + 1, j, l, m]
 end
 function linkUx_inv!(i, j, l, m, s::TemporalSecondChern)
-    s.Ux_inv = s.evec[i+1, j, l, m]' * s.evec[i, j, l, m]
+    return s.Ux_inv = s.evec[i + 1, j, l, m]' * s.evec[i, j, l, m]
 end
 
 function linkUy!(i, j, l, m, s::TemporalSecondChern)
-    s.Uy = s.evec[i, j, l, m]' * s.evec[i, j+1, l, m]
+    return s.Uy = s.evec[i, j, l, m]' * s.evec[i, j + 1, l, m]
 end
 function linkUy_inv!(i, j, l, m, s::TemporalSecondChern)
-    s.Uy_inv = s.evec[i, j+1, l, m]' * s.evec[i, j, l, m]
+    return s.Uy_inv = s.evec[i, j + 1, l, m]' * s.evec[i, j, l, m]
 end
 
 function linkUz!(i, j, l, m, s::TemporalSecondChern)
-    s.Uz = s.evec[i, j, l, m]' * s.evec[i, j, l+1, m]
+    return s.Uz = s.evec[i, j, l, m]' * s.evec[i, j, l + 1, m]
 end
 function linkUz_inv!(i, j, l, m, s::TemporalSecondChern)
-    s.Uz_inv = s.evec[i, j, l+1, m]' * s.evec[i, j, l, m]
+    return s.Uz_inv = s.evec[i, j, l + 1, m]' * s.evec[i, j, l, m]
 end
 
 function linkUw!(i, j, l, m, s::TemporalSecondChern)
-    s.Uw = s.evec[i, j, l, m]' * s.evec[i, j, l, m+1]
+    return s.Uw = s.evec[i, j, l, m]' * s.evec[i, j, l, m + 1]
 end
 function linkUw_inv!(i, j, l, m, s::TemporalSecondChern)
-    s.Uw_inv = s.evec[i, j, l, m+1]' * s.evec[i, j, l, m]
-
+    return s.Uw_inv = s.evec[i, j, l, m + 1]' * s.evec[i, j, l, m]
 end
 
 # Functions to calculate field strength tensors Fxy, Fzw, Fwx, Fzy, Fzx, Fyw
@@ -38,8 +37,7 @@ function Fxy!(i, j, l, m, s::TemporalSecondChern, Nfill)
     # Calculate Fxy and adjust for normalization
     s.Fxy = s.Ux * s.Uy * s.Ux_inv * s.Uy_inv
     s.Ftemp .= s.Fxy .* Nfill ./ tr(s.Fxy)
-    s.Fxy = log(s.Ftemp)
-
+    return s.Fxy = log(s.Ftemp)
 end
 function Fzw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
@@ -49,7 +47,7 @@ function Fzw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     # Calculate Fxy and adjust for normalization
     s.Fzw = s.Uz * s.Uw * s.Uz_inv * s.Uw_inv
     s.Ftemp .= s.Fzw * Nfill / tr(s.Fzw)
-    s.Fzw = log(s.Ftemp)
+    return s.Fzw = log(s.Ftemp)
 end
 function Fwx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUw!(i, j, l, m, s)
@@ -59,7 +57,7 @@ function Fwx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     # Calculate Fxy and adjust for normalization
     s.Fwx = s.Uw * s.Ux * s.Uw_inv * s.Ux_inv
     s.Ftemp .= s.Fwx * Nfill / tr(s.Fwx)
-    s.Fwx = log(s.Ftemp)
+    return s.Fwx = log(s.Ftemp)
 end
 function Fzy!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
@@ -69,7 +67,7 @@ function Fzy!(i, j, l, m, s::TemporalSecondChern, Nfill)
     # Calculate Fxy and adjust for normalization
     s.Fzy = s.Uz * s.Uy * s.Uz_inv * s.Uy_inv
     s.Ftemp .= s.Fzy * Nfill / tr(s.Fzy)
-    s.Fzy = log(s.Ftemp)
+    return s.Fzy = log(s.Ftemp)
 end
 function Fzx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUz!(i, j, l, m, s)
@@ -79,7 +77,7 @@ function Fzx!(i, j, l, m, s::TemporalSecondChern, Nfill)
     # Calculate Fxy and adjust for normalization
     s.Fzx = s.Uz * s.Ux * s.Uz_inv * s.Ux_inv
     s.Ftemp .= s.Fzx * Nfill / tr(s.Fzx)
-    s.Fzx = log(s.Ftemp)
+    return s.Fzx = log(s.Ftemp)
 end
 function Fyw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     linkUy!(i, j, l, m, s)
@@ -89,7 +87,7 @@ function Fyw!(i, j, l, m, s::TemporalSecondChern, Nfill)
     # Calculate Fxy and adjust for normalization
     s.Fyw = s.Uy * s.Uw * s.Uy_inv * s.Uw_inv
     s.Ftemp .= s.Fyw * Nfill / tr(s.Fyw)
-    s.Fyw = log(s.Ftemp)
+    return s.Fyw = log(s.Ftemp)
 end
 
 # Function to calculate the second Chern number at local k-point using field strength tensors
@@ -105,7 +103,7 @@ function chernF!(i, j, l, m, v)
     Fyw!(i, j, l, m, s, Nfill)
     # Combine components to calculate the Chern number
     s.Fxy = s.Fxy * s.Fzw + s.Fwx * s.Fzy + s.Fzx * s.Fyw
-    s.chern += tr(s.Fxy)
+    return s.chern += tr(s.Fxy)
 end
 
 # Function to set temporal parameters for the simulation
@@ -117,10 +115,10 @@ function setParams(p)
     Nz = p.N[3]
     Nw = p.N[4]
 
-    Kxrange = range(-pi, pi, length=Nx + 1)
-    Kyrange = range(-pi, pi, length=Ny + 1)
-    Kzrange = range(-pi, pi, length=Nz + 1)
-    Kwrange = range(-pi, pi, length=Nw + 1)
+    Kxrange = range(-pi, pi; length=Nx + 1)
+    Kyrange = range(-pi, pi; length=Ny + 1)
+    Kzrange = range(-pi, pi; length=Nz + 1)
+    Kwrange = range(-pi, pi; length=Nw + 1)
 
     NH = p.Hs # Hamiltonian size
     Nfill = p.Nfill # Filling number
@@ -130,7 +128,10 @@ function setParams(p)
     k = @SVector zeros(4) # Initialize momentum vector
 
     # Initialize matrices for eigenvectors, Hamiltonian, unitary matrices, and field strength tensors
-    evec = [@SMatrix zeros(ComplexF64, NH, Nfill) for i in 1:Nx+1, j in 1:Ny+1, l in 1:Nz+1, m in 1:Nw+1]
+    evec = [
+        @SMatrix zeros(ComplexF64, NH, Nfill) for i in 1:(Nx + 1), j in 1:(Ny + 1),
+        l in 1:(Nz + 1), m in 1:(Nw + 1)
+    ]
 
     H = @SMatrix zeros(ComplexF64, NH, NH)
     Ux = @SMatrix zeros(ComplexF64, Nfill, Nfill)
@@ -150,59 +151,79 @@ function setParams(p)
     Ftemp = zeros(ComplexF64, Nfill, Nfill) # Temporal variable for LinearAlgebra.log calculation
 
     chern = zero(ComplexF64) # Initialize Chern number
-    sys = TemporalSecondChern(; chern, k, evec, H, Ux, Uy, Uz, Uw, Ux_inv, Uy_inv, Uz_inv, Uw_inv, Fxy, Fzw, Fwx, Fzy, Fzx, Fyw, Ftemp) # Create Temporal struct
+    sys = TemporalSecondChern(;
+        chern,
+        k,
+        evec,
+        H,
+        Ux,
+        Uy,
+        Uz,
+        Uw,
+        Ux_inv,
+        Uy_inv,
+        Uz_inv,
+        Uw_inv,
+        Fxy,
+        Fzw,
+        Fwx,
+        Fzy,
+        Fzx,
+        Fyw,
+        Ftemp,
+    ) # Create Temporal struct
 
-    (; r, sys) # Return parameters
+    return (; r, sys) # Return parameters
 end
 
 # Function to fix the gauge at the boundaries
 function boundaryGauge(r, s::TemporalSecondChern)
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[l, j, i, r.Nz+1] = s.evec[l, j, i, 1]
+        s.evec[l, j, i, r.Nz + 1] = s.evec[l, j, i, 1]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[l, j, r.Nz+1, i] = s.evec[l, j, 1, i]
+        s.evec[l, j, r.Nz + 1, i] = s.evec[l, j, 1, i]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[l, r.Ny+1, j, i] = s.evec[l, 1, j, i]
+        s.evec[l, r.Ny + 1, j, i] = s.evec[l, 1, j, i]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[r.Nz+1, l, j, i] = s.evec[1, l, j, i]
+        s.evec[r.Nz + 1, l, j, i] = s.evec[1, l, j, i]
     end
 
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[j, i, r.Nz+1, r.Nw+1] = s.evec[j, i, 1, 1]
+        s.evec[j, i, r.Nz + 1, r.Nw + 1] = s.evec[j, i, 1, 1]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[j, r.Nz+1, i, r.Nw+1] = s.evec[j, 1, i, 1]
+        s.evec[j, r.Nz + 1, i, r.Nw + 1] = s.evec[j, 1, i, 1]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[r.Ny+1, j, i, r.Nw+1] = s.evec[1, j, i, 1]
+        s.evec[r.Ny + 1, j, i, r.Nw + 1] = s.evec[1, j, i, 1]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[j, r.Nz+1, r.Nw+1, i] = s.evec[j, 1, 1, i]
+        s.evec[j, r.Nz + 1, r.Nw + 1, i] = s.evec[j, 1, 1, i]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[r.Nz+1, j, r.Nw+1, i] = s.evec[1, j, 1, i]
+        s.evec[r.Nz + 1, j, r.Nw + 1, i] = s.evec[1, j, 1, i]
     end
     for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[r.Ny+1, r.Nz+1, j, i] = s.evec[1, 1, j, i]
+        s.evec[r.Ny + 1, r.Nz + 1, j, i] = s.evec[1, 1, j, i]
     end
 
     for i in eachindex(r.Kxrange)
-        s.evec[i, r.Ny+1, r.Nz+1, r.Nw+1] = s.evec[i, 1, 1, 1]
+        s.evec[i, r.Ny + 1, r.Nz + 1, r.Nw + 1] = s.evec[i, 1, 1, 1]
     end
     for i in eachindex(r.Kxrange)
-        s.evec[r.Nz+1, i, r.Ny+1, r.Nw+1] = s.evec[1, i, 1, 1]
+        s.evec[r.Nz + 1, i, r.Ny + 1, r.Nw + 1] = s.evec[1, i, 1, 1]
     end
     for i in eachindex(r.Kxrange)
-        s.evec[r.Ny+1, r.Nz+1, i, r.Nw+1] = s.evec[1, 1, i, 1]
+        s.evec[r.Ny + 1, r.Nz + 1, i, r.Nw + 1] = s.evec[1, 1, i, 1]
     end
     for i in eachindex(r.Kxrange)
-        s.evec[r.Nz+1, r.Ny+1, r.Nw+1, i] = s.evec[1, 1, 1, i]
+        s.evec[r.Nz + 1, r.Ny + 1, r.Nw + 1, i] = s.evec[1, 1, 1, i]
     end
 
-    s.evec[r.Nx+1, r.Ny+1, r.Nz+1, r.Nw+1] = s.evec[1, 1, 1, 1]
+    return s.evec[r.Nx + 1, r.Ny + 1, r.Nz + 1, r.Nw + 1] = s.evec[1, 1, 1, 1]
 end
 
 # Function to set the basis for calculations
@@ -211,22 +232,30 @@ function setBasis!(v, p)
     s = v.sys
 
     # Loop over the grid to calculate the eigenvectors
-    for m in eachindex(r.Kwrange), l in eachindex(r.Kzrange), j in eachindex(r.Kyrange), i in eachindex(r.Kxrange)
+    for m in eachindex(r.Kwrange),
+        l in eachindex(r.Kzrange),
+        j in eachindex(r.Kyrange),
+        i in eachindex(r.Kxrange)
+
         s.k = @SVector [r.Kxrange[i], r.Kyrange[j], r.Kzrange[l], r.Kwrange[m]]
         # H!(p)
         # s.H = eigvecs(s.H)
         s.H = eigvecs(p.Ham(s.k))
-        s.evec[i, j, l, m] = @view s.H[:, 1:r.Nfill]
+        s.evec[i, j, l, m] = @view s.H[:, 1:(r.Nfill)]
     end
 
-    boundaryGauge(r, s) # Apply boundary conditions
+    return boundaryGauge(r, s) # Apply boundary conditions
 end
 
 # Function to update the second Chern number
 function updateChern!(v, ::UseSingleThread)
     r = v.r
     # Loop over the grid and calculate the Chern number
-    for m in eachindex(r.Kwrange)[1:end-1], l in eachindex(r.Kzrange)[1:end-1], j in eachindex(r.Kyrange)[1:end-1], i in eachindex(r.Kxrange)[1:end-1]
+    for m in eachindex(r.Kwrange)[1:(end - 1)],
+        l in eachindex(r.Kzrange)[1:(end - 1)],
+        j in eachindex(r.Kyrange)[1:(end - 1)],
+        i in eachindex(r.Kxrange)[1:(end - 1)]
+
         chernF!(i, j, l, m, v)
     end
 end
@@ -240,17 +269,20 @@ function updateChern!(v, mod::UseMPI)
     myrank = mod.MPI.Comm_rank(comm)
     nprocs = mod.MPI.Comm_size(comm)
 
-    idxs = Distributed.splitrange(1, length(r.Kwrange) - 1, nprocs)[myrank+1]
+    idxs = Distributed.splitrange(1, length(r.Kwrange) - 1, nprocs)[myrank + 1]
 
     # Loop over the grid and calculate the Chern number
     for m in idxs
-        for l in eachindex(r.Kzrange)[1:end-1], j in eachindex(r.Kyrange)[1:end-1], i in eachindex(r.Kxrange)[1:end-1]
+        for l in eachindex(r.Kzrange)[1:(end - 1)],
+            j in eachindex(r.Kyrange)[1:(end - 1)],
+            i in eachindex(r.Kxrange)[1:(end - 1)]
+
             chernF!(i, j, l, m, v)
         end
     end
     v.sys.chern = mod.MPI.Allreduce(v.sys.chern, mod.MPI.SUM, comm)
 
-    mod.MPI.Barrier(comm)
+    return mod.MPI.Barrier(comm)
 end
 
 function warn_finiteImaginary(x)
@@ -273,7 +305,9 @@ Main function to execute the simulation and calculate the second Chern number.
 - `chern`: The second Chern number.
 
 """
-function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
+function SecondChernPhase(
+    p; parallel::T=UseSingleThread()
+) where {T<:TopologicalNumbersParallel}
     # @unpack N, Hs = p
 
     v = setParams(p) # Set parameters
@@ -282,8 +316,7 @@ function SecondChernPhase(p; parallel::T=UseSingleThread()) where {T<:Topologica
 
     SecondChernPhase!(v; parallel) # Update the second Chern number
 
-    v.sys.chern # Return the second Chern number
-
+    return v.sys.chern # Return the second Chern number
 end
 
 # Main function to execute the simulation
@@ -299,15 +332,15 @@ This function updates the second Chern number for the given system `v`. The `par
 # Example
 
 """
-function SecondChernPhase!(v; parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
+function SecondChernPhase!(
+    v; parallel::T=UseSingleThread()
+) where {T<:TopologicalNumbersParallel}
     s = v.sys
 
     updateChern!(v, parallel) # Update the second Chern number
 
-    s.chern /= 4pi^2 # Normalize the second Chern number
-
+    return s.chern /= 4pi^2 # Normalize the second Chern number
 end
-
 
 # Old method
 @doc raw"""
@@ -331,9 +364,10 @@ function calcSecondChern(
     Nfill::T1=nothing,
     N::T2=(30, 30, 30, 30),
     returnRealValue::Bool=true,
-    parallel::T3=UseSingleThread()
-) where {T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel}
-
+    parallel::T3=UseSingleThread(),
+) where {
+    T1<:Union{Int,Nothing},T2<:Union{AbstractVector,Tuple},T3<:TopologicalNumbersParallel
+}
     Hs = size(Hamiltonian(zeros(4)), 1)
     if isnothing(Nfill)
         Nfill = Hs ÷ 2 # Half filling
@@ -347,7 +381,7 @@ function calcSecondChern(
         TopologicalNumber = real(TopologicalNumber)
     end
 
-    (; TopologicalNumber)
+    return (; TopologicalNumber)
 end
 
 @doc raw"""
@@ -376,9 +410,7 @@ julia> result.TopologicalNumber
 
 """
 function solve(
-    prob::SCProblem,
-    alg::T1=FHS2();
-    parallel::T2=UseSingleThread()
+    prob::SCProblem, alg::T1=FHS2(); parallel::T2=UseSingleThread()
 ) where {T1<:SecondChernAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, N, Nfill, RV = prob
 
@@ -398,5 +430,5 @@ function solve(
         TopologicalNumber = real(TopologicalNumber)
     end
 
-    SCSolution(; TopologicalNumber)
+    return SCSolution(; TopologicalNumber)
 end

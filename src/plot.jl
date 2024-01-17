@@ -1,5 +1,29 @@
 function marker(i)
-    markers = ("o", "v", "^", ",", "<", ">", "8", "s", "*", "h", "H", "D", "d", ".", "1", "2", "3", "4", "+", "x", "|", "_", "p")
+    markers = (
+        "o",
+        "v",
+        "^",
+        ",",
+        "<",
+        ">",
+        "8",
+        "s",
+        "*",
+        "h",
+        "H",
+        "D",
+        "d",
+        ".",
+        "1",
+        "2",
+        "3",
+        "4",
+        "+",
+        "x",
+        "|",
+        "_",
+        "p",
+    )
     if i > length(markers)
         i = i % length(markers)
     end
@@ -39,9 +63,8 @@ function plot1D(
     png::Bool=false,
     pdf::Bool=false,
     svg::Bool=false,
-    filename::String="phaseDiagram"
+    filename::String="phaseDiagram",
 ) where {T1<:SecondChernAlgorithms,T2<:AbstractVector,T3<:AbstractVector}
-
     fig = figure()
     ax = fig.add_subplot(111)
 
@@ -50,16 +73,16 @@ function plot1D(
         ax.set_ylabel(L"\nu")
     end
     ax.grid()
-    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
+    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(; integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
-        ax.scatter(param_range, nums, marker=marker(1))
+        ax.scatter(param_range, nums; marker=marker(1))
         # ax.legend()
     end
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    fig
+    return fig
 end
 
 @doc raw"""
@@ -95,9 +118,8 @@ function plot1D(
     png::Bool=false,
     pdf::Bool=false,
     svg::Bool=false,
-    filename::String="phaseDiagram"
+    filename::String="phaseDiagram",
 ) where {T1<:Union{AbstractVector,AbstractMatrix},T2<:AbstractVector}
-
     fig = figure()
     ax = fig.add_subplot(111)
 
@@ -106,14 +128,14 @@ function plot1D(
         ax.set_ylabel(L"\nu")
     end
     ax.grid()
-    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
+    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(; integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
         if nums isa AbstractVector
-            ax.scatter(param_range, nums, marker=marker(1))
+            ax.scatter(param_range, nums; marker=marker(1))
         else
             for i in axes(nums, 2)
-                ax.scatter(param_range, nums[:, i], marker=marker(i), label="Band$(i)")
+                ax.scatter(param_range, nums[:, i]; marker=marker(i), label="Band$(i)")
             end
         end
         ax.legend()
@@ -121,7 +143,7 @@ function plot1D(
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    fig
+    return fig
 end
 
 @doc raw"""
@@ -153,9 +175,8 @@ function plot1D(
     png::Bool=false,
     pdf::Bool=false,
     svg::Bool=false,
-    filename::String="phaseDiagram"
+    filename::String="phaseDiagram",
 )
-
     fig = figure()
     ax = fig.add_subplot(111)
 
@@ -164,14 +185,16 @@ function plot1D(
         ax.set_ylabel(L"\nu")
     end
     ax.grid()
-    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=true))
+    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(; integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
         if result.nums isa AbstractVector
-            ax.scatter(result.param, result.nums, marker=marker(1))
+            ax.scatter(result.param, result.nums; marker=marker(1))
         else
             for i in axes(result.nums, 2)
-                ax.scatter(result.param, result.nums[:, i], marker=marker(i), label="Band$(i)")
+                ax.scatter(
+                    result.param, result.nums[:, i]; marker=marker(i), label="Band$(i)"
+                )
             end
         end
         ax.legend()
@@ -179,7 +202,7 @@ function plot1D(
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    fig
+    return fig
 end
 
 @doc raw"""
@@ -215,9 +238,8 @@ function plot2D(
     png::Bool=false,
     pdf::Bool=false,
     svg::Bool=false,
-    filename::String="phaseDiagram"
+    filename::String="phaseDiagram",
 ) where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
-
     fig = figure()
     ax = fig.add_subplot(111)
 
@@ -227,13 +249,20 @@ function plot2D(
     end
 
     if disp == true || png == true || pdf == true || svg == true
-        im = ax.imshow(nums, cmap="jet", interpolation="none", origin="lower", extent=(param_range1[1], param_range1[end], param_range2[1], param_range2[end]), aspect="auto")
-        fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+        im = ax.imshow(
+            nums;
+            cmap="jet",
+            interpolation="none",
+            origin="lower",
+            extent=(param_range1[1], param_range1[end], param_range2[1], param_range2[end]),
+            aspect="auto",
+        )
+        fig.colorbar(im; ax=ax, ticks=matplotlib.ticker.MaxNLocator(; integer=true))
     end
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    fig
+    return fig
 end
 
 @doc raw"""
@@ -265,9 +294,8 @@ function plot2D(
     png::Bool=false,
     pdf::Bool=false,
     svg::Bool=false,
-    filename::String="phaseDiagram"
+    filename::String="phaseDiagram",
 )
-
     fig = figure()
     ax = fig.add_subplot(111)
 
@@ -279,18 +307,26 @@ function plot2D(
     nums_half = if result.nums isa Array{Float64,2}
         transpose(result.nums)
     else
-        transpose(sum(@view(result.nums[1:end÷2, :, :]), dims=1)[1, :, :])
+        transpose(sum(@view(result.nums[1:(end ÷ 2), :, :]); dims=1)[1, :, :])
     end
 
     if disp == true || png == true || pdf == true || svg == true
-        im = ax.imshow(nums_half, cmap="jet", interpolation="none", origin="lower", extent=(result.param1[1], result.param1[end], result.param2[1], result.param2[end]), aspect="auto")
-        fig.colorbar(im, ax=ax, ticks=matplotlib.ticker.MaxNLocator(integer=true))
+        im = ax.imshow(
+            nums_half;
+            cmap="jet",
+            interpolation="none",
+            origin="lower",
+            extent=(
+                result.param1[1], result.param1[end], result.param2[1], result.param2[end]
+            ),
+            aspect="auto",
+        )
+        fig.colorbar(im; ax=ax, ticks=matplotlib.ticker.MaxNLocator(; integer=true))
     end
-
 
     p = (; disp, png, pdf, svg, filename)
     output(fig, p)
-    fig
+    return fig
 end
 
 function output(fig, p)

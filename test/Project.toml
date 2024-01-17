@@ -1,6 +1,7 @@
 [deps]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MPI = "da04e1cc-30fd-572f-bb4f-1f8673147195"
 PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
@@ -10,6 +11,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 [compat]
 Aqua = "0.6"
 CondaPkg = "0.2"
+JuliaFormatter = "1.0"
 LinearAlgebra = "^1.6"
 MPI = "0.20"
 PythonCall = "0.9"

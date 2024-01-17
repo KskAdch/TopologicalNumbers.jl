@@ -36,7 +36,7 @@ function psimat_cube!(n, psimat, Evec, p::Params) # wave function □
     psimat[5, :, :] .= eigen!(Ham(k5)).vectors
     psimat[6, :, :] .= eigen!(Ham(k6)).vectors
     psimat[7, :, :] .= eigen!(Ham(k7)).vectors
-    psimat[8, :, :] .= eigen!(Ham(k8)).vectors
+    return psimat[8, :, :] .= eigen!(Ham(k8)).vectors
 end
 
 @views function Linkmat_cube!(psimat, Evec, Linkmat, p::Params)
@@ -87,23 +87,59 @@ function F!(Linkmat, phi, TopologicalNumber, p::Params)
 
     dphi = zeros(6, Hs)
 
-    phi[1, :] = [angle(conj(Linkmat[4, l]) * Linkmat[5, l] * Linkmat[12, l] * conj(Linkmat[8, l])) for l in 1:Hs]
-    dphi[1, :] = [-angle(Linkmat[4, l]) + angle(Linkmat[5, l]) + angle(Linkmat[12, l]) - angle(Linkmat[8, l]) for l in 1:Hs]
+    phi[1, :] = [
+        angle(conj(Linkmat[4, l]) * Linkmat[5, l] * Linkmat[12, l] * conj(Linkmat[8, l]))
+        for l in 1:Hs
+    ]
+    dphi[1, :] = [
+        -angle(Linkmat[4, l]) + angle(Linkmat[5, l]) + angle(Linkmat[12, l]) -
+        angle(Linkmat[8, l]) for l in 1:Hs
+    ]
 
-    phi[2, :] = [angle(Linkmat[2, l] * Linkmat[7, l] * conj(Linkmat[10, l]) * conj(Linkmat[6, l])) for l in 1:Hs]
-    dphi[2, :] = [angle(Linkmat[2, l]) + angle(Linkmat[7, l]) - angle(Linkmat[10, l]) - angle(Linkmat[6, l]) for l in 1:Hs]
+    phi[2, :] = [
+        angle(Linkmat[2, l] * Linkmat[7, l] * conj(Linkmat[10, l]) * conj(Linkmat[6, l]))
+        for l in 1:Hs
+    ]
+    dphi[2, :] = [
+        angle(Linkmat[2, l]) + angle(Linkmat[7, l]) - angle(Linkmat[10, l]) -
+        angle(Linkmat[6, l]) for l in 1:Hs
+    ]
 
-    phi[3, :] = [angle(Linkmat[1, l] * Linkmat[6, l] * conj(Linkmat[9, l]) * conj(Linkmat[5, l])) for l in 1:Hs]
-    dphi[3, :] = [angle(Linkmat[1, l]) + angle(Linkmat[6, l]) - angle(Linkmat[9, l]) - angle(Linkmat[5, l]) for l in 1:Hs]
+    phi[3, :] = [
+        angle(Linkmat[1, l] * Linkmat[6, l] * conj(Linkmat[9, l]) * conj(Linkmat[5, l])) for
+        l in 1:Hs
+    ]
+    dphi[3, :] = [
+        angle(Linkmat[1, l]) + angle(Linkmat[6, l]) - angle(Linkmat[9, l]) -
+        angle(Linkmat[5, l]) for l in 1:Hs
+    ]
 
-    phi[4, :] = [angle(conj(Linkmat[3, l]) * Linkmat[8, l] * Linkmat[11, l] * conj(Linkmat[7, l])) for l in 1:Hs]
-    dphi[4, :] = [-angle(Linkmat[3, l]) + angle(Linkmat[8, l]) + angle(Linkmat[11, l]) - angle(Linkmat[7, l]) for l in 1:Hs]
+    phi[4, :] = [
+        angle(conj(Linkmat[3, l]) * Linkmat[8, l] * Linkmat[11, l] * conj(Linkmat[7, l]))
+        for l in 1:Hs
+    ]
+    dphi[4, :] = [
+        -angle(Linkmat[3, l]) + angle(Linkmat[8, l]) + angle(Linkmat[11, l]) -
+        angle(Linkmat[7, l]) for l in 1:Hs
+    ]
 
-    phi[5, :] = [angle(Linkmat[4, l] * Linkmat[3, l] * conj(Linkmat[2, l]) * conj(Linkmat[1, l])) for l in 1:Hs]
-    dphi[5, :] = [angle(Linkmat[4, l]) + angle(Linkmat[3, l]) - angle(Linkmat[2, l]) - angle(Linkmat[1, l]) for l in 1:Hs]
+    phi[5, :] = [
+        angle(Linkmat[4, l] * Linkmat[3, l] * conj(Linkmat[2, l]) * conj(Linkmat[1, l])) for
+        l in 1:Hs
+    ]
+    dphi[5, :] = [
+        angle(Linkmat[4, l]) + angle(Linkmat[3, l]) - angle(Linkmat[2, l]) -
+        angle(Linkmat[1, l]) for l in 1:Hs
+    ]
 
-    phi[6, :] = [angle(Linkmat[9, l] * Linkmat[10, l] * conj(Linkmat[11, l]) * conj(Linkmat[12, l])) for l in 1:Hs]
-    dphi[6, :] = [angle(Linkmat[9, l]) + angle(Linkmat[10, l]) - angle(Linkmat[11, l]) - angle(Linkmat[12, l]) for l in 1:Hs]
+    phi[6, :] = [
+        angle(Linkmat[9, l] * Linkmat[10, l] * conj(Linkmat[11, l]) * conj(Linkmat[12, l]))
+        for l in 1:Hs
+    ]
+    dphi[6, :] = [
+        angle(Linkmat[9, l]) + angle(Linkmat[10, l]) - angle(Linkmat[11, l]) -
+        angle(Linkmat[12, l]) for l in 1:Hs
+    ]
 
     for j in 1:6
         if rounds == true
@@ -131,13 +167,8 @@ end
 
 """
 function calcWeylNode(
-    Hamiltonian::Function,
-    n::T;
-    N::Int=51,
-    gapless::Real=0.0,
-    rounds::Bool=true
+    Hamiltonian::Function, n::T; N::Int=51, gapless::Real=0.0, rounds::Bool=true
 ) where {T<:AbstractVector{Int64}}
-
     Hs = size(Hamiltonian(n), 1)
     p = Params(; Ham=Hamiltonian, N, gapless, rounds, Hs, dim=3)
 
@@ -157,10 +188,8 @@ function calcWeylNode(
         TopologicalNumber = round.(Int, TopologicalNumber)
     end
 
-    (; TopologicalNumber, n, N)
+    return (; TopologicalNumber, n, N)
 end
-
-
 
 @doc raw"""
 Calculate the Weyl node in the three-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
@@ -208,9 +237,8 @@ julia> sol.TopologicalNumber
 ```
 
 """
-function solve(prob::WNProblem,
-    alg::T1=FHSlocal3();
-    parallel::T2=UseSingleThread()
+function solve(
+    prob::WNProblem, alg::T1=FHSlocal3(); parallel::T2=UseSingleThread()
 ) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
     @unpack H, n, N, gapless, rounds = prob
 
@@ -233,5 +261,5 @@ function solve(prob::WNProblem,
         TopologicalNumber = round.(Int, TopologicalNumber)
     end
 
-    WNSolution(; TopologicalNumber, n, N)
+    return WNSolution(; TopologicalNumber, n, N)
 end

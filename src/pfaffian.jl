@@ -12,7 +12,6 @@ where x and v a real vectors, tau is 0 or 2, and
 alpha a real number (e_1 is the first unit vector)
 """
 function householder_real(x)
-
     @assert length(x) > 0
 
     sigma = sum(abs2, @view(x[2:end]))
@@ -46,7 +45,6 @@ where x and v a real vectors, tau is 0 or 2, and
 alpha a real number (e_1 is the first unit vector)
 """
 function householder_real!(v, x)
-
     @assert length(x) > 0
 
     sigma = sum(abs2, @view(x[2:end]))
@@ -71,7 +69,6 @@ function householder_real!(v, x)
         return 2, alpha
     end
 end
-
 
 @doc raw"""
     (v, tau, alpha) = householder_complex(x)
@@ -146,7 +143,9 @@ A = Q T Q^T
 A is overwritten if overwrite_a=true (default: false), and
 Q only calculated if calc_q=true (default: true)
 """
-function skew_tridiagonalize(A::AbstractMatrix{T}; overwrite_a=false, calc_q=true) where {T<:Number}
+function skew_tridiagonalize(
+    A::AbstractMatrix{T}; overwrite_a=false, calc_q=true
+) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -167,24 +166,24 @@ function skew_tridiagonalize(A::AbstractMatrix{T}; overwrite_a=false, calc_q=tru
         Q = Matrix{T}(I, size(A))
     end
 
-    @inbounds for i in 1:size(A, 1)-2
+    @inbounds for i in 1:(size(A, 1) - 2)
         # Find a Householder vector to eliminate the i-th column
-        v, tau, alpha = householder(@view(A[i+1:end, i]))
-        A[i+1, i] = alpha
-        A[i, i+1] = -alpha
-        A[i+2:end, i] .= zero(T)
-        A[i, i+2:end] .= zero(T)
+        v, tau, alpha = householder(@view(A[(i + 1):end, i]))
+        A[i + 1, i] = alpha
+        A[i, i + 1] = -alpha
+        A[(i + 2):end, i] .= zero(T)
+        A[i, (i + 2):end] .= zero(T)
 
         # Update the matrix block A(i+1:N,i+1:N)
-        w = tau .* (@view(A[i+1:end, i+1:end]) * conj(v))
-        A[i+1:end, i+1:end] .+= v * transpose(w) .- w * transpose(v)
+        w = tau .* (@view(A[(i + 1):end, (i + 1):end]) * conj(v))
+        A[(i + 1):end, (i + 1):end] .+= v * transpose(w) .- w * transpose(v)
 
         if calc_q
             # Accumulate the individual Householder reflections
             # Accumulate them in the form P_1*P_2*..., which is
             # (..*P_2*P_1)^dagger
-            y = tau .* (@view(Q[:, i+1:end]) * v)
-            Q[:, i+1:end] .-= y * v'
+            y = tau .* (@view(Q[:, (i + 1):end]) * v)
+            Q[:, (i + 1):end] .-= y * v'
         end
     end
 
@@ -207,7 +206,9 @@ A is overwritten if overwrite_a=true (default: false),
 L and P only calculated if calc_L=true or calc_P=true,
 respectively (default: true).
 """
-function skew_LTL(A::AbstractMatrix{T}; overwrite_a=false, calc_L=true, calc_P=true) where {T<:Number}
+function skew_LTL(
+    A::AbstractMatrix{T}; overwrite_a=false, calc_L=true, calc_P=true
+) where {T<:Number}
     # Check if matrix is square
     @assert size(A, 1) == size(A, 2) > 0
     # Check if it's skew-symmetric
@@ -226,49 +227,49 @@ function skew_LTL(A::AbstractMatrix{T}; overwrite_a=false, calc_L=true, calc_P=t
         Pv = collect(1:n)
     end
 
-    for k in 1:n-2
+    for k in 1:(n - 2)
         # First, find the largest entry in A[k+1:end,k] and permute it to A[k+1,k]
-        kp = k + findmax(abs.(@view(A[k+1:end, k])))[2]
+        kp = k + findmax(abs.(@view(A[(k + 1):end, k])))[2]
 
         # Check if we need to pivot
         if kp != k + 1
             # Interchange rows k+1 and kp
-            temp = copy(@view(A[k+1, k:end]))
-            A[k+1, k:end] .= @view(A[kp, k:end])
+            temp = copy(@view(A[k + 1, k:end]))
+            A[k + 1, k:end] .= @view(A[kp, k:end])
             A[kp, k:end] .= temp
 
             # Then interchange columns k+1 and kp
-            temp = copy(A[k:end, k+1])
-            A[k:end, k+1] .= A[k:end, kp]
+            temp = copy(A[k:end, k + 1])
+            A[k:end, k + 1] .= A[k:end, kp]
             A[k:end, kp] .= temp
 
             if calc_L
                 # Permute L accordingly
-                temp = copy(L[k+1, 1:k])
-                L[k+1, 1:k] = L[kp, 1:k]
+                temp = copy(L[k + 1, 1:k])
+                L[k + 1, 1:k] = L[kp, 1:k]
                 L[kp, 1:k] = temp
             end
 
             if calc_P
                 # Accumulate the permutation matrix
-                Pv[k+1], Pv[kp] = Pv[kp], Pv[k+1]
+                Pv[k + 1], Pv[kp] = Pv[kp], Pv[k + 1]
             end
         end
 
         # Now form the Gauss vector
-        if A[k+1, k] != 0.0
-            tau = A[k+2:end, k] ./ A[k+1, k]
+        if A[k + 1, k] != 0.0
+            tau = A[(k + 2):end, k] ./ A[k + 1, k]
 
             # Clear eliminated row and column
-            A[k+2:end, k] .= 0.0
-            A[k, k+2:end] .= 0.0
+            A[(k + 2):end, k] .= 0.0
+            A[k, (k + 2):end] .= 0.0
 
             # Update the matrix block A[k+2:end,k+2:end]
-            A[k+2:end, k+2:end] .+= tau * transpose(A[k+2:end, k+1])
-            A[k+2:end, k+2:end] .-= A[k+2:end, k+1] * transpose(tau)
+            A[(k + 2):end, (k + 2):end] .+= tau * transpose(A[(k + 2):end, k + 1])
+            A[(k + 2):end, (k + 2):end] .-= A[(k + 2):end, k + 1] * transpose(tau)
 
             if calc_L
-                L[k+2:end, k+1] .= tau
+                L[(k + 2):end, k + 1] .= tau
             end
         end
     end
@@ -314,12 +315,11 @@ function pfaffian(A::AbstractMatrix{T}; overwrite_a=false, method="P") where {T<
     @assert method in ("P", "H")
 
     if method == "P"
-        return pfaffian_LTL(A, overwrite_a=overwrite_a)
+        return pfaffian_LTL(A; overwrite_a=overwrite_a)
     else
-        return pfaffian_householder(A, overwrite_a=overwrite_a)
+        return pfaffian_householder(A; overwrite_a=overwrite_a)
     end
 end
-
 
 @doc raw"""
     pfaffian_LTL(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Number}
@@ -353,25 +353,25 @@ function pfaffian_LTL(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Number}
 
     pfaffian_val = one(T)
 
-    @inbounds for k in 1:2:n-1
+    @inbounds for k in 1:2:(n - 1)
         tau0 = @view tau[k:end]
 
         # First, find the largest entry in A[k+1:end, k] and permute it to A[k+1, k]
-        @views kp = k + findmax(abs.(A[k+1:end, k]))[2]
+        @views kp = k + findmax(abs.(A[(k + 1):end, k]))[2]
 
         # Check if we need to pivot
         if kp != k + 1
             # Interchange rows k+1 and kp
             @inbounds @simd for l in k:n
-                t = A[k+1, l]
-                A[k+1, l] = A[kp, l]
+                t = A[k + 1, l]
+                A[k + 1, l] = A[kp, l]
                 A[kp, l] = t
             end
 
             # Then interchange columns k+1 and kp
             @inbounds @simd for l in k:n
-                t = A[l, k+1]
-                A[l, k+1] = A[l, kp]
+                t = A[l, k + 1]
+                A[l, k + 1] = A[l, kp]
                 A[l, kp] = t
             end
 
@@ -380,16 +380,18 @@ function pfaffian_LTL(A::AbstractMatrix{T}; overwrite_a=false) where {T<:Number}
         end
 
         # Now form the Gauss vector
-        @inbounds if A[k+1, k] != zero(T)
-            @inbounds @views tau0 .= A[k, k+2:end] ./ A[k, k+1]
+        @inbounds if A[k + 1, k] != zero(T)
+            @inbounds @views tau0 .= A[k, (k + 2):end] ./ A[k, k + 1]
 
-            pfaffian_val *= @inbounds A[k, k+1]
+            pfaffian_val *= @inbounds A[k, k + 1]
 
             if k + 2 <= n
                 # Update the matrix block A[k+2:end, k+2:end]
                 @inbounds for l1 in eachindex(tau0)
                     @simd for l2 in eachindex(tau0)
-                        @fastmath A[k+1+l2, k+1+l1] += tau0[l2] * A[k+1+l1, k+1] - tau0[l1] * A[k+1+l2, k+1]
+                        @fastmath A[k + 1 + l2, k + 1 + l1] +=
+                            tau0[l2] * A[k + 1 + l1, k + 1] -
+                            tau0[l1] * A[k + 1 + l2, k + 1]
                     end
                 end
             end
@@ -444,22 +446,22 @@ function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<
 
     pfaffian_val = one(T)
 
-    @inbounds for i in 1:(n-2)
+    @inbounds for i in 1:(n - 2)
         # Z0 = @view Z[i:end, i:end]
         v0 = @view v[i:end]
         w0 = @view w[i:end]
 
         # Find a Householder vector to eliminate the i-th column
-        @views tau, alpha = householder!(v0, A[i+1:end, i])
-        A[i+1, i] = alpha
-        A[i, i+1] = -alpha
-        @views A[i+2:end, i] .= zero(T)
-        @views A[i, i+2:end] .= zero(T)
+        @views tau, alpha = householder!(v0, A[(i + 1):end, i])
+        A[i + 1, i] = alpha
+        A[i, i + 1] = -alpha
+        @views A[(i + 2):end, i] .= zero(T)
+        @views A[i, (i + 2):end] .= zero(T)
 
         # Update the matrix block A[i+1:end, i+1:end]
         # A0 = @view A[i+1:end, i+1:end]
         # @views mul!(w0, A0, conj.(v0))
-        @views mul!(w0, A[i+1:end, i+1:end], conj.(v0))
+        @views mul!(w0, A[(i + 1):end, (i + 1):end], conj.(v0))
         w0 .*= tau
         # mul!(Z0, v0, transpose(w0))
         # @views A0 .+= Z0
@@ -474,7 +476,7 @@ function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<
         @inbounds for j in eachindex(w0)
             @simd for k in eachindex(v0)
                 # A0[k, j] += v0[k] * w0[j] - v0[j] * w0[k]
-                @fastmath A[i+k, i+j] += v0[k] * w0[j] - v0[j] * w0[k]
+                @fastmath A[i + k, i + j] += v0[k] * w0[j] - v0[j] * w0[k]
             end
         end
 
@@ -486,7 +488,7 @@ function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<
         end
     end
 
-    pfaffian_val *= @inbounds A[n-1, n]
+    pfaffian_val *= @inbounds A[n - 1, n]
 
     return pfaffian_val
 end
@@ -533,22 +535,22 @@ function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<
 
     pfaffian_val = one(T)
 
-    @inbounds for i in 1:(n-2)
+    @inbounds for i in 1:(n - 2)
         # Z0 = @view Z[i:end, i:end]
         v0 = @view v[i:end]
         w0 = @view w[i:end]
 
         # Find a Householder vector to eliminate the i-th column
-        @views tau, alpha = householder!(v0, A[i+1:end, i])
-        A[i+1, i] = alpha
-        A[i, i+1] = -alpha
-        @views A[i+2:end, i] .= zero(T)
-        @views A[i, i+2:end] .= zero(T)
+        @views tau, alpha = householder!(v0, A[(i + 1):end, i])
+        A[i + 1, i] = alpha
+        A[i, i + 1] = -alpha
+        @views A[(i + 2):end, i] .= zero(T)
+        @views A[i, (i + 2):end] .= zero(T)
 
         # Update the matrix block A[i+1:end, i+1:end]
         # A0 = @view A[i+1:end, i+1:end]
         # @views mul!(w0, A0, conj.(v0))
-        @views mul!(w0, A[i+1:end, i+1:end], v0)
+        @views mul!(w0, A[(i + 1):end, (i + 1):end], v0)
         w0 .*= tau
         # mul!(Z0, v0, transpose(w0))
         # @views A0 .+= Z0
@@ -563,7 +565,7 @@ function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<
         @inbounds for j in eachindex(w0)
             @simd for k in eachindex(v0)
                 # A0[k, j] += v0[k] * w0[j] - v0[j] * w0[k]
-                @fastmath A[i+k, i+j] += v0[k] * w0[j] - v0[j] * w0[k]
+                @fastmath A[i + k, i + j] += v0[k] * w0[j] - v0[j] * w0[k]
             end
         end
 
@@ -575,7 +577,7 @@ function pfaffian_householder(A::AbstractMatrix{T}; overwrite_a=false) where {T<
         end
     end
 
-    pfaffian_val *= @inbounds A[n-1, n]
+    pfaffian_val *= @inbounds A[n - 1, n]
 
     return pfaffian_val
 end

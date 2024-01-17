@@ -1,19 +1,19 @@
 function Ene1D(p::Params) # 1D Energy
     @unpack Ham, N, Hs = p
 
-    k = range(-π, π, length=N)
+    k = range(-π, π; length=N)
     Ene = zeros(N, Hs)
 
     for i in 1:N
         Ene[i, :] = eigvals!(Ham(k[i]))
     end
-    k, Ene
+    return k, Ene
 end
 
 function Ene2D(p::Params) # 2D Energy
     @unpack Ham, N, Hs = p
 
-    k = range(-π, π, length=N)
+    k = range(-π, π; length=N)
     k0 = zeros(2)
     Ene = zeros(N, N, Hs)
 
@@ -25,13 +25,13 @@ function Ene2D(p::Params) # 2D Energy
         end
     end
     k = hcat(k, k)
-    k, Ene
+    return k, Ene
 end
 
 function Ene4D(p::Params) # 4D Energy
     @unpack Ham, N, Hs = p
 
-    k = range(-π, π, length=N)
+    k = range(-π, π; length=N)
     k0 = zeros(4)
     Ene = zeros(N, N, N, N, Hs)
 
@@ -51,19 +51,18 @@ function Ene4D(p::Params) # 4D Energy
     k = hcat(k, k)
     k = hcat(k, k)
     k = hcat(k, k)
-    k, Ene
+    return k, Ene
 end
 
 function diagram(p::Params, p_out)
     @unpack dim, N, Hs = p
     @unpack labels, disp, png, pdf, svg = p_out
 
-    nrang = range(-π, π, length=N)
+    nrang = range(-π, π; length=N)
 
     fig = figure()
 
     if dim == 1
-
         ax = fig.add_subplot(111)
 
         if labels == true
@@ -84,8 +83,7 @@ function diagram(p::Params, p_out)
             plotclose()
         end
     elseif dim == 2
-
-        ax = fig.add_subplot(111, projection="3d")
+        ax = fig.add_subplot(111; projection="3d")
 
         if labels == true
             ax.set_xlabel(L"k_1")
@@ -101,19 +99,17 @@ function diagram(p::Params, p_out)
         k, Ene = Ene2D(p)
 
         if disp == true || png == true || pdf == true || svg == true
-            X, Y = complex.(nrang', nrang) |> z -> (real.(z), imag.(z))
+            X, Y = (z -> (real.(z), imag.(z)))(complex.(nrang', nrang))
 
             for i in 1:Hs
-                ax.plot_surface(X, Y, Ene[:, :, i], shade=true, antialiased=false)
+                ax.plot_surface(X, Y, Ene[:, :, i]; shade=true, antialiased=false)
             end
         else
             plotclose()
         end
     elseif dim == 4
-
         k, Ene = Ene4D(p)
         plotclose()
-
     end
 
     return k, Ene, fig
@@ -138,7 +134,6 @@ function output(k, Ene, fig, p)
         return (; k, Ene)
     end
 end
-
 
 @doc raw"""
     showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
@@ -173,9 +168,8 @@ function showBand(
     png::Bool=false,
     pdf::Bool=false,
     svg::Bool=false,
-    filename::String="Band"
+    filename::String="Band",
 )
-
     dim = Hs = 0
 
     try
@@ -201,5 +195,5 @@ function showBand(
 
     k, Ene, fig = diagram(p, p_out)
 
-    output(k, Ene, fig, p_out)
+    return output(k, Ene, fig, p_out)
 end
