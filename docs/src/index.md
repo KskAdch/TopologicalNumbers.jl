@@ -83,3 +83,9 @@ The correspondence between the spatial dimension of the system and the supported
     </tr>
 </table>
 ```
+
+## Contributing
+It is a collaborative project open to contributions. You can:
+- Open a new issue
+- Contact the project administator
+- Open a PR with the contribution
