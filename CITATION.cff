@@ -1,4 +1,5 @@
-cff-version: 1.1.0
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
 authors:
   - family-names: Adachi
     given-names: Keisuke
@@ -7,3 +8,4 @@ authors:
     given-names: Minoru
     orcid: https://orcid.org/0009-0008-4623-8010
 title: "TopologicalNumbers.jl"
+url: "https://github.com/KskAdch/TopologicalNumbers.jl"
