@@ -52,9 +52,9 @@ The output is:
 Z2Solution{Vector{Int64}, Nothing, Int64}([1, 1], nothing, 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each pair of two energy bands. 
-The vector is arranged in order of bands, starting from the one with the lowest energy.
-The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
+The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for Energy bands below and above some filling condition that you selected in the options (the default is the half-filling).
+The vector is arranged in order of bands, starting from the lower energy.
+The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for Energy bands below and above some filling condition (mod2).
 `Total` is a quantity that should always return zero.
 
 You can access these values as follows:
