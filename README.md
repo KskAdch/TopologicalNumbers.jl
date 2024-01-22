@@ -9,7 +9,7 @@
 ## Overview
 
 TopologicalNumbers.jl is a Julia package designed to calculate topological numbers, 
-such as the Chern numbers and $\mathbb{Z}_2$ numbers, 
+such as the first and second Chern numbers and $\mathbb{Z}_2$ numbers, 
 using a numerical approach based on the Fukui-Hatsugai-Suzuki method or the Shiozaki method, 
 or method of calculating the Weyl nodes.  
 This package includes the following functions:
@@ -267,7 +267,7 @@ The output is:
 Z2Solution{Vector{Int64}, Nothing, Int64}([1, 1], nothing, 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each pair of two energy bands. 
+The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for Energy bands below and above some filling condition that you selected in the options (the default is the half-filling). 
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
 `Total` is a quantity that should always return zero.
