@@ -1,0 +1,9 @@
+cff-version: 1.1.0
+authors:
+  - family-names: Adachi
+    given-names: Keisuke
+    orcid: https://orcid.org/0009-0004-0195-7952
+  - family-names: Kanega
+    given-names: Minoru
+    orcid: https://orcid.org/0009-0008-4623-8010
+title: "TopologicalNumbers.jl"
