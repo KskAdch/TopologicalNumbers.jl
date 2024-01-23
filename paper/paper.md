@@ -50,24 +50,24 @@ To obtain the topological numbers,
 we often need numerical calculations,
 and it may require an enormous amount of computation before convergence is achieved. 
 Therefore, creating tools to easily calculate these numbers will lead to advances in research for topological phase of matters. 
-So far, several methods [@Fukui2005;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete] have been reported that suggest that some topological numbers can be computed efficiently. 
+So far, several methods [@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete] have been reported that suggest that some topological numbers can be computed efficiently. 
 However, since each method is specialized for a specific dimension or symmetry class,
-it is necessary to implement the algorithm for each problem.
+it is necessary to implement the algorithm for each problem, respectively.
 Our project of `TopologicalNumbers.jl` aims to provide a package that can easily and efficiently compute topological numbers in various dimensions and symmetry classes, comprehensively.
 
 
 
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
-These numbers are very important physical quantities in the study of condensed matter physics. 
-However, their calculation can be very computationally intensive. 
-In addition, the computation of topological numbers is often not the essence of the study. 
-Most researchers in the field of condensed matter physics calculate topological numbers as an assistance to their research. 
+These numbers are important physical quantities in the study of topological phase of matters. 
+However, their calculation is often computationally intensive. 
+<!-- In addition, the computation of topological numbers is often not the essence of the study.  -->
+<!-- Most researchers in the field of condensed matter physics calculate topological numbers as an assistance to their research.  -->
 Therefore, this package is very useful and practical for them. 
 The package is also useful for beginning students of condensed matter physics.
 
 There are currently various methods for computing topological numbers, 
-the first of efficient calculation methods was the Fukui-Hatsugai-Suzuki [@Fukui2005] in 2005 for method of computing two-dimensional Chern numbers. 
+the first of efficient calculation methods was the Fukui-Hatsugai-Suzuki [@Fukui2005Chern] in 2005 for method of computing two-dimensional Chern numbers. 
 In general, topological numbers are obtained by integrating the eigenstates of the Hamiltonian in the Brillouin zone, 
 and this method can efficiently calculate them by discretizing the Brillouin zone, 
 which is the integral range. 
@@ -75,7 +75,7 @@ This method can be useful in a practical computation for more complicated system
 Also, methods have been proposed to compute various topological invariants using this method. 
 One is the method of [@Shiozaki2023discrete], which computes the Z2 numbers in two-dimensional with time-reversal symmetry in 2023. 
 This method does not require any gauge fixing conditions and is quantized for any discrete approximation of the Brillouin zone. 
-It is also used for methods to find Weyl points and Weyl node [@Hirayama2017;@Yang2011;@Hirayama2015;@Du2017] in three-dimensional.
+It is also used for methods to find Weyl points and Weyl node [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence] in three-dimensional.
 
 There is no Julia package yet that comprehensively implements these methods. 
 The basic topological numbers in this package can be calculated if only the Hamiltonian is given. 
@@ -91,9 +91,3 @@ M.K. was supported by JST, the establishment of university fellowships towards t
 
 
 # References
-
-
-
-
-Non-negative matrix factorization (NMF) is a widely used algorithm to decompose non-negative matrix data into factor matrices. Due to the interpretability of its non-negativity and the convenience of using decomposition results as clustering, there are many applications of NMF in image processing, audio processing, and bioinformatics (Cichocki et al., 2009).
-NMF has been applied to matrix data but there is a growing demand to apply NMF to more heterogeneous non-negative data such as multiple matrices and tensors (high-dimensional arrays), which are higher-order data structures than matrices (Cichocki et al., 2009). To meet these requirements, we originally developed nnTensor, which is an R/CRAN package to perform some non-negative matrix/tensor decomposition algorithms (https://cran.r-project.org/web/packages/nnTensor/index.html).
