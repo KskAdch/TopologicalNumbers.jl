@@ -40,17 +40,21 @@ These materials are new states of matter that are insulating in the bulk but hav
 The conducting states on the surface are protected by the topology of the bulk band structure, 
 and the topological numbers, such as the first Chern number, second one, Z2 number, etc., 
 are used to characterize them.
-<!-- The topological number is a physical quantity that plays an important role in characterizing topological phase transitions in condensed matter physics.  -->
 As a typical example, 
 the quantum Hall effect has the quantized Hall conductivity, 
-can be calculated by the first Chern number. 
-Other topological numbers can be also calculated in various ways depending on each dimension and symmetry class. 
-The quantization of such physical quantities is closely related to the concept of topology. 
-However, the calculation of this topological number often requires numerical calculations. 
-In addition, it may require an enormous amount of computation before convergence is achieved. 
-Creating tools to easily calculate the topological numbers will lead to advances in condensed matter physics. 
-In fact, several papers [@Fukui2005;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete] have been reported that suggest that some topological numbers can be computed efficiently. 
-We have taken these papers as references and produced a package that easily and efficiently computes topological numbers.
+which can be calculated by the first Chern number. 
+Other topological numbers similarly become important physical quantities that characterize the system, 
+depending on the system dimension and symmetry classes [@Ryu2010Topological].
+
+To obtain the topological numbers,
+we often need numerical calculations,
+and it may require an enormous amount of computation before convergence is achieved. 
+Therefore, creating tools to easily calculate these numbers will lead to advances in research for topological phase of matters. 
+So far, several methods [@Fukui2005;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete] have been reported that suggest that some topological numbers can be computed efficiently. 
+However, since each method is specialized for a specific dimension or symmetry class,
+it is necessary to implement the algorithm for each problem.
+Our project of `TopologicalNumbers.jl` aims to provide a package that can easily and efficiently compute topological numbers in various dimensions and symmetry classes, comprehensively.
+
 
 
 # Statement of need
@@ -87,3 +91,9 @@ M.K. was supported by JST, the establishment of university fellowships towards t
 
 
 # References
+
+
+
+
+Non-negative matrix factorization (NMF) is a widely used algorithm to decompose non-negative matrix data into factor matrices. Due to the interpretability of its non-negativity and the convenience of using decomposition results as clustering, there are many applications of NMF in image processing, audio processing, and bioinformatics (Cichocki et al., 2009).
+NMF has been applied to matrix data but there is a growing demand to apply NMF to more heterogeneous non-negative data such as multiple matrices and tensors (high-dimensional arrays), which are higher-order data structures than matrices (Cichocki et al., 2009). To meet these requirements, we originally developed nnTensor, which is an R/CRAN package to perform some non-negative matrix/tensor decomposition algorithms (https://cran.r-project.org/web/packages/nnTensor/index.html).
