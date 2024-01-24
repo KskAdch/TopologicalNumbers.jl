@@ -59,15 +59,10 @@ Our project of `TopologicalNumbers.jl` aims to provide a package that can easily
 
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
-These numbers are important physical quantities in the study of topological phase of matters. 
-However, their calculation is often computationally intensive. 
-<!-- In addition, the computation of topological numbers is often not the essence of the study.  -->
-<!-- Most researchers in the field of condensed matter physics calculate topological numbers as an assistance to their research.  -->
-Therefore, this package is very useful and practical for them. 
-The package is also useful for beginning students of condensed matter physics.
+This package currently includes various methods for computing topological numbers.
+The first of efficient calculation method is the Fukui-Hatsugai-Suzuki one [@Fukui2005Chern] for computing the first Chern numbers in two-dimensional systems. 
 
-There are currently various methods for computing topological numbers, 
-the first of efficient calculation methods was the Fukui-Hatsugai-Suzuki [@Fukui2005Chern] in 2005 for method of computing two-dimensional Chern numbers. 
+<!-- ### 各メソッドの説明（編集中） ### -->
 In general, topological numbers are obtained by integrating the eigenstates of the Hamiltonian in the Brillouin zone, 
 and this method can efficiently calculate them by discretizing the Brillouin zone, 
 which is the integral range. 
@@ -76,13 +71,34 @@ Also, methods have been proposed to compute various topological invariants using
 One is the method of [@Shiozaki2023discrete], which computes the Z2 numbers in two-dimensional with time-reversal symmetry in 2023. 
 This method does not require any gauge fixing conditions and is quantized for any discrete approximation of the Brillouin zone. 
 It is also used for methods to find Weyl points and Weyl node [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence] in three-dimensional.
+<!-- ###### -->
 
-There is no Julia package yet that comprehensively implements these methods. 
-The basic topological numbers in this package can be calculated if only the Hamiltonian is given. 
-The calculations can be performed with a minimum number of arguments, 
+
+There is no Julia package yet that comprehensively implements these calculation methods. 
+ユーザーはこれらのメソッドを用いて、簡単にトポロジカル数を計算することができます。
+最も簡単には、ユーザーが与えるべき情報は波数を引数に持つハミルトニアンの関数のみです。
+対応する`Problem`を作成し、`solve`関数を呼び出す (`solve(Problem)`) ことで、計算が実行されます。
+現在、それぞれの`Problem`に対して実装されている`Algorithm`が1種類ずつのため、ユーザーは計算手法を選ぶことができませんが、
+将来的な拡張性のために`solve`は`Algorithm`を引数に取ることができます (`solve(Problem, Algorithm)`)。
+
+
+また、Z2不変量の計算に必要なpfaffianの計算については、`PFAPACK`をJuliaに移植し、利用しています。
+PFAPACKは、skew-symmetric行列のpfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、
+元々提供されているすべての関数のpure-Julia実装が我々のパッケージに含まれています。
+現在までにreal skew-symmetric matricesに対するpfaffianを計算するJulia公式パッケージとして`SkewLinearAlgebra.jl`がありますが、
+complex skew-symmetric matricesを取り扱えるpure-Juliaの公式ライブラリは`TopologicalNumbers.jl`が初めてです。
+エネルギーバンド構造や相図を可視化する`showBand`/`plot1D`/`plot2D`、
+ユーザーがこれらの機能の動作をすぐに確認し、使い方を学ぶことができるようないくつかのトイモデルのハミルトニアン(`SSH`/`Haldane`など)を提供するなど、いくつかのユーティリティ関数も利用可能です。
+また、`MPI.jl`を用いた並列計算にも対応しています。
+
+
+
+<!-- There is no Julia package yet that comprehensively implements these calculation methods.  -->
+<!-- The basic topological numbers in this package can be calculated if only the Hamiltonian is given.  -->
+<!-- The calculations can be performed with a minimum number of arguments, 
 making them easy to use even for Julia beginners and beginning students of condensed matter physics. 
 It is also easy for researchers to use because it is designed with many optional arguments so that it can be used for general-purpose calculations. 
-It is designed to be more accessible and with clear documentation.
+It is designed to be more accessible and with clear documentation. -->
 
 
 # Acknowledgements
@@ -91,3 +107,59 @@ M.K. was supported by JST, the establishment of university fellowships towards t
 
 
 # References
+
+
+<!-- 
+
+This package includes the following functions:
+
+- Calculation of the dispersion relation.
+- Provides numerical calculation methods for various types of topological numbers.
+- Calculation of the phase diagram.
+- Compute Pfaffian and tridiagonarize skew-symmetric matrix (migration to Julia from [PFAPACK](https://pypi.org/project/pfapack/) [Wimmer2012Algorithm](@cite)).
+- Utility functions for plotting.
+- Support parallel computing using `MPI`.
+
+
+The correspondence between the spatial dimension of the system and the supported topological numbers is as follows.
+
+
++-------------------+-----------------------------------------------------------------------+
+| Dimension         | Function                                                              |
+|                   |                                                                       |
++:=================:+:=====================================================================:+
+| 0D                | - Calculation of Weyl nodes ($\mathbb{Z}$)                            |
++-------------------+-----------------------------------------------------------------------+
+| 1D                | - Calculation of Berry Phases ($\mathbb{Z}$)                          |
++-------------------+-----------------------------------------------------------------------+
+| 2D                | - Calculation of local Berry Fluxes ($\mathbb{Z}$)                    |
+|                   | - Calculation of first Chern numbers ($\mathbb{Z}$)                   |
+|                   | - Calculation of $\mathbb{Z}_2$ numbers ($\mathbb{Z}_2$)              |
++-------------------+-----------------------------------------------------------------------+
+| 3D                | - Calculation of Weyl nodes ($\mathbb{Z}$)                            |
+|                   | - Calculation of first Chern numbers in sliced Surface ($\mathbb{Z}$) |
+|                   | - Finding Weyl points ($\mathbb{Z}$)                                  |
++-------------------+-----------------------------------------------------------------------+
+| 4D                | - Calculation of second Chern numbers ($\mathbb{Z}$)                  |
++-------------------+-----------------------------------------------------------------------+
+
+
+
++-------------------+-----------------------------------------------------------------------+
+| Dimension         | Function                                                              |
+|                   |                                                                       |
++:=================:+:=====================================================================:+
+| 0D                | Calculation of Weyl nodes ($\mathbb{Z}$)                              |
++-------------------+-----------------------------------------------------------------------+
+| 1D                | Calculation of Berry Phases ($\mathbb{Z}$)                            |
++-------------------+-----------------------------------------------------------------------+
+| 2D                | Calculation of local Berry Fluxes ($\mathbb{Z}$)                      |
+|                   | Calculation of first Chern numbers ($\mathbb{Z}$)                     |
+|                   | Calculation of $\mathbb{Z}_2$ numbers ($\mathbb{Z}_2$)                |
++-------------------+-----------------------------------------------------------------------+
+| 3D                | Calculation of Weyl nodes ($\mathbb{Z}$)                              |
+|                   | Calculation of first Chern numbers in sliced Surface ($\mathbb{Z}$)   |
+|                   | Finding Weyl points ($\mathbb{Z}$)                                    |
++-------------------+-----------------------------------------------------------------------+
+| 4D                | Calculation of second Chern numbers ($\mathbb{Z}$)                    |
++-------------------+-----------------------------------------------------------------------+ -->

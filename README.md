@@ -32,7 +32,7 @@ This package includes the following functions:
 
 The correspondence between the spatial dimension of the system and the supported topological numbers is as follows.
 
-|Dimention|Function                                                                                            |
+|Dimension|Function                                                                                            |
 |---------|----------------------------------------------------------------------------------------------------|
 |0D       |Calculation of Weyl nodes ($\mathbb{Z}$)                                                                   |
 |1D       |Calculation of Berry Phases ($\mathbb{Z}$)<br>                                                                   |
