@@ -1,4 +1,4 @@
-# TopologicalNumbers.jl: A Julia package for calculating topological numbers
+# TopologicalNumbers.jl: A Julia package for topological number computation
 
 ![TopologicalNumbers logo](docs/src/assets/logo_title.svg#gh-light-mode-only)
 ![TopologicalNumbers logo](docs/src/assets/logo_title_dark.svg#gh-dark-mode-only)
@@ -14,15 +14,15 @@
 
 ## Overview
 
-TopologicalNumbers.jl is a Julia package designed to calculate topological numbers, 
+TopologicalNumbers.jl is a Julia package designed to compute topological numbers, 
 such as the first and second Chern numbers and $\mathbb{Z}_2$ numbers, 
 using a numerical approach based on the Fukui-Hatsugai-Suzuki method or the Shiozaki method, 
 or method of calculating the Weyl nodes.  
 This package includes the following functions:
 
-- Calculation of the dispersion relation.
+- Computation of the dispersion relation.
 - Provides numerical calculation methods for various types of topological numbers.
-- Calculation of the phase diagram.
+- Computation of the phase diagram.
 - Compute Pfaffian and tridiagonarize skew-symmetric matrix (migration to Julia from [PFAPACK](https://pypi.org/project/pfapack/)).
 - Utility functions for plotting.
 - Support parallel computing using `MPI`.

@@ -1,5 +1,5 @@
 ---
-title: 'TopologicalNumbers.jl: A Julia package for calculating topological numbers'
+title: 'TopologicalNumbers.jl: A Julia package for topological number computation'
 tags:
   - Julia
   - condensed matter physics
