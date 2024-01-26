@@ -46,7 +46,7 @@ depending on the system dimension and symmetry classes [@Ryu2010Topological].
 
 To obtain the topological numbers, we often need numerical calculations, 
 and it may require an enormous amount of computation before convergence is achieved. 
-Therefore, creating tools to easily calculate these numbers will lead to advances in research for the topological phase of matters. 
+Therefore, creating tools to easily compute these numbers will lead to advances in research for the topological phase of matters. 
 So far, several methods have been reported that suggest that some topological numbers can be computed efficiently [@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]. 
 However, since each method is specialized for a specific dimension or symmetry class, 
 it is necessary to implement the algorithm for each problem, respectively. 
@@ -56,12 +56,12 @@ Our project, `TopologicalNumbers.jl`, aims to provide a package that can easily 
 
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
-This package currently includes various methods for computing topological numbers. 
+This package currently includes various methods for calculating topological numbers. 
 The first is the Fukui-Hatsugai-Suzuki (FHS) method for computing first Chern numbers in two-dimensional solid-state systems [@Fukui2005Chern]. 
 First Chern numbers are obtained by integrating the Berry curvature, 
 derived from the eigenstates of the Hamiltonian, 
 in the Brillouin zone. 
-The FHS method enables us to calculate the numbers efficiently by discretizing Berry curvature in the Brillouin zone. 
+The FHS method enables us to compute the numbers efficiently by discretizing Berry curvature in the Brillouin zone. 
 Based on the FHS method, several calculation methods have been proposed to compute various topological numbers. 
 One is the method of second Chern number calculation in four-dimensional systems [@Mochol-Grzelak2018Efficient]. 
 $\mathbb{Z}_2$ numbers can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
@@ -72,14 +72,14 @@ The FHS method is also applied to find Weyl points and Weyl nodes in three-dimen
 Currently, there is no comprehensive Julia package that implements all these calculation methods. 
 Users can easily calculate topological numbers using these methods included in our package. 
 In the simplest case, users only need to provide a function of the Hamiltonian matrix with wave numbers as arguments. 
-Calculations can be performed by creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`). 
+Computations can be performed by creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`). 
 The package also offers a `calcPhaseDiagram` function, 
 enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` and parameter ranges (`calcPhaseDiagram(Problem, range...)`).
 
 
 
 For the calculation of $\mathbb{Z}_2$ invariants, which require the computation of pfaffian, we have ported `PFAPACK` to Julia. 
-`PFAPACK` is a Fortran/C++/Python library for calculating the pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], 
+`PFAPACK` is a Fortran/C++/Python library for computing the pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], 
 and our package includes a pure-Julia implementation of all the functions originally provided. 
 While `SkewLinearAlgebra.jl` exists as an official Julia package for computing pfaffians of real skew-symmetric matrices, 
 `TopologicalNumbers.jl` is the first official package to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
