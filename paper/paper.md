@@ -74,7 +74,7 @@ Users can easily calculate topological numbers using these methods included in o
 In the simplest case, users only need to provide a function of the Hamiltonian matrix with wave numbers as arguments. 
 Calculations can be executed by creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`). 
 The package also offers a `calcPhaseDiagram` function, 
-enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` (`solve(Problem)`).
+enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` and parameter ranges (`calcPhaseDiagram(Problem, range...)`).
 
 
 
