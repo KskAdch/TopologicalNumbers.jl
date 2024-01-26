@@ -38,7 +38,7 @@ bibliography: paper.bib
 Topological insulators have been of considerable interest in the last decades [@Hasan2010Colloquium;@Qi2011Topological]. 
 These materials are new states of matter that are insulating in the bulk but have conducting states on their surfaces.
 The conducting states on the surface are protected by the topology of the bulk band structure, 
-and the topological numbers, such as the first Chern number, second one, Z2 number, etc., 
+and topological numbers, such as first Chern number, second one, Z2 number, etc., 
 are used to characterize them.
 As a typical example, 
 the quantum Hall effect has the quantized Hall conductivity, 
@@ -46,8 +46,7 @@ which can be calculated by the first Chern number.
 Other topological numbers similarly become important physical quantities that characterize the system, 
 depending on the system dimension and symmetry classes [@Ryu2010Topological].
 
-In condensed matter physics,
-to obtain the topological numbers,
+To obtain the topological numbers,
 we often need numerical calculations,
 and it may require an enormous amount of computation before convergence is achieved. 
 Therefore, creating tools to easily calculate these numbers will lead to advances in research for topological phase of matters. 
@@ -60,11 +59,13 @@ Our project of `TopologicalNumbers.jl` aims to provide a package that can easily
 
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
-This package currently includes various methods for computing topological numbers.
-The first of efficient calculation method is the Fukui-Hatsugai-Suzuki one [@Fukui2005Chern] for computing the first Chern numbers in two-dimensional systems. 
+This package currently includes various methods for computing the numbers.
+The basic one of all methods is the Fukui-Hatsugai-Suzuki (FHS) method [@Fukui2005Chern] for computing the first Chern numbers in two-dimensional solid state systems.
+<!-- The first of efficient calculation method is the Fukui-Hatsugai-Suzuki one [@Fukui2005Chern] for computing the first Chern numbers in two-dimensional solid state systems.  -->
 
 <!-- ### 各メソッドの説明（編集中） ### -->
-In general, topological numbers are obtained by integrating the eigenstates of the Hamiltonian in the Brillouin zone, 
+The first Chern number is obtained by integrating the Berry curvature, 
+derived from the eigenstates of the Hamiltonian, in the Brillouin zone, 
 and this method can efficiently calculate them by discretizing the Brillouin zone, 
 which is the integral range. 
 This method can be useful in a practical computation for more complicated systems with a topological order for which a number of data points of the wave functions cannot easily be increased. 
