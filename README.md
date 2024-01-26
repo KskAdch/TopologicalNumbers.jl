@@ -32,7 +32,6 @@ The correspondence between the spatial dimension of the system and the supported
 
 |Dimension|Function                                                                                            |
 |---------|----------------------------------------------------------------------------------------------------|
-|0D       |Calculation of Weyl nodes ($\mathbb{Z}$)                                                                   |
 |1D       |Calculation of Berry Phases ($\mathbb{Z}$)<br>                                                                   |
 |2D       |Calculation of local Berry Fluxes ($\mathbb{Z}$)<br>Calculation of first Chern numbers ($\mathbb{Z}$)<br>Calculation of $\mathbb{Z}_2$ numbers ($\mathbb{Z}_2$)        |
 |3D       |Calculation of Weyl nodes ($\mathbb{Z}$)<br> Calculation of first Chern numbers in sliced Surface ($\mathbb{Z}$)<br>Finding Weyl points ($\mathbb{Z}$)<br>|

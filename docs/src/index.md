@@ -69,10 +69,6 @@ The correspondence between the spatial dimension of the system and the supported
         <th>Function</th>
     </tr>
     <tr>
-        <td>0D</td>
-        <td>Calculation of Weyl nodes ($\mathbb{Z}$)<br></td>
-    </tr>
-    <tr>
         <td>1D</td>
         <td>Calculation of Berry Phases ($\mathbb{Z}$)<br></td>
     </tr>
