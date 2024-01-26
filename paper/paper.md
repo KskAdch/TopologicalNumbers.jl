@@ -36,7 +36,7 @@ bibliography: paper.bib
 
 # Summary
 Topological insulators have been of considerable interest in the last decades [@Hasan2010Colloquium;@Qi2011Topological]. 
-These materials are new states of matter that are insulating in the bulk but have conducting states on their surfaces.
+These materials have new states of matter that are insulating in the bulk but have conducting states on their surfaces.
 The conducting states on the surface are protected by the topology of the bulk band structure, 
 and topological numbers, such as first Chern number, second one, Z2 number, etc., 
 are used to characterize them.
@@ -59,7 +59,7 @@ Our project of `TopologicalNumbers.jl` aims to provide a package that can easily
 
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
-This package currently includes various methods for computing the numbers.
+This package currently includes various methods for computing such numbers.
 The first one is the Fukui-Hatsugai-Suzuki (FHS) method [@Fukui2005Chern] for computing first Chern numbers in two-dimensional solid state systems.
 First Chern numbers are obtained by integrating the Berry curvature, 
 derived from the eigenstates of the Hamiltonian, in the Brillouin zone.
@@ -72,7 +72,7 @@ FHS method is also applied to find Weyl points and Weyl node in three-dimensiona
 
 
 Currently, there is no comprehensive Julia package that implements all these calculation methods. 
-Users can easily calculate topological numbers using these methods. 
+Users can easily calculate topological numbers using these methods in our package. 
 The simplest requirement for users is to provide a function of the Hamiltonian with wave numbers as arguments. 
 By creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`), calculations can be executed. 
 At present, each `Problem` has one implemented `Algorithm`, limiting users' choices in computational methods. 
