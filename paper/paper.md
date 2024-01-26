@@ -93,74 +93,9 @@ Moreover, the package supports parallel computing using `MPI.jl`.
 
 
 
-
-<!-- There is no Julia package yet that comprehensively implements these calculation methods.  -->
-<!-- The basic topological numbers in this package can be calculated if only the Hamiltonian is given.  -->
-<!-- The calculations can be performed with a minimum number of arguments, 
-making them easy to use even for Julia beginners and beginning students of condensed matter physics. 
-It is also easy for researchers to use because it is designed with many optional arguments so that it can be used for general-purpose calculations. 
-It is designed to be more accessible and with clear documentation. -->
-
-
 # Acknowledgements
 The authors are grateful to Takahiro Fukui for fruitful discussions.
 M.K. was supported by JST, the establishment of university fellowships towards the creation of science technology innovation, Grant No. JPMJFS2107.
 
 
 # References
-
-
-<!-- 
-
-This package includes the following functions:
-
-- Calculation of the dispersion relation.
-- Provides numerical calculation methods for various types of topological numbers.
-- Calculation of the phase diagram.
-- Compute Pfaffian and tridiagonarize skew-symmetric matrix (migration to Julia from [PFAPACK](https://pypi.org/project/pfapack/) [Wimmer2012Algorithm](@cite)).
-- Utility functions for plotting.
-- Support parallel computing using `MPI`.
-
-
-The correspondence between the spatial dimension of the system and the supported topological numbers is as follows.
-
-
-+-------------------+-----------------------------------------------------------------------+
-| Dimension         | Function                                                              |
-|                   |                                                                       |
-+:=================:+:=====================================================================:+
-| 0D                | - Calculation of Weyl nodes ($\mathbb{Z}$)                            |
-+-------------------+-----------------------------------------------------------------------+
-| 1D                | - Calculation of Berry Phases ($\mathbb{Z}$)                          |
-+-------------------+-----------------------------------------------------------------------+
-| 2D                | - Calculation of local Berry Fluxes ($\mathbb{Z}$)                    |
-|                   | - Calculation of first Chern numbers ($\mathbb{Z}$)                   |
-|                   | - Calculation of $\mathbb{Z}_2$ numbers ($\mathbb{Z}_2$)              |
-+-------------------+-----------------------------------------------------------------------+
-| 3D                | - Calculation of Weyl nodes ($\mathbb{Z}$)                            |
-|                   | - Calculation of first Chern numbers in sliced Surface ($\mathbb{Z}$) |
-|                   | - Finding Weyl points ($\mathbb{Z}$)                                  |
-+-------------------+-----------------------------------------------------------------------+
-| 4D                | - Calculation of second Chern numbers ($\mathbb{Z}$)                  |
-+-------------------+-----------------------------------------------------------------------+
-
-
-
-+-------------------+-----------------------------------------------------------------------+
-| Dimension         | Function                                                              |
-|                   |                                                                       |
-+:=================:+:=====================================================================:+
-| 0D                | Calculation of Weyl nodes ($\mathbb{Z}$)                              |
-+-------------------+-----------------------------------------------------------------------+
-| 1D                | Calculation of Berry Phases ($\mathbb{Z}$)                            |
-+-------------------+-----------------------------------------------------------------------+
-| 2D                | Calculation of local Berry Fluxes ($\mathbb{Z}$)                      |
-|                   | Calculation of first Chern numbers ($\mathbb{Z}$)                     |
-|                   | Calculation of $\mathbb{Z}_2$ numbers ($\mathbb{Z}_2$)                |
-+-------------------+-----------------------------------------------------------------------+
-| 3D                | Calculation of Weyl nodes ($\mathbb{Z}$)                              |
-|                   | Calculation of first Chern numbers in sliced Surface ($\mathbb{Z}$)   |
-|                   | Finding Weyl points ($\mathbb{Z}$)                                    |
-+-------------------+-----------------------------------------------------------------------+
-| 4D                | Calculation of second Chern numbers ($\mathbb{Z}$)                    |
-+-------------------+-----------------------------------------------------------------------+ -->
