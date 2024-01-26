@@ -8,7 +8,7 @@ tags:
   - topological insulator
   - Berry phase
   - Chern number
-  - Z2 number
+  - $\mathbb{Z}_2$ number
   - phase diagram
   - Weyl node
   - Weyl point
@@ -39,7 +39,7 @@ bibliography: paper.bib
 Topological insulators have been of considerable interest in the last decades [@Hasan2010Colloquium;@Qi2011Topological]. 
 These materials show new states of matter that are insulating in the bulk but have conducting states on their surfaces. 
 The conducting states on the surface are protected by the topology of the bulk band structure, and topological numbers, 
-such as first Chern number, second Chern number, Z2 number, etc., are used to characterize them. 
+such as first Chern number, second Chern number, $\mathbb{Z}_2$ number, etc., are used to characterize them. 
 As a typical example, the quantum Hall effect has the quantized Hall conductivity, which can be calculated by the first Chern number. 
 Other topological numbers similarly become important physical quantities that characterize the system, 
 depending on the system dimension and symmetry classes [@Ryu2010Topological].
@@ -64,21 +64,21 @@ in the Brillouin zone.
 The FHS method enables us to calculate the numbers efficiently by discretizing Berry curvature in the Brillouin zone. 
 Based on the FHS method, several calculation methods have been proposed to compute various topological numbers. 
 One is the method of second Chern number calculation in four-dimensional systems [@Mochol-Grzelak2018Efficient]. 
-Z2 numbers can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
+$\mathbb{Z}_2$ numbers can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
 The FHS method is also applied to find Weyl points and Weyl nodes in three-dimensional systems [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence].
 
 
 
 Currently, there is no comprehensive Julia package that implements all these calculation methods. 
 Users can easily calculate topological numbers using these methods included in our package. 
-In the simplest case, users only need to provide a function of the Hamiltonian with wave numbers as arguments. 
+In the simplest case, users only need to provide a function of the Hamiltonian matrix with wave numbers as arguments. 
 Calculations can be executed by creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`). 
 The package also offers a `calcPhaseDiagram` function, 
 enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` (`solve(Problem)`).
 
 
 
-For the calculation of Z2 invariants, which require the computation of pfaffian, we have ported `PFAPACK` to Julia. 
+For the calculation of $\mathbb{Z}_2$ invariants, which require the computation of pfaffian, we have ported `PFAPACK` to Julia. 
 `PFAPACK` is a Fortran/C++/Python library for calculating the pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], 
 and our package includes a pure-Julia implementation of all the functions originally provided. 
 While `SkewLinearAlgebra.jl` exists as an official Julia package for computing pfaffians of real skew-symmetric matrices, 
