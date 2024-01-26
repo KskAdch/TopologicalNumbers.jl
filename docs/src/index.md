@@ -5,8 +5,8 @@ CurrentModule = TopologicalNumbers
 # TopologicalNumbers.jl
 
 
-![TopologicalNumbers logo](assets/logo_title.svg#gh-light-mode-only)
-![TopologicalNumbers logo](assets/logo_title_dark.svg#gh-dark-mode-only)
+![TopologicalNumbers logo](assets/logo_title.svg\#gh-light-mode-only)
+![TopologicalNumbers logo](assets/logo_title_dark.svg\#gh-dark-mode-only)
 
 ---
 
