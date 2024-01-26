@@ -46,7 +46,8 @@ which can be calculated by the first Chern number.
 Other topological numbers similarly become important physical quantities that characterize the system, 
 depending on the system dimension and symmetry classes [@Ryu2010Topological].
 
-To obtain the topological numbers,
+In condensed matter physics,
+to obtain the topological numbers,
 we often need numerical calculations,
 and it may require an enormous amount of computation before convergence is achieved. 
 Therefore, creating tools to easily calculate these numbers will lead to advances in research for topological phase of matters. 
@@ -80,6 +81,7 @@ There is no Julia package yet that comprehensively implements these calculation 
 対応する`Problem`を作成し、`solve`関数を呼び出す (`solve(Problem)`) ことで、計算が実行されます。
 現在、それぞれの`Problem`に対して実装されている`Algorithm`が1種類ずつのため、ユーザーは計算手法を選ぶことができませんが、
 将来的な拡張性のために`solve`は`Algorithm`を引数に取ることができます (`solve(Problem, Algorithm)`)。
+例えば、数値積分による計算手法を実装予定です。
 また、相図を計算する`calcPhaseDiagram`関数も提供しており、`Problem`を与えることで1次元/2次元パラメータ空間におけるトポロジカル数の値を計算することができます(`solve(Problem)`)。
 
 

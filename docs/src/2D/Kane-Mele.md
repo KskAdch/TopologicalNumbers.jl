@@ -28,6 +28,11 @@ julia> function H₀(k, p) # Kane-Mele
            R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
        end
 ```
+You can also use our preset Hamiltonian function `KaneMele` to define the same Hamiltonian matrix as follows:
+
+```julia
+julia> H₀(k, p) = KaneMele(k, p)
+```
 
 To calculate the dispersion, execute:
 

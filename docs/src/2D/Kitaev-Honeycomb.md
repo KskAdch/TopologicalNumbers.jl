@@ -19,6 +19,11 @@ julia> function H₀(k, p) # Kitaev
             hx .* sx .+ hy .* sy .+ hz .* sz
        end
 ```
+You can also use our preset Hamiltonian function `KitaevHoneycomb` to define the same Hamiltonian matrix as follows:
+
+```julia
+julia> H₀(k, p) = KitaevHoneycomb(k, p)
+```
 
 The band structure is computed as follows:
 

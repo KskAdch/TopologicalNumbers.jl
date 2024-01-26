@@ -27,6 +27,11 @@ julia> function H₀(k, p) # Thouless pump
            R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
        end
 ```
+You can also use our preset Hamiltonian function `ThoulessPump` to define the same Hamiltonian matrix as follows:
+
+```julia
+julia> H₀(k, p) = ThoulessPump(k, p)
+```
 
 To calculate the dispersion, execute:
 

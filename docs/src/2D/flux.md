@@ -27,6 +27,11 @@ julia> function H₀(k, p)
            Hmat
        end
 ```
+You can also use our preset Hamiltonian function `Flux2d` to define the same Hamiltonian matrix as follows:
+
+```julia
+julia> H₀(k, p) = Flux2d(k, p)
+```
 
 To calculate the dispersion, run:
 

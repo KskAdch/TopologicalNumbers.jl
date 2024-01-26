@@ -14,6 +14,11 @@ julia> function H₀(k, p)
             ]
         end
 ```
+You can also use our preset Hamiltonian function `KitaevChain` to define the same Hamiltonian matrix as follows:
+
+```julia
+julia> H₀(k, p) = KitaevChain(k, p)
+```
 
 The band structure is computed as follows:
 
