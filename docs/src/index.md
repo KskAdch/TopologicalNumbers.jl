@@ -5,8 +5,24 @@ CurrentModule = TopologicalNumbers
 # TopologicalNumbers.jl
 
 
-![TopologicalNumbers logo](assets/logo_title.svg\#gh-light-mode-only)
-![TopologicalNumbers logo](assets/logo_title_dark.svg\#gh-dark-mode-only)
+```@raw html
+
+<picture>
+  <!-- ダークモード用 -->
+  <source
+    srcset="assets/logo_title_dark.svg"
+    media="(prefers-color-scheme: dark)"
+  />
+  <!-- ライトモード用 -->
+  <source srcset="assets/logo_title.svg" />
+  <img
+    src="assets/logo_title.svg"
+    alt="TopologicalNumbers logo"
+  />
+</picture>
+
+```
+
 
 ---
 
