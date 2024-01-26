@@ -71,25 +71,25 @@ FHS method is also applied to find Weyl points and Weyl node in three-dimensiona
 
 
 
-There is no Julia package yet that comprehensively implements these calculation methods. 
-ユーザーはこれらのメソッドを用いて、簡単にトポロジカル数を計算することができます。
-最も簡単には、ユーザーが与えるべき情報は波数を引数に持つハミルトニアンの関数のみです。
-対応する`Problem`を作成し、`solve`関数を呼び出す (`solve(Problem)`) ことで、計算が実行されます。
-現在、それぞれの`Problem`に対して実装されている`Algorithm`が1種類ずつのため、ユーザーは計算手法を選ぶことができませんが、
-将来的な拡張性のために`solve`は`Algorithm`を引数に取ることができます (`solve(Problem, Algorithm)`)。
-例えば、数値積分による計算手法を実装予定です。
-また、相図を計算する`calcPhaseDiagram`関数も提供しており、`Problem`を与えることで1次元/2次元パラメータ空間におけるトポロジカル数の値を計算することができます(`solve(Problem)`)。
+Currently, there is no comprehensive Julia package that implements all these calculation methods. 
+Users can easily calculate topological numbers using these methods. 
+The simplest requirement for users is to provide a function of the Hamiltonian with wave numbers as arguments. 
+By creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`), calculations can be executed. 
+At present, each `Problem` has one implemented `Algorithm`, limiting users' choices in computational methods. 
+However, `solve` is designed to accept an `Algorithm` as an argument (`solve(Problem, Algorithm)`), allowing for future extensions. 
+For example, methods based on numerical integration are planned for implementation. 
+The package also offers a `calcPhaseDiagram` function, enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` (`solve(Problem)`).
 
 
 
-また、Z2不変量の計算に必要なpfaffianの計算については、`PFAPACK`をJuliaに移植し、利用しています。
-PFAPACKは、skew-symmetric行列のpfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、
-元々提供されているすべての関数のpure-Julia実装が我々のパッケージに含まれています。
-現在までにreal skew-symmetric matricesに対するpfaffianを計算するJulia公式パッケージとして`SkewLinearAlgebra.jl`がありますが、
-complex skew-symmetric matricesを取り扱えるpure-Juliaの公式ライブラリは`TopologicalNumbers.jl`が初めてです。
-エネルギーバンド構造や相図を可視化する`showBand`/`plot1D`/`plot2D`、
-ユーザーがこれらの機能の動作をすぐに確認し、使い方を学ぶことができるようないくつかのモデルハミルトニアン(`SSH`/`Haldane`など)を提供するなど、いくつかのユーティリティ関数も利用可能です。
-また、`MPI.jl`を用いた並列計算にも対応しています。
+For the calculation of Z2 invariants, which require the computation of pfaffian, 
+`PFAPACK` has been ported to Julia and is utilized in our package. 
+`PFAPACK` is a Fortran/C++/Python library for calculating the pfaffian of skew-symmetric matrices, as noted in [@Wimmer2012Algorithm], and our package includes a pure-Julia implementation of all the functions originally provided. 
+While `SkewLinearAlgebra.jl` exists as an official Julia package for computing pfaffians of real skew-symmetric matrices, 
+`TopologicalNumbers.jl` is the first to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
+Additionally, several utility functions are available, such as `showBand`/`plot1D`/`plot2D` for visualizing energy band structures and phase diagrams. 
+We also provide various model Hamiltonians (e.g., `SSH`, `Haldane`) to enable users to quickly check the functionality and learn how to use these features. 
+Moreover, the package supports parallel computing using `MPI.jl`.
 
 
 
