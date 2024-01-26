@@ -50,7 +50,7 @@ To obtain the topological numbers,
 we often need numerical calculations,
 and it may require an enormous amount of computation before convergence is achieved. 
 Therefore, creating tools to easily calculate these numbers will lead to advances in research for topological phase of matters. 
-So far, several methods [@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete] have been reported that suggest that some topological numbers can be computed efficiently. 
+So far, several methods have been reported that suggest that some topological numbers can be computed efficiently [@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]. 
 However, since each method is specialized for a specific dimension or symmetry class,
 it is necessary to implement the algorithm for each problem, respectively.
 Our project of `TopologicalNumbers.jl` aims to provide a package that can easily and efficiently compute topological numbers in various dimensions and symmetry classes, comprehensively.
@@ -60,7 +60,7 @@ Our project of `TopologicalNumbers.jl` aims to provide a package that can easily
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
 This package currently includes various methods for computing topological numbers.
-The first one is the Fukui-Hatsugai-Suzuki (FHS) method [@Fukui2005Chern] for computing first Chern numbers in two-dimensional solid state systems.
+The first one is the Fukui-Hatsugai-Suzuki (FHS) method for computing first Chern numbers in two-dimensional solid state systems [@Fukui2005Chern].
 First Chern numbers are obtained by integrating the Berry curvature, 
 derived from the eigenstates of the Hamiltonian, in the Brillouin zone.
 FHS method enables us to calculate the numbers efficiently by discretizing Berry curvature in the Brillouin zone.
