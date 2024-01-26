@@ -36,7 +36,7 @@ bibliography: paper.bib
 
 # Summary
 Topological insulators have been of considerable interest in the last decades [@Hasan2010Colloquium;@Qi2011Topological]. 
-These materials have new states of matter that are insulating in the bulk but have conducting states on their surfaces.
+These materials show new states of matter that are insulating in the bulk but have conducting states on their surfaces.
 The conducting states on the surface are protected by the topology of the bulk band structure, 
 and topological numbers, such as first Chern number, second one, Z2 number, etc., 
 are used to characterize them.
@@ -59,7 +59,7 @@ Our project of `TopologicalNumbers.jl` aims to provide a package that can easily
 
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
-This package currently includes various methods for computing such numbers.
+This package currently includes various methods for computing topological numbers.
 The first one is the Fukui-Hatsugai-Suzuki (FHS) method [@Fukui2005Chern] for computing first Chern numbers in two-dimensional solid state systems.
 First Chern numbers are obtained by integrating the Berry curvature, 
 derived from the eigenstates of the Hamiltonian, in the Brillouin zone.
@@ -75,21 +75,20 @@ Currently, there is no comprehensive Julia package that implements all these cal
 Users can easily calculate topological numbers using these methods in our package. 
 The simplest requirement for users is to provide a function of the Hamiltonian with wave numbers as arguments. 
 By creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`), calculations can be executed. 
-At present, each `Problem` has one implemented `Algorithm`, limiting users' choices in computational methods. 
-However, `solve` is designed to accept an `Algorithm` as an argument (`solve(Problem, Algorithm)`), allowing for future extensions. 
-For example, methods based on numerical integration are planned for implementation. 
 The package also offers a `calcPhaseDiagram` function, enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` (`solve(Problem)`).
 
 
 
 For the calculation of Z2 invariants, which require the computation of pfaffian, 
-`PFAPACK` has been ported to Julia and is utilized in our package. 
-`PFAPACK` is a Fortran/C++/Python library for calculating the pfaffian of skew-symmetric matrices, as noted in [@Wimmer2012Algorithm], and our package includes a pure-Julia implementation of all the functions originally provided. 
+`PFAPACK` has been ported to Julia by us and is utilized in our package. 
+`PFAPACK` is a Fortran/C++/Python library for calculating the pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], and our package includes a pure-Julia implementation of all the functions originally provided. 
 While `SkewLinearAlgebra.jl` exists as an official Julia package for computing pfaffians of real skew-symmetric matrices, 
-`TopologicalNumbers.jl` is the first to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
+`TopologicalNumbers.jl` is the first official package to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
 Additionally, several utility functions are available, such as `showBand`/`plot1D`/`plot2D` for visualizing energy band structures and phase diagrams. 
 We also provide various model Hamiltonians (e.g., `SSH`, `Haldane`) to enable users to quickly check the functionality and learn how to use these features. 
 Moreover, the package supports parallel computing using `MPI.jl`.
+Consequently, `TopologicalNumbers.jl` is a first comprehensive package for computing topological numbers in solid state systems, 
+and we believe that it will be useful for researchers in the field of solid state physics and around.
 
 
 
