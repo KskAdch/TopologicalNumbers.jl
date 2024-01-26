@@ -1,9 +1,7 @@
 # TopologicalNumbers.jl: A Julia package for calculating topological numbers
 
-
-<div align="center">
-<img src="docs/src/assets/logo_title.svg" alt="TopologicalNumbers logo"></img>
-</div>
+![TopologicalNumbers logo](docs/src/assets/logo_title.svg#gh-light-mode-only)
+![TopologicalNumbers logo](docs/src/assets/logo_title_dark.svg#gh-dark-mode-only)
 
 ---
 

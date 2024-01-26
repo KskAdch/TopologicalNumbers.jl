@@ -70,7 +70,7 @@ and this method can efficiently calculate them by discretizing the Brillouin zon
 which is the integral range. 
 This method can be useful in a practical computation for more complicated systems with a topological order for which a number of data points of the wave functions cannot easily be increased. 
 Also, methods have been proposed to compute various topological invariants using this method. 
-One is the method of [@Shiozaki2023discrete], which computes the Z2 numbers in two-dimensional with time-reversal symmetry in 2023. 
+One is the method of [@Fukui2007Quantum;@Shiozaki2023discrete], which computes the Z2 numbers in two-dimensional with time-reversal symmetry. 
 This method does not require any gauge fixing conditions and is quantized for any discrete approximation of the Brillouin zone. 
 It is also used for methods to find Weyl points and Weyl node [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence] in three-dimensional.
 <!-- ###### -->
