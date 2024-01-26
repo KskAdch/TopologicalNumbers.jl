@@ -60,20 +60,15 @@ Our project of `TopologicalNumbers.jl` aims to provide a package that can easily
 # Statement of need
 `TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
 This package currently includes various methods for computing the numbers.
-The basic one of all methods is the Fukui-Hatsugai-Suzuki (FHS) method [@Fukui2005Chern] for computing the first Chern numbers in two-dimensional solid state systems.
-<!-- The first of efficient calculation method is the Fukui-Hatsugai-Suzuki one [@Fukui2005Chern] for computing the first Chern numbers in two-dimensional solid state systems.  -->
+The first one is the Fukui-Hatsugai-Suzuki (FHS) method [@Fukui2005Chern] for computing first Chern numbers in two-dimensional solid state systems.
+First Chern numbers are obtained by integrating the Berry curvature, 
+derived from the eigenstates of the Hamiltonian, in the Brillouin zone.
+FHS method enables us to calculate the numbers efficiently by discretizing Berry curvature in the Brillouin zone.
+Based on FHS method, several calculation methods have been proposed to compute various topological numbers. 
+One is the method of second Chern number calculation in four-dimensional systems [@Mochol-Grzelak2018Efficient].
+Z2 numbers can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete].
+FHS method is also applied to find Weyl points and Weyl node in three-dimensional systems [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence].
 
-<!-- ### 各メソッドの説明（編集中） ### -->
-The first Chern number is obtained by integrating the Berry curvature, 
-derived from the eigenstates of the Hamiltonian, in the Brillouin zone, 
-and this method can efficiently calculate them by discretizing the Brillouin zone, 
-which is the integral range. 
-This method can be useful in a practical computation for more complicated systems with a topological order for which a number of data points of the wave functions cannot easily be increased. 
-Also, methods have been proposed to compute various topological invariants using this method. 
-One is the method of [@Fukui2007Quantum;@Shiozaki2023discrete], which computes the Z2 numbers in two-dimensional with time-reversal symmetry. 
-This method does not require any gauge fixing conditions and is quantized for any discrete approximation of the Brillouin zone. 
-It is also used for methods to find Weyl points and Weyl node [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence] in three-dimensional.
-<!-- ###### -->
 
 
 There is no Julia package yet that comprehensively implements these calculation methods. 
@@ -86,6 +81,7 @@ There is no Julia package yet that comprehensively implements these calculation 
 また、相図を計算する`calcPhaseDiagram`関数も提供しており、`Problem`を与えることで1次元/2次元パラメータ空間におけるトポロジカル数の値を計算することができます(`solve(Problem)`)。
 
 
+
 また、Z2不変量の計算に必要なpfaffianの計算については、`PFAPACK`をJuliaに移植し、利用しています。
 PFAPACKは、skew-symmetric行列のpfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、
 元々提供されているすべての関数のpure-Julia実装が我々のパッケージに含まれています。
@@ -94,6 +90,7 @@ complex skew-symmetric matricesを取り扱えるpure-Juliaの公式ライブラ
 エネルギーバンド構造や相図を可視化する`showBand`/`plot1D`/`plot2D`、
 ユーザーがこれらの機能の動作をすぐに確認し、使い方を学ぶことができるようないくつかのモデルハミルトニアン(`SSH`/`Haldane`など)を提供するなど、いくつかのユーティリティ関数も利用可能です。
 また、`MPI.jl`を用いた並列計算にも対応しています。
+
 
 
 
