@@ -92,7 +92,7 @@ PFAPACKは、skew-symmetric行列のpfaffianを計算するためのFortran/C++/
 現在までにreal skew-symmetric matricesに対するpfaffianを計算するJulia公式パッケージとして`SkewLinearAlgebra.jl`がありますが、
 complex skew-symmetric matricesを取り扱えるpure-Juliaの公式ライブラリは`TopologicalNumbers.jl`が初めてです。
 エネルギーバンド構造や相図を可視化する`showBand`/`plot1D`/`plot2D`、
-ユーザーがこれらの機能の動作をすぐに確認し、使い方を学ぶことができるようないくつかのトイモデルのハミルトニアン(`SSH`/`Haldane`など)を提供するなど、いくつかのユーティリティ関数も利用可能です。
+ユーザーがこれらの機能の動作をすぐに確認し、使い方を学ぶことができるようないくつかのモデルハミルトニアン(`SSH`/`Haldane`など)を提供するなど、いくつかのユーティリティ関数も利用可能です。
 また、`MPI.jl`を用いた並列計算にも対応しています。
 
 
