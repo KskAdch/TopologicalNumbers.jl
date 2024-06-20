@@ -395,6 +395,24 @@ mpirun -np 4 julia --project test.jl
 ```
 
 
+## Citation
+
+If TopologicalNumbers.jl is useful in your research, please consider citing it. 
+Below is the BibTeX entry for referencing this project:
+
+```bibtex
+@misc{Adachi2024TopologicalNumbers,
+  title = {{{TopologicalNumbers}}.Jl: {{A Julia}} Package for Topological Number Computation},
+  author = {Adachi, Keisuke and Kanega, Minoru},
+  year = {2024},
+  number = {arXiv:2402.00885},
+  eprint = {2402.00885},
+  primaryclass = {cond-mat},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2402.00885},
+  archiveprefix = {arxiv}
+}
+```
 
 
 
