@@ -36,6 +36,9 @@ bibliography: paper.bib
 
 
 # Summary
+<!--
+トポロジカル絶縁体はXXXX年に発見され盛んに研究されてきたが、絶縁体を含むトポロジカル物質がここ数年で大きな関心を集めている[@Hasan2010Colloquium;@Qi2011Topological]。
+-->
 Topological insulators have been of considerable interest in the last decades [@Hasan2010Colloquium;@Qi2011Topological]. 
 These materials show new states of matter that are insulating in the bulk but have conducting states on their surfaces. 
 The conducting states on the surface are protected by the topology of the bulk band structure, and topological numbers, 
@@ -51,6 +54,11 @@ So far, several methods have been reported that suggest that some topological nu
 However, since each method is specialized for a specific dimension or symmetry class, 
 it is necessary to implement the algorithm for each problem, respectively. 
 Our project, `TopologicalNumbers.jl`, aims to provide a package that can easily and efficiently compute topological numbers comprehensively in various dimensions and symmetry classes.
+<!--
+具体的には実空間ハミルトニアンをフーリエ変換した、波数空間におけるハミルトニアンと、計算したいトポロジカル数を指定する。
+この二つを指定するだけで次元や対称性クラスに依存することなく、包括的にトポロジカル数を計算することができる。
+また、莫大な時間を要する計算を上記の革新的な方法を用いて短縮することができる。
+-->
 
 
 
