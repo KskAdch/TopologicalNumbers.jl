@@ -41,11 +41,23 @@ bibliography: paper.bib
 -->
 Topological insulators have been of considerable interest in the last decades [@Hasan2010Colloquium;@Qi2011Topological]. 
 These materials show new states of matter that are insulating in the bulk but have conducting states on their surfaces. 
+<!--
+ある対称性の下では、この表面上の伝導度はChern数や$\mathbb{Z}_{2}$数などによって計算できる。
+このChern数や$\mathbb{Z}_{2}$数は整数であり、まさしくトポロジカル数である。
+したがってトポロジカル数を計算することは、物質の表面の伝導度などの特徴的な物理量を計算することに匹敵する。
+-->
 The conducting states on the surface are protected by the topology of the bulk band structure, and topological numbers, 
 such as first Chern number, second Chern number, $\mathbb{Z}_2$ number, etc., are used to characterize them. 
 As a typical example, the quantum Hall effect has the quantized Hall conductivity, which can be calculated by the first Chern number. 
+<!--
+実際に量子ホール効果が起こっているときのホール伝導度$\sigma$は、電子の素電化を$e$、プランク定数を$h$としたとき$\sigma=\tfrac{e^{2}}{h}\nu$と表せる。
+このときの$\nu$がトポロジカル数の一つである第一Chern数である。
+-->
 Other topological numbers similarly become important physical quantities that characterize the system, 
 depending on the system dimension and symmetry classes [@Ryu2010Topological].
+<!--
+さらに、これらのトポロジカル数は高度なエレクトロニクス、スピントロニクス、量子コンピューティングに応用できる可能性のあるトポロジカル絶縁体・超伝導体などのエキゾチックな物質を理解するために不可欠である。
+-->
 
 To obtain the topological numbers, we often need numerical calculations, 
 and it may require an enormous amount of computation before convergence is achieved. 
