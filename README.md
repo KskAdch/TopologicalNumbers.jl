@@ -40,7 +40,7 @@ The correspondence between the spatial dimension of the system and the supported
 
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
-It is confirmed to work on Julia 1.6 (LTS) and 1.10.
+It is confirmed to work on Julia 1.10 (LTS) and 1.11.
 
 
 ## Installation
