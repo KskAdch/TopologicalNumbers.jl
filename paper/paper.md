@@ -42,7 +42,7 @@ These invariants, such as the Chern number and $\mathbb{Z}_2$ invariants, are cr
 Our package provides an accessible and efficient toolset for researchers and educators to compute these invariants across various dimensions and symmetry classes, facilitating the exploration and discovery of new topological phases of matter.
 
 `TopologicalNumbers.jl`は、凝縮系物理学における物質の性質を特徴付ける数学的量であるトポロジカル不変量を計算するための、オープンソースのJuliaパッケージです。
-これらの不変量、例えばチャーン数や$\mathbb{Z}_2$不変量は、トポロジカル絶縁体や超伝導体のようなエキゾチックな物質を理解する上で重要であり、これらは先進的なエレクトロニクスやスピントロニクス、量子コンピューティングへの応用が期待されています[Ref.]。
+これらの不変量、例えばチャーン数や$\mathbb{Z}_2$不変量は、先進的なエレクトロニクスやスピントロニクス、量子コンピューティングへの応用が期待されているトポロジカル絶縁体や超伝導体のようなエキゾチックな物質を理解する上で重要です[Ref.]。
 本パッケージは、研究者や教育者がこれらの不変量を様々な次元や対称性クラスで計算できる、使いやすく効率的なツールセットを提供し、新たなトポロジカル相の探索と発見を促進します。
 
 
@@ -50,17 +50,18 @@ Our package provides an accessible and efficient toolset for researchers and edu
 # Statement of need
 
 固体物理学において、物質がどのような特性を持つか理解することは重要です。
-例えば、電気伝導度は物質が電気をどの程度通すかを示す重要な物理量であり、通常は、物質に弱い静電場をかけたとき物質中の大域的空間（バルク）において電子が遷移可能であるような量子状態が存在すれば有限の値を持ち、電気が流れる金属となります。
-逆に存在しなければ低い値を持ち、電気を流さない絶縁体となります。
-しかし、1980年以降、今日に至るまで大きな関心を集めている量子ホール絶縁体やトポロジカル絶縁体などを含むトポロジカル電子系は、バルクでは絶縁体でありながら、物質表面には電子の伝導状態を持つ新しい物質状態を示します[Ref.]。
-このような新奇特性から、トポロジカル電子系の候補物質の探索や特性評価がこれまで盛んに行われて来ています[@Hasan2010Colloquium;@Qi2011Topological]。
+例えば、電気伝導度は物質が電気をどの程度通すかを示す重要な物理量です。
+通常、物質に弱い静電場をかけたとき、物質中の大域的空間（バルク）において電子が遷移可能な量子状態が存在すれば、電気伝導度は有限の値を持ち、電気が流れる金属となります。
+逆に、存在しなければ電気伝導度は低い値となり、電気を流さない絶縁体となります。
+しかし、1980年以降、量子ホール絶縁体やトポロジカル絶縁体などを含むトポロジカル電子系は、バルクでは絶縁体でありながら、物質表面には電子の伝導状態を持つ新しい物質状態を示し、今日に至るまで大きな関心を集めています[@Hasan2010Colloquium;@Qi2011Topological]。
+この新奇な特性から、トポロジカル電子系の候補物質の探索や特性評価が盛んに行われてきました。
 
 
-表面の伝導状態の特徴は、物質のハミルトニアンから決定される固有量子状態が波数空間上でどのようなトポロジーを持つかによって決定されており、第一チャーン数、第二チャーン数、$\mathbb{Z}_2$不変量などのトポロジカル数がそれらを特徴付けるために用いられます[Ref.]。
-典型的な例として、2次元物質に対して弱い電場をかけた際、かけた電場と直交方向に量子化された有限の電気伝導度（ホール伝導度）が現れる現象を量子ホール効果と言います[Ref.]。
-ホール伝導度$\sigma_{xy}$は整数値を取る第一チャーン数$\nu$によって特徴づけられ、$\sigma_{xy}=\frac{e^{2}}{h}\nu$と与えられることが知られています。
+表面の伝導状態の特徴は、物質のハミルトニアンから決定される固有量子状態が波数空間上でどのようなトポロジーを持つかによって決まり、第一チャーン数、第二チャーン数、$\mathbb{Z}_2$不変量などのトポロジカル数がそれらを特徴付けるために用いられます[@Thouless1982Quantized;@Kane2005Z_2]。
+典型的な例として、2次元物質に弱い電場をかけた際、かけた電場と直交する方向に量子化された有限の電気伝導度（ホール伝導度）が現れる現象を量子ホール効果と言います[@Thouless1982Quantized]。
+ホール伝導度$\sigma_{xy}$は、整数値を取る第一チャーン数$\nu$によって特徴づけられ、$\sigma_{xy}=\frac{e^{2}}{h}\nu$と与えられることが知られています。
 ここで、$e$は電気素量、$h$はプランク定数です。
-他のトポロジカル数も同様に、系の次元や、系の持つ対称性のクラスに応じて、系を特徴付ける重要な物理量となります [@Ryu2010Topological]。
+他のトポロジカル数も同様に、系の次元や持つ対称性クラスに応じて、系を特徴付ける重要な物理量となります [@Ryu2010Topological]。
 
 
 To obtain the topological numbers, we often need numerical calculations, and it may require an enormous amount of computation before convergence is achieved. 
@@ -101,7 +102,7 @@ For instance, `Z2Pack` [@Gresch2017Z2Pack] is a Python-based tool widely used fo
 `WannierTools` [@Wu2018WannierTools] offers powerful features for analyzing topological materials using Wannier functions but is implemented in Fortran, which may present a steeper learning curve for some users.
 
 現在、これらすべての計算法を実装した包括的なJuliaパッケージは存在しません。
-一方、他のプラットフォームでは、本パッケージと異なるワニエ電荷中心[Ref.]またはWilson loop[Ref.]と呼ばれる量を用いた手法で実装されたいくつかのソフトウェアパッケージが利用可能です。
+一方、他のプラットフォームでは、本パッケージと異なるワニエ電荷中心[@Soluyanov2011Computing]またはWilson ループ[@Yu2011Equivalent]と呼ばれる量を用いた手法で実装されたソフトウェアパッケージが利用可能です。
 例えば、`Z2Pack` [@Gresch2017Z2Pack]は、$\mathbb{Z}_2$不変量や第一チャーン数の計算に広く用いられるPythonベースのツールです。
 また、`WannierTools` [@Wu2018WannierTools]は、ワニエ関数を用いたトポロジカル物質の解析に強力な機能を提供しますが、Fortranで実装されており、一部のユーザーにとっては習得のハードルが高い可能性があります。
 
@@ -111,11 +112,11 @@ Our package supports a wide range of topological invariants—including first an
 It also offers parallel computing capabilities through `MPI.jl`, enhancing computational efficiency for large-scale problems. 
 By combining these features, `TopologicalNumbers.jl` fills a gap in the current ecosystem of computational tools for topological materials, offering a unique balance of performance, usability, and extensibility.
 
-`TopologicalNumbers.jl`は、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、効率的なpure-Julia implementationのフレームワークを提供することで一線を画しています。
-我々のパッケージは、第一チャーン数および第二チャーン数や$\mathbb{Z}_2$不変量など、様々なトポロジカル不変量を複数の次元や対称性クラスにわたってサポートしています。
+`TopologicalNumbers.jl`は、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、効率的な純粋Julia実装のフレームワークを提供することで際立っています。
+我々のパッケージは、第一チャーン数および第二チャーン数、$\mathbb{Z}_2$不変量など、様々なトポロジカル不変量を複数の次元や対称性クラスにわたってサポートしています。
 また、`MPI.jl`を通じた並列計算機能を提供し、大規模な問題に対する計算効率を向上させます。
-さらに、Juliaのマルチディスパッチ機能を活用して、`DifferentialEquations.jl`[Ref.]のような`Problem`、`Algorithm`、`solve`スタイルを採用することで一貫したインターフェースを提供し、拡張性を高めています。
-これらの機能を組み合わせることで、`TopologicalNumbers.jl`は性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供し、他のライブラリと必ずしも競合するのではなく、代替のツールと異なる視点を提供します。
+さらに、Juliaのマルチディスパッチ機能を活用して、`DifferentialEquations.jl`[@Rackauckas2017DifferentialEquationsjl]のような`Problem`、`Algorithm`、`solve`スタイルを採用することで一貫したインターフェースを提供し、拡張性を高めています。
+これらの機能を組み合わせることで、`TopologicalNumbers.jl`は性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供し、他のライブラリと競合するのではなく、代替のツールとして異なる視点を提供します。
 
 
 Additionally, for the calculation of $\mathbb{Z}_2$ invariants, which require the computation of Pfaffians, we have ported `PFAPACK` to Julia. 
@@ -124,7 +125,7 @@ While `SkewLinearAlgebra.jl` exists as an official Julia package for computing P
 
 また、Pfaffianの計算を必要とする$\mathbb{Z}_2$不変量の計算のために、我々は`PFAPACK`をJuliaに移植しました。
 `PFAPACK`は、反対称行列のPfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、本パッケージには元々提供されていたすべての関数の純粋なJulia実装が含まれています。
-`SkewLinearAlgebra.jl`は実反対称行列のPfaffianを計算するための公式のJuliaパッケージとして存在しますが、`TopologicalNumbers.jl`は複素数の反対称行列を扱うための純粋なJulia実装を提供する最初の公式パッケージです。
+`SkewLinearAlgebra.jl`は実数の反対称行列のPfaffianを計算するための公式のJuliaパッケージとして存在しますが、`TopologicalNumbers.jl`は複素数の反対称行列を扱うための純粋なJulia実装を提供する最初の公式パッケージです。
 
 
 
