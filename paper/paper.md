@@ -41,7 +41,7 @@ bibliography: paper.bib
 These invariants, such as the Chern number and $\mathbb{Z}_2$ invariants, are crucial for understanding exotic materials like topological insulators and superconductors which have potential applications in advanced electronics, spintronics, and quantum computing. 
 Our package provides an accessible and efficient toolset for researchers and educators to compute these invariants across various dimensions and symmetry classes, facilitating the exploration and discovery of new topological phases of matter.
 
-TopologicalNumbers.jlは、凝縮系物理学における物質の性質を特徴付ける数学的量であるトポロジカル不変量を計算するための、オープンソースのJuliaパッケージです。
+`TopologicalNumbers.jl`は、凝縮系物理学における物質の性質を特徴付ける数学的量であるトポロジカル不変量を計算するための、オープンソースのJuliaパッケージです。
 これらの不変量、例えばチャーン数や$\mathbb{Z}_2$不変量は、トポロジカル絶縁体や超伝導体のようなエキゾチックな物質を理解する上で重要であり、これらは先進的なエレクトロニクスやスピントロニクス、量子コンピューティングへの応用が期待されています[Ref.]。
 本パッケージは、研究者や教育者がこれらの不変量を様々な次元や対称性クラスで計算できる、使いやすく効率的なツールセットを提供し、新たなトポロジカル相の探索と発見を促進します。
 
@@ -73,7 +73,7 @@ Our project, `TopologicalNumbers.jl`, aims to provide a package that can easily 
 したがって、これらの数を容易に計算できるツールを作成することは、物質のトポロジカル相の研究の進展につながります。
 これまで、いくつかのトポロジカル数を効率的に計算できることを示唆する手法が報告されています[@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]。
 しかし、各手法は特定の次元や対称性クラスに特化しているため、それぞれの問題に対してアルゴリズムを実装する必要があります。
-我々のプロジェクトであるTopologicalNumbers.jlは、様々な次元や対称性クラスにおいて、トポロジカル数を容易かつ効率的に包括的に計算できるパッケージを提供することを目指しています。
+我々のプロジェクトである`TopologicalNumbers.jl`は、様々な次元や対称性クラスにおいて、トポロジカル数を容易かつ効率的に包括的に計算できるパッケージを提供することを目指しています。
 
 
 This package currently includes various methods for calculating topological numbers. 
@@ -101,8 +101,8 @@ For instance, `Z2Pack` [@Gresch2017Z2Pack] is a Python-based tool widely used fo
 
 現在、これらすべての計算法を実装した包括的なJuliaパッケージは存在しません。
 一方、他のプラットフォームでは、本パッケージと異なるワニエ電荷中心[Ref.]またはWilson loop[Ref.]と呼ばれる量を用いた手法で実装されたいくつかのソフトウェアパッケージが利用可能です。
-例えば、Z2Pack [@Gresch2017Z2Pack]は、$\mathbb{Z}_2$不変量や第一チャーン数の計算に広く用いられるPythonベースのツールです。
-また、WannierTools [@Wu2018WannierTools]は、ワニエ関数を用いたトポロジカル物質の解析に強力な機能を提供しますが、Fortranで実装されており、一部のユーザーにとっては習得のハードルが高い可能性があります。
+例えば、`Z2Pack` [@Gresch2017Z2Pack]は、$\mathbb{Z}_2$不変量や第一チャーン数の計算に広く用いられるPythonベースのツールです。
+また、`WannierTools` [@Wu2018WannierTools]は、ワニエ関数を用いたトポロジカル物質の解析に強力な機能を提供しますが、Fortranで実装されており、一部のユーザーにとっては習得のハードルが高い可能性があります。
 
 
 `TopologicalNumbers.jl` sets itself apart by providing a comprehensive and efficient framework within the Julia programming language, known for its high performance and user-friendly syntax. 
@@ -110,20 +110,20 @@ Our package supports a wide range of topological invariants—including first an
 It also offers parallel computing capabilities through `MPI.jl`, enhancing computational efficiency for large-scale problems. 
 By combining these features, `TopologicalNumbers.jl` fills a gap in the current ecosystem of computational tools for topological materials, offering a unique balance of performance, usability, and extensibility.
 
-TopologicalNumbers.jlは、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、効率的なpure-Julia implementationのフレームワークを提供することで際立っています。
+`TopologicalNumbers.jl`は、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、効率的なpure-Julia implementationのフレームワークを提供することで一線を画しています。
 我々のパッケージは、第一チャーン数および第二チャーン数や$\mathbb{Z}_2$不変量など、様々なトポロジカル不変量を複数の次元や対称性クラスにわたってサポートしています。
-また、MPI.jlを通じた並列計算機能を提供し、大規模な問題に対する計算効率を向上させます。
+また、`MPI.jl`を通じた並列計算機能を提供し、大規模な問題に対する計算効率を向上させます。
 さらに、Juliaのマルチディスパッチ機能を活用し、`DifferentialEquations.jl`[Ref.]のような`Problem`、`Algorithm`、`solve`のような一貫したインターフェースを提供することで、拡張性を高めています。
-これらの機能を組み合わせることで、TopologicalNumbers.jlは性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供し、他のライブラリと必ずしも競合するのではなく、代替のツールと異なる視点を提供します。
+これらの機能を組み合わせることで、`TopologicalNumbers.jl`は性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供し、他のライブラリと必ずしも競合するのではなく、代替のツールと異なる視点を提供します。
 
 
 Additionally, for the calculation of $\mathbb{Z}_2$ invariants, which require the computation of Pfaffians, we have ported `PFAPACK` to Julia. 
 `PFAPACK` is a Fortran/C++/Python library for computing the Pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], and our package includes a pure-Julia implementation of all the functions originally provided. 
-While `SkewLinearAlgebra.jl` exists as an official Julia package for computing Pfaffians of real skew-symmetric matrices, TopologicalNumbers.jl is the first official package to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
+While `SkewLinearAlgebra.jl` exists as an official Julia package for computing Pfaffians of real skew-symmetric matrices, `TopologicalNumbers.jl` is the first official package to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
 
-また、Pfaffianの計算を必要とする$\mathbb{Z}_2$不変量の計算のために、我々はPFAPACKをJuliaに移植しました。
-PFAPACKは、反対称行列のPfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、本パッケージには元々提供されていたすべての関数の純粋なJulia実装が含まれています。
-SkewLinearAlgebra.jlは実対称行列のPfaffianを計算するための公式のJuliaパッケージとして存在しますが、TopologicalNumbers.jlは複素数の反対称行列を扱うための純粋なJulia実装を提供する最初の公式パッケージです。
+また、Pfaffianの計算を必要とする$\mathbb{Z}_2$不変量の計算のために、我々は`PFAPACK`をJuliaに移植しました。
+`PFAPACK`は、反対称行列のPfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、本パッケージには元々提供されていたすべての関数の純粋なJulia実装が含まれています。
+`SkewLinearAlgebra.jl`は実対称行列のPfaffianを計算するための公式のJuliaパッケージとして存在しますが、`TopologicalNumbers.jl`は複素数の反対称行列を扱うための純粋なJulia実装を提供する最初の公式パッケージです。
 
 
 
@@ -136,15 +136,15 @@ The package also offers a `calcPhaseDiagram` function, enabling the computation 
 
 ユーザーは、本パッケージに含まれる数々の手法を用いて、容易にトポロジカル数を計算できます。
 最も単純な場合、ユーザーは波数を引数とするハミルトニアン行列の関数を提供するだけで済みます。
-計算は、対応するProblemを作成し、solve関数（solve(Problem)）を呼び出すことで実行できます。
-また、本パッケージはcalcPhaseDiagram関数を提供しており、Problemとパラメータ範囲を指定することで、一次元または二次元のパラメータ空間におけるトポロジカル数の計算を可能にします（calcPhaseDiagram(Problem, range...)）。
+計算は、対応する`Problem`を作成し、`solve`関数（`solve(Problem)`）を呼び出すことで実行できます。
+また、本パッケージはcalcPhaseDiagram関数を提供しており、`Problem`とパラメータ範囲を指定することで、一次元または二次元のパラメータ空間におけるトポロジカル数の計算を可能にします（`calcPhaseDiagram(Problem, range...)`）。
 
 
 Furthermore, several utility functions are available, such as `showBand`, `plot1D`, and `plot2D` for visualizing energy band structures and phase diagrams. 
 We also provide various model Hamiltonians (e.g., `SSH`, `Haldane`) to enable users to quickly check the functionality and learn how to use these features.
 
-さらに、エネルギーバンド構造や相図を可視化するためのshowBand、plot1D、plot2Dなどのユーティリティ関数も利用可能です。
-また、ユーザーが機能を迅速にチェックし、これらの機能の使い方を学ぶことができるように、SSH、Haldaneなどの様々なモデルハミルトニアンも提供しています。
+さらに、エネルギーバンド構造や相図を可視化するための`showBand`、`plot1D`、`plot2D`などのユーティリティ関数も利用可能です。
+また、ユーザーが機能を迅速にチェックし、これらの機能の使い方を学ぶことができるように、`SSH`、`Haldane`などの様々なモデルハミルトニアンも提供しています。
 
 
 
