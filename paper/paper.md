@@ -193,8 +193,8 @@ By combining these features, `TopologicalNumbers.jl` fills a gap in the current 
 TopologicalNumbers.jlは、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、効率的なpure-Julia implementationのフレームワークを提供することで際立っています。
 我々のパッケージは、第一チャーン数および第二チャーン数や$\mathbb{Z}_2$不変量など、様々なトポロジカル不変量を複数の次元や対称性クラスにわたってサポートしています。
 また、MPI.jlを通じた並列計算機能を提供し、大規模な問題に対する計算効率を向上させます。
-これらの機能を組み合わせることで、TopologicalNumbers.jlは性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供します。
-これにより、ライブラリに独自のアイデンティティを与え、必ずしも競合するのではなく、代替のツールと異なる視点を提供します。
+さらに、Juliaのマルチディスパッチ機能を活用し、`DifferentialEquations.jl`[Ref.]のような`Problem`、`Algorithm`、`solve`のような一貫したインターフェースを提供することで、拡張性を高めています。
+これらの機能を組み合わせることで、TopologicalNumbers.jlは性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供し、他のライブラリと必ずしも競合するのではなく、代替のツールと異なる視点を提供します。
 
 
 
