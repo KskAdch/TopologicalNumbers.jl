@@ -112,13 +112,13 @@ Other topological numbers similarly become important physical quantities that ch
 例えば、電気伝導度は物質が電気をどの程度通すかを示す重要な物理量であり、通常は、物質に弱い静電場をかけたとき物質中の大域的空間（バルク）において電子が遷移可能であるような量子状態が存在すれば有限の値を持ち、電気が流れる金属となります。
 逆に存在しなければ低い値を持ち、電気を流さない絶縁体となります。
 <!-- しかし、2005年に理論的に提唱されたトポロジカル絶縁体は、バルクでは絶縁体でありながら、物質表面には電子の伝導状態を持つ新しい物質状態を示します[Ref.]。 -->
-しかし、1980年以降、今日に至るまで大きな関心を集めている量子ホール絶縁体やトポロジカル絶縁体・超伝導体などを含むトポロジカル電子系は、バルクでは絶縁体でありながら、物質表面には電子の伝導状態を持つ新しい物質状態を示します[Ref.]。
+しかし、1980年以降、今日に至るまで大きな関心を集めている量子ホール絶縁体やトポロジカル絶縁体などを含むトポロジカル電子系は、バルクでは絶縁体でありながら、物質表面には電子の伝導状態を持つ新しい物質状態を示します[Ref.]。
 <!-- このような新奇特性からトポロジカル絶縁体は大きな関心を集めており、今日に至るまでトポロジカル絶縁体候補物質の探索や特性評価が盛んに行われています[@Hasan2010Colloquium;@Qi2011Topological]。 -->
-このような新奇特性から、トポロジカル電子系の候補物質の探索や特性評価はこれまで盛んに行われて来ています[@Hasan2010Colloquium;@Qi2011Topological]。
+このような新奇特性から、トポロジカル電子系の候補物質の探索や特性評価がこれまで盛んに行われて来ています[@Hasan2010Colloquium;@Qi2011Topological]。
 
 
 
-表面の伝導状態の特徴は、物質のハミルトニアンから決定される固有量子状態が波数空間上でどのようなトポロジーを持つかによって決定されており、第一チャーン数、第二チャーン数、$\mathbb{Z}_2$不変量などのトポロジカル数がそれらを特徴付けるために用いられます。
+表面の伝導状態の特徴は、物質のハミルトニアンから決定される固有量子状態が波数空間上でどのようなトポロジーを持つかによって決定されており、第一チャーン数、第二チャーン数、$\mathbb{Z}_2$不変量などのトポロジカル数がそれらを特徴付けるために用いられます[Ref.]。
 典型的な例として、2次元物質に対して弱い電場をかけた際、かけた電場と直交方向に量子化された有限の電気伝導度（ホール伝導度）が現れる現象を量子ホール効果と言います[Ref.]。
 ホール伝導度$\sigma_{xy}$は整数値を取る第一チャーン数$\nu$によって特徴づけられ、$\sigma_{xy}=\frac{e^{2}}{h}\nu$と与えられることが知られています。
 ここで、$e$は電気素量、$h$はプランク定数です。
@@ -159,7 +159,7 @@ One is the method of second Chern number calculation in four-dimensional systems
 $\mathbb{Z}_2$ invariants can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
 The FHS method is also applied to find Weyl points and Weyl nodes in three-dimensional systems [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence].
 
-<!-- TopologicalNumbers.jlは、様々なトポロジカル数を計算するためのオープンソースのJuliaパッケージです。
+<!--
 このパッケージは現在、トポロジカル数を計算するための様々な手法を含んでいます。
 最初に挙げられるのは、二次元固体物理系における第一チャーン数を計算するための福井・初貝・鈴木（FHS）法です [@Fukui2005Chern]。
 第一チャーン数は、ハミルトニアンの固有状態から導かれるベリー曲率をブリルアンゾーン内で積分することで得られます。
@@ -174,14 +174,15 @@ FHS法は、三次元系におけるワイル点やワイルノードを見つ�
 Currently, there is no comprehensive Julia package that implements all these calculation methods. 
 Various software packages are available for computing topological invariants in condensed matter systems. 
 For instance, `Z2Pack` [@Gresch2017Z2Pack] is a Python-based tool widely used for calculating $\mathbb{Z}_2$ invariants and Chern numbers, primarily focusing on two-dimensional systems and requiring extensive setup. 
-<!-- `PythTB` [@Coh2016PythTB] is another Python library designed for tight-binding calculations but may lack efficiency for large-scale computations. 
-`WannierTools` [@Wu2018WannierTools] offers powerful features for analyzing topological materials using Wannier functions but is implemented in Fortran, which may present a steeper learning curve for some users. -->
+<!-- `PythTB` [@Coh2016PythTB] is another Python library designed for tight-binding calculations but may lack efficiency for large-scale computations. -->
+`WannierTools` [@Wu2018WannierTools] offers powerful features for analyzing topological materials using Wannier functions but is implemented in Fortran, which may present a steeper learning curve for some users.
 
 現在、これらすべての計算法を実装した包括的なJuliaパッケージは存在しません。
-凝縮系物理学におけるトポロジカル不変量の計算のために、様々なソフトウェアパッケージが利用可能です。
-例えば、Z2Pack [@Gresch2017Z2Pack]は、$\mathbb{Z}_2$不変量やチャーン数の計算に広く用いられるPythonベースのツールであり、主に二次元系に焦点を当て、広範な設定が必要です。
-<!-- 
-WannierTools [@Wu2018WannierTools]は、ワニエ関数を用いたトポロジカル物質の解析に強力な機能を提供しますが、Fortranで実装されており、一部のユーザーにとっては習得のハードルが高いかもしれません。 -->
+一方、他のプラットフォームでは、本パッケージと異なるワニエ電荷中心[Ref.]またはWilson loop[Ref.]と呼ばれる量を用いた手法で実装されたいくつかのソフトウェアパッケージが利用可能です。
+例えば、Z2Pack [@Gresch2017Z2Pack]は、$\mathbb{Z}_2$不変量や第一チャーン数の計算に広く用いられるPythonベースのツールです。
+<!-- ワニエ電荷中心[Ref.]（Wilson loop[Ref.]）の方法に基づいています。 -->
+<!-- PythTB [@Coh2016PythTB]は、タイトバインディング計算のためのPythonライブラリでありますが、大規模な計算においては効率が欠ける場合があります。 -->
+また、WannierTools [@Wu2018WannierTools]は、ワニエ関数を用いたトポロジカル物質の解析に強力な機能を提供しますが、Fortranで実装されており、一部のユーザーにとっては習得のハードルが高い可能性があります。
 
 
 `TopologicalNumbers.jl` sets itself apart by providing a comprehensive and efficient framework within the Julia programming language, known for its high performance and user-friendly syntax. 
@@ -189,14 +190,54 @@ Our package supports a wide range of topological invariants—including first an
 It also offers parallel computing capabilities through `MPI.jl`, enhancing computational efficiency for large-scale problems. 
 By combining these features, `TopologicalNumbers.jl` fills a gap in the current ecosystem of computational tools for topological materials, offering a unique balance of performance, usability, and extensibility.
 
-<!-- TopologicalNumbers.jlは、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、包括的かつ効率的なフレームワークを提供することで際立っています。
-我々のパッケージは、一次および二次のチャーン数や$\mathbb{Z}_2$不変量など、様々なトポロジカル不変量を複数の次元や対称性クラスにわたってサポートしています。
+TopologicalNumbers.jlは、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、効率的なpure-Julia implementationのフレームワークを提供することで際立っています。
+我々のパッケージは、第一チャーン数および第二チャーン数や$\mathbb{Z}_2$不変量など、様々なトポロジカル不変量を複数の次元や対称性クラスにわたってサポートしています。
 また、MPI.jlを通じた並列計算機能を提供し、大規模な問題に対する計算効率を向上させます。
-これらの機能を組み合わせることで、TopologicalNumbers.jlはトポロジカル物質のための計算ツールの現行エコシステムにおけるギャップを埋め、性能、使いやすさ、拡張性のユニークなバランスを提供します。 -->
+これらの機能を組み合わせることで、TopologicalNumbers.jlは性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供します。
+これにより、ライブラリに独自のアイデンティティを与え、必ずしも競合するのではなく、代替のツールと異なる視点を提供します。
 
 
 
-<!-- これらの機能は、タイトバインディングフレームワークの中でライブラリに独自のアイデンティティを与え、必ずしも競合するのではなく、代替のツールと異なる視点を提供します。 -->
+
+Additionally, for the calculation of $\mathbb{Z}_2$ invariants, which require the computation of Pfaffians, we have ported `PFAPACK` to Julia. 
+`PFAPACK` is a Fortran/C++/Python library for computing the Pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], and our package includes a pure-Julia implementation of all the functions originally provided. 
+While `SkewLinearAlgebra.jl` exists as an official Julia package for computing Pfaffians of real skew-symmetric matrices, TopologicalNumbers.jl is the first official package to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
+
+<!-- また、Pfaffianの計算を必要とする$\mathbb{Z}_2$不変量の計算のために、我々はPFAPACKをJuliaに移植しました。
+PFAPACKは、反対称行列のPfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、本パッケージには元々提供されていたすべての関数の純粋なJulia実装が含まれています。
+SkewLinearAlgebra.jlは実対称行列のPfaffianを計算するための公式のJuliaパッケージとして存在しますが、TopologicalNumbers.jlは複素数の反対称行列を扱うための純粋なJulia実装を提供する最初の公式パッケージです。-->
+
+
+
+# Usage
+
+<!-- Currently, there is no comprehensive Julia package that implements all these calculation methods.  -->
+Users can easily calculate topological numbers using these methods included in our package.
+In the simplest case, users only need to provide a function of the Hamiltonian matrix with wave numbers as arguments. 
+Computations can be performed by creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`). 
+The package also offers a `calcPhaseDiagram` function, enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` and parameter ranges (`calcPhaseDiagram(Problem, range...)`).
+
+<!-- 
+ユーザーは、本パッケージに含まれるこれらの手法を用いて、容易にトポロジカル数を計算できます。
+最も単純な場合、ユーザーは波数を引数とするハミルトニアン行列の関数を提供するだけで済みます。
+計算は、対応するProblemを作成し、solve関数（solve(Problem)）を呼び出すことで実行できます。
+また、本パッケージはcalcPhaseDiagram関数を提供しており、Problemとパラメータ範囲を指定することで、一次元または二次元のパラメータ空間におけるトポロジカル数の計算を可能にします（calcPhaseDiagram(Problem, range...)）。 -->
+
+
+
+
+Furthermore, several utility functions are available, such as `showBand`, `plot1D`, and `plot2D` for visualizing energy band structures and phase diagrams. 
+We also provide various model Hamiltonians (e.g., `SSH`, `Haldane`) to enable users to quickly check the functionality and learn how to use these features.
+<!-- Moreover, the package supports parallel computing using `MPI.jl`.  -->
+<!-- Consequently, `TopologicalNumbers.jl` is the first comprehensive Julia package for computing topological numbers in solid-state systems, and we believe that it will be useful for researchers in the field of solid-state physics. -->
+
+<!-- 
+さらに、エネルギーバンド構造や相図を可視化するためのshowBand、plot1D、plot2Dなどのユーティリティ関数も利用可能です。
+また、ユーザーが機能を迅速にチェックし、これらの機能の使い方を学ぶことができるように、SSH、Haldaneなどの様々なモデルハミルトニアンも提供しています。
+さらに、本パッケージはMPI.jlを用いた並列計算をサポートしています。
+その結果、TopologicalNumbers.jlは固体物理系におけるトポロジカル数を計算するための最初の包括的なJuliaパッケージであり、我々はこれが固体物理学の分野の研究者にとって有用であると信じています。 -->
+
+
 
 
 
@@ -222,10 +263,10 @@ FHS法は、三次元系におけるワイル点やワイルノードを見つ�
 
 
 <!-- Currently, there is no comprehensive Julia package that implements all these calculation methods.  -->
-Users can easily calculate topological numbers using these methods included in our package.
+<!-- Users can easily calculate topological numbers using these methods included in our package.
 In the simplest case, users only need to provide a function of the Hamiltonian matrix with wave numbers as arguments. 
 Computations can be performed by creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`). 
-The package also offers a `calcPhaseDiagram` function, enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` and parameter ranges (`calcPhaseDiagram(Problem, range...)`).
+The package also offers a `calcPhaseDiagram` function, enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` and parameter ranges (`calcPhaseDiagram(Problem, range...)`). -->
 
 <!-- 現在、これらすべての計算法を実装した包括的なJuliaパッケージは存在しません。
 ユーザーは、本パッケージに含まれるこれらの手法を用いて、容易にトポロジカル数を計算できます。
@@ -235,13 +276,13 @@ The package also offers a `calcPhaseDiagram` function, enabling the computation 
 
 
 
-For the calculation of $\mathbb{Z}_2$ invariants, which require the computation of Pfaffians, we have ported `PFAPACK` to Julia. 
+<!-- For the calculation of $\mathbb{Z}_2$ invariants, which require the computation of Pfaffians, we have ported `PFAPACK` to Julia. 
 `PFAPACK` is a Fortran/C++/Python library for computing the Pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], and our package includes a pure-Julia implementation of all the functions originally provided. 
 While `SkewLinearAlgebra.jl` exists as an official Julia package for computing Pfaffians of real skew-symmetric matrices, TopologicalNumbers.jl is the first official package to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
 Additionally, several utility functions are available, such as `showBand`, `plot1D`, and `plot2D` for visualizing energy band structures and phase diagrams. 
 We also provide various model Hamiltonians (e.g., `SSH`, `Haldane`) to enable users to quickly check the functionality and learn how to use these features.
 Moreover, the package supports parallel computing using `MPI.jl`. 
-Consequently, `TopologicalNumbers.jl` is the first comprehensive Julia package for computing topological numbers in solid-state systems, and we believe that it will be useful for researchers in the field of solid-state physics.
+Consequently, `TopologicalNumbers.jl` is the first comprehensive Julia package for computing topological numbers in solid-state systems, and we believe that it will be useful for researchers in the field of solid-state physics. -->
 
 <!-- Pfaffianの計算を必要とする$\mathbb{Z}_2$不変量の計算のために、我々はPFAPACKをJuliaに移植しました。
 PFAPACKは、反対称行列のPfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、本パッケージには元々提供されていたすべての関数の純粋なJulia実装が含まれています。
