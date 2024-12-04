@@ -71,7 +71,7 @@ Our project, `TopologicalNumbers.jl`, aims to provide a package that can easily 
 
 トポロジカル数を得るためには、しばしば数値計算が必要であり、収束するまでに膨大な計算量を要することがあります。
 したがって、これらの数を容易に計算できるツールを作成することは、物質のトポロジカル相の研究の進展につながります。
-これまで、いくつかのトポロジカル数を効率的に計算できることを示唆する手法が報告されています[@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]。
+これまで、種々のトポロジカル数を効率的に計算できることを示唆するいくつかの手法が報告されています[@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]。
 しかし、各手法は特定の次元や対称性クラスに特化しているため、それぞれの問題に対してアルゴリズムを実装する必要があります。
 我々のプロジェクトである`TopologicalNumbers.jl`は、様々な次元や対称性クラスにおいて、トポロジカル数を容易かつ効率的に包括的に計算できるパッケージを提供することを目指しています。
 
@@ -89,7 +89,8 @@ The FHS method is also applied to find Weyl points and Weyl nodes in three-dimen
 最初に挙げられるのは、二次元固体物理系における第一チャーン数を計算するための福井・初貝・鈴木（FHS）法です [@Fukui2005Chern]。
 第一チャーン数は、ハミルトニアンの固有状態から導かれるベリー曲率をブリルアンゾーン内で積分することで得られます。
 FHS法は、ブリルアンゾーン内でベリー曲率を離散化することで、数を効率的に計算することを可能にします。
-FHS法に基づいて、様々なトポロジカル数を計算するためのいくつかの計算法が提案されています。その一つは、四次元系における第二チャーン数の計算法です [@Mochol-Grzelak2018Efficient]。
+FHS法に基づいて、様々なトポロジカル数を計算するためのいくつかの計算法が提案されています。
+その一つは、四次元系における第二チャーン数の計算法です [@Mochol-Grzelak2018Efficient]。
 また、時間反転対称性を持つ二次元系では、$\mathbb{Z}_2$不変量も計算できます [@Fukui2007Quantum;@Shiozaki2023discrete]。
 FHS法は、三次元系におけるワイル点やワイルノードを見つけるためにも適用されています [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence]。
 
@@ -113,7 +114,7 @@ By combining these features, `TopologicalNumbers.jl` fills a gap in the current 
 `TopologicalNumbers.jl`は、高性能でユーザーフレンドリーな構文で知られるJuliaプログラミング言語内で、効率的なpure-Julia implementationのフレームワークを提供することで一線を画しています。
 我々のパッケージは、第一チャーン数および第二チャーン数や$\mathbb{Z}_2$不変量など、様々なトポロジカル不変量を複数の次元や対称性クラスにわたってサポートしています。
 また、`MPI.jl`を通じた並列計算機能を提供し、大規模な問題に対する計算効率を向上させます。
-さらに、Juliaのマルチディスパッチ機能を活用し、`DifferentialEquations.jl`[Ref.]のような`Problem`、`Algorithm`、`solve`のような一貫したインターフェースを提供することで、拡張性を高めています。
+さらに、Juliaのマルチディスパッチ機能を活用して、`DifferentialEquations.jl`[Ref.]のような`Problem`、`Algorithm`、`solve`スタイルを採用することで一貫したインターフェースを提供し、拡張性を高めています。
 これらの機能を組み合わせることで、`TopologicalNumbers.jl`は性能、使いやすさ、メンテナンス性、拡張性のユニークなバランスを提供し、他のライブラリと必ずしも競合するのではなく、代替のツールと異なる視点を提供します。
 
 
@@ -123,7 +124,7 @@ While `SkewLinearAlgebra.jl` exists as an official Julia package for computing P
 
 また、Pfaffianの計算を必要とする$\mathbb{Z}_2$不変量の計算のために、我々は`PFAPACK`をJuliaに移植しました。
 `PFAPACK`は、反対称行列のPfaffianを計算するためのFortran/C++/Pythonライブラリであり [@Wimmer2012Algorithm]、本パッケージには元々提供されていたすべての関数の純粋なJulia実装が含まれています。
-`SkewLinearAlgebra.jl`は実対称行列のPfaffianを計算するための公式のJuliaパッケージとして存在しますが、`TopologicalNumbers.jl`は複素数の反対称行列を扱うための純粋なJulia実装を提供する最初の公式パッケージです。
+`SkewLinearAlgebra.jl`は実反対称行列のPfaffianを計算するための公式のJuliaパッケージとして存在しますが、`TopologicalNumbers.jl`は複素数の反対称行列を扱うための純粋なJulia実装を提供する最初の公式パッケージです。
 
 
 
