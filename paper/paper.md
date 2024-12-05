@@ -38,7 +38,7 @@ bibliography: paper.bib
 # Summary
 
 `TopologicalNumbers.jl` is an open-source Julia package designed to calculate topological invariants, which are mathematical quantities characterizing the properties of materials in condensed matter physics. 
-These invariants, such as the Chern number and the $\mathbb{Z}_2$ invariant, are crucial for understanding exotic materials like topological insulators and superconductors, which have potential applications in advanced electronics, spintronics, and quantum computing [Ref.]. 
+These invariants, such as the Chern number and the $\mathbb{Z}_2$ invariant, are crucial for understanding exotic materials like topological insulators and superconductors, which have potential applications in advanced electronics, spintronics, and quantum computing [@Nayak2008NonAbelian;@Hasan2010Colloquium;@Qi2011Topological]. 
 This package provides researchers and educators with an easy-to-use and efficient toolset to compute these invariants across various dimensions and symmetry classes, facilitating the exploration and discovery of new topological phases of matter.
 
 
@@ -73,7 +73,7 @@ The FHS method enables us to compute the numbers efficiently by discretizing the
 Several calculation methods have been proposed based on the FHS method to compute various topological numbers.
 One such method is for calculating the second Chern number in four-dimensional systems [@Mochol-Grzelak2018Efficient]. 
 The $\mathbb{Z}_2$ invariant can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
-The FHS method is also applied to find Weyl points and Weyl nodes in three-dimensional systems [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence].
+The FHS method is also applied to find Weyl points and Weyl nodes in three-dimensional systems [@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence;@Hirayama2018Topological].
 
 
 Currently, there is no comprehensive Julia package that implements all these calculation methods. 
@@ -103,7 +103,7 @@ The package also provides the `calcPhaseDiagram` function, which allows the comp
 
 
 Furthermore, utility functions such as `showBand`, `plot1D`, and `plot2D` are available for visualizing energy band structures and phase diagrams. 
-We also offer various model Hamiltonians (e.g., the Su–Schrieffer–Heeger (SSH) model [Ref.] and the Haldane model [Ref.]), enabling users to test functionalities and quickly learn how to use these features.
+We also offer various model Hamiltonians (e.g., the Su–Schrieffer–Heeger (SSH) model [@Su1979Solitons] and the Haldane model [@Haldane1988Model]), enabling users to test functionalities and quickly learn how to use these features.
 
 
 # Acknowledgements
