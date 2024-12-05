@@ -46,7 +46,7 @@ This package provides researchers and educators with an easy-to-use and efficien
 
 Understanding the properties of materials is essential in solid-state physics. 
 For example, electrical conductivity is a key physical quantity that indicates how well a material conducts electric current. 
-Typically, when a weak electric field is applied to a material, if there exist quantum eigenstates in the bulk into which electrons can transition, the material exhibits finite electrical conductivity and behaves as a metal. 
+Typically, when a weak electric field is applied to a material, if quantum eigenstates exist in the bulk into which electrons can transition, the material exhibits finite electrical conductivity and behaves as a metal.
 Conversely, if such states do not exist, the electrical conductivity is low, and the material behaves as an insulator.
 Since the 1980s, topological electronic systems—including quantum Hall insulators and topological insulators—have attracted attention because they exhibit new states where the bulk is insulating, but the material’s surface possesses conducting electronic states [@Hasan2010Colloquium;@Qi2011Topological]. 
 Due to these novel properties, extensive research has been conducted to explore candidate materials and evaluate their characteristics.
@@ -55,11 +55,11 @@ Due to these novel properties, extensive research has been conducted to explore 
 The features of surface conducting states are determined by the topology of quantum eigenstates in momentum space, dictated by the material’s Hamiltonian. 
 Topological numbers, such as the first Chern number, the second Chern number, and the $\mathbb{Z}_2$ invariant, are used to characterize these properties [@Thouless1982Quantized;@Kane2005Z_2]. 
 A typical example is the quantum Hall effect, where applying a weak electric field to a two-dimensional material results in a quantized finite electrical conductivity (Hall conductivity) in the direction perpendicular to the applied field [@Thouless1982Quantized]. 
-The Hall conductivity $\sigma_{xy}$ is characterized by the first Chern number $\nu\in\mathbb{Z}$ and is given by $\sigma_{xy} = \frac{e^{2}}{h} \nu$, where $e$ is the elementary charge and $h$ is Planck’s constant. 
+The Hall conductivity $\sigma_{xy}$ is characterized by the first Chern number $\nu \in \mathbb{Z}$ and is given by $\sigma_{xy} = \frac{e^{2}}{h} \nu$, where $e$ is the elementary charge and $h$ is Planck’s constant. 
 Other topological numbers similarly serve as important physical quantities characterizing systems, depending on their dimensions and symmetry classes [@Ryu2010Topological].
 
 
-To obtain the topological numbers, we often need numerical calculations, and it may require an enormous amount of computation before convergence is achieved. 
+We often need numerical calculations to obtain the topological numbers, which may require enormous computation before convergence is achieved. 
 Therefore, creating tools that allow easy computation of these numbers will advance research on the topological phases of matter. 
 So far, several methods have been reported that enable efficient computation of some topological numbers [@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]. 
 However, since each method is specialized for specific dimensions or symmetry classes, it is necessary to implement the algorithm separately for each problem. 
@@ -70,7 +70,7 @@ This package currently includes several methods for calculating topological numb
 The first is the Fukui–Hatsugai–Suzuki (FHS) method for computing the first Chern number in two-dimensional solid-state systems [@Fukui2005Chern]. 
 The first Chern number is obtained by integrating the Berry curvature, derived from the eigenstates of the Hamiltonian, over the Brillouin zone. 
 The FHS method enables us to compute the numbers efficiently by discretizing the Berry curvature in the Brillouin zone. 
-Based on the FHS method, several calculation methods have been proposed to compute various topological numbers. 
+Several calculation methods have been proposed based on the FHS method to compute various topological numbers.
 One such method is for calculating the second Chern number in four-dimensional systems [@Mochol-Grzelak2018Efficient]. 
 The $\mathbb{Z}_2$ invariant can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
 The FHS method is also applied to find Weyl points and Weyl nodes in three-dimensional systems [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence].
@@ -83,10 +83,10 @@ For example, `Z2Pack` [@Gresch2017Z2Pack] is a Python-based tool widely used for
 
 
 `TopologicalNumbers.jl` distinguishes itself by providing an efficient, pure Julia implementation within the Julia programming language, known for its high performance and user-friendly syntax. 
-This package supports various topological invariants—including the first and second Chern numbers and the $\mathbb{Z}_2$ invariant—across multiple dimensions and symmetry classes. 
+This package supports various topological invariants across multiple dimensions and symmetry classes, including the first and second Chern numbers and the $\mathbb{Z}_2$ invariant. 
 It also offers parallel computing capabilities through `MPI.jl`, enhancing computational efficiency for large-scale problems. 
 Furthermore, by leveraging Julia’s multiple dispatch feature, we adopt a consistent interface using the `Problem`, `Algorithm`, and `solve` style, similar to `DifferentialEquations.jl` [@Rackauckas2017DifferentialEquationsjl], enhancing extensibility. 
-By combining these features, `TopologicalNumbers.jl` offers a unique balance of performance, usability, maintainability, and extensibility, providing an alternative perspective rather than competing directly with other libraries.
+Combining these features, `TopologicalNumbers.jl` offers a unique balance of performance, usability, maintainability, and extensibility, providing an alternative perspective rather than competing directly with other libraries.
 
 
 Additionally, to compute the $\mathbb{Z}_2$ invariant, which requires calculating the Pfaffian, we have ported `PFAPACK` to Julia. 
@@ -103,7 +103,7 @@ The package also provides the `calcPhaseDiagram` function, which allows the comp
 
 
 Furthermore, utility functions such as `showBand`, `plot1D`, and `plot2D` are available for visualizing energy band structures and phase diagrams. 
-We also offer various model Hamiltonians (e.g., `SSH`, `Haldane`), enabling users to quickly test functionalities and learn how to use these features.
+We also offer various model Hamiltonians (e.g., the Su–Schrieffer–Heeger (SSH) model [Ref.] and the Haldane model [Ref.]), enabling users to test functionalities and learn how to use these features quickly.
 
 
 # Acknowledgements
