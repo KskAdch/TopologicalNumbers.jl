@@ -103,7 +103,7 @@ The package also provides the `calcPhaseDiagram` function, which allows the comp
 
 
 Furthermore, utility functions such as `showBand`, `plot1D`, and `plot2D` are available for visualizing energy band structures and phase diagrams. 
-We also offer various model Hamiltonians (e.g., the Su–Schrieffer–Heeger (SSH) model [Ref.] and the Haldane model [Ref.]), enabling users to test functionalities and learn how to use these features quickly.
+We also offer various model Hamiltonians (e.g., the Su–Schrieffer–Heeger (SSH) model [Ref.] and the Haldane model [Ref.]), enabling users to test functionalities and quickly learn how to use these features.
 
 
 # Acknowledgements
