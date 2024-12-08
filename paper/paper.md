@@ -36,63 +36,78 @@ bibliography: paper.bib
 
 
 # Summary
-Topological insulators have been of considerable interest in the last decades [@Hasan2010Colloquium;@Qi2011Topological]. 
-These materials show new states of matter that are insulating in the bulk but have conducting states on their surfaces. 
-The conducting states on the surface are protected by the topology of the bulk band structure, and topological numbers, 
-such as first Chern number, second Chern number, $\mathbb{Z}_2$ number, etc., are used to characterize them. 
-As a typical example, the quantum Hall effect has the quantized Hall conductivity, which can be calculated by the first Chern number. 
-Other topological numbers similarly become important physical quantities that characterize the system, 
-depending on the system dimension and symmetry classes [@Ryu2010Topological].
 
-To obtain the topological numbers, we often need numerical calculations, 
-and it may require an enormous amount of computation before convergence is achieved. 
-Therefore, creating tools to easily compute these numbers will lead to advances in research for the topological phase of matters. 
-So far, several methods have been reported that suggest that some topological numbers can be computed efficiently [@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]. 
-However, since each method is specialized for a specific dimension or symmetry class, 
-it is necessary to implement the algorithm for each problem, respectively. 
-Our project, `TopologicalNumbers.jl`, aims to provide a package that can easily and efficiently compute topological numbers comprehensively in various dimensions and symmetry classes.
-
+`TopologicalNumbers.jl` is an open-source Julia package designed to calculate topological invariants—mathematical quantities that characterize the properties of materials in condensed matter physics. 
+These invariants, such as the Chern number and the $\mathbb{Z}_2$ invariant, are crucial for understanding exotic materials like topological insulators and superconductors, which have potential applications in advanced electronics, spintronics, and quantum computing [@Nayak2008NonAbelian;@Hasan2010Colloquium;@Qi2011Topological]. 
+This package provides researchers and educators with an easy-to-use and efficient toolset to compute these invariants across various dimensions and symmetry classes, facilitating the exploration and discovery of new topological phases of matter.
 
 
 # Statement of need
-`TopologicalNumbers.jl` is an open-source Julia package for computing various topological numbers. 
-This package currently includes various methods for calculating topological numbers. 
-The first is the Fukui-Hatsugai-Suzuki (FHS) method for computing first Chern numbers in two-dimensional solid-state systems [@Fukui2005Chern]. 
-First Chern numbers are obtained by integrating the Berry curvature, 
-derived from the eigenstates of the Hamiltonian, 
-in the Brillouin zone. 
-The FHS method enables us to compute the numbers efficiently by discretizing Berry curvature in the Brillouin zone. 
-Based on the FHS method, several calculation methods have been proposed to compute various topological numbers. 
-One is the method of second Chern number calculation in four-dimensional systems [@Mochol-Grzelak2018Efficient]. 
-$\mathbb{Z}_2$ numbers can also be calculated in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
-The FHS method is also applied to find Weyl points and Weyl nodes in three-dimensional systems [@Hirayama2018Topological;@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence].
 
+Understanding the properties of materials is essential in solid-state physics. 
+For example, electrical conductivity is a key physical quantity indicating how well a material conducts electric current. 
+Typically, when a weak electric field is applied to a material, if quantum eigenstates exist in the bulk into which electrons can transition, the material exhibits finite electrical conductivity and behaves as a metal.
+Conversely, if such states do not exist, the electrical conductivity is low, and the material behaves as an insulator.
+Since the 1980s, it has been revealed that certain materials exhibit states in which the bulk is insulating while the material’s surface has conducting electronic states [@Hasan2010Colloquium;@Qi2011Topological]. 
+These materials are known as topological electronic systems, including quantum Hall insulators and topological insulators. 
+Due to these novel properties, extensive research has been conducted to identify candidate materials and evaluate their characteristics.
+
+
+The features of surface conducting states are determined by the topology of quantum eigenstates in momentum space, defined by the material’s Hamiltonian. 
+Topological numbers, such as the first Chern number, the second Chern number, and the $\mathbb{Z}_2$ invariant, are used to characterize these properties [@Thouless1982Quantized;@Kane2005Z_2]. 
+A typical example is the quantum Hall effect, where applying a weak electric field to a two-dimensional material results in a quantized finite electrical conductivity (Hall conductivity) perpendicular to the applied field [@Thouless1982Quantized]. 
+The Hall conductivity $\sigma_{xy}$ is characterized by the first Chern number $\nu \in \mathbb{Z}$ and is given by $\sigma_{xy} = \frac{e^{2}}{h} \nu$, where $e$ is the elementary charge and $h$ is Planck’s constant. 
+Other topological numbers similarly serve as important physical quantities that characterize systems, depending on their dimensions and symmetry classes [@Ryu2010Topological].
+
+
+Obtaining topological numbers often requires extensive numerical calculations, which may demand considerable computational effort before achieving convergence. 
+Therefore, creating tools that simplify the computation of these quantities will advance research on topological phases of matter. 
+Several methods have been developed to enable efficient computation of certain topological numbers [@Fukui2005Chern;@Fukui2007Quantum;@Mochol-Grzelak2018Efficient;@Shiozaki2023discrete]. 
+However, since each method is typically specialized for specific dimensions or symmetry classes, one must often implement algorithms separately for each problem. 
+Our project, `TopologicalNumbers.jl`, aims to provide a package that can efficiently and easily compute topological numbers across various dimensions and symmetry classes.
+
+
+This package currently includes several methods for calculating topological numbers. 
+The first is the Fukui–Hatsugai–Suzuki (FHS) method for computing the first Chern number in two-dimensional solid-state systems [@Fukui2005Chern]. 
+The first Chern number is obtained by integrating the Berry curvature, derived from the Hamiltonian’s eigenstates, over the Brillouin zone. 
+The FHS method enables efficient computation by discretizing the Berry curvature in the Brillouin zone. 
+Several methods based on the FHS approach have been proposed to compute various topological numbers.
+One such method calculates the second Chern number in four-dimensional systems [@Mochol-Grzelak2018Efficient]. 
+The $\mathbb{Z}_2$ invariant can be computed in two-dimensional systems with time-reversal symmetry [@Fukui2007Quantum;@Shiozaki2023discrete]. 
+The FHS method also applies to identifying Weyl points and Weyl nodes in three-dimensional systems [@Yang2011Quantum;@Hirayama2015Weyl;@Du2017Emergence;@Hirayama2018Topological].
 
 
 Currently, there is no comprehensive Julia package that implements all these calculation methods. 
-Users can easily calculate topological numbers using these methods included in our package. 
-In the simplest case, users only need to provide a function of the Hamiltonian matrix with wave numbers as arguments. 
-Computations can be performed by creating a corresponding `Problem` and calling the `solve` function (`solve(Problem)`). 
-The package also offers a `calcPhaseDiagram` function, 
-enabling the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by providing a `Problem` and parameter ranges (`calcPhaseDiagram(Problem, range...)`).
+On other platforms, software packages using different approaches—such as those based on Wannier charge centers [@Soluyanov2011Computing] or Wilson loops [@Yu2011Equivalent]—are available. 
+For example, `Z2Pack` [@Gresch2017Z2Pack] is a Python-based tool widely used for calculating the $\mathbb{Z}_2$ invariant and the first Chern number. 
+`WannierTools` [@Wu2018WannierTools] offers powerful features for analyzing topological materials but is implemented in Fortran, which may pose a steep learning curve for some users.
 
 
+`TopologicalNumbers.jl` distinguishes itself by providing an efficient, pure Julia implementation. Julia is known for its high performance and user-friendly syntax. 
+This package supports various topological invariants across multiple dimensions and symmetry classes, including the first and second Chern numbers and the $\mathbb{Z}_2$ invariant. 
+It also offers parallel computing capabilities through `MPI.jl`, enhancing computational efficiency for large-scale problems. 
+By leveraging Julia’s multiple dispatch feature, we adopt a consistent interface using the `Problem`, `Algorithm`, and `solve` style—similar to `DifferentialEquations.jl` [@Rackauckas2017DifferentialEquationsjl]—to improve extensibility. 
+With these features, `TopologicalNumbers.jl` achieves a unique balance of performance, usability, maintainability, and extensibility, providing an alternative perspective rather than directly competing with other libraries.
 
-For the calculation of $\mathbb{Z}_2$ invariants, which require the computation of pfaffian, we have ported `PFAPACK` to Julia. 
-`PFAPACK` is a Fortran/C++/Python library for computing the pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm], 
-and our package includes a pure-Julia implementation of all the functions originally provided. 
-While `SkewLinearAlgebra.jl` exists as an official Julia package for computing pfaffians of real skew-symmetric matrices, 
-`TopologicalNumbers.jl` is the first official package to offer a pure-Julia implementation for handling complex skew-symmetric matrices. 
-Additionally, several utility functions are available, such as `showBand`/`plot1D`/`plot2D` for visualizing energy band structures and phase diagrams. 
-We also provide various model Hamiltonians (e.g., `SSH`, `Haldane`) to enable users to quickly check the functionality and learn how to use these features. 
-Moreover, the package supports parallel computing using `MPI.jl`. 
-Consequently, `TopologicalNumbers.jl` is the first comprehensive Julia package for computing topological numbers in solid-state systems, 
-and we believe that it will be useful for researchers in the field of solid-state physics.
 
+Additionally, to compute the $\mathbb{Z}_2$ invariant, which requires calculating the Pfaffian, we have ported `PFAPACK` to Julia. 
+`PFAPACK` is a Fortran/C++/Python library for computing the Pfaffian of skew-symmetric matrices [@Wimmer2012Algorithm].
+Our package includes pure Julia implementations of all originally provided functions. 
+While `SkewLinearAlgebra.jl` exists as an official Julia package for computing the Pfaffian of real skew-symmetric matrices, to our knowledge, `TopologicalNumbers.jl` is the first official package to offer a pure Julia implementation that handles complex skew-symmetric matrices. 
+
+
+# Usage
+
+Users can easily compute topological numbers using the various methods included in this package.
+In the simplest case, they need only provide a function that returns the Hamiltonian matrix as a function of the wave numbers. 
+Computations are performed by creating the corresponding `Problem` instance and calling the `solve` function (`solve(Problem)`). 
+The package also provides the `calcPhaseDiagram` function, which enables the computation of topological numbers in one-dimensional or two-dimensional parameter spaces by specifying the `Problem` and parameter ranges (`calcPhaseDiagram(Problem, range...)`).
+
+
+Moreover, utility functions such as `showBand`, `plot1D`, and `plot2D` are available for visualizing energy band structures and phase diagrams. 
+We also offer various model Hamiltonians, such as the Su–Schrieffer–Heeger (SSH) model [@Su1979Solitons] and the Haldane model [@Haldane1988Model], allowing users to quickly test functionalities and learn how to use these features.
 
 
 # Acknowledgements
 The authors are grateful to Takahiro Fukui for fruitful discussions. 
-M.K. was supported by JST, 
-the establishment of university fellowships towards the creation of science technology innovation, 
-Grant No. JPMJFS2107.
+M. K. was supported by JST, the establishment of university fellowships towards the creation of science technology innovation (Grant No. JPMJFS2107), and by JST SPRING (Grant No. JPMJSP2109).
