@@ -53,7 +53,7 @@ These materials are known as topological electronic systems, including quantum H
 Due to these novel properties, extensive research has been conducted to identify candidate materials and evaluate their characteristics.
 
 
-The features of surface conducting states are determined by the topology of quantum eigenstates in momentum space, defined by the material’s Hamiltonian. 
+The features of surface conducting states are determined by the topology of quantum eigenstates in momentum space. 
 Topological numbers, such as the first Chern number, the second Chern number, and the $\mathbb{Z}_2$ invariant, are used to characterize these properties [@Thouless1982Quantized;@Kane2005Z_2]. 
 A typical example is the quantum Hall effect, where applying a weak electric field to a two-dimensional material results in a quantized finite electrical conductivity (Hall conductivity) perpendicular to the applied field [@Thouless1982Quantized]. 
 The Hall conductivity $\sigma_{xy}$ is characterized by the first Chern number $\nu \in \mathbb{Z}$ and is given by $\sigma_{xy} = \frac{e^{2}}{h} \nu$, where $e$ is the elementary charge and $h$ is Planck’s constant. 
