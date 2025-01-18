@@ -873,7 +873,68 @@ end
 
 # Berry phase
 @doc raw"""
+Calculate the one-dimensional phase diagram for the Berry phase as a function of a parameter range.
+
     calcPhaseDiagram(prob::BPProblem, param_range::T1, alg::T2=BP(); parallel::T3=UseSingleThread(), plot::Bool=false, progress::Bool=false) where {T1<:AbstractVector,T2<:BerryPhaseAlgorithms,T3<:TopologicalNumbersParallel}
+
+# Description
+`calcPhaseDiagram` は、一次元系を想定した `BPProblem` に対して、指定したパラメータの範囲 (`param_range`) を走査しながら Berry 位相 を計算し、相図を得るための関数です。  
+`alg` や `parallel` オプションを切り替えることで、計算手法や並列化戦略を柔軟に変更できます。さらに、`plot` 引数を有効にすると、計算完了後に簡易的なプロットを表示することも可能です。
+
+# Arguments
+- `prob::BPProblem`: 
+  Berry 位相計算用の問題設定を格納した構造体です。ハミルトニアンやメッシュサイズ、ギャップの有無などのパラメータを含みます。
+
+- `param_range::AbstractVector`: 
+  走査するパラメータのリストや範囲 (e.g. `range(-2.0, 2.0, length=50)`) を指定します。この値を用いて、内部でハミルトニアンに与えるパラメータを変化させ、Berry 位相を計算します。
+
+- `alg::BerryPhaseAlgorithms=BP()`: 
+  Berry 位相の計算アルゴリズムを指定します。既定値は `BP()` です。必要に応じて、異なるアルゴリズムを実装・指定することが可能です。
+
+- `parallel::TopologicalNumbersParallel=UseSingleThread()`: 
+  並列化の戦略を指定します。既定値はシングルスレッド (`UseSingleThread()`) です。分散環境やマルチスレッドでの実行をしたい場合は別途指定してください。（現時点でBerry Phaseの計算はマルチスレッド対応していません。）
+
+- `plot::Bool=false`: 
+  `true` に設定すると、計算完了後に簡易的なプロットが表示されます。可視化によって位相遷移を直感的に確認したい場合に有用です。
+
+- `progress::Bool=false`: 
+  `true` に設定すると、ループ計算時に進捗状況を表示します。計算規模が大きい場合の目安として活用できます。
+
+# Returns
+- `NamedTuple{(:param, :nums)}`: 
+  - `param::AbstractVector`: 与えられた `param_range` のコピーです。
+  - `nums::AbstractMatrix`: 各パラメータごとに計算された Berry 位相（あるいはそれに基づくトポロジカル量）の配列です。**バンドの数 × パラメータ数**の行列として格納されます。
+
+# Examples
+
+```julia
+julia> using TopologicalNumbers
+julia> # ハミルトニアンを定義
+       H₀(k, p) = SSH(k, p)
+julia> # Berry phase を計算する問題を設定
+       prob = BPProblem(H₀)
+julia> # パラメータを -2.0 から 2.0 まで 9 分割で走査
+       param_range = range(-2.0, 2.0, length=9)
+julia> # 位相図を計算 (既定アルゴリズム BP, 並列化なし, プロットあり, 進捗表示あり)
+       result = calcPhaseDiagram(prob, param_range; plot=true, progress=true)
+(param = -2.0:0.5:2.0, nums = [1 1; 1 1; 0 0; 0 0; 0 0; 0 0; 0 0; 1 1; 1 1])
+
+julia> result.param
+-2.0:0.5:2.0
+
+julia> result.nums
+9×2 Matrix{Int64}:
+ 1  1
+ 1  1
+ 0  0
+ 0  0
+ 0  0
+ 0  0
+ 0  0
+ 1  1
+ 1  1
+
+
 """
 function calcPhaseDiagram(
     prob::BPProblem,

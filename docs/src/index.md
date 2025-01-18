@@ -44,7 +44,7 @@ the Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite),
 or method of calculating the Weyl nodes [Hirayama2018Topological,Yang2011Quantum,Hirayama2015Weyl,Du2017Emergence](@cite).
 
 This software is released under the MIT License, please see the LICENSE file for more details.  
-It is confirmed to work on Julia 1.6 (LTS) and 1.10.
+It is confirmed to work on Julia 1.10 (LTS) and 1.11.
 
 
 ## Installation
