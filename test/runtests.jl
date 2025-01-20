@@ -702,7 +702,7 @@ const np = pyimport("numpy")
                 @test solve(prob).TopologicalNumber ≈ 0.8309301430562057
 
                 H(k, p) = LatticeDirac(k, p[1]) + p[2] * Matrix{Float64}(I, 4, 4)
-                prob = SCProblem(H, 1, 31)
+                prob = SCProblem(H, 31, 1)
                 param1 = [-1.0, 1.0]
                 param2 = [-0.5, 0.5]
                 res = calcPhaseDiagram(prob, param1, param2)

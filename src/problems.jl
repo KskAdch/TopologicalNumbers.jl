@@ -177,32 +177,12 @@ julia>
 SCProblem(H) = SCProblem(; H=H)
 
 @doc raw"""
-    SCProblem(H, Nf)
+    SCProblem(H, N)
 
 Constructs a second Chern number problem with the default parameters.
 
 # Arguments
 - `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 4.
-- `Nf`: The number of filled bands. `nothing` means the half-filling.
-
-# Returns
-A `SCProblem` object.
-
-# Example
-```julia
-julia> 
-```
-"""
-SCProblem(H, Nf) = SCProblem(; H=H, Nfill=Nf)
-
-@doc raw"""
-    SCProblem(H, Nf, N)
-
-Constructs a second Chern number problem with the default parameters.
-
-# Arguments
-- `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 4.
-- `Nf`: The number of filled bands. `nothing` means the half-filling.
 - `N`: The number of points in the Brillouin zone. Type of `Int` means the uniform mesh. You can also specify the mesh by giving a tuple or a vector.
 
 # Returns
@@ -213,7 +193,28 @@ A `SCProblem` object.
 julia> 
 ```
 """
-SCProblem(H, Nf, N) = SCProblem(; H=H, Nfill=Nf, N=N)
+SCProblem(H, N) = SCProblem(; H=H, N=N)
+
+@doc raw"""
+    SCProblem(H, N, Nf)
+
+Constructs a second Chern number problem with the default parameters.
+
+# Arguments
+- `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 4.
+- `N`: The number of points in the Brillouin zone. Type of `Int` means the uniform mesh. You can also specify the mesh by giving a tuple or a vector.
+- `Nf`: The number of filled bands. `nothing` means the half-filling.
+
+
+# Returns
+A `SCProblem` object.
+
+# Example
+```julia
+julia> 
+```
+"""
+SCProblem(H, N, Nf) = SCProblem(; H=H, N=N, Nfill=Nf)
 
 # Problem for calculating the Z2 invariant
 @doc raw"""
