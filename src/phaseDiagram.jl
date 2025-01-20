@@ -1471,7 +1471,7 @@ Calculate the one-dimensional phase diagram for the second Chern number over a s
 
 # Arguments
 - `prob::SCProblem`: 
-  A structure that contains the problem settings for second Chern number calculations, including the Hamiltonian, mesh size, gap information, and other parameters.
+  A structure that contains the problem settings for second Chern number calculations, including the Hamiltonian, mesh size, number of filled bands, gap information, and other parameters. The default is a half-filled band case.
 
 - `param_range::AbstractVector`: 
   A list or range of parameters (e.g., `range(-2.0, 2.0, length=50)`) over which to scan. The Hamiltonian is evaluated at each parameter value in order to compute the second Chern number.
@@ -1480,7 +1480,7 @@ Calculate the one-dimensional phase diagram for the second Chern number over a s
   The algorithm used to compute the second Chern number. The default is `FHS2()`. You can implement and specify other algorithms as needed.
 
 - `parallel::TopologicalNumbersParallel=UseSingleThread()`: 
-  The parallelization strategy. The default is single-threaded (`UseSingleThread()`). If you wish to run in a distributed environment, you can specify it accordingly. (Note that, at present, the second Chern number calculation does not support multithreading.)
+  The parallelization strategy. The default is single-threaded (`UseSingleThread()`). If you wish to run in a distributed environment, you can specify it accordingly.
 
 - `plot::Bool=false`: 
   If set to `true`, a simple plot of the calculated results is shown after the computation finishes. This is helpful for visually confirming topological phase transitions.
@@ -1491,7 +1491,7 @@ Calculate the one-dimensional phase diagram for the second Chern number over a s
 # Returns
 - `NamedTuple{(:param, :nums)}`: 
   - `param::AbstractVector`: A copy of the input `param_range`.
-  - `nums::AbstractMatrix`: A matrix containing the computed second Chern numbers for each parameter. The size of this matrix is (**number of bands** × **number of parameter values**).
+  - `nums::AbstractVector`: A vector containing the computed second Chern numbers for each parameter.
 
 # Examples
 
@@ -1499,7 +1499,7 @@ Calculate the one-dimensional phase diagram for the second Chern number over a s
 julia> using TopologicalNumbers
 julia> # Define the Hamiltonian
        H₀(k, p) = LatticeDirac(k, p)
-julia> N = 30; # number of k-points in each direction
+julia> N = 10; # number of k-points in each direction
 julia> # Set up the second Chern number problem
        prob = SCProblem(H₀, N)
 julia> # Define a parameter range
@@ -1507,23 +1507,17 @@ julia> # Define a parameter range
 julia> # Calculate the phase diagram (using the default FHS2 algorithm, single-threaded,
        # with plotting enabled and progress display)
        result = calcPhaseDiagram(prob, param; plot=true, progress=true)
-(param = -3.141592653589793:0.6981317007977318:3.141592653589793, nums = [0 0; -1 1; -1 1; -1 1; 0 0; 0 0; 1 -1; 1 -1; 1 -1; 0 0])
+(param = -4.9:3.2666666666666666:4.9, nums = [0.0010237313095167136, -2.0667333080974726, 2.1572606447321445, -0.0009805850180973081])
 
 julia> result.param
--3.141592653589793:0.6981317007977318:3.141592653589793
+-4.9:3.2666666666666666:4.9
 
 julia> result.nums
-10×2 Matrix{Int64}:
-  0   0
- -1   1
- -1   1
- -1   1
-  0   0
-  0   0
-  1  -1
-  1  -1
-  1  -1
-  0   0
+4-element Vector{Float64}:
+  0.0010237313095167136
+ -2.0667333080974726
+  2.1572606447321445
+ -0.0009805850180973081
 
 
 """
