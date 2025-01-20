@@ -933,7 +933,7 @@ julia> result.nums
  0  0
  1  1
  1  1
-
+```
 
 """
 function calcPhaseDiagram(
@@ -1032,7 +1032,7 @@ julia> result.nums
 [:, :, 4] =
  0  1  1  0
  0  1  1  0
-
+```
 
 """
 function calcPhaseDiagram(
@@ -1128,7 +1128,7 @@ julia> result.nums
   1  -1
   1  -1
   0   0
-
+```
 
 """
 function calcPhaseDiagram(
@@ -1228,7 +1228,7 @@ julia> result.nums
 [:, :, 4] =
  0  0  0  0
  0  0  0  0
-
+```
 
 """
 function calcPhaseDiagram(
@@ -1324,7 +1324,7 @@ julia> result.nums
  0  0
  0  0
  0  0
-
+```
 
 """
 function calcPhaseDiagram(
@@ -1427,7 +1427,7 @@ julia> result.nums
 [:, :, 4] =
  0  1  1  0
  0  1  1  0
-
+```
 
 """
 function calcPhaseDiagram(
@@ -1518,6 +1518,7 @@ julia> result.nums
  -2.0667333080974726
   2.1572606447321445
  -0.0009805850180973081
+```
 
 
 """
