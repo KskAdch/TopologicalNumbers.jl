@@ -11,4 +11,5 @@ using StaticArrays
 if haskey(ENV, "GITHUB_ACTIONS") && haskey(ENV, "AUTOMERGE_GITHUB_TOKEN")
     ENV["MPLBACKEND"] = "Agg"
 end
+# ENV["MPLBACKEND"] = "Agg"
 using PythonPlot
