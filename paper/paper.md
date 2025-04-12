@@ -37,7 +37,7 @@ bibliography: paper.bib
 
 # Summary
 
-`TopologicalNumbers.jl` is an open-source Julia package designed to calculate topological invariants—mathematical quantities that characterize the properties of materials in condensed matter physics. 
+`TopologicalNumbers.jl` is an open-source Julia package designed to calculate topological invariants — mathematical quantities that characterize the properties of materials in condensed matter physics. 
 These invariants, such as the Chern number and the $\mathbb{Z}_2$ invariant, are crucial for understanding exotic materials like topological insulators and superconductors, which have potential applications in advanced electronics, spintronics, and quantum computing [@Nayak2008NonAbelian;@Hasan2010Colloquium;@Qi2011Topological]. 
 This package provides researchers and educators with an easy-to-use and efficient toolset to compute these invariants across various dimensions and symmetry classes, facilitating the exploration and discovery of new topological phases of matter.
 
@@ -78,7 +78,7 @@ The FHS method also applies to identifying Weyl points and Weyl nodes in three-d
 
 
 Currently, there is no comprehensive Julia package that implements all these calculation methods. 
-On other platforms, software packages using different approaches—such as those based on Wannier charge centers [@Soluyanov2011Computing] or Wilson loops [@Yu2011Equivalent]—are available. 
+On other platforms, software packages using different approaches — such as those based on Wannier charge centers [@Soluyanov2011Computing] or Wilson loops [@Yu2011Equivalent] — are available. 
 For example, `Z2Pack` [@Gresch2017Z2Pack] is a Python-based tool widely used for calculating the $\mathbb{Z}_2$ invariant and the first Chern number. 
 `WannierTools` [@Wu2018WannierTools] offers powerful features for analyzing topological materials but is implemented in Fortran, which may pose a steep learning curve for some users.
 
@@ -86,7 +86,7 @@ For example, `Z2Pack` [@Gresch2017Z2Pack] is a Python-based tool widely used for
 `TopologicalNumbers.jl` distinguishes itself by providing an efficient, pure Julia implementation. Julia is known for its high performance and user-friendly syntax. 
 This package supports various topological invariants across multiple dimensions and symmetry classes, including the first and second Chern numbers and the $\mathbb{Z}_2$ invariant. 
 It also offers parallel computing capabilities through `MPI.jl`, enhancing computational efficiency for large-scale problems. 
-By leveraging Julia’s multiple dispatch feature, we adopt a consistent interface using the `Problem`, `Algorithm`, and `solve` style—similar to `DifferentialEquations.jl` [@Rackauckas2017DifferentialEquationsjl]—to improve extensibility. 
+By leveraging Julia’s multiple dispatch feature, we adopt a consistent interface using the `Problem`, `Algorithm`, and `solve` style — similar to `DifferentialEquations.jl` [@Rackauckas2017DifferentialEquationsjl] — to improve extensibility. 
 With these features, `TopologicalNumbers.jl` achieves a unique balance of performance, usability, maintainability, and extensibility, providing an alternative perspective rather than directly competing with other libraries.
 
 
