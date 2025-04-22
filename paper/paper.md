@@ -111,3 +111,6 @@ We also offer various model Hamiltonians, such as the Su–Schrieffer–Heeger (
 # Acknowledgements
 The authors are grateful to Takahiro Fukui for fruitful discussions. 
 M. K. was supported by JST, the establishment of university fellowships towards the creation of science technology innovation (Grant No. JPMJFS2107), and by JST SPRING (Grant No. JPMJSP2109).
+
+
+#References
