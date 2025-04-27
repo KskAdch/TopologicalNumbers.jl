@@ -401,16 +401,17 @@ If TopologicalNumbers.jl is useful in your research, please consider citing it.
 Below is the BibTeX entry for referencing this project:
 
 ```bibtex
-@misc{Adachi2024TopologicalNumbers,
-  title = {{{TopologicalNumbers}}.Jl: {{A Julia}} Package for Topological Number Computation},
-  author = {Adachi, Keisuke and Kanega, Minoru},
-  year = {2024},
-  number = {arXiv:2402.00885},
-  eprint = {2402.00885},
-  primaryclass = {cond-mat},
-  publisher = {arXiv},
-  doi = {10.48550/arXiv.2402.00885},
-  archiveprefix = {arxiv}
+@article{Adachi2025TopologicalNumbers,
+doi = {10.21105/joss.06944},
+url = {https://doi.org/10.21105/joss.06944},
+year = {2025},
+publisher = {The Open Journal},
+volume = {10},
+number = {108},
+pages = {6944},
+author = {Keisuke Adachi and Minoru Kanega},
+title = {TopologicalNumbers.jl: A Julia package for topological number computation},
+journal = {Journal of Open Source Software}
 }
 ```
 

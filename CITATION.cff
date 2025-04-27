@@ -1,12 +1,41 @@
-cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+cff-version: "1.2.0"
 authors:
   - family-names: Adachi
     given-names: Keisuke
-    orcid: https://orcid.org/0009-0004-0195-7952
+    orcid: "https://orcid.org/0009-0004-0195-7952"
   - family-names: Kanega
     given-names: Minoru
-    orcid: https://orcid.org/0009-0008-4623-8010
-title: "TopologicalNumbers.jl"
-doi: 10.5281/zenodo.10548482
-url: "https://github.com/KskAdch/TopologicalNumbers.jl"
+    orcid: "https://orcid.org/0009-0008-4623-8010"
+contact:
+  - family-names: Adachi
+    given-names: Keisuke
+    orcid: "https://orcid.org/0009-0004-0195-7952"
+  - family-names: Kanega
+    given-names: Minoru
+    orcid: "https://orcid.org/0009-0008-4623-8010"
+doi: 10.5281/zenodo.14710087
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+    - family-names: Adachi
+      given-names: Keisuke
+      orcid: "https://orcid.org/0009-0004-0195-7952"
+    - family-names: Kanega
+      given-names: Minoru
+      orcid: "https://orcid.org/0009-0008-4623-8010"
+  date-published: 2025-04-23
+  doi: 10.21105/joss.06944
+  issn: 2475-9066
+  issue: 108
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 6944
+  title: "TopologicalNumbers.jl: A Julia package for topological number
+    computation"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.06944"
+  volume: 10
+title: "TopologicalNumbers.jl: A Julia package for topological number
+  computation"

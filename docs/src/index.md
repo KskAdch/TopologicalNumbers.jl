@@ -35,6 +35,7 @@ Documentation for [TopologicalNumbers](https://github.com/KskAdch/TopologicalNum
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://KskAdch.github.io/TopologicalNumbers.jl/dev/)
 [![Build Status](https://github.com/KskAdch/TopologicalNumbers.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/KskAdch/TopologicalNumbers.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/KskAdch/TopologicalNumbers.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/KskAdch/TopologicalNumbers.jl)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06944/status.svg)](https://doi.org/10.21105/joss.06944)
 
 ## Overview
 
@@ -106,3 +107,24 @@ The correspondence between the spatial dimension of the system and the supported
 ## Contributing
 
 User feedback is appreciated. Please create a [GitHub Issue](https://github.com/KskAdch/TopologicalNumbers.jl/issues) to report bugs or suggest new features, or a [Pull Request](https://github.com/KskAdch/TopologicalNumbers.jl/pulls) to contribute to the package. 
+
+
+## Citation
+
+If TopologicalNumbers.jl is useful in your research, please consider citing it. 
+Below is the BibTeX entry for referencing this project:
+
+```bibtex
+@article{Adachi2025TopologicalNumbers,
+doi = {10.21105/joss.06944},
+url = {https://doi.org/10.21105/joss.06944},
+year = {2025},
+publisher = {The Open Journal},
+volume = {10},
+number = {108},
+pages = {6944},
+author = {Keisuke Adachi and Minoru Kanega},
+title = {TopologicalNumbers.jl: A Julia package for topological number computation},
+journal = {Journal of Open Source Software}
+}
+```
