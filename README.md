@@ -10,7 +10,7 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://KskAdch.github.io/TopologicalNumbers.jl/dev/)
 [![Build Status](https://github.com/KskAdch/TopologicalNumbers.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/KskAdch/TopologicalNumbers.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/KskAdch/TopologicalNumbers.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/KskAdch/TopologicalNumbers.jl)
-[![DOI](https://zenodo.org/badge/666049458.svg)](https://zenodo.org/badge/latestdoi/666049458)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06944/status.svg)](https://doi.org/10.21105/joss.06944)
 
 ## Overview
 
