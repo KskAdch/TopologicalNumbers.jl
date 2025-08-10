@@ -80,9 +80,9 @@ julia> function H₀(k, p) # SSH
 
 Or you can use our preset Hamiltonian function:
 
-'''julia
+```julia
 julia> H₀(k, p) = SSH(k, p)
-'''
+```
 
 The band structure is computed as follows:
 
@@ -163,9 +163,9 @@ julia> function H₀(k, p) # Haldane
 
 Or you can use our preset Hamiltonian function:
 
-'''julia
+```julia
 julia> H₀(k, p) = Haldane(k, p)
-'''
+```
 
 The band structure is computed as follows:
 
@@ -264,9 +264,9 @@ julia> function H₀(k, p) # BHZ
 ```
 Alternatively, you can use our preset Hamiltonian:
 
-'''julia
+```julia
 julia> H₀(k, p) = BHZ(k, p)
-'''
+```
 
 To calculate the dispersion, execute:
 
