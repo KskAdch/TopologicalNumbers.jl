@@ -68,18 +68,26 @@ Here's a simple example of the SSH Hamiltonian:
 
 ```julia
 julia> using TopologicalNumbers
-julia> function H₀(k, p)
+julia> function H₀(k, p) # SSH
+            t₁ = 1
+            t₂ = p
             [
-                0 p[1]+p[2]*exp(-im * k)
-                p[1]+p[2]*exp(im * k) 0
+                0  t₁ + t₂*exp(-im * k)
+                t₁ + t₂*exp(im * k) 0
             ]
         end
 ```
 
+Or you can use our preset Hamiltonian function:
+
+'''julia
+julia> H₀(k, p) = SSH(k, p)
+'''
+
 The band structure is computed as follows:
 
 ```julia
-julia> H(k) = H₀(k, (0.9, 1.0))
+julia> H(k) = H₀(k, 1.1)
 julia> showBand(H; value=false, disp=true)
 ```
 
@@ -134,25 +142,30 @@ julia> sol = calcPhaseDiagram(prob, param; plot=true)
 Hamiltonian of Haldane model is given by:
 
 ```julia
-julia> function H₀(k, p) # landau
-           k1, k2 = k
-           J = 1.0
-           K = 1.0
-           ϕ, M = p
+julia> function H₀(k, p) # Haldane
+            k1, k2 = k
+            t₁ = 1
+            t₂, ϕ, m = p
 
-           h0 = 2K * cos(ϕ) * (cos(k1) + cos(k2) + cos(k1 + k2))
-           hx = J * (1 + cos(k1) + cos(k2))
-           hy = J * (-sin(k1) + sin(k2))
-           hz = M - 2K * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
+            h0 = 2t₂ * cos(ϕ) * (cos(k1) + cos(k2) + cos(k1 + k2))
+            hx = t₁ * (1 + cos(k1) + cos(k2))
+            hy = t₁ * (-sin(k1) + sin(k2))
+            hz = m - 2t₂ * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
 
-           s0 = [1 0; 0 1]
-           sx = [0 1; 1 0]
-           sy = [0 -im; im 0]
-           sz = [1 0; 0 -1]
+            s0 = [1 0; 0 1]
+            sx = [0 1; 1 0]
+            sy = [0 -im; im 0]
+            sz = [1 0; 0 -1]
 
-           h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
-       end
+            h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+        end
 ```
+
+Or you can use our preset Hamiltonian function:
+
+'''julia
+julia> H₀(k, p) = Haldane(k, p)
+'''
 
 The band structure is computed as follows:
 
@@ -220,32 +233,40 @@ julia> sol = calcPhaseDiagram(prob, param1, param2; plot=true)
 As an example of a two-dimensional topological insulator, the BHZ model is presented here:
 
 ```julia
+julia> using LinearAlgebra
 julia> function H₀(k, p) # BHZ
-    k1, k2 = k
-    tₛₚ = 1
-    t₁ = ϵ₁ = 2
-    ϵ₂, t₂ = p
+            k1, k2 = k
+            tₛₚ = 1
+            t₁ = ϵ₁ = 2
+            ϵ₂, t₂ = p
 
-    R0 = -t₁*(cos(k1) + cos(k2)) + ϵ₁/2
-    R3 = 2tₛₚ*sin(k2)
-    R4 = 2tₛₚ*sin(k1)
-    R5 = -t₂*(cos(k1) + cos(k2)) + ϵ₂/2
+            ϵ = -t₁*(cos(k1) + cos(k2)) + ϵ₁/2
+            R1 = 0
+            R2 = 0
+            R3 = 2tₛₚ*sin(k2)
+            R4 = 2tₛₚ*sin(k1)
+            R0 = -t₂*(cos(k1) + cos(k2)) + ϵ₂/2
 
-    s0 = [1 0; 0 1]
-    sx = [0 1; 1 0]
-    sy = [0 -im; im 0]
-    sz = [1 0; 0 -1]
+            s0 = [1 0; 0 1]
+            sx = [0 1; 1 0]
+            sy = [0 -im; im 0]
+            sz = [1 0; 0 -1]
 
-    a0 = kron(s0, s0)
-    a1 = kron(sx, sx)
-    a2 = kron(sx, sy)
-    a3 = kron(sx, sz)
-    a4 = kron(sy, s0)
-    a5 = kron(sz, s0)
+            I0 = Matrix{Int64}(I, 4, 4)
+            a1 = kron(sz, sx)
+            a2 = kron(sz, sy)
+            a3 = kron(sz, sz)
+            a4 = kron(sy, s0)
+            a0 = kron(sx, s0)
 
-    R0 .* a0 .+ R3 .* a3 .+ R4 .* a4 .+ R5 .* a5
-end
+            ϵ .* I0 .+ R1 .* a1 .+ R2 .* a2 .+ R3 .* a3 .+ R4 .* a4 .+ R0 .* a0
+        end
 ```
+Alternatively, you can use our preset Hamiltonian:
+
+'''julia
+julia> H₀(k, p) = BHZ(k, p)
+'''
 
 To calculate the dispersion, execute:
 
