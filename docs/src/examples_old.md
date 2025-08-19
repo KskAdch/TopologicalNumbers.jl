@@ -40,7 +40,7 @@ The output is:
 (TopologicalNumber = [1, 1], Total = 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the winding number for each band. 
+The first argument `TopologicalNumber` in the named tuple is a vector that stores the winding number for each band. 
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the winding numbers for each band (mod 2).
 `Total` is a quantity that should always return zero.
@@ -125,7 +125,7 @@ The output is:
 (TopologicalNumber = [1, 1, -2, -2, 1, 1], Total = 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the first Chern number for each band. 
+The first argument `TopologicalNumber` in the named tuple is a vector that stores the first Chern number for each band. 
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the first Chern numbers for each band.
 `Total` is a quantity that should always return zero.
@@ -219,7 +219,7 @@ The output is:
 (TopologicalNumber = [1, 1], Total = 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for each each pair of two energy bands. 
+The first argument `TopologicalNumber` in the named tuple is a vector that stores the $\mathbb{Z}_2$ number for each each pair of two energy bands. 
 The vector is arranged in order of bands, starting from the one with the lowest energy.
 The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for each pair of two energy bands.
 `Total` is a quantity that should always return zero.
