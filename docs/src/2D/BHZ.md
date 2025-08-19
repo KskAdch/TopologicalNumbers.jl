@@ -7,7 +7,7 @@ julia> using LinearAlgebra
 julia> function H₀(k, p) # BHZ
     k1, k2 = k
     tₛₚ = 1
-    t₁ = ϵ₁ = 2
+    t₁ = ϵ₁ = 1
     ϵ₂, t₂ = p
 
     ϵ = -t₁*(cos(k1) + cos(k2)) + ϵ₁/2
@@ -35,7 +35,7 @@ end
 You can also use our preset Hamiltonian function `BHZ` to define the same Hamiltonian matrix as follows:
 
 ```julia
-julia> H₀(k, p) = BHZ(k, p)
+julia> H₀ = BHZ
 ```
 
 To calculate the dispersion, execute:
@@ -45,7 +45,7 @@ julia> H(k) = H₀(k, (2, 2))
 julia> showBand(H; value=false, disp=true)
 ```
 
-![Dispersion of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/de14907c-777f-4667-810b-54c10888dfa1)
+![Dispersion of BHZ model](./assets/Band_BHZ.png)
 
 
 Next, we can compute the $\mathbb{Z}_2$ numbers using `Z2Problem`:
@@ -62,7 +62,7 @@ The output is:
 Z2Solution{Vector{Int64}, Nothing, Int64}([1, 1], nothing, 0)
 ```
 
-The first argument `TopologicalNumber` in the named tuple is an vector that stores the $\mathbb{Z}_2$ number for Energy bands below and above some filling condition that you selected in the options (the default is the half-filling).
+The first argument `TopologicalNumber` in the named tuple is a vector that stores the $\mathbb{Z}_2$ number for Energy bands below and above some filling condition that you selected in the options (the default is the half-filling).
 The vector is arranged in order of bands, starting from the lower energy.
 The second argument `Total` stores the total of the $\mathbb{Z}_2$ numbers for Energy bands below and above some filling condition (mod2).
 `Total` is a quantity that should always return zero.
@@ -91,7 +91,7 @@ julia> sol = calcPhaseDiagram(prob, param; plot=true)
 (param = -2.0:0.004004004004004004:2.0, nums = [0 0; 0 0; … ; 0 0; 0 0])
 ```
 
-![One-dimensional phase diagram of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/5d6d5364-68d0-4423-8ecf-49bf0538af63)
+![One-dimensional phase diagram of BHZ model](./assets/phase_diagram1D_BHZ.png)
 
 
 Also, two-dimensional phase diagram is given by:
@@ -105,4 +105,4 @@ julia> calcPhaseDiagram(prob, param1, param2; plot=true)
 ```
 
 
-![Two-dimensional phase diagram of BHZ model](https://github.com/KskAdch/TopologicalNumbers.jl/assets/139373570/802eedbe-c893-44b4-8267-d80e1745415a)
+![Two-dimensional phase diagram of BHZ model](./assets/phase_diagram2D_BHZ.png)

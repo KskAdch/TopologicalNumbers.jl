@@ -1,4 +1,4 @@
-# The Su-Schriffer-Heeger (SSH) model
+# The Su-Schrieffer-Heeger (SSH) model
 
 Here's a simple example of the SSH Hamiltonian:
 
@@ -17,7 +17,7 @@ julia> function H₀(k, p)
 You can also use our preset Hamiltonian function `SSH` to define the same Hamiltonian matrix as follows:
 
 ```julia
-julia> H₀(k, p) = SSH(k, p)
+julia> H₀ = SSH
 ```
 
 The band structure is computed as follows:
