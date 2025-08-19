@@ -24,7 +24,7 @@ julia> function H₀(k, p) # Haldane
 You can also use our preset Hamiltonian function `Haldane` to define the same Hamiltonian matrix as follows:
 
 ```julia
-julia> H₀(k, p) = Haldane(k, p)
+julia> H₀ = Haldane
 ```
 
 The band structure is computed as follows:

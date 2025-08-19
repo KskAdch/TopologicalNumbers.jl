@@ -35,7 +35,7 @@ end
 You can also use our preset Hamiltonian function `BHZ` to define the same Hamiltonian matrix as follows:
 
 ```julia
-julia> H₀(k, p) = BHZ(k, p)
+julia> H₀ = BHZ
 ```
 
 To calculate the dispersion, execute:

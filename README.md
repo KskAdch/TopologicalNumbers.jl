@@ -62,7 +62,7 @@ julia> Pkg.add("TopologicalNumbers")
 
 ## Examples
 
-### The Su-Schriffer-Heeger (SSH) model
+### The Su-Schrieffer-Heeger (SSH) model
 
 Here's a simple example of the SSH Hamiltonian:
 
@@ -81,7 +81,7 @@ julia> function H₀(k, p) # SSH
 Or you can use our preset Hamiltonian function:
 
 ```julia
-julia> H₀(k, p) = SSH(k, p)
+julia> H₀ = SSH
 ```
 
 The band structure is computed as follows:
@@ -164,13 +164,13 @@ julia> function H₀(k, p) # Haldane
 Or you can use our preset Hamiltonian function:
 
 ```julia
-julia> H₀(k, p) = Haldane(k, p)
+julia> H₀ = Haldane
 ```
 
 The band structure is computed as follows:
 
 ```julia
-julia> H(k) = H₀(k, (π/3, 0.5))
+julia> H(k) = H₀(k, (1, π/3, 0.5))
 julia> showBand(H; value=false, disp=true)
 ```
 
@@ -265,7 +265,7 @@ julia> function H₀(k, p) # BHZ
 Alternatively, you can use our preset Hamiltonian:
 
 ```julia
-julia> H₀(k, p) = BHZ(k, p)
+julia> H₀ = BHZ
 ```
 
 To calculate the dispersion, execute:
