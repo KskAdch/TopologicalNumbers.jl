@@ -376,6 +376,38 @@ function Z2sol(TR, p::Params)
     end
 end
 
+"""
+    z2HamiltonianSize(Hamiltonian)
+
+Hamiltonian が正方行列を返すことを確認し、その次元を返す。
+"""
+function z2HamiltonianSize(Hamiltonian::Function)
+    H = Hamiltonian(zeros(2))
+    size(H, 1) == size(H, 2) ||
+        throw(ArgumentError("Hamiltonian should return a square matrix"))
+    return size(H, 1)
+end
+
+"""
+    validateZ2Parameters(N, Nfill, Hs)
+
+Z₂ 数の計算前に、メッシュ数・占有バンド数・Hamiltonian の次元を検証する。
+検証済みの占有バンド数を返し、`Nfill === nothing` の場合は半充填を用いる。
+"""
+function validateZ2Parameters(N::Int, Nfill::Union{Int,Nothing}, Hs::Int)
+    N > 0 || throw(ArgumentError("N should be positive"))
+    iseven(N) || throw(ArgumentError("N should be an even number"))
+    Hs >= 2 || throw(ArgumentError("Hamiltonian size should be at least 2"))
+    iseven(Hs) || throw(ArgumentError("Hamiltonian size should be an even number"))
+
+    validatedNfill = isnothing(Nfill) ? Hs ÷ 2 : Nfill
+    0 < validatedNfill < Hs ||
+        throw(ArgumentError("Nfill should be positive and smaller than the Hamiltonian size"))
+    iseven(validatedNfill) || throw(ArgumentError("Nfill should be an even number"))
+
+    return validatedNfill
+end
+
 @doc raw"""
 
  Calculate the $\mathbb{Z}_2$ numbers in the two-dimensional case with reference to Shiozaki method [Fukui2007Quantum,Shiozaki2023discrete](@cite).
@@ -383,9 +415,9 @@ end
     calcZ2(Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Bool=true, TR::Bool=false) where {T1<:Union{Int,Nothing}}
 
  Arguments
- - `Hamiltonian::Function` is a matrix with one-dimensional wavenumber `k` as an argument.
+ - `Hamiltonian::Function` is a matrix with two-dimensional wavenumber `k` as an argument.
  - `Nfill::T1`: The filling number. The default value is `Hs ÷ 2`, where `Hs` is the size of the Hamiltonian matrix.
- - `N::Int` is the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - `N::Int` is a positive, even number of meshes used to discretize each direction of the Brillouin zone.
  - `rounds::Bool` is an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
 # Definition
@@ -414,19 +446,8 @@ U_{n,i}(\bm{k})=\braket{\Psi_{n}(\bm{k})|\Psi_{n}(\bm{k}+\bm{e}_{i})}
 function calcZ2(
     Hamiltonian::Function; Nfill::T1=nothing, N::Int=50, rounds::Bool=true, TR::Bool=false
 ) where {T1<:Union{Int,Nothing}}
-    Hs = size(Hamiltonian(zeros(2)), 1)
-    Hshalf = Hs ÷ 2
-    if isodd(N)
-        throw(ArgumentError("N should be an even number"))
-    else
-        if isnothing(Nfill)
-            Nfill = Hshalf
-        elseif isodd(Nfill)
-            throw(ArgumentError("Nfill should be an even number"))
-        elseif Nfill > Hs
-            throw(ArgumentError("Nfill should be smaller than the Hamiltonian size"))
-        end
-    end
+    Hs = z2HamiltonianSize(Hamiltonian)
+    Nfill = validateZ2Parameters(N, Nfill, Hs)
     p = Params(; Ham=Hamiltonian, Nfill, N, Hs, gapless=0.0, rounds, dim=2)
 
     r = Z2sol(TR, p)
@@ -469,17 +490,8 @@ function solve(
 ) where {T1<:Z2Algorithms,T2<:TopologicalNumbersParallel}
     @unpack H, Nfill, N, rounds, TR = prob
 
-    Hs = size(H(zeros(2)), 1)
-    Hshalf = Hs ÷ 2
-    if isodd(N)
-        throw(ArgumentError("N should be an even number"))
-    else
-        if isnothing(Nfill)
-            Nfill = Hshalf
-        elseif isodd(Nfill)
-            throw(ArgumentError("Nfill should be an even number"))
-        end
-    end
+    Hs = z2HamiltonianSize(H)
+    Nfill = validateZ2Parameters(N, Nfill, Hs)
 
     p = Params(; Ham=H, Nfill, N, Hs, rounds, dim=2)
 
