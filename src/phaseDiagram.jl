@@ -126,7 +126,7 @@ function update2D!(
 end
 
 # Old method
-function update1D!(nums, num0, H, alg!, range1, ::UseSingleThread, p::Params)
+function update1D!(nums::AbstractArray, num0, H, alg!, range1, ::UseSingleThread, p::Params)
     for i in eachindex(range1)
         update1Din!(i, nums, num0, H, alg!, range1, p)
     end
@@ -134,7 +134,14 @@ end
 
 # Old method
 function update1D!(
-    nums, num0, H, alg!, range1, idxs::ProgressBar, ::UseSingleThread, p::Params
+    nums::AbstractArray,
+    num0,
+    H,
+    alg!,
+    range1,
+    idxs::ProgressBar,
+    ::UseSingleThread,
+    p::Params,
 )
     for i in idxs
         update1Din!(i, nums, num0, H, alg!, range1, p)
@@ -142,7 +149,9 @@ function update1D!(
 end
 
 # Old method
-function update2D!(nums, num0, H, alg!, range1, range2, ::UseSingleThread, p::Params)
+function update2D!(
+    nums::AbstractArray, num0, H, alg!, range1, range2, ::UseSingleThread, p::Params
+)
     for i in eachindex(range1), j in eachindex(range2)
         update2Din!(i, j, nums, num0, H, alg!, range1, range2, p)
     end
@@ -150,7 +159,15 @@ end
 
 # Old method
 function update2D!(
-    nums, num0, H, alg!, range1, range2, idxs::ProgressBar, ::UseSingleThread, p::Params
+    nums::AbstractArray,
+    num0,
+    H,
+    alg!,
+    range1,
+    range2,
+    idxs::ProgressBar,
+    ::UseSingleThread,
+    p::Params,
 )
     for i in idxs, j in eachindex(range2)
         update2Din!(i, j, nums, num0, H, alg!, range1, range2, p)
@@ -300,7 +317,7 @@ function update2D!(
 end
 
 # Old method
-function update1D!(nums, num0, H, alg!, range1, mod::UseMPI, p::Params)
+function update1D!(nums::AbstractArray, num0, H, alg!, range1, mod::UseMPI, p::Params)
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
@@ -318,7 +335,9 @@ function update1D!(nums, num0, H, alg!, range1, mod::UseMPI, p::Params)
 end
 
 # Old method
-function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, p::Params)
+function update1D!(
+    nums::AbstractArray, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, p::Params
+)
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
@@ -339,7 +358,9 @@ function update1D!(nums, num0, H, alg!, range1, idxs::ProgressBar, mod::UseMPI, 
 end
 
 # Old method
-function update2D!(nums, num0, H, alg!, range1, range2, mod::UseMPI, p::Params)
+function update2D!(
+    nums::AbstractArray, num0, H, alg!, range1, range2, mod::UseMPI, p::Params
+)
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
     myrank = mod.MPI.Comm_rank(comm)
@@ -360,7 +381,15 @@ end
 
 # Old method
 function update2D!(
-    nums, num0, H, alg!, range1, range2, idxs::ProgressBar, mod::UseMPI, p::Params
+    nums::AbstractArray,
+    num0,
+    H,
+    alg!,
+    range1,
+    range2,
+    idxs::ProgressBar,
+    mod::UseMPI,
+    p::Params,
 )
     mod.MPI.Init()
     comm = mod.MPI.COMM_WORLD
