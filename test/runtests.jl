@@ -21,9 +21,11 @@ const pf = pyimport("pfapack.pfaffian")
 const np = pyimport("numpy")
 
 using Aqua
-Aqua.test_all(TopologicalNumbers; ambiguities=false)
-# 依存パッケージ同士を除外し、本パッケージが定義したメソッドの曖昧性を検査する。
-Aqua.test_ambiguities(TopologicalNumbers)
+@testset "Aqua品質検査" begin
+    Aqua.test_all(TopologicalNumbers; ambiguities=false)
+    # 依存パッケージ同士を除外し、本パッケージが定義したメソッドの曖昧性を検査する。
+    Aqua.test_ambiguities(TopologicalNumbers)
+end
 
 @testset "TopologicalNumbers.jl" begin
 
