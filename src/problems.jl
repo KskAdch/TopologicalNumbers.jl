@@ -68,13 +68,13 @@ BPProblem(H, N) = BPProblem(; H=H, N=N)
 
 # Problem for calculating the first Chern number
 @doc raw"""
-    FCProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
+    FCProblem{T1<:Function,T2<:Int,T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
 
 A struct representing a problem for calculating the first Chern number.
 
 # Fields
 - `H::T1`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 2.
-- `N::T2`: The number of points for one direction in the Brillouin zone. Default is 51.
+- `N::T2`: Brillouin zone のメッシュ数を表す整数。既定値は51です。
 - `gapless::T3`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T4`: A boolean indicating whether to round a returned variable. Default is true.
 
@@ -83,9 +83,8 @@ A struct representing a problem for calculating the first Chern number.
 julia> 
 ```
 """
-Base.@kwdef struct FCProblem{
-    T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool
-} <: TopologicalNumbersProblems
+Base.@kwdef struct FCProblem{T1<:Function,T2<:Int,T3<:Real,T4<:Bool} <:
+                   TopologicalNumbersProblems
     H::T1
     N::T2 = 51
     gapless::T3 = 0.0
@@ -118,7 +117,7 @@ Constructs a first Chern number problem with the default parameters.
 
 # Arguments
 - `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 2.
-- `N`: The number of points for one direction in the Brillouin zone.
+- `N`: Brillouin zone のメッシュ数を表す整数。
 
 # Returns
 A `FCProblem` object.
@@ -304,14 +303,14 @@ Z2Problem(H, Nf, N) = Z2Problem(; H=H, Nfill=Nf, N=N)
 
 # Problem for calculating the local Berry flux
 @doc raw"""
-    LBFProblem{T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
+    LBFProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <: TopologicalNumbersProblems
 
 A struct representing a problem for calculating the $k$-local value of Berry flux.
 
 # Fields
 - `H::T1`: The Hamiltonian function `H=H(k)` that defines the system. `k` is an `AbstractVector` (or a `Tuple`) of the wavenumber vector. Dimension of `k` must be 2.
 - `n::T2`: An `AbstractVector` (or a `Tuple`) including two elements of `Int`, which represents wavenumber ($2\pi n/N$) when calculating Berry flux. Dimension of `n` must be 2.
-- `N::T3`: The number of points for one direction in the Brillouin zone. Default is 51.
+- `N::T3`: Brillouin zone のメッシュ数を表す整数。既定値は51です。
 - `gapless::T4`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T5`: A boolean indicating whether to round a returned variable. Default is true.
 
@@ -320,9 +319,8 @@ A struct representing a problem for calculating the $k$-local value of Berry flu
 julia> 
 ```
 """
-Base.@kwdef struct LBFProblem{
-    T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool
-} <: TopologicalNumbersProblems
+Base.@kwdef struct LBFProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <:
+                   TopologicalNumbersProblems
     H::T1
     n::T2
     N::T3 = 51
@@ -358,7 +356,7 @@ Constructs a local Berry flux problem with the default parameters.
 # Arguments
 - `H`: The Hamiltonian function `H=H(k)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector. Dimension of `k` must be 2.
 - `n`: An `AbstractVector` (or a `Tuple`) including two elements of `Int`, which represents wavenumber ($2\pi n/N$) when calculating Berry flux. Dimension of `n` must be 2.
-- `N`: The number of points for one direction in the Brillouin zone.
+- `N`: Brillouin zone のメッシュ数を表す整数。
 
 # Returns
 A `LBFProblem` object.
@@ -372,7 +370,7 @@ LBFProblem(H, n, N) = LBFProblem(; H=H, n=n, N=N)
 
 # Problem for finding and calculating the Weyl points
 @doc raw"""
-    WCSProblem{T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool} <: TopologicalNumbersProblems
+    WCSProblem{T1<:Function,T2<:String,T3<:Int,T4<:Int,T5<:Real,T6<:Bool} <: TopologicalNumbersProblems
 
 A struct representing a problem for finding and calculating the Weyl points.
 
@@ -380,7 +378,7 @@ A struct representing a problem for finding and calculating the Weyl points.
 - `H::T1`: The Hamiltonian function `H=H(k)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector. Dimension of `k` must be 3.
 - `kn::T2`: Compute the Chern number of the plane perpendicular to the `"kn"` direction in Brillouin zone (`"k1"`, `"k2"`, `"k3"`).
 - `kn_mesh::T3`: Number of mesh in `"kn"` direction. Default is 51.
-- `N::T4`: The number of points for one direction in the Brillouin zone. Default is 51.
+- `N::T4`: 各切断面の1方向あたりのメッシュ数を表す整数。既定値は51です。
 - `gapless::T5`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T6`: A boolean indicating whether to round a returned variable. Default is true.
 
@@ -389,9 +387,8 @@ A struct representing a problem for finding and calculating the Weyl points.
 julia> 
 ```
 """
-Base.@kwdef struct WCSProblem{
-    T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool
-} <: TopologicalNumbersProblems
+Base.@kwdef struct WCSProblem{T1<:Function,T2<:String,T3<:Int,T4<:Int,T5<:Real,T6<:Bool} <:
+                   TopologicalNumbersProblems
     H::T1
     kn::T2
     kn_mesh::T3 = 51
@@ -428,7 +425,7 @@ Constructs a problem for finding and calculating the Weyl points with the defaul
 # Arguments
 - `H`: The Hamiltonian function `H=H(k)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector. Dimension of `k` must be 3.
 - `kn`: Compute the Chern number of the plane perpendicular to the `"kn"` direction in Brillouin zone (`"k1"`, `"k2"`, `"k3"`).
-- `N`: The number of points for one direction in the Brillouin zone.
+- `N`: 各切断面の1方向あたりのメッシュ数を表す整数。
 
 # Returns
 A `WCSProblem` object.
@@ -449,7 +446,7 @@ Constructs a problem for finding and calculating the Weyl points with the defaul
 - `H`: The Hamiltonian function `H=H(k)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector. Dimension of `k` must be 3.
 - `kn`: Compute the Chern number of the plane perpendicular to the `"kn"` direction in Brillouin zone (`"k1"`, `"k2"`, `"k3"`).
 - `N1`: Number of mesh in `"kn"` direction.
-- `N2`: The number of points for one direction in the Brillouin zone.
+- `N2`: 各切断面の1方向あたりのメッシュ数を表す整数。
 
 # Returns
 A `WCSProblem` object.
