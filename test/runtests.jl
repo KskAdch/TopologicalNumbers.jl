@@ -696,6 +696,11 @@ const np = pyimport("numpy")
                 @test calcSecondChern(H; N, parallel=UseMPI(MPI)).TopologicalNumber ≈
                     0.8309301430562057
 
+                anisotropic_prob = SCProblem(H, (2, 3, 2, 2))
+                @test solve(anisotropic_prob).TopologicalNumber ≈ 0.0 atol = 1e-10
+                @test calcSecondChern(H; N=(3, 4, 5, 6)).TopologicalNumber ≈
+                    0.20176270231048674 atol = 1e-8
+
                 SCProblem(H)
                 SCProblem(H, 1)
                 prob = SCProblem(; H, N)
