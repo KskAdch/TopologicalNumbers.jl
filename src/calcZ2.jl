@@ -312,6 +312,16 @@ function setTemporalZ2TR(p::Params)
     )
 end
 
+"""
+    roundTopologicalNumbers(nums)
+
+有限な要素だけなら整数へ丸める。`NaN` や無限大を含む場合は、非有限値を
+保持できる浮動小数点配列のまま有限値を丸める。
+"""
+function roundTopologicalNumbers(nums)
+    return all(isfinite, nums) ? round.(Int, nums) : round.(nums)
+end
+
 function Z2sol(TR, p::Params)
     @unpack rounds = p
 
@@ -320,16 +330,7 @@ function Z2sol(TR, p::Params)
         Z2Phase!(v, p)
 
         if rounds == true
-            TopologicalNumber = v.num
-            if all(!isnan, v.num[:, 1])
-                TopologicalNumber = round.(Int, v.num)
-            else
-                for i in eachindex(v.num[:, 1])
-                    if TopologicalNumber[i] !== NaN
-                        TopologicalNumber[i] = round(Int, v.num)
-                    end
-                end
-            end
+            TopologicalNumber = roundTopologicalNumbers(v.num)
             Total = mod(sum(TopologicalNumber), 2)
         elseif rounds == false
             TopologicalNumber = v.num
@@ -343,26 +344,8 @@ function Z2sol(TR, p::Params)
         Z2Phase!(v, p)
 
         if rounds == true
-            TopologicalNumber = v.num[:, 1]
-            if all(!isnan, v.num[:, 1])
-                TopologicalNumber = round.(Int, v.num[:, 1])
-            else
-                for i in eachindex(v.num[:, 1])
-                    if TopologicalNumber[i] !== NaN
-                        TopologicalNumber[i] = round(Int, v.num[i, 1])
-                    end
-                end
-            end
-            TRTopologicalNumber = v.num[:, 2]
-            if all(!isnan, v.num[:, 2])
-                TRTopologicalNumber = round.(Int, v.num[:, 2])
-            else
-                for i in eachindex(TRTopologicalNumber)
-                    if TRTopologicalNumber[i] !== NaN
-                        TRTopologicalNumber[i] = round(Int, v.num[i, 2])
-                    end
-                end
-            end
+            TopologicalNumber = roundTopologicalNumbers(v.num[:, 1])
+            TRTopologicalNumber = roundTopologicalNumbers(v.num[:, 2])
 
             Total = mod(sum(TopologicalNumber), 2)
         elseif rounds == false

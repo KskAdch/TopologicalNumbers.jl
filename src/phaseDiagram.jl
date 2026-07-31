@@ -417,7 +417,7 @@ function calc_data1D(
         end
     else
         if rounds == true
-            round.(Int, transpose(nums))
+            roundTopologicalNumbers(transpose(nums))
         elseif rounds == false
             transpose(nums)
         end
@@ -458,7 +458,7 @@ function calc_data1D(
         end
     else
         if rounds == true
-            round.(Int, transpose(nums))
+            roundTopologicalNumbers(transpose(nums))
         elseif rounds == false
             transpose(nums)
         end
@@ -499,16 +499,7 @@ function calc_data2D(
         end
     else
         if rounds == true
-            if all(!isnan, nums)
-                nums = round.(Int, nums)
-            else
-                for i in eachindex(nums)
-                    if nums[i] !== NaN
-                        nums[i] = round(Int, nums[i])
-                    end
-                end
-            end
-            nums
+            roundTopologicalNumbers(nums)
         elseif rounds == false
             nums
         end
@@ -549,7 +540,7 @@ function calc_data2D(
         end
     else
         if rounds == true
-            round.(Int, nums)
+            roundTopologicalNumbers(nums)
         elseif rounds == false
             nums
         end
@@ -582,7 +573,7 @@ function calc_data1D(
     end
 
     if rounds == true
-        round.(Int, transpose(nums))
+        roundTopologicalNumbers(transpose(nums))
     elseif rounds == false
         transpose(nums)
     end
@@ -614,7 +605,7 @@ function calc_data1D(
     end
 
     if rounds == true
-        round.(Int, transpose(nums))
+        roundTopologicalNumbers(transpose(nums))
     elseif rounds == false
         transpose(nums)
     end
@@ -648,7 +639,7 @@ function calc_data2D(
     end
 
     if rounds == true
-        round.(Int, nums)
+        roundTopologicalNumbers(nums)
     elseif rounds == false
         nums
     end
@@ -682,7 +673,7 @@ function calc_data2D(
     end
 
     if rounds == true
-        round.(Int, nums)
+        roundTopologicalNumbers(nums)
     elseif rounds == false
         nums
     end
