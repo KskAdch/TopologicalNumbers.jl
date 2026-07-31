@@ -1143,7 +1143,7 @@ function calcPhaseDiagram(
 
     dim = 2
     Ham(k) = H(k, 0.0)
-    Hs = size(Ham(zeros(2)), 1)
+    Hs = z2HamiltonianSize(Ham)
 
     p = Params(; Ham, dim, N, gapless, rounds, Hs)
 
@@ -1249,7 +1249,7 @@ function calcPhaseDiagram(
 
     dim = 2
     Ham(k) = H(k, (0.0, 0.0))
-    Hs = size(Ham(zeros(2)), 1)
+    Hs = z2HamiltonianSize(Ham)
 
     p = Params(; Ham, dim, N, gapless, rounds, Hs)
 
@@ -1340,10 +1340,7 @@ function calcPhaseDiagram(
     dim = 2
     Ham(k) = H(k, 0.0)
     Hs = size(Ham(zeros(2)), 1)
-
-    if isnothing(Nfill)
-        Nfill = Hs ÷ 2
-    end
+    Nfill = validateZ2Parameters(N, Nfill, Hs)
 
     p = Params(; Ham, dim, Nfill, N, rounds, Hs)
 
@@ -1446,10 +1443,7 @@ function calcPhaseDiagram(
     dim = 2
     Ham(k) = H(k, (0.0, 0.0))
     Hs = size(Ham(zeros(2)), 1)
-
-    if isnothing(Nfill)
-        Nfill = Hs ÷ 2
-    end
+    Nfill = validateZ2Parameters(N, Nfill, Hs)
 
     p = Params(; Ham, dim, Nfill, N, rounds, Hs)
 

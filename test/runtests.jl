@@ -454,6 +454,28 @@ const np = pyimport("numpy")
             @test H₀((0.0, 0.0), (1, 1.0)) == KaneMele((0.0, 0.0), 1.0)
             H(k) = H₀(k, (1.0, 1.0))
 
+            @testset "入力検証" begin
+                @test_throws ArgumentError calcZ2(H; N=0)
+                @test_throws ArgumentError calcZ2(H; N=3)
+                @test_throws ArgumentError calcZ2(H; Nfill=0)
+                @test_throws ArgumentError calcZ2(H; Nfill=1)
+                @test_throws ArgumentError calcZ2(H; Nfill=4)
+                @test_throws MethodError Z2Problem(; H=H, N=(4, 4))
+
+                Hodd(k) = zeros(ComplexF64, 3, 3)
+                @test_throws ArgumentError calcZ2(Hodd)
+                Hrect(k) = zeros(ComplexF64, 4, 2)
+                @test_throws ArgumentError calcZ2(Hrect)
+                @test_throws ArgumentError solve(Z2Problem(; H=H, N=3))
+                H1(k, p) = H₀(k, (p, 1.0))
+                @test_throws ArgumentError calcPhaseDiagram(
+                    Z2Problem(; H=H1, N=3), [0.0]
+                )
+                @test_throws ArgumentError calcPhaseDiagram(
+                    Z2Problem(; H=H₀, N=3), [0.0], [0.0]
+                )
+            end
+
             N = 51
             k = range(-π, π; length=N)
             bandsum = (
