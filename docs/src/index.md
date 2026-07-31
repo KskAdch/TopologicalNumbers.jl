@@ -63,7 +63,14 @@ julia> using Pkg
 julia> Pkg.add("TopologicalNumbers")
 ```
 
+Plotting functions such as `showBand`, `plot1D`, and `plot2D` use
+[PythonPlot.jl](https://github.com/JuliaPy/PythonPlot.jl). Install it only when plotting is
+needed:
 
+```julia
+pkg> add PythonPlot
+julia> using PythonPlot
+```
 
 ## Package Features
 
