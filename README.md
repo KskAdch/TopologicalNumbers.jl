@@ -23,7 +23,7 @@ This package includes the following functions:
 - Computation of the dispersion relation.
 - Provides numerical calculation methods for various types of topological numbers.
 - Computation of the phase diagram.
-- Compute Pfaffian and tridiagonarize skew-symmetric matrix (migration to Julia from [PFAPACK](https://pypi.org/project/pfapack/)).
+- Compute Pfaffian and tridiagonalize skew-symmetric matrix (migration to Julia from [PFAPACK](https://pypi.org/project/pfapack/)).
 - Utility functions for plotting.
 - Support parallel computing using `MPI`.
 
@@ -439,4 +439,3 @@ journal = {Journal of Open Source Software}
 
 
 Please see [Documentation](https://kskadch.github.io/TopologicalNumbers.jl/dev/) for more details.
-
