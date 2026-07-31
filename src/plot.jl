@@ -163,10 +163,6 @@ Plot a 1D phase diagram.
 # Returns
 - `fig`: The matplotlib figure object.
 
-# Example
-```julia
-julia>
-```
 """
 function plot1D(
     result::NamedTuple;
@@ -224,10 +220,6 @@ Plot a 2D phase diagram.
 # Returns
 - `fig`: The matplotlib figure object.
 
-# Example
-```julia
-julia>
-```
 """
 function plot2D(
     nums::T1,
@@ -282,10 +274,6 @@ Plot a 2D phase diagram.
 # Returns
 - `fig`: The matplotlib figure object.
 
-# Example
-```julia
-julia>
-```
 """
 function plot2D(
     result::NamedTuple;

@@ -924,3 +924,19 @@ const np = pyimport("numpy")
         end
     end
 end
+
+@testset "ドキュメント品質" begin
+    package_root = pkgdir(TopologicalNumbers)
+    documentation_roots =
+        (joinpath(package_root, "src"), joinpath(package_root, "docs", "src"))
+
+    for root in documentation_roots
+        for (directory, _, files) in walkdir(root)
+            for file in files
+                (endswith(file, ".jl") || endswith(file, ".md")) || continue
+                path = joinpath(directory, file)
+                @test !occursin(r"(?m)^\h*julia>\h*$", read(path, String))
+            end
+        end
+    end
+end

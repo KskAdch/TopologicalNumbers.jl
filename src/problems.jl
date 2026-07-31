@@ -12,10 +12,6 @@ The `BPProblem` struct represents a problem for calculating Berry phase.
 - `gapless::T3`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T4`: A boolean indicating whether to round a returned variable. Default is true.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct BPProblem{
     T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool
@@ -38,11 +34,6 @@ Constructs a Berry phase problem with the default parameters.
 # Returns
 A `BPProblem` object.
 
-# Example
-```julia
-julia> 
-```
-
 """
 BPProblem(H) = BPProblem(; H=H)
 
@@ -57,11 +48,6 @@ Constructs a Berry phase problem with the default parameters.
 
 # Returns
 A `BPProblem` object.
-
-# Example
-```julia
-julia> 
-```
 
 """
 BPProblem(H, N) = BPProblem(; H=H, N=N)
@@ -78,10 +64,6 @@ A struct representing a problem for calculating the first Chern number.
 - `gapless::T3`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T4`: A boolean indicating whether to round a returned variable. Default is true.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct FCProblem{
     T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool
@@ -104,10 +86,6 @@ Constructs a first Chern number problem with the default parameters.
 # Returns
 A `FCProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 FCProblem(H) = FCProblem(; H=H)
 
@@ -123,10 +101,6 @@ Constructs a first Chern number problem with the default parameters.
 # Returns
 A `FCProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 FCProblem(H, N) = FCProblem(; H=H, N=N)
 
@@ -142,10 +116,6 @@ A struct representing a problem for calculating the second Chern number.
 - `N::T3`: The number of points in the Brillouin zone. Type of `Int` means the uniform mesh. You can also specify the mesh by giving a tuple or a vector. Default is 30.
 - `RV::T4`: A boolean indicating whether to return a `real` value. Default is true.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct SCProblem{
     T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool
@@ -169,10 +139,6 @@ Constructs a second Chern number problem with the default parameters.
 # Returns
 A `SCProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 SCProblem(H) = SCProblem(; H=H)
 
@@ -188,10 +154,6 @@ Constructs a second Chern number problem with the default parameters.
 # Returns
 A `SCProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 SCProblem(H, N) = SCProblem(; H=H, N=N)
 
@@ -209,10 +171,6 @@ Constructs a second Chern number problem with the default parameters.
 # Returns
 A `SCProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 SCProblem(H, N, Nf) = SCProblem(; H=H, N=N, Nfill=Nf)
 
@@ -227,12 +185,8 @@ A struct representing a problem for calculating the Z2 number.
 - `Nfill::T2`: The number of filled bands. `nothing` means the half-filling. Default is `nothing`.
 - `N::T3`: The number of points for one direction in the Brillouin zone. Default is 50.
 - `rounds::T4`: A boolean indicating whether to round a returned variable. Default is true.
-- `TR::T4`: A boolean indicating whether to calculate the remaining part of the Brillouin zone. If `true`, `solve` returns an additional result `TRTopologicalNumber`. If the calculation is done nomally, `TRTopologicalNumber` is equal to `TopologicalNumber`. Default is false.
+- `TR::T4`: A boolean indicating whether to calculate the remaining part of the Brillouin zone. If `true`, `solve` returns an additional result `TRTopologicalNumber`. If the calculation is done normally, `TRTopologicalNumber` is equal to `TopologicalNumber`. Default is false.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct Z2Problem{
     T1<:Function,T2<:Union{Int,Nothing},T3<:Union{Tuple,AbstractVector,Int},T4<:Bool
@@ -256,10 +210,6 @@ Constructs a Z2 number problem with the default parameters.
 # Returns
 A `Z2Problem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 Z2Problem(H) = Z2Problem(; H=H)
 
@@ -275,10 +225,6 @@ Constructs a Z2 number problem with the default parameters.
 # Returns
 A `Z2Problem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 Z2Problem(H, Nf) = Z2Problem(; H=H, Nfill=Nf)
 
@@ -295,10 +241,6 @@ Constructs a Z2 number problem with the default parameters.
 # Returns
 A `Z2Problem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 Z2Problem(H, Nf, N) = Z2Problem(; H=H, Nfill=Nf, N=N)
 
@@ -315,10 +257,6 @@ A struct representing a problem for calculating the $k$-local value of Berry flu
 - `gapless::T4`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T5`: A boolean indicating whether to round a returned variable. Default is true.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct LBFProblem{
     T1<:Function,T2<:AbstractVector,T3<:Union{Tuple,AbstractVector,Int},T4<:Real,T5<:Bool
@@ -343,10 +281,6 @@ Constructs a local Berry flux problem with the default parameters.
 # Returns
 A `LBFProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 LBFProblem(H, n) = LBFProblem(; H=H, n=n)
 
@@ -363,10 +297,6 @@ Constructs a local Berry flux problem with the default parameters.
 # Returns
 A `LBFProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 LBFProblem(H, n, N) = LBFProblem(; H=H, n=n, N=N)
 
@@ -384,10 +314,6 @@ A struct representing a problem for finding and calculating the Weyl points.
 - `gapless::T5`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T6`: A boolean indicating whether to round a returned variable. Default is true.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct WCSProblem{
     T1<:Function,T2<:String,T3<:Int,T4<:Union{Tuple,AbstractVector,Int},T5<:Real,T6<:Bool
@@ -413,10 +339,6 @@ Constructs a problem for finding and calculating the Weyl points with the defaul
 # Returns
 A `WCSProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 WCSProblem(H, kn) = WCSProblem(; H=H, kn=kn)
 
@@ -433,10 +355,6 @@ Constructs a problem for finding and calculating the Weyl points with the defaul
 # Returns
 A `WCSProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 WCSProblem(H, kn, N::T) where {T<:Int} = WCSProblem(; H=H, kn=kn, kn_mesh=N, N=N)
 
@@ -454,10 +372,6 @@ Constructs a problem for finding and calculating the Weyl points with the defaul
 # Returns
 A `WCSProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 WCSProblem(H, kn, N1, N2) = WCSProblem(; H=H, kn=kn, kn_mesh=N1, N=N2)
 
@@ -474,10 +388,6 @@ A struct representing a problem for calculating the Weyl nodes.
 - `gapless::T4`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T5`: A boolean indicating whether to round a returned variable. Default is true.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct WNProblem{T1<:Function,T2<:AbstractVector,T3<:Int,T4<:Real,T5<:Bool} <:
                    TopologicalNumbersProblems
@@ -501,10 +411,6 @@ Constructs a problem for calculating the Weyl nodes with the default parameters.
 # Returns
 A `WNProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 WNProblem(H, n) = WNProblem(; H=H, n=n)
 
@@ -521,10 +427,6 @@ Constructs a problem for calculating the Weyl nodes with the default parameters.
 # Returns
 A `WNProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 WNProblem(H, n, N) = WNProblem(; H=H, n=n, N=N)
 
@@ -540,10 +442,6 @@ A struct representing a problem for calculating the Weyl points.
 - `gapless::T3` The threshold that determines the state to be degenerate. The $n$th iteration adopts the threshold value of the $n$th value of the vector. The number of iterations can be varied by the length of the vector. Default is `[1e-1, 1e-2, 1e-3, 1e-4]`.
 - `rounds::T4`: A boolean indicating whether to round a returned variable. Default is true.
 
-# Example
-```julia
-julia> 
-```
 """
 Base.@kwdef struct WPProblem{T1<:Function,T2<:Int,T3<:AbstractVector,T4<:Bool} <:
                    TopologicalNumbersProblems
@@ -565,10 +463,6 @@ Constructs a problem for calculating the Weyl points with the default parameters
 # Returns
 A `WPProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 WPProblem(H) = WPProblem(; H=H)
 
@@ -584,10 +478,6 @@ Constructs a problem for calculating the Weyl points with the default parameters
 # Returns
 A `WPProblem` object.
 
-# Example
-```julia
-julia> 
-```
 """
 WPProblem(H, N) = WPProblem(; H=H, N=N)
 
