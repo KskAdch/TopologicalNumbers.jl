@@ -454,6 +454,38 @@ const np = pyimport("numpy")
             @test H₀((0.0, 0.0), (1, 1.0)) == KaneMele((0.0, 0.0), 1.0)
             H(k) = H₀(k, (1.0, 1.0))
 
+            @testset "NaN の保持" begin
+                Hmixed(k, p) =
+                    iszero(p) ? diagm(ComplexF64[-2, 1, 2, -1]) :
+                    zeros(ComplexF64, 4, 4)
+                Hnan(k) = Hmixed(k, 0.0)
+
+                result = calcZ2(Hnan; N=2)
+                @test all(isnan, result.TopologicalNumber)
+                @test isnan(result.Total)
+
+                params = [0.0, 1.0]
+                expected = [NaN NaN; 0.0 0.0]
+                result = calcPhaseDiagram(Z2Problem(; H=Hmixed, N=2), params)
+                @test isequal(result.nums, expected)
+
+                result = calcPhaseDiagram(Hmixed, params, "Z2"; N=2, progress=true)
+                @test isequal(result.nums, expected)
+
+                Hmixed2(k, p) = Hmixed(k, p[1])
+                result = calcPhaseDiagram(
+                    Z2Problem(; H=Hmixed2, N=2), params, [1.0]; progress=true
+                )
+                @test all(isnan, result.nums[:, 1, 1])
+                @test all(iszero, result.nums[:, 2, 1])
+
+                result = calcPhaseDiagram(
+                    Hmixed2, params, [1.0], "Z2"; N=2, progress=true
+                )
+                @test all(isnan, result.nums[:, 1, 1])
+                @test all(iszero, result.nums[:, 2, 1])
+            end
+
             N = 51
             k = range(-π, π; length=N)
             bandsum = (
