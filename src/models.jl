@@ -197,12 +197,14 @@ function Haldane(
     hy = t₁ * (-sin(k1) + sin(k2))
     hz = m - 2t₂ * sin(ϕ) * (sin(k1) + sin(k2) - sin(k1 + k2))
 
-    s0 = [1 0; 0 1]
-    sx = [0 1; 1 0]
-    sy = [0 -im; im 0]
-    sz = [1 0; 0 -1]
-
-    return h0 .* s0 .+ hx .* sx .+ hy .* sy .+ hz .* sz
+    # 行列要素を直接組み立て、パウリ行列と中間行列の生成を避ける。
+    T = promote_type(typeof(h0), typeof(hx), typeof(im * hy), typeof(hz))
+    H = Matrix{T}(undef, 2, 2)
+    H[1, 1] = h0 + hz
+    H[1, 2] = hx - im * hy
+    H[2, 1] = hx + im * hy
+    H[2, 2] = h0 - hz
+    return H
 end
 
 @doc raw"""
@@ -528,23 +530,30 @@ function LatticeDirac(k::T1, p::T2) where {T1<:Union{AbstractVector,Tuple},T2<:R
     c = 1
     m = p
 
-    # Define Pauli matrices and Gamma matrices
-    σ₀ = [1 0; 0 1]
-    σ₁ = [0 1; 1 0]
-    σ₂ = [0 -im; im 0]
-    σ₃ = [1 0; 0 -1]
-    g1 = kron(σ₁, σ₀)
-    g2 = kron(σ₂, σ₀)
-    g3 = kron(σ₃, σ₁)
-    g4 = kron(σ₃, σ₂)
-    g5 = kron(σ₃, σ₃)
-
     h1 = m + c * (cos(k1) + cos(k2) + cos(k3) + cos(k4))
     h2 = sin(k1)
     h3 = sin(k2)
     h4 = sin(k3)
     h5 = sin(k4)
 
-    # Update the Hamiltonian matrix in place
-    return h1 .* g1 .+ h2 .* g2 .+ h3 .* g3 .+ h4 .* g4 .+ h5 .* g5
+    # 行列要素を直接組み立て、ガンマ行列と中間行列の生成を避ける。
+    T = promote_type(typeof(h1), typeof(im * h2), typeof(h3), typeof(im * h4), typeof(h5))
+    H = Matrix{T}(undef, 4, 4)
+    H[1, 1] = h5
+    H[1, 2] = h3 - im * h4
+    H[1, 3] = h1 - im * h2
+    H[1, 4] = zero(T)
+    H[2, 1] = h3 + im * h4
+    H[2, 2] = -h5
+    H[2, 3] = zero(T)
+    H[2, 4] = h1 - im * h2
+    H[3, 1] = h1 + im * h2
+    H[3, 2] = zero(T)
+    H[3, 3] = -h5
+    H[3, 4] = -h3 + im * h4
+    H[4, 1] = zero(T)
+    H[4, 2] = h1 + im * h2
+    H[4, 3] = -h3 - im * h4
+    H[4, 4] = h5
+    return H
 end
