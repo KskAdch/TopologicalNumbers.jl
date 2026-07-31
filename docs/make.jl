@@ -18,6 +18,7 @@ makedocs(;
         prettyurls=get(ENV, "CI", "false") == "true",
         canonical="https://KskAdch.github.io/TopologicalNumbers.jl",
         edit_link="main",
+        repolink="https://github.com/KskAdch/TopologicalNumbers.jl",
         assets=String[],
     ),
     pages=[
