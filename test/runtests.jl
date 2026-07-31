@@ -90,6 +90,9 @@ const np = pyimport("numpy")
         @test typeof(fig) == Figure
         plotclose()
 
+        @test TopologicalNumbers.marker(1) == TopologicalNumbers.marker(24)
+        @test TopologicalNumbers.marker(23) == TopologicalNumbers.marker(46)
+
         result = calcPhaseDiagram(H, param, "BerryPhase"; rounds=false)
         num = [
             2.8271597168564594e-16 1.987846675914698e-17
