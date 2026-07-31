@@ -287,7 +287,7 @@ end
 
 function warn_finiteImaginary(x)
     if abs(imag(x)) > 1e-10
-        warn("Imaginary part of the second Chern number has a finite value.")
+        @warn "Imaginary part of the second Chern number has a finite value."
     end
 end
 
