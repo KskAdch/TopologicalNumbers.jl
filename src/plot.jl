@@ -24,10 +24,7 @@ function marker(i)
         "_",
         "p",
     )
-    if i > length(markers)
-        i = i % length(markers)
-    end
-    return markers[i]
+    return markers[mod1(i, length(markers))]
 end
 
 @doc raw"""
