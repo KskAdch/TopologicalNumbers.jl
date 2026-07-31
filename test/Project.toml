@@ -9,7 +9,7 @@ PythonPlot = "274fc56d-3b97-40fa-a1cd-1b4a50311bf9"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-Aqua = "0.6"
+Aqua = "0.8"
 CondaPkg = "0.2"
 JuliaFormatter = "1.0"
 LinearAlgebra = "^1.6"
