@@ -1,9 +1,12 @@
+using Random: MersenneTwister
+
 @testset "Pfaffian Tests" begin
     N = 100
-    Ar = rand(N, N)
+    rng = MersenneTwister(1234)
+    Ar = rand(rng, N, N)
     Ar .= Ar .- transpose(Ar)
 
-    Ac = rand(ComplexF64, N, N)
+    Ac = rand(rng, ComplexF64, N, N)
     Ac .= Ac .- transpose(Ac)
 
     @testset "householder_real" begin
@@ -209,8 +212,8 @@
     end
 
     # From PFAPACK source https://github.com/basnijholt/pfapack
-    # Migration from PFAPACK(Python) 
-    EPS = 1e-12
+    # 行列演算で蓄積する丸め誤差を、行列サイズと機械精度に応じて許容する。
+    EPS = 1000 * N * eps(Float64)
 
     @testset "Pfaffian Tests" begin
         # First test with real matrices
