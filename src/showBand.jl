@@ -28,6 +28,27 @@ function Ene2D(p::Params) # 2D Energy
     return k, Ene
 end
 
+function Ene3D(p::Params) # 3次元のエネルギー
+    @unpack Ham, N, Hs = p
+
+    k = range(-π, π; length=N)
+    k0 = zeros(3)
+    Ene = zeros(N, N, N, Hs)
+
+    for l in 1:N
+        k0[3] = k[l]
+        for j in 1:N
+            k0[2] = k[j]
+            for i in 1:N
+                k0[1] = k[i]
+                Ene[i, j, l, :] .= eigvals!(Ham(k0))
+            end
+        end
+    end
+    k = hcat(k, k, k)
+    return k, Ene
+end
+
 function Ene4D(p::Params) # 4D Energy
     @unpack Ham, N, Hs = p
 
@@ -107,6 +128,9 @@ function diagram(p::Params, p_out)
         else
             plotclose()
         end
+    elseif dim == 3
+        k, Ene = Ene3D(p)
+        plotclose()
     elseif dim == 4
         k, Ene = Ene4D(p)
         plotclose()
@@ -139,6 +163,7 @@ end
     showBand(Hamiltonian::Function; N::Int=51, labels::Bool=true, value::Bool=true, disp::Bool=false, png::Bool=false, pdf::Bool=false, svg::Bool=false, filename::String="Band")
 
 This function generates a band structure plot for a given Hamiltonian.
+3次元および4次元のハミルトニアンでは図を生成せず、波数とエネルギーの配列を返します。
 
 # Arguments
 - `Hamiltonian::Function`: The Hamiltonian function that takes a wave number parameter `k` and returns the corresponding Hamiltonian matrix.

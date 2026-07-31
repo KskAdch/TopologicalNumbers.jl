@@ -657,6 +657,12 @@ const np = pyimport("numpy")
             [[4000, 9990, 9990], [6000, 9990, 9990]],
         ]
         @test result.Nodes == [[1, -1], [-1, 1]]
+
+        band = showBand(H₀; N=3)
+        k = range(-π, π; length=3)
+        @test band.k == hcat(k, k, k)
+        @test size(band.Ene) == (3, 3, 3, 2)
+        @test band.Ene[2, 2, 2, :] ≈ eigvals(H₀(zeros(3)))
     end
 
     @testset "4D case" begin
