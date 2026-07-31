@@ -296,18 +296,20 @@ function plot2D(
     svg::Bool=false,
     filename::String="phaseDiagram",
 )
+    nums_half = if result.nums isa AbstractMatrix
+        transpose(result.nums)
+    elseif ndims(result.nums) == 3
+        transpose(sum(@view(result.nums[1:(end ÷ 2), :, :]); dims=1)[1, :, :])
+    else
+        throw(ArgumentError("result.nums should be a two- or three-dimensional array"))
+    end
+
     fig = figure()
     ax = fig.add_subplot(111)
 
     if labels == true
         ax.set_xlabel(L"p_1")
         ax.set_ylabel(L"p_2")
-    end
-
-    nums_half = if result.nums isa Array{Float64,2}
-        transpose(result.nums)
-    else
-        transpose(sum(@view(result.nums[1:(end ÷ 2), :, :]); dims=1)[1, :, :])
     end
 
     if disp == true || png == true || pdf == true || svg == true
