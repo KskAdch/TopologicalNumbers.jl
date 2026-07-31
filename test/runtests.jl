@@ -57,6 +57,8 @@ const np = pyimport("numpy")
         @test abs(sum(result.Ene)) < 1e-10
 
         @test calcBerryPhase(H) == (TopologicalNumber=[1, 1], Total=0)
+        @test_throws ArgumentError calcBerryPhase(H; N=0)
+        @test_throws ArgumentError calcBerryPhase(H; N=-1)
 
         @test norm(
             calcBerryPhase(H).TopologicalNumber -
@@ -66,6 +68,13 @@ const np = pyimport("numpy")
         BPProblem(H, 41)
         prob = BPProblem(H)
         @test solve(prob).TopologicalNumber == [1, 1]
+
+        @test_throws ArgumentError solve(BPProblem(H, 0))
+
+        Hparam(k, p) = H(k)
+        invalid_prob = BPProblem(Hparam, 0)
+        @test_throws ArgumentError calcPhaseDiagram(invalid_prob, [0.0])
+        @test_throws ArgumentError calcPhaseDiagram(Hparam, [0.0], BP(); N=(1,))
 
         H(k, p) = H₀(k, (p, 1.0))
 

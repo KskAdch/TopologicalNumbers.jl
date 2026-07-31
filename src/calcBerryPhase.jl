@@ -73,10 +73,22 @@ end
     return phi .= angle.(v.Link)
 end
 
+"""
+    validateBerryPhaseMesh(N)
+
+Berry 位相を計算できるように、メッシュ数 `N` が正の整数であることを確認する。
+"""
+function validateBerryPhaseMesh(N)
+    N isa Int && N > 0 || throw(ArgumentError("`N` には正の整数を指定してください"))
+    return nothing
+end
+
 @doc raw"""
 """
 @views function BerryPhase!(TopologicalNumber, p::Params) # berry phase
     @unpack N, Hs = p
+    validateBerryPhaseMesh(N)
+
     Link = zeros(ComplexF64, Hs)
 
     Evec0 = zeros(Hs)
@@ -112,7 +124,7 @@ end
 
  Arguments
  - `Hamiltonian::Function`: the Hamiltonian matrix function with one-dimensional wavenumber `k` as an argument.
- - `N::Int`: the number of meshes when discretizing the Brillouin Zone. It is preferable for `N` to be an odd number to increase the accuracy of the calculation.
+ - `N::Int`: Brillouin zone を離散化するメッシュ数。正の整数を指定してください。計算精度を高めるには奇数が推奨されます。
  - `gapless::Real`: the threshold that determines the state to be degenerate. Coarsening the mesh(`N`) but increasing `gapless` will increase the accuracy of the calculation.
  - `rounds::Bool`: an option to round the value of the topological number to an integer value. The topological number returns a value of type `Int` when `true`, and a value of type `Float` when `false`.
 
