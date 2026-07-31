@@ -596,6 +596,7 @@ const np = pyimport("numpy")
         @test result.TopologicalNumber == [1, -1]
         @test result.n == [4, 10, 10]
         @test result.N == 11
+        @test_throws ArgumentError solve(prob, Evar())
 
         N = 11
         nodes = zeros(N, N, N, 2)
@@ -630,6 +631,7 @@ const np = pyimport("numpy")
         @test result.kn == "k1"
         @test result.nums[:, 1] == [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]
         @test result.nums[:, 2] == -result.nums[:, 1]
+        @test_throws ArgumentError solve(prob, FHSlocal3())
 
         prob = WCSProblem(H₀, "k2", 11)
         result = solve(prob)
@@ -657,6 +659,7 @@ const np = pyimport("numpy")
             [[4000, 9990, 9990], [6000, 9990, 9990]],
         ]
         @test result.Nodes == [[1, -1], [-1, 1]]
+        @test_throws ArgumentError solve(prob, FHSsurface())
     end
 
     @testset "4D case" begin

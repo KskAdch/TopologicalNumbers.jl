@@ -75,12 +75,12 @@ end
 @doc raw"""
 Calculate the sliced first Chern numbers in the three-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-    solve(prob::WCSProblem, alg::T1=FHSsurface(); parallel::T2=UseSingleThread()) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
+    solve(prob::WCSProblem, alg::FHSsurface=FHSsurface(); parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
 
 # Arguments
 - `prob::WCSProblem`: The WCSProblem struct that contains the Hamiltonian matrix function in the wave number space and other parameters.
-- `alg::T1=FHSsurface()`: The algorithm to use for calculating the sliced first Chern numbers. Default is `FHSsurface` algorithm.
-- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
+- `alg::FHSsurface=FHSsurface()`: sliced first Chern number の計算には `FHSsurface` を使用します。
+- `parallel::T=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
 # Returns
 - `WCSSolution`: A struct that contains the calculated sliced first Chern numbers.
@@ -166,8 +166,11 @@ julia> sol.nums
 
 """
 function solve(
-    prob::WCSProblem, alg::T1=FHSsurface(); parallel::T2=UseSingleThread(), plot::Bool=false
-) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
+    prob::WCSProblem,
+    _alg::FHSsurface=FHSsurface();
+    parallel::T=UseSingleThread(),
+    plot::Bool=false,
+) where {T<:TopologicalNumbersParallel}
     @unpack H, kn, kn_mesh, N, gapless, rounds = prob
 
     Hs = size(H(zeros(3)), 1)
@@ -188,4 +191,13 @@ function solve(
     end
 
     return WCSSolution(; kn, param=kn_range, nums)
+end
+
+function solve(
+    prob::WCSProblem,
+    alg::WeylPointsAlgorithms;
+    parallel::TopologicalNumbersParallel=UseSingleThread(),
+    plot::Bool=false,
+)
+    throw(ArgumentError("WCSProblem では FHSsurface() を指定してください: $alg"))
 end
