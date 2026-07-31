@@ -39,7 +39,17 @@ makedocs(;
             "Four-dimensional case (Z)" =>
                 ["Lattice Dirac model" => "4D/LatticeDirac.md"],
         ],
-        "Library" => ["Public" => "lib/public.md", "Internal" => "lib/internal.md"],
+        "Library" => [
+            "Public API" => [
+                "Overview" => "lib/public.md",
+                "Problems and algorithms" => "lib/problems.md",
+                "Topological invariants" => "lib/invariants.md",
+                "Weyl points and Berry flux" => "lib/weyl.md",
+                "Models and visualization" => "lib/models.md",
+                "Pfaffian utilities" => "lib/pfaffian.md",
+            ],
+            "Internal" => "lib/internal.md",
+        ],
         "References" => "references.md",
     ],
 )
