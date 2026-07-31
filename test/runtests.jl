@@ -715,6 +715,26 @@ const np = pyimport("numpy")
                     digits=20,
                 )
 
+                function Hflat(k, p)
+                    k1, k2, k3, k4 = k
+                    return Matrix(Diagonal(ComplexF64[-2, -1, 1, 2]))
+                end
+                flat_prob = SCProblem(Hflat, (1, 1, 1, 1))
+                plot_params = [0.0, 1.0]
+                expected = calcPhaseDiagram(flat_prob, plot_params, plot_params)
+                actual = @test_nowarn calcPhaseDiagram(
+                    flat_prob, plot_params, plot_params; plot=true
+                )
+                @test actual == expected
+                plotclose()
+
+                expected = calcPhaseDiagram(Hflat, plot_params, plot_params, FHS2(); N=1)
+                actual = @test_nowarn calcPhaseDiagram(
+                    Hflat, plot_params, plot_params, FHS2(); N=1, plot=true
+                )
+                @test actual == expected
+                plotclose()
+
                 param = range(-4.9, 4.9; length=4)
                 result = calcPhaseDiagram(H₀, param, FHS2(); N=10)
                 calcPhaseDiagram(H₀, param, FHS2(); N=10, progress=true)
