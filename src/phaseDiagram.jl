@@ -816,7 +816,7 @@ function calcPhaseDiagram(
 
     if alg == FHS2()
         if plot == true
-            plot2D(transpose(nums_half), param_range1, param_range2)
+            plot2D(transpose(nums), param_range1, param_range2)
         end
     else
         if plot == true && Hs % 2 == 0
@@ -860,7 +860,7 @@ function calcPhaseDiagram2D_core(
 
     if alg isa FHS2
         if plot == true
-            plot2D(transpose(nums_half), param_range1, param_range2)
+            plot2D(transpose(nums), param_range1, param_range2)
         end
     else
         if plot == true && p.Hs % 2 == 0
