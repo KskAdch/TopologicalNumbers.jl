@@ -133,6 +133,23 @@ const np = pyimport("numpy")
         @test typeof(fig) == Figure
         plotclose()
 
+        @testset "2次元行列の結果" begin
+            matrix = Int[0 1 0; 1 0 1; 0 1 0]
+            matrix_result = (; param1=param, param2=param, nums=matrix)
+            fig = plot2D(matrix_result; disp=false)
+            @test typeof(fig) == Figure
+            plotclose()
+
+            view_result = (; param1=param, param2=param, nums=@view(matrix[:, :]))
+            fig = plot2D(view_result; disp=false)
+            @test typeof(fig) == Figure
+            plotclose()
+
+            invalid_result = (; param1=param, param2=param, nums=zeros(3))
+            @test_throws ArgumentError plot2D(invalid_result; disp=false)
+            plotclose()
+        end
+
         param = range(-2.0, 2.0; length=4)
         result = calcPhaseDiagram(H₀, param, param, "BerryPhase"; rounds=false)
         num = zeros(2, 4, 4)
