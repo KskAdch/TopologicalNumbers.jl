@@ -176,51 +176,30 @@ function setParams(p)
     return (; r, sys) # Return parameters
 end
 
-# Function to fix the gauge at the boundaries
+# 各軸の終端を始点と同じ基底にそろえ、周期境界でゲージを固定する。
 function boundaryGauge(r, s::TemporalSecondChern)
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[l, j, i, r.Nz + 1] = s.evec[l, j, i, 1]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[l, j, r.Nz + 1, i] = s.evec[l, j, 1, i]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[l, r.Ny + 1, j, i] = s.evec[l, 1, j, i]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange), l in eachindex(r.Kzrange)
-        s.evec[r.Nz + 1, l, j, i] = s.evec[1, l, j, i]
+    for j in eachindex(r.Kyrange),
+        l in eachindex(r.Kzrange),
+        m in eachindex(r.Kwrange)
+        s.evec[r.Nx + 1, j, l, m] = s.evec[1, j, l, m]
     end
 
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[j, i, r.Nz + 1, r.Nw + 1] = s.evec[j, i, 1, 1]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[j, r.Nz + 1, i, r.Nw + 1] = s.evec[j, 1, i, 1]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[r.Ny + 1, j, i, r.Nw + 1] = s.evec[1, j, i, 1]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[j, r.Nz + 1, r.Nw + 1, i] = s.evec[j, 1, 1, i]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[r.Nz + 1, j, r.Nw + 1, i] = s.evec[1, j, 1, i]
-    end
-    for i in eachindex(r.Kxrange), j in eachindex(r.Kyrange)
-        s.evec[r.Ny + 1, r.Nz + 1, j, i] = s.evec[1, 1, j, i]
+    for i in eachindex(r.Kxrange),
+        l in eachindex(r.Kzrange),
+        m in eachindex(r.Kwrange)
+        s.evec[i, r.Ny + 1, l, m] = s.evec[i, 1, l, m]
     end
 
-    for i in eachindex(r.Kxrange)
-        s.evec[i, r.Ny + 1, r.Nz + 1, r.Nw + 1] = s.evec[i, 1, 1, 1]
+    for i in eachindex(r.Kxrange),
+        j in eachindex(r.Kyrange),
+        m in eachindex(r.Kwrange)
+        s.evec[i, j, r.Nz + 1, m] = s.evec[i, j, 1, m]
     end
-    for i in eachindex(r.Kxrange)
-        s.evec[r.Nz + 1, i, r.Ny + 1, r.Nw + 1] = s.evec[1, i, 1, 1]
-    end
-    for i in eachindex(r.Kxrange)
-        s.evec[r.Ny + 1, r.Nz + 1, i, r.Nw + 1] = s.evec[1, 1, i, 1]
-    end
-    for i in eachindex(r.Kxrange)
-        s.evec[r.Nz + 1, r.Ny + 1, r.Nw + 1, i] = s.evec[1, 1, 1, i]
+
+    for i in eachindex(r.Kxrange),
+        j in eachindex(r.Kyrange),
+        l in eachindex(r.Kzrange)
+        s.evec[i, j, l, r.Nw + 1] = s.evec[i, j, l, 1]
     end
 
     return s.evec[r.Nx + 1, r.Ny + 1, r.Nz + 1, r.Nw + 1] = s.evec[1, 1, 1, 1]
