@@ -1,0 +1,6 @@
+[deps]
+matplotlib = ">=3.8,<4"
+numpy = ">=1.26,<3"
+pfapack = ">=1,<2"
+python = ">=3.10,<3.15"
+scipy = ">=1.11,<2"
