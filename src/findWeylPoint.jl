@@ -10,14 +10,20 @@ function make_k0list!(E, k0list, N, Hs, gapless)
                 for b in 1:(Hs - 1)
                     dE = Evec[b + 1] .- Evec[b]
                     if dE < gapless
-                        append!(k0list[b], [[n1, n2, n3]])
-                        append!(k0list[b + 1], [[n1, n2, n3]])
+                        push!(k0list[b], [n1, n2, n3])
+                        push!(k0list[b + 1], [n1, n2, n3])
                     end
-                    unique!(k0list[b])
                 end
             end
         end
     end
+
+    # 同じ候補は隣接するバンドから追加されるため、走査後に一度だけ整理する。
+    for points in k0list
+        unique!(points)
+    end
+
+    return nothing
 end
 
 function update_k0list!(E, k0list, N, Ni, Hs, gapless)
@@ -95,7 +101,7 @@ function weylpoint!(Hamiltonian, k0list, Nodes, Ni, Hs, rounds)
 end
 
 @doc raw"""
-    findWeylPoint(Hamiltonian::Function; N::Int=10, gapless::T=[1e-1, 1e-2, 1e-3, 1e-4], rounds::Bool=true) where {T<:AbstractVector{Float64}}
+    findWeylPoint(Hamiltonian::Function; N::Int=10, gapless::T=[1e-1, 1e-1, 1e-2, 1e-3], rounds::Bool=true) where {T<:AbstractVector{Float64}}
 
  Arguments
  - Hamiltionian::Function: The Hamiltonian matrix with three-dimensional wavenumber `k` as an argument.
@@ -105,7 +111,7 @@ end
    
 """
 function findWeylPoint(
-    Hamiltonian::Function; N::Int=10, gapless::T=[1e-1, 1e-2, 1e-3, 1e-4], rounds::Bool=true
+    Hamiltonian::Function; N::Int=10, gapless::T=[1e-1, 1e-1, 1e-2, 1e-3], rounds::Bool=true
 ) where {T<:AbstractVector{Float64}}
     Hs = size(Hamiltonian(zeros(3)), 1)
     k0list = [Vector{Int64}[] for i in 1:Hs]
@@ -113,7 +119,7 @@ function findWeylPoint(
     if rounds == true
         Nodes = [Int64[] for i in 1:Hs]
     else
-        Nodes = [Float64[] for i in :Hs]
+        Nodes = [Float64[] for i in 1:Hs]
     end
 
     E(k) = eigvals(Hamiltonian(k))
@@ -123,7 +129,7 @@ function findWeylPoint(
     Ni = N
     for iter in 1:(length(gapless) - 1)
         Ni *= N
-        update_k0list!(E, k0list, N, Ni, Hs, gapless[iter])
+        update_k0list!(E, k0list, N, Ni, Hs, gapless[iter + 1])
     end
 
     weylpoint!(Hamiltonian, k0list, Nodes, Ni, Hs, rounds)
@@ -186,7 +192,7 @@ function solve(
     if rounds == true
         Nodes = [Int64[] for i in 1:Hs]
     else
-        Nodes = [Float64[] for i in :Hs]
+        Nodes = [Float64[] for i in 1:Hs]
     end
 
     E(k) = eigvals(H(k))
@@ -196,7 +202,7 @@ function solve(
     Ni = N
     for iter in 1:(length(gapless) - 1)
         Ni *= N
-        update_k0list!(E, k0list, N, Ni, Hs, gapless[iter])
+        update_k0list!(E, k0list, N, Ni, Hs, gapless[iter + 1])
     end
 
     weylpoint!(H, k0list, Nodes, Ni, Hs, rounds)

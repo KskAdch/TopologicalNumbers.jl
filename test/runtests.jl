@@ -20,6 +20,19 @@ const pf = pyimport("pfapack.pfaffian")
 # const cpf = pyimport("pfapack.ctypes").pfaffian
 const np = pyimport("numpy")
 
+mutable struct TrackedThresholds <: AbstractVector{Float64}
+    values::Vector{Float64}
+    accessed::Vector{Int}
+end
+
+Base.size(values::TrackedThresholds) = size(values.values)
+Base.IndexStyle(::Type{TrackedThresholds}) = IndexLinear()
+
+function Base.getindex(values::TrackedThresholds, index::Int)
+    push!(values.accessed, index)
+    return values.values[index]
+end
+
 # using Aqua
 # Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
@@ -657,6 +670,23 @@ const np = pyimport("numpy")
             [[4000, 9990, 9990], [6000, 9990, 9990]],
         ]
         @test result.Nodes == [[1, -1], [-1, 1]]
+
+        H_gapped(k) = [0.0 0.0; 0.0 1.0]
+
+        thresholds = TrackedThresholds([0.1, 0.01, 0.001], Int[])
+        result = findWeylPoint(
+            H_gapped; N=1, gapless=thresholds, rounds=false
+        )
+        @test result.Nodes == [Float64[], Float64[]]
+        @test thresholds.accessed == [1, 2, 3]
+
+        thresholds = TrackedThresholds([0.1, 0.01, 0.001], Int[])
+        prob = WPProblem(;
+            H=H_gapped, N=1, gapless=thresholds, rounds=false
+        )
+        result = solve(prob)
+        @test result.Nodes == [Float64[], Float64[]]
+        @test thresholds.accessed == [1, 2, 3]
     end
 
     @testset "4D case" begin
