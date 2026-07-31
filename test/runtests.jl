@@ -1,14 +1,12 @@
+# `Pkg.test()` の一時環境からもテスト用 `CondaPkg.toml` を探索できるようにする。
+push!(LOAD_PATH, joinpath(@__DIR__, "conda"))
+
 using TopologicalNumbers
 using LinearAlgebra
 using JuliaFormatter
 using Test
 
 using MPI
-
-using CondaPkg
-# CondaPkg.add("numpy")
-CondaPkg.add("pfapack")
-# CondaPkg.add("scipy")
 
 using PythonCall
 using PythonPlot
