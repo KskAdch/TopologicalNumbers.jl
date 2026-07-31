@@ -63,7 +63,9 @@ const np = pyimport("numpy")
             calcBerryPhase(H; rounds=false).TopologicalNumber,
         ) < 1e-10
 
-        BPProblem(H, 41)
+        @test BPProblem(H, 41).N == 41
+        @test_throws MethodError BPProblem(H, (41,))
+        @test_throws MethodError BPProblem(; H, N=[41])
         prob = BPProblem(H)
         @test solve(prob).TopologicalNumber == [1, 1]
 

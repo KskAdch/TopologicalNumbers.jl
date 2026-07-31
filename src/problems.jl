@@ -2,13 +2,13 @@ abstract type TopologicalNumbersProblems end
 
 # Problem for calculating the Berry phase
 @doc raw"""
-    struct BPProblem{T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
+    struct BPProblem{T1<:Function,T2<:Int,T3<:Real,T4<:Bool} <: TopologicalNumbersProblems
 
 The `BPProblem` struct represents a problem for calculating Berry phase.
 
 # Fields
 - `H::T1`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 1.
-- `N::T2`: The number of points for one direction in the Brillouin zone. Default is 51.
+- `N::T2`: Brillouin zone のメッシュ数を表す整数。既定値は51です。
 - `gapless::T3`: The threshold for considering a band as gapless. Default is 0.0.
 - `rounds::T4`: A boolean indicating whether to round a returned variable. Default is true.
 
@@ -17,9 +17,8 @@ The `BPProblem` struct represents a problem for calculating Berry phase.
 julia> 
 ```
 """
-Base.@kwdef struct BPProblem{
-    T1<:Function,T2<:Union{Tuple,AbstractVector,Int},T3<:Real,T4<:Bool
-} <: TopologicalNumbersProblems
+Base.@kwdef struct BPProblem{T1<:Function,T2<:Int,T3<:Real,T4<:Bool} <:
+                   TopologicalNumbersProblems
     H::T1
     N::T2 = 51
     gapless::T3 = 0.0
@@ -53,7 +52,7 @@ Constructs a Berry phase problem with the default parameters.
 
 # Arguments
 - `H`: The Hamiltonian function `H=H(k, p)` that defines the system. `k` is a abstract vector (or a tuple) of the wavenumber vector and `p` contains parameter. Dimension of `k` must be 1.
-- `N`: The number of points for one direction in the Brillouin zone.
+- `N`: Brillouin zone のメッシュ数を表す整数。
 
 # Returns
 A `BPProblem` object.
