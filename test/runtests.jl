@@ -720,16 +720,17 @@ const np = pyimport("numpy")
                     return Matrix(Diagonal(ComplexF64[-2, -1, 1, 2]))
                 end
                 flat_prob = SCProblem(Hflat, (1, 1, 1, 1))
-                expected = calcPhaseDiagram(flat_prob, [0.0], [0.0])
+                plot_params = [0.0, 1.0]
+                expected = calcPhaseDiagram(flat_prob, plot_params, plot_params)
                 actual = @test_nowarn calcPhaseDiagram(
-                    flat_prob, [0.0], [0.0]; plot=true
+                    flat_prob, plot_params, plot_params; plot=true
                 )
                 @test actual == expected
                 plotclose()
 
-                expected = calcPhaseDiagram(Hflat, [0.0], [0.0], FHS2(); N=1)
+                expected = calcPhaseDiagram(Hflat, plot_params, plot_params, FHS2(); N=1)
                 actual = @test_nowarn calcPhaseDiagram(
-                    Hflat, [0.0], [0.0], FHS2(); N=1, plot=true
+                    Hflat, plot_params, plot_params, FHS2(); N=1, plot=true
                 )
                 @test actual == expected
                 plotclose()
