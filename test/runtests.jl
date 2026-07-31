@@ -24,12 +24,10 @@ const np = pyimport("numpy")
 # Aqua.test_all(TopologicalNumbers; ambiguities=false)
 
 @testset "TopologicalNumbers.jl" begin
-
-    # test format
-    # @testset "Test formatting of files" begin
-    #     pkgpath = pkgdir(TopologicalNumbers)
-    #     @test format(pkgpath, overwrite=false)
-    # end
+    @testset "JuliaFormatter" begin
+        pkgpath = pkgdir(TopologicalNumbers)
+        @test format(pkgpath; overwrite=false)
+    end
 
     # test pfaffian
     include("test_pfaffian.jl")
