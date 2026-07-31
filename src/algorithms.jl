@@ -1,9 +1,18 @@
 @doc raw"""
+    TopologicalNumbersAlgorithms
+
+トポロジカル数の数値計算法を表す抽象型。
+
+各計算法を `solve` や `calcPhaseDiagram` へ渡したときの多重ディスパッチに使う。
+この型を直接生成せず、目的に対応する具象アルゴリズム型を使う。
 """
 abstract type TopologicalNumbersAlgorithms end
 
 # Algorithms for calculating the Berry phase
 @doc raw"""
+    BerryPhaseAlgorithms <: TopologicalNumbersAlgorithms
+
+Berry 位相を計算するアルゴリズムに共通する抽象型。
 """
 abstract type BerryPhaseAlgorithms <: TopologicalNumbersAlgorithms end
 # struct Int1DBP <: Z2Algorithms end
@@ -27,6 +36,9 @@ struct BP <: BerryPhaseAlgorithms end
 
 # Algorithms for calculating the first Chern number
 @doc raw"""
+    FirstChernAlgorithms <: TopologicalNumbersAlgorithms
+
+第一 Chern 数を計算するアルゴリズムに共通する抽象型。
 """
 abstract type FirstChernAlgorithms <: TopologicalNumbersAlgorithms end
 # struct IntFChern <: FirstChernAlgorithms end
@@ -49,6 +61,9 @@ struct FHS <: FirstChernAlgorithms end
 
 # Algorithms for calculating the second Chern number
 @doc raw"""
+    SecondChernAlgorithms <: TopologicalNumbersAlgorithms
+
+第二 Chern 数を計算するアルゴリズムに共通する抽象型。
 """
 abstract type SecondChernAlgorithms <: TopologicalNumbersAlgorithms end
 # struct IntSChern <: SecondChernAlgorithms end
@@ -60,6 +75,9 @@ struct FHS2 <: SecondChernAlgorithms end
 
 # Algorithms for calculating the Z2 invariant
 @doc raw"""
+    Z2Algorithms <: TopologicalNumbersAlgorithms
+
+時間反転対称な系の ``\mathbb{Z}_2`` 不変量を計算するアルゴリズムに共通する抽象型。
 """
 abstract type Z2Algorithms <: TopologicalNumbersAlgorithms end
 # struct Int2DZ2 <: Z2Algorithms end
@@ -94,6 +112,9 @@ struct Shio <: Z2Algorithms end
 
 # Algorithms for calculating the local Berry flux
 @doc raw"""
+    BerryFluxAlgorithms <: TopologicalNumbersAlgorithms
+
+離散化した波数空間の局所 Berry flux を計算するアルゴリズムに共通する抽象型。
 """
 abstract type BerryFluxAlgorithms <: TopologicalNumbersAlgorithms end
 
@@ -121,17 +142,40 @@ struct FHSlocal2 <: BerryFluxAlgorithms end
 
 # Algorithms for finding and calculating the Weyl points
 @doc raw"""
+    WeylPointsAlgorithms <: TopologicalNumbersAlgorithms
+
+Weyl 点の探索やトポロジカル電荷の計算に使うアルゴリズムに共通する抽象型。
 """
 abstract type WeylPointsAlgorithms <: TopologicalNumbersAlgorithms end
 
 @doc raw"""
+    FHSsurface()
+
+三次元 Brillouin zone を指定した波数方向に分割し、各二次元断面の第一 Chern 数を
+Fukui-Hatsugai-Suzuki 法で計算するアルゴリズム。
+
+`WCSProblem` に対する `solve` の既定アルゴリズムとして使う。
 """
 struct FHSsurface <: WeylPointsAlgorithms end
 
 @doc raw"""
+    FHSlocal3()
+
+三次元波数メッシュのセルを囲む 6 面の Berry flux を
+Fukui-Hatsugai-Suzuki 法で足し合わせ、セル内の Weyl 点のトポロジカル電荷を
+計算するアルゴリズム。
+
+`WNProblem` に対する `solve` の既定アルゴリズムとして使う。
 """
 struct FHSlocal3 <: WeylPointsAlgorithms end
 
 @doc raw"""
+    Evar()
+
+隣接バンド間のエネルギー差が閾値未満になる波数領域を段階的に細分化し、
+Weyl 点の候補を探索するアルゴリズム。候補のトポロジカル電荷は
+`FHSlocal3` に対応する局所 Berry flux の計算で判定する。
+
+`WPProblem` に対する `solve` の既定アルゴリズムとして使う。
 """
 struct Evar <: WeylPointsAlgorithms end
