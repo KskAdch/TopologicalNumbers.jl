@@ -1,0 +1,109 @@
+name: 不具合報告
+description: 計算結果、API、描画、MPIに関する再現可能な不具合を報告します
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        報告ありがとうございます。数値問題を切り分けられるよう、可能な範囲で最小の再現例を記載してください。
+
+  - type: input
+    id: package-version
+    attributes:
+      label: TopologicalNumbers.jl のバージョン
+      description: "例: 1.7.7、または main の commit SHA"
+      placeholder: "1.7.7"
+    validations:
+      required: true
+
+  - type: input
+    id: julia-version
+    attributes:
+      label: Julia のバージョン
+      description: "versioninfo() で確認できます"
+      placeholder: "1.10.11"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: OS
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - その他
+    validations:
+      required: true
+
+  - type: input
+    id: api
+    attributes:
+      label: 対象API
+      description: 問題が起きた関数、Problem型、算法を記載してください
+      placeholder: "calcChern、FCProblem、FHS()"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducer
+    attributes:
+      label: 最小再現コード
+      description: Hamiltonian の定義、引数、呼び出しを含む実行可能な例を記載してください
+      render: julia
+    validations:
+      required: true
+
+  - type: input
+    id: mesh
+    attributes:
+      label: メッシュと充填条件
+      description: N、Nfill、gapless、rounds など結果に影響する設定を記載してください
+      placeholder: "N=51, Nfill=2, gapless=0.0, rounds=false"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待した結果
+      description: 既知の不変量、理論値、または期待するAPI動作を記載してください
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の結果
+      description: 数値、返値型、エラーメッセージなどを記載してください
+    validations:
+      required: true
+
+  - type: dropdown
+    id: optional-features
+    attributes:
+      label: 関連する追加機能
+      multiple: true
+      options:
+        - PythonPlotによる描画
+        - MPI並列計算
+        - Pfaffian計算
+        - 該当なし
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: スタックトレースと追加情報
+      description: 完全なスタックトレース、versioninfo()、再現頻度などを記載してください
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 事前確認
+      options:
+        - label: 既存のIssueに同じ報告がないことを確認しました
+          required: true
+        - label: 機密情報を含まない最小再現例を記載しました
+          required: true
