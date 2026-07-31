@@ -60,7 +60,8 @@ function diagram(p::Params, p_out)
 
     nrang = range(-π, π; length=N)
 
-    fig = figure()
+    plt = _pythonplot()
+    fig = plt.figure()
 
     if dim == 1
         ax = fig.add_subplot(111)
@@ -80,7 +81,7 @@ function diagram(p::Params, p_out)
                 ax.plot(nrang, Ene[:, i])
             end
         else
-            plotclose()
+            plt.plotclose()
         end
     elseif dim == 2
         ax = fig.add_subplot(111; projection="3d")
@@ -105,11 +106,11 @@ function diagram(p::Params, p_out)
                 ax.plot_surface(X, Y, Ene[:, :, i]; shade=true, antialiased=false)
             end
         else
-            plotclose()
+            plt.plotclose()
         end
     elseif dim == 4
         k, Ene = Ene4D(p)
-        plotclose()
+        plt.plotclose()
     end
 
     return k, Ene, fig
@@ -117,14 +118,15 @@ end
 
 function output(k, Ene, fig, p)
     @unpack value, disp, png, pdf, svg, filename = p
+    plt = _pythonplot()
     if png == true
-        savefig(filename * ".png")
+        plt.savefig(filename * ".png")
     end
     if pdf == true
-        savefig(filename * ".pdf")
+        plt.savefig(filename * ".pdf")
     end
     if svg == true
-        savefig(filename * ".svg")
+        plt.savefig(filename * ".svg")
     end
     if disp == true
         # plotshow()

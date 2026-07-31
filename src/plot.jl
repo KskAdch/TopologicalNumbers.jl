@@ -65,7 +65,8 @@ function plot1D(
     svg::Bool=false,
     filename::String="phaseDiagram",
 ) where {T1<:SecondChernAlgorithms,T2<:AbstractVector,T3<:AbstractVector}
-    fig = figure()
+    plt = _pythonplot()
+    fig = plt.figure()
     ax = fig.add_subplot(111)
 
     if labels == true
@@ -73,7 +74,7 @@ function plot1D(
         ax.set_ylabel(L"\nu")
     end
     ax.grid()
-    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(; integer=true))
+    ax.yaxis.set_major_locator(plt.matplotlib.ticker.MaxNLocator(; integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
         ax.scatter(param_range, nums; marker=marker(1))
@@ -120,7 +121,8 @@ function plot1D(
     svg::Bool=false,
     filename::String="phaseDiagram",
 ) where {T1<:Union{AbstractVector,AbstractMatrix},T2<:AbstractVector}
-    fig = figure()
+    plt = _pythonplot()
+    fig = plt.figure()
     ax = fig.add_subplot(111)
 
     if labels == true
@@ -128,7 +130,7 @@ function plot1D(
         ax.set_ylabel(L"\nu")
     end
     ax.grid()
-    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(; integer=true))
+    ax.yaxis.set_major_locator(plt.matplotlib.ticker.MaxNLocator(; integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
         if nums isa AbstractVector
@@ -177,7 +179,8 @@ function plot1D(
     svg::Bool=false,
     filename::String="phaseDiagram",
 )
-    fig = figure()
+    plt = _pythonplot()
+    fig = plt.figure()
     ax = fig.add_subplot(111)
 
     if labels == true
@@ -185,7 +188,7 @@ function plot1D(
         ax.set_ylabel(L"\nu")
     end
     ax.grid()
-    ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(; integer=true))
+    ax.yaxis.set_major_locator(plt.matplotlib.ticker.MaxNLocator(; integer=true))
 
     if disp == true || png == true || pdf == true || svg == true
         if result.nums isa AbstractVector
@@ -240,7 +243,8 @@ function plot2D(
     svg::Bool=false,
     filename::String="phaseDiagram",
 ) where {T1<:AbstractArray,T2<:AbstractVector,T3<:AbstractVector}
-    fig = figure()
+    plt = _pythonplot()
+    fig = plt.figure()
     ax = fig.add_subplot(111)
 
     if labels == true
@@ -257,7 +261,7 @@ function plot2D(
             extent=(param_range1[1], param_range1[end], param_range2[1], param_range2[end]),
             aspect="auto",
         )
-        fig.colorbar(im; ax=ax, ticks=matplotlib.ticker.MaxNLocator(; integer=true))
+        fig.colorbar(im; ax=ax, ticks=plt.matplotlib.ticker.MaxNLocator(; integer=true))
     end
 
     p = (; disp, png, pdf, svg, filename)
@@ -296,7 +300,8 @@ function plot2D(
     svg::Bool=false,
     filename::String="phaseDiagram",
 )
-    fig = figure()
+    plt = _pythonplot()
+    fig = plt.figure()
     ax = fig.add_subplot(111)
 
     if labels == true
@@ -321,7 +326,7 @@ function plot2D(
             ),
             aspect="auto",
         )
-        fig.colorbar(im; ax=ax, ticks=matplotlib.ticker.MaxNLocator(; integer=true))
+        fig.colorbar(im; ax=ax, ticks=plt.matplotlib.ticker.MaxNLocator(; integer=true))
     end
 
     p = (; disp, png, pdf, svg, filename)
@@ -331,14 +336,15 @@ end
 
 function output(fig, p)
     @unpack disp, png, pdf, svg, filename = p
+    plt = _pythonplot()
     if png == true
-        savefig(filename * ".png")
+        plt.savefig(filename * ".png")
     end
     if pdf == true
-        savefig(filename * ".pdf")
+        plt.savefig(filename * ".pdf")
     end
     if svg == true
-        savefig(filename * ".svg")
+        plt.savefig(filename * ".svg")
     end
     if disp == true
         # plotshow()
