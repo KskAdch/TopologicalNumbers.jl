@@ -661,6 +661,9 @@ const np = pyimport("numpy")
 
     @testset "4D case" begin
         @testset "SecondChern" begin
+            @test_logs (:warn, r"Imaginary part") TopologicalNumbers.warn_finiteImaginary(im)
+            @test_logs TopologicalNumbers.warn_finiteImaginary(0.0)
+
             @testset "Lattice Dirac model" begin
                 function H₀(k, p) # landau
                     k1, k2, k3, k4 = k
