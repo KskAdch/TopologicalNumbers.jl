@@ -208,7 +208,8 @@ const np = pyimport("numpy")
 
                 @test calcChern(H) == (TopologicalNumber=[1, 1, -2, -2, 1, 1], Total=0)
 
-                FCProblem(H, 41)
+                @test FCProblem(H, 41).N == 41
+                @test_throws MethodError FCProblem(H, (41, 41))
                 prob = FCProblem(H)
                 @test solve(prob).TopologicalNumber == [1, 1, -2, -2, 1, 1]
 
@@ -226,7 +227,8 @@ const np = pyimport("numpy")
                 @test C1 == [1, 1, -2, -2, 1, 1]
                 @test C2 ≈ [1, 1, -2, -2, 1, 1]
 
-                LBFProblem(H, zeros(3), 41)
+                @test LBFProblem(H, zeros(3), 41).N == 41
+                @test_throws MethodError LBFProblem(H, zeros(2), (41, 41))
                 C1 = zeros(6)
                 C2 = zeros(6)
                 N = 51
@@ -624,7 +626,8 @@ const np = pyimport("numpy")
         @test result.nums[:, 2] == -result.nums[:, 1]
 
         WCSProblem(H₀, "k1")
-        WCSProblem(H₀, "k1", 11, 41)
+        @test WCSProblem(H₀, "k1", 11, 41).N == 41
+        @test_throws MethodError WCSProblem(H₀, "k1", 11, (41, 41))
         prob = WCSProblem(H₀, "k1", 11)
         result = solve(prob)
         @test result.kn == "k1"
