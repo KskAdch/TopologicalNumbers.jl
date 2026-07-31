@@ -134,12 +134,12 @@ end
 @doc raw"""
 Calculate the Weyl points in the three-dimensional case using energy variational method.
 
-    solve(prob::WPProblem, alg::T1=Evar(); parallel::T2=UseSingleThread()) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
+    solve(prob::WPProblem, alg::Evar=Evar(); parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
 
 # Arguments
 - `prob::WPProblem`: The WPProblem struct that contains the Hamiltonian matrix function in the wave number space and other parameters.
-- `alg::T1=Evar()`: The algorithm to use for calculating the Weyl points. Default is `Evar` algorithm.
-- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
+- `alg::Evar=Evar()`: Weyl point の探索には `Evar` を使用します。
+- `parallel::T=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
 # Returns
 - `WPSolution`: A struct that contains the calculated Weyl points.
@@ -176,8 +176,8 @@ julia> 2pi*result.WeylPoint[1] / result.N .- pi*[ones(3), ones(3)]
 
 """
 function solve(
-    prob::WPProblem, alg::T1=Evar(); parallel::T2=UseSingleThread()
-) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
+    prob::WPProblem, _alg::Evar=Evar(); parallel::T=UseSingleThread()
+) where {T<:TopologicalNumbersParallel}
     @unpack H, N, gapless, rounds = prob
 
     Hs = size(H(zeros(3)), 1)
@@ -202,4 +202,12 @@ function solve(
     weylpoint!(H, k0list, Nodes, Ni, Hs, rounds)
 
     return WPSolution(; WeylPoint=k0list, N=Ni, Nodes)
+end
+
+function solve(
+    prob::WPProblem,
+    alg::WeylPointsAlgorithms;
+    parallel::TopologicalNumbersParallel=UseSingleThread(),
+)
+    throw(ArgumentError("WPProblem では Evar() を指定してください: $alg"))
 end

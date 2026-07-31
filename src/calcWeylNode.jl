@@ -194,12 +194,12 @@ end
 @doc raw"""
 Calculate the Weyl node in the three-dimensional case with reference to Fukui-Hatsugai-Suzuki method [Fukui2005Chern](@cite).
 
-    solve(prob::WNProblem, alg::T1=FHSlocal3(); parallel::T2=UseSingleThread()) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
+    solve(prob::WNProblem, alg::FHSlocal3=FHSlocal3(); parallel::T=UseSingleThread()) where {T<:TopologicalNumbersParallel}
 
 # Arguments
 - `prob::WNProblem`: The WNProblem struct that contains the Hamiltonian matrix function in the wave number space and other parameters.
-- `alg::T1=FHSlocal3()`: The algorithm to use for calculating the Weyl nodes. Default is `FHSlocal3` algorithm.
-- `parallel::T2=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
+- `alg::FHSlocal3=FHSlocal3()`: Weyl node の計算には `FHSlocal3` を使用します。
+- `parallel::T=UseSingleThread()`: The parallelization strategy to use. Default is to use a single thread.
 
 # Returns
 - `WNSolution`: A struct that contains the calculated Weyl nodes.
@@ -238,8 +238,8 @@ julia> sol.TopologicalNumber
 
 """
 function solve(
-    prob::WNProblem, alg::T1=FHSlocal3(); parallel::T2=UseSingleThread()
-) where {T1<:WeylPointsAlgorithms,T2<:TopologicalNumbersParallel}
+    prob::WNProblem, _alg::FHSlocal3=FHSlocal3(); parallel::T=UseSingleThread()
+) where {T<:TopologicalNumbersParallel}
     @unpack H, n, N, gapless, rounds = prob
 
     Hs = size(H(n), 1)
@@ -262,4 +262,12 @@ function solve(
     end
 
     return WNSolution(; TopologicalNumber, n, N)
+end
+
+function solve(
+    prob::WNProblem,
+    alg::WeylPointsAlgorithms;
+    parallel::TopologicalNumbersParallel=UseSingleThread(),
+)
+    throw(ArgumentError("WNProblem では FHSlocal3() を指定してください: $alg"))
 end
